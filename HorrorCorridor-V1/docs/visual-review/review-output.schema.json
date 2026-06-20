@@ -1,0 +1,100 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "HorrorCorridorVisualReview",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "score",
+    "pass",
+    "categoryScores",
+    "topSemanticDifferences",
+    "firstVisibleFailure",
+    "requiredChanges",
+    "promotionStatus"
+  ],
+  "properties": {
+    "score": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 100
+    },
+    "pass": {
+      "type": "boolean"
+    },
+    "promotionStatus": {
+      "type": "string",
+      "enum": ["accept", "retry", "reject", "blocked"]
+    },
+    "firstVisibleFailure": {
+      "type": "string"
+    },
+    "topSemanticDifferences": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "requiredChanges": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "categoryScores": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "identityMatch",
+        "silhouetteGeometry",
+        "materialPbr",
+        "textureDetail",
+        "lightingReadability",
+        "compositionRoute",
+        "moodArtDirection",
+        "artifactFree"
+      ],
+      "properties": {
+        "identityMatch": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 100
+        },
+        "silhouetteGeometry": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 100
+        },
+        "materialPbr": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 100
+        },
+        "textureDetail": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 100
+        },
+        "lightingReadability": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 100
+        },
+        "compositionRoute": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 100
+        },
+        "moodArtDirection": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 100
+        },
+        "artifactFree": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 100
+        }
+      }
+    }
+  }
+}

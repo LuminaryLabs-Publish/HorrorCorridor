@@ -1,0 +1,21 @@
+{
+  "copiedFrom": "/Users/crimsonwheeler/Documents/GitHub/HorrorCorridor/HorrorCorridor-V1/docs/reference-images/generated/starting-scene-target-2026-06-19.png",
+  "image": "docs/visual-review/runs/2026-06-19T22-11-37-303Z-mock-retry-3/reference/reference.png",
+  "source": {
+    "bytes": 2635147,
+    "ext": ".png",
+    "mtime": "2026-06-19T06:14:48.762Z",
+    "sha256": "a60b45887c73d4bd476f9391107d6ca2e1ea7f4fde5fc78d00a014ebef141335",
+    "width": 1254,
+    "height": 1254
+  },
+  "status": "completed",
+  "submittedAt": "2026-06-19T22:11:37.313Z",
+  "target": "starting-scene",
+  "bytes": 2635147,
+  "ext": ".png",
+  "mtime": "2026-06-19T22:11:37.311Z",
+  "sha256": "a60b45887c73d4bd476f9391107d6ca2e1ea7f4fde5fc78d00a014ebef141335",
+  "width": 1254,
+  "height": 1254
+}

@@ -1,0 +1,11 @@
+{
+  "createdAt": "2026-06-20T01:16:57.621Z",
+  "firstVisibleFailure": "Mock score below threshold: review-room capture needs a lamp-visible correction.",
+  "requiredChanges": [
+    "Improve the first visible lamp failure before main-scene promotion."
+  ],
+  "score": 42,
+  "topSemanticDifferences": [
+    "Mock semantic delta: lamp does not yet satisfy isolated human-view target."
+  ]
+}

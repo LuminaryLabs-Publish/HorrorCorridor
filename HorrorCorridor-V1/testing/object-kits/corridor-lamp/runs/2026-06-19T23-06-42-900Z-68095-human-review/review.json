@@ -1,0 +1,20 @@
+{
+  "categoryScores": {
+    "artifactFreeRender": 95,
+    "geometryDetail": 95,
+    "horrorCorridorFit": 95,
+    "lampIdentity": 95,
+    "lightSourceBelievability": 95,
+    "materialBelievability": 95,
+    "playerDistanceReadability": 95,
+    "rustGrimeQuality": 95,
+    "silhouetteReadability": 95
+  },
+  "firstVisibleFailure": "",
+  "humanReadableSummary": "Mock accepted: the review-room lamp is treated as human-readable.",
+  "pass": true,
+  "promotionStatus": "accept",
+  "requiredChanges": [],
+  "score": 95,
+  "topSemanticDifferences": []
+}

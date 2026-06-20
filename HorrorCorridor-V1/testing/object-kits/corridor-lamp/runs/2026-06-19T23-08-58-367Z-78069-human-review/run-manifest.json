@@ -1,0 +1,57 @@
+{
+  "completedAt": "2026-06-19T23:09:15.241Z",
+  "captures": [
+    {
+      "mode": "front",
+      "rawCanvasPath": "testing/object-kits/corridor-lamp/runs/2026-06-19T23-08-58-367Z-78069-human-review/screenshots/raw-canvas-front.png",
+      "reviewRoomPath": "testing/object-kits/corridor-lamp/runs/2026-06-19T23-08-58-367Z-78069-human-review/screenshots/review-room-front.png"
+    },
+    {
+      "mode": "side",
+      "rawCanvasPath": "testing/object-kits/corridor-lamp/runs/2026-06-19T23-08-58-367Z-78069-human-review/screenshots/raw-canvas-side.png",
+      "reviewRoomPath": "testing/object-kits/corridor-lamp/runs/2026-06-19T23-08-58-367Z-78069-human-review/screenshots/review-room-side.png"
+    },
+    {
+      "mode": "three-quarter",
+      "rawCanvasPath": "testing/object-kits/corridor-lamp/runs/2026-06-19T23-08-58-367Z-78069-human-review/screenshots/raw-canvas-three-quarter.png",
+      "reviewRoomPath": "testing/object-kits/corridor-lamp/runs/2026-06-19T23-08-58-367Z-78069-human-review/screenshots/review-room-three-quarter.png"
+    },
+    {
+      "mode": "player-distance",
+      "rawCanvasPath": "testing/object-kits/corridor-lamp/runs/2026-06-19T23-08-58-367Z-78069-human-review/screenshots/raw-canvas-player-distance.png",
+      "reviewRoomPath": "testing/object-kits/corridor-lamp/runs/2026-06-19T23-08-58-367Z-78069-human-review/screenshots/review-room-player-distance.png"
+    },
+    {
+      "mode": "corridor-dark",
+      "rawCanvasPath": "testing/object-kits/corridor-lamp/runs/2026-06-19T23-08-58-367Z-78069-human-review/screenshots/raw-canvas-corridor-dark.png",
+      "reviewRoomPath": "testing/object-kits/corridor-lamp/runs/2026-06-19T23-08-58-367Z-78069-human-review/screenshots/review-room-corridor-dark.png"
+    }
+  ],
+  "kit": "corridor-lamp",
+  "playwrightSource": "nexus-simulator",
+  "review": {
+    "categoryScores": {
+      "artifactFreeRender": 42,
+      "geometryDetail": 42,
+      "horrorCorridorFit": 42,
+      "lampIdentity": 42,
+      "lightSourceBelievability": 42,
+      "materialBelievability": 42,
+      "playerDistanceReadability": 42,
+      "rustGrimeQuality": 42,
+      "silhouetteReadability": 42
+    },
+    "firstVisibleFailure": "Mock score below threshold: review-room capture needs a lamp-visible correction.",
+    "humanReadableSummary": "Mock rejected: the review-room lamp needs visible improvement.",
+    "pass": false,
+    "promotionStatus": "retry",
+    "requiredChanges": [
+      "Improve the first visible lamp failure before main-scene promotion."
+    ],
+    "score": 42,
+    "topSemanticDifferences": [
+      "Mock semantic delta: lamp does not yet satisfy isolated human-view target."
+    ]
+  },
+  "status": "needs-fix"
+}

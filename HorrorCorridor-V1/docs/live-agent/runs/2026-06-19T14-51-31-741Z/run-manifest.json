@@ -1,0 +1,21 @@
+{
+  "harness": "horror-corridor-live-agent",
+  "startedAt": "2026-06-19T14:51:31.758Z",
+  "options": {
+    "actionDurationMs": 900,
+    "cdpPort": 9224,
+    "forever": false,
+    "intervalMs": 1500,
+    "launchCdpChrome": true,
+    "runDir": "",
+    "runsRoot": "/Users/crimsonwheeler/Documents/GitHub/HorrorCorridor/HorrorCorridor-V1/docs/live-agent/runs",
+    "startServerOnce": true,
+    "url": "http://localhost:3000/?debug=frames",
+    "maxEpisodes": 2
+  },
+  "repoRoot": "/Users/crimsonwheeler/Documents/GitHub/HorrorCorridor/HorrorCorridor-V1",
+  "runDir": "/Users/crimsonwheeler/Documents/GitHub/HorrorCorridor/HorrorCorridor-V1/docs/live-agent/runs/2026-06-19T14-51-31-741Z",
+  "status": "interrupted",
+  "completedAt": "2026-06-19T14:59:08.893Z",
+  "episodeCount": 2
+}

@@ -3,16 +3,20 @@ import {
   Group,
   InstancedMesh,
   Matrix4,
+  MeshBasicMaterial,
   Mesh,
   Object3D,
+  PlaneGeometry,
   PointLight,
   Scene,
   SphereGeometry,
+  SpotLight,
+  MeshStandardMaterial,
   Vector3,
   type Material,
-  type MeshLambertMaterial,
 } from "three";
 
+import { createHorrorCorridorPreset } from "@/protokits/presets/horror-corridor-preset";
 import { CELL_SIZE, WALL_HEIGHT } from "@/lib/constants";
 import { CUBE_COLORS, type CubeColorHex } from "@/lib/colors";
 import type { MazeResult, MazeCube } from "@/features/maze/domain/mazeTypes";
@@ -20,22 +24,44 @@ import type { ReplicatedGameSnapshot, WorldPosition } from "@/types/shared";
 
 import { createLights } from "./createLights";
 import { createMaterials } from "./createMaterials";
+import {
+  createSceneDressingManifest,
+  type SceneDressingSummary,
+} from "./sceneDressingDescriptors";
+import {
+  createScenePropRenderable,
+  createSceneTextureRenderable,
+} from "./sceneDressingRenderer";
+import { createTerrainSurface, type TerrainSurface } from "./terrainSurface";
 
 export type MazeWorldFrame = Readonly<{
   snapshot: ReplicatedGameSnapshot | null;
   localPlayerId: string | null;
   localPlayerPosition: WorldPosition | null;
+  localViewAngles?: Readonly<{
+    yaw: number;
+    pitch: number;
+  }> | null;
 }>;
 
 export type MazeWorld = Readonly<{
   root: Group;
   attach: (scene: Scene) => void;
   update: (elapsedMs: number, frame?: MazeWorldFrame) => void;
+  getSceneDressingSummary: () => SceneDressingSummary;
+  getTerrainEyePosition: (position: WorldPosition) => WorldPosition;
   dispose: () => void;
 }>;
 
 type MazeStaticLayer = Group &
   Readonly<{
+    update: (elapsedMs: number) => void;
+    dispose: () => void;
+  }>;
+
+type MazeSceneDressingLayer = Group &
+  Readonly<{
+    summary: SceneDressingSummary;
     update: (elapsedMs: number) => void;
     dispose: () => void;
   }>;
@@ -90,6 +116,76 @@ const disposeObject = (object: Object3D, skipMaterials: ReadonlySet<Material> = 
   });
 };
 
+const buildSceneDressingLayer = (
+  maze: MazeResult,
+  preset: ReturnType<typeof createHorrorCorridorPreset>,
+): MazeSceneDressingLayer => {
+  const manifest = createSceneDressingManifest(maze, preset);
+  const group = new Group();
+  group.name = "maze-scene-dressing";
+  group.userData.sceneDressingSummary = manifest.summary;
+
+  const materials: Material[] = [];
+  const propPulseTargets: Mesh[] = [];
+  const texturePulseTargets: Mesh[] = [];
+
+  for (const descriptor of manifest.props) {
+    const renderable = createScenePropRenderable(descriptor, preset);
+    materials.push(...renderable.materials);
+    propPulseTargets.push(...renderable.pulseTargets);
+    group.add(renderable.object);
+  }
+
+  for (const descriptor of manifest.textures) {
+    const renderable = createSceneTextureRenderable(descriptor, preset);
+    materials.push(...renderable.materials);
+    texturePulseTargets.push(...renderable.pulseTargets);
+    group.add(renderable.object);
+  }
+
+  for (const descriptor of manifest.lights) {
+    const light = new PointLight(
+      descriptor.color,
+      descriptor.intensity,
+      descriptor.range,
+      descriptor.decay,
+    );
+    light.name = descriptor.id;
+    light.position.set(descriptor.position.x, descriptor.position.y, descriptor.position.z);
+    light.userData.baseIntensity = descriptor.intensity;
+    group.add(light);
+  }
+
+  return Object.assign(group, {
+    summary: manifest.summary,
+    update: (elapsedMs: number) => {
+      for (const target of propPulseTargets) {
+        const material = target.material;
+        if (material instanceof MeshStandardMaterial) {
+          material.emissiveIntensity =
+            0.14 + Math.sin(elapsedMs * 0.0018 + target.position.x) * 0.04;
+        } else if (material instanceof MeshBasicMaterial) {
+          material.opacity = 0.56 + Math.sin(elapsedMs * 0.002 + target.position.z) * 0.08;
+        }
+      }
+      for (const target of texturePulseTargets) {
+        const material = target.material as MeshBasicMaterial;
+        const baseOpacity = typeof material.userData.baseOpacity === "number" ? material.userData.baseOpacity : 0.18;
+        material.opacity = Math.max(0.04, baseOpacity + Math.sin(elapsedMs * 0.002 + target.position.z) * 0.025);
+      }
+    },
+    dispose: () => {
+      disposeObject(group);
+      for (const material of materials) {
+        const generatedAlphaTexture = material.userData.generatedAlphaTexture as { dispose: () => void } | undefined;
+        const generatedProjectionAlphaTexture = material.userData.generatedProjectionAlphaTexture as { dispose: () => void } | undefined;
+        generatedAlphaTexture?.dispose();
+        generatedProjectionAlphaTexture?.dispose();
+      }
+    },
+  });
+};
+
 const countCells = (maze: MazeResult, predicate: (value: number) => boolean): number => {
   let total = 0;
 
@@ -102,6 +198,12 @@ const countCells = (maze: MazeResult, predicate: (value: number) => boolean): nu
   }
 
   return total;
+};
+
+const projectedCellNoise = (x: number, y: number): number => {
+  let value = Math.imul(x + 1013, 374761393) ^ Math.imul(y + 9176, 668265263);
+  value = Math.imul(value ^ (value >>> 13), 1274126177);
+  return ((value ^ (value >>> 16)) >>> 0) / 4294967295;
 };
 
 const buildInstancedLayer = (
@@ -120,13 +222,17 @@ const setInstanceMatrix = (
   mesh: InstancedMesh,
   index: number,
   position: Readonly<{ x: number; y: number; z: number }>,
-  scale = 1,
+  scale: number | Readonly<{ x: number; y: number; z: number }> = 1,
 ): void => {
   const matrix = new Matrix4();
+  const scaleVector =
+    typeof scale === "number"
+      ? new Vector3(scale, scale, scale)
+      : new Vector3(scale.x, scale.y, scale.z);
   matrix.compose(
     position as Vector3,
     new Object3D().quaternion,
-    new Vector3(scale, scale, scale),
+    scaleVector,
   );
   mesh.setMatrixAt(index, matrix);
 };
@@ -135,6 +241,8 @@ const buildMazeStaticLayer = (
   maze: MazeResult,
   materials: ReturnType<typeof createMaterials>,
   lights: ReturnType<typeof createLights>,
+  terrain: TerrainSurface,
+  preset: ReturnType<typeof createHorrorCorridorPreset>,
 ): MazeStaticLayer => {
   const staticGroup = new Group();
   staticGroup.name = "maze-static";
@@ -146,6 +254,7 @@ const buildMazeStaticLayer = (
   const branchFloorCount = countCells(maze, (value) => value === 1);
   const walkableCount = mainFloorCount + branchFloorCount;
   const wallCount = countCells(maze, (value) => value === 0);
+  const usesRooflessOpenSky = preset.openSkyProjection.enabled && preset.openSkyProjection.rooflessCorridors;
 
   const mainFloorLayer = buildInstancedLayer(
     floorGeometry,
@@ -161,7 +270,7 @@ const buildMazeStaticLayer = (
   );
   const ceilingLayer = buildInstancedLayer(
     ceilingGeometry,
-    walkableCount,
+    usesRooflessOpenSky ? 0 : walkableCount,
     materials.ceiling,
     "maze-ceiling",
   );
@@ -178,37 +287,49 @@ const buildMazeStaticLayer = (
       const position = toWorldCellPosition(x, y);
 
       if (cell === 0) {
+        const baseY = terrain.wallBaseYAt(position.x, position.z);
+        const heightFactor = preset.openSkyProjection.enabled
+          ? preset.openSkyProjection.heightRange[0] +
+            projectedCellNoise(x, y) *
+              (preset.openSkyProjection.heightRange[1] - preset.openSkyProjection.heightRange[0])
+          : 1;
+        const projectedHeight = WALL_HEIGHT * heightFactor;
         setInstanceMatrix(wallLayer, wallIndex, {
           x: position.x,
-          y: WALL_HEIGHT / 2,
+          y: baseY + projectedHeight / 2,
           z: position.z,
-        });
+        }, { x: 1, y: projectedHeight / WALL_HEIGHT, z: 1 });
         wallIndex += 1;
         continue;
       }
 
       if (cell === 1) {
+        const floorY = terrain.floorYAt(position.x, position.z, 0.035);
         setInstanceMatrix(branchFloorLayer, branchFloorIndex, {
           x: position.x,
-          y: 0.035,
+          y: floorY,
           z: position.z,
         });
         branchFloorIndex += 1;
       } else {
+        const floorY = terrain.floorYAt(position.x, position.z, 0.04);
         setInstanceMatrix(mainFloorLayer, mainFloorIndex, {
           x: position.x,
-          y: 0.04,
+          y: floorY,
           z: position.z,
         });
         mainFloorIndex += 1;
       }
 
-      setInstanceMatrix(ceilingLayer, ceilingIndex, {
-        x: position.x,
-        y: WALL_HEIGHT - 0.04,
-        z: position.z,
-      });
-      ceilingIndex += 1;
+      if (!usesRooflessOpenSky) {
+        const ceilingBaseY = terrain.floorYAt(position.x, position.z, WALL_HEIGHT - 0.04);
+        setInstanceMatrix(ceilingLayer, ceilingIndex, {
+          x: position.x,
+          y: ceilingBaseY,
+          z: position.z,
+        });
+        ceilingIndex += 1;
+      }
     }
   }
 
@@ -223,26 +344,20 @@ const buildMazeStaticLayer = (
 
   const startCell = toWorldCellPosition(maze.start.x, maze.start.y);
   const endCell = toWorldCellPosition(maze.end.x, maze.end.y);
+  const startY = terrain.floorYAt(startCell.x, startCell.z);
+  const endY = terrain.floorYAt(endCell.x, endCell.z);
 
-  const startGlowMaterial = materials.glow.clone();
   const endGlowMaterial = materials.glow.clone();
 
-  const startMarker = new Mesh(
-    new BoxGeometry(CELL_SIZE * 0.58, 0.12, CELL_SIZE * 0.58),
-    startGlowMaterial,
-  );
-  startMarker.name = "maze-start-marker";
-  startMarker.position.set(startCell.x, 0.08, startCell.z);
-
-  const startLight = new PointLight(0x8cff98, 2.65, 18, 2.15);
-  startLight.position.set(startCell.x, WALL_HEIGHT * 0.7, startCell.z);
+  const startLight = new PointLight(0xd7ad79, 3.1, 30, 1.55);
+  startLight.position.set(startCell.x, startY + WALL_HEIGHT * 0.7, startCell.z);
 
   const endOrb = new Mesh(new SphereGeometry(CELL_SIZE * 0.16, 14, 14), materials.glow.clone());
   endOrb.name = "maze-end-orb";
-  endOrb.position.set(endCell.x, WALL_HEIGHT * 0.62, endCell.z);
+  endOrb.position.set(endCell.x, endY + WALL_HEIGHT * 0.62, endCell.z);
 
-  const endLight = new PointLight(0xb0ff8f, 2.8, 18, 2);
-  endLight.position.set(endCell.x, WALL_HEIGHT * 0.7, endCell.z);
+  const endLight = new PointLight(0xa6af70, 2.7, 24, 1.75);
+  endLight.position.set(endCell.x, endY + WALL_HEIGHT * 0.7, endCell.z);
 
   const pedestalGroup = new Group();
   pedestalGroup.name = "maze-pedestals";
@@ -252,7 +367,8 @@ const buildMazeStaticLayer = (
       new BoxGeometry(CELL_SIZE * 0.24, WALL_HEIGHT * 0.42, CELL_SIZE * 0.24),
       materials.pedestal,
     );
-    pedestal.position.set(endCell.x + offsetX, WALL_HEIGHT * 0.21, endCell.z + offsetZ);
+    const pedestalY = terrain.floorYAt(endCell.x + offsetX, endCell.z + offsetZ);
+    pedestal.position.set(endCell.x + offsetX, pedestalY + WALL_HEIGHT * 0.21, endCell.z + offsetZ);
     pedestalGroup.add(pedestal);
   }
 
@@ -269,7 +385,8 @@ const buildMazeStaticLayer = (
       );
       guideNode.position.set(
         node.x * CELL_SIZE + CELL_SIZE / 2,
-        0.22 + Math.sin(index * 0.2) * 0.02,
+        terrain.floorYAt(node.x * CELL_SIZE + CELL_SIZE / 2, node.y * CELL_SIZE + CELL_SIZE / 2, 0.22) +
+          Math.sin(index * 0.2) * 0.02,
         node.y * CELL_SIZE + CELL_SIZE / 2,
       );
       guideGroup.add(guideNode);
@@ -277,13 +394,12 @@ const buildMazeStaticLayer = (
   }
 
   const endHalo = new Mesh(new SphereGeometry(CELL_SIZE * 0.28, 16, 16), endGlowMaterial);
-  endHalo.position.set(endCell.x, WALL_HEIGHT * 0.56, endCell.z);
+  endHalo.position.set(endCell.x, endY + WALL_HEIGHT * 0.56, endCell.z);
 
   staticGroup.add(mainFloorLayer);
   staticGroup.add(branchFloorLayer);
   staticGroup.add(ceilingLayer);
   staticGroup.add(wallLayer);
-  staticGroup.add(startMarker);
   staticGroup.add(startLight);
   staticGroup.add(endOrb);
   staticGroup.add(endLight);
@@ -291,7 +407,7 @@ const buildMazeStaticLayer = (
   staticGroup.add(pedestalGroup);
   staticGroup.add(guideGroup);
 
-  const extraMaterials: Material[] = [startGlowMaterial, endGlowMaterial];
+  const extraMaterials: Material[] = [endGlowMaterial];
 
   return Object.assign(staticGroup, {
     dispose: () => {
@@ -303,14 +419,17 @@ const buildMazeStaticLayer = (
     },
     update: (elapsedMs: number) => {
       lights.update(elapsedMs);
-      endLight.intensity = 2.2 + Math.sin(elapsedMs * 0.0023) * 0.28;
+      endLight.intensity = 2.8 + Math.sin(elapsedMs * 0.0023) * 0.28;
       endGlowMaterial.opacity = 0.55 + Math.sin(elapsedMs * 0.0031) * 0.08;
-      startGlowMaterial.opacity = 0.75 + Math.sin(elapsedMs * 0.0041) * 0.08;
     },
   });
 };
 
-const createCubeMesh = (cube: MazeCube, materials = createMaterials()): Mesh => {
+const createCubeMesh = (
+  cube: MazeCube,
+  materials = createMaterials(createHorrorCorridorPreset()),
+  terrain?: TerrainSurface,
+): Mesh => {
   const cubeMaterial = materials.cube.clone();
   cubeMaterial.color.setHex(cube.colorHex);
   cubeMaterial.emissive.setHex(cube.colorHex);
@@ -321,7 +440,7 @@ const createCubeMesh = (cube: MazeCube, materials = createMaterials()): Mesh => 
     cubeMaterial,
   );
   mesh.name = cube.id;
-  mesh.position.set(cube.x, CELL_SIZE * 0.28, cube.z);
+  mesh.position.set(cube.x, (terrain?.floorYAt(cube.x, cube.z) ?? 0) + CELL_SIZE * 0.28, cube.z);
   mesh.userData.cubeId = cube.id;
   return mesh;
 };
@@ -329,12 +448,15 @@ const createCubeMesh = (cube: MazeCube, materials = createMaterials()): Mesh => 
 export const buildMazeWorld = (maze: MazeResult): MazeWorld => {
   const root = new Group();
   root.name = "maze-world";
+  const preset = createHorrorCorridorPreset();
+  const terrain = createTerrainSurface(maze, preset);
   const endCell = toWorldCellPosition(maze.end.x, maze.end.y);
   const startCell = toWorldCellPosition(maze.start.x, maze.start.y);
 
-  const materials = createMaterials();
+  const materials = createMaterials(preset);
   const lights = createLights();
-  const staticLayer = buildMazeStaticLayer(maze, materials, lights);
+  const staticLayer = buildMazeStaticLayer(maze, materials, lights, terrain, preset);
+  const sceneDressingLayer = buildSceneDressingLayer(maze, preset);
 
   const cubeGroup = new Group();
   cubeGroup.name = "maze-cubes";
@@ -343,25 +465,51 @@ export const buildMazeWorld = (maze: MazeResult): MazeWorld => {
 
   const playerGroup = new Group();
   playerGroup.name = "maze-players";
-  const playerFollowLight = new PointLight(0xffeedd, 1.05, 25, 2);
-  playerFollowLight.name = "maze-player-light";
-  playerFollowLight.position.set(startCell.x, 2, startCell.z);
+  const playerFollowLight = new PointLight(0xffddb0, 0.62, 18, 1.28);
+  playerFollowLight.name = "maze-player-near-fill";
+  playerFollowLight.position.set(startCell.x, terrain.floorYAt(startCell.x, startCell.z, 2), startCell.z);
+  const flashlightGroup = new Group();
+  flashlightGroup.name = "maze-floating-flashlight";
+  const flashlightBody = new Mesh(
+    new BoxGeometry(CELL_SIZE * 0.14, CELL_SIZE * 0.08, CELL_SIZE * 0.28),
+    materials.trim.clone(),
+  );
+  flashlightBody.name = "maze-floating-flashlight-body";
+  const flashlightLens = new Mesh(new SphereGeometry(CELL_SIZE * 0.055, 8, 8), materials.glow.clone());
+  flashlightLens.name = "maze-floating-flashlight-lens";
+  flashlightLens.position.z = -CELL_SIZE * 0.16;
+  const flashlight = new SpotLight(
+    preset.flashlight.color,
+    preset.flashlight.intensity,
+    preset.flashlight.range,
+    preset.flashlight.angle,
+    preset.flashlight.penumbra,
+    preset.flashlight.decay,
+  );
+  flashlight.name = "maze-floating-flashlight-spot";
+  flashlight.target.name = "maze-floating-flashlight-target";
+  flashlightGroup.add(flashlightBody);
+  flashlightGroup.add(flashlightLens);
+  flashlightGroup.add(flashlight);
+  flashlightGroup.add(flashlight.target);
 
-  const oozeGeometry = new SphereGeometry(CELL_SIZE * 0.08, 8, 8);
+  const oozeGeometry = new PlaneGeometry(CELL_SIZE * 0.28, CELL_SIZE * 0.28);
+  oozeGeometry.rotateX(-Math.PI / 2);
   const oozeMesh = new InstancedMesh(oozeGeometry, materials.ooze, Math.max(maze.cubes.length, 800));
-  oozeMesh.name = "maze-ooze";
+  oozeMesh.name = "maze-ooze-decals";
   oozeMesh.count = 0;
+  oozeMesh.frustumCulled = false;
 
   const cubeMeshes = new Map<string, Mesh>();
   const cubeLights = new Map<string, PointLight>();
   const playerMeshes = new Map<string, Mesh>();
 
   for (const cube of maze.cubes) {
-    const mesh = createCubeMesh(cube, materials);
+    const mesh = createCubeMesh(cube, materials, terrain);
     cubeMeshes.set(cube.id, mesh);
     cubeGroup.add(mesh);
 
-    const light = new PointLight(cube.colorHex, 0.9, 10, 2.2);
+    const light = new PointLight(cube.colorHex, 0.34, 6.5, 2.2);
     light.name = `${cube.id}-light`;
     light.position.set(cube.x, CELL_SIZE * 0.6, cube.z);
     cubeLights.set(cube.id, light);
@@ -369,11 +517,13 @@ export const buildMazeWorld = (maze: MazeResult): MazeWorld => {
   }
 
   root.add(staticLayer);
+  root.add(sceneDressingLayer);
   root.add(cubeGroup);
   root.add(cubeLightGroup);
   root.add(playerGroup);
   root.add(oozeMesh);
   root.add(playerFollowLight);
+  root.add(flashlightGroup);
   root.add(lights.group);
 
   const syncCubeMeshes = (
@@ -402,6 +552,7 @@ export const buildMazeWorld = (maze: MazeResult): MazeWorld => {
             ownerId: null,
           },
           materials,
+          terrain,
         );
         cubeMeshes.set(cube.id, mesh);
         cubeGroup.add(mesh);
@@ -409,7 +560,7 @@ export const buildMazeWorld = (maze: MazeResult): MazeWorld => {
 
       let light = cubeLights.get(cube.id);
       if (!light) {
-        light = new PointLight(cubeHex, 0.9, 10, 2.2);
+        light = new PointLight(cubeHex, 0.34, 6.5, 2.2);
         light.name = `${cube.id}-light`;
         cubeLights.set(cube.id, light);
         cubeLightGroup.add(light);
@@ -420,8 +571,16 @@ export const buildMazeWorld = (maze: MazeResult): MazeWorld => {
       const slotIndex = slotIndexByCubeId.get(cube.id) ?? 0;
       const [offsetX, offsetZ] = pedestalOffsets[slotIndex] ?? [0, 0];
       const position = isPlaced
-        ? { x: endCell.x + offsetX, y: WALL_HEIGHT * 0.46, z: endCell.z + offsetZ }
-        : cube.position;
+        ? {
+            x: endCell.x + offsetX,
+            y: terrain.floorYAt(endCell.x + offsetX, endCell.z + offsetZ, WALL_HEIGHT * 0.46),
+            z: endCell.z + offsetZ,
+          }
+        : {
+            x: cube.position.x,
+            y: terrain.floorYAt(cube.position.x, cube.position.z, CELL_SIZE * 0.28),
+            z: cube.position.z,
+          };
 
       mesh.visible = !isHeld;
       mesh.position.set(position.x, position.y, position.z);
@@ -474,13 +633,13 @@ export const buildMazeWorld = (maze: MazeResult): MazeWorld => {
         playerGroup.add(mesh);
       }
 
-      const playerMaterial = mesh.material as MeshLambertMaterial;
+      const playerMaterial = mesh.material as MeshStandardMaterial;
       playerMaterial.color.set(player.color);
       playerMaterial.emissive.set(player.color);
       playerMaterial.emissiveIntensity = 0.18;
 
       mesh.visible = true;
-      mesh.position.set(player.position.x, 0.82, player.position.z);
+      mesh.position.set(player.position.x, terrain.floorYAt(player.position.x, player.position.z, 0.82), player.position.z);
       mesh.rotation.y = player.rotationY;
       mesh.scale.setScalar(1);
     }
@@ -497,12 +656,14 @@ export const buildMazeWorld = (maze: MazeResult): MazeWorld => {
 
   const syncOozeTrail = (snapshot: ReplicatedGameSnapshot["oozeTrail"]): void => {
     let index = 0;
+    const decal = new Object3D();
 
     for (const ooze of snapshot) {
-      const position = new Vector3(ooze.x, ooze.y, ooze.z);
-      const matrix = new Matrix4();
-      matrix.compose(position, new Object3D().quaternion, new Vector3(ooze.scale, ooze.scale, ooze.scale));
-      oozeMesh.setMatrixAt(index, matrix);
+      decal.position.set(ooze.x, terrain.floorYAt(ooze.x, ooze.z, Math.max(0.012, ooze.y)), ooze.z);
+      decal.rotation.set(0, ooze.rotY, 0);
+      decal.scale.set(ooze.scale, ooze.scale, ooze.scale);
+      decal.updateMatrix();
+      oozeMesh.setMatrixAt(index, decal.matrix);
       index += 1;
     }
 
@@ -517,16 +678,41 @@ export const buildMazeWorld = (maze: MazeResult): MazeWorld => {
     },
     update: (elapsedMs, frame) => {
       staticLayer.update(elapsedMs);
+      sceneDressingLayer.update(elapsedMs);
       const localPlayerPosition = frame?.localPlayerPosition;
 
       if (localPlayerPosition) {
+        const viewAngles = frame?.localViewAngles ?? { yaw: 0, pitch: 0 };
+        const horizontal = Math.cos(viewAngles.pitch);
+        const forward = new Vector3(
+          -Math.sin(viewAngles.yaw) * horizontal,
+          -Math.sin(viewAngles.pitch),
+          -Math.cos(viewAngles.yaw) * horizontal,
+        ).normalize();
+        const right = new Vector3(Math.cos(viewAngles.yaw), 0, -Math.sin(viewAngles.yaw)).normalize();
+        const flashlightPosition = new Vector3(
+          localPlayerPosition.x,
+          terrain.floorYAt(localPlayerPosition.x, localPlayerPosition.z, localPlayerPosition.y),
+          localPlayerPosition.z,
+        )
+          .add(right.multiplyScalar(preset.flashlight.floatOffset.x))
+          .add(new Vector3(0, preset.flashlight.floatOffset.y, 0))
+          .add(forward.clone().multiplyScalar(preset.flashlight.floatOffset.z));
         playerFollowLight.position.set(
           localPlayerPosition.x,
-          localPlayerPosition.y + 0.55,
+          terrain.floorYAt(localPlayerPosition.x, localPlayerPosition.z, localPlayerPosition.y + 0.75),
           localPlayerPosition.z,
         );
+        flashlightGroup.visible = preset.flashlight.enabled;
+        flashlightGroup.position.copy(flashlightPosition);
+        flashlightGroup.rotation.order = "YXZ";
+        flashlightGroup.rotation.y = viewAngles.yaw;
+        flashlightGroup.rotation.x = viewAngles.pitch;
+        flashlight.position.set(0, 0, 0);
+        flashlight.target.position.set(0, 0, -preset.flashlight.range * 0.55);
+        flashlight.intensity = preset.flashlight.intensity + Math.sin(elapsedMs * 0.018) * 0.14;
       }
-      playerFollowLight.intensity = 0.98 + Math.sin(elapsedMs * 0.0025) * 0.08;
+      playerFollowLight.intensity = 0.62 + Math.sin(elapsedMs * 0.0025) * 0.05;
 
       const snapshot = frame?.snapshot;
       if (snapshot) {
@@ -535,10 +721,19 @@ export const buildMazeWorld = (maze: MazeResult): MazeWorld => {
         syncOozeTrail(snapshot.oozeTrail);
       }
     },
+    getSceneDressingSummary: () => sceneDressingLayer.summary,
+    getTerrainEyePosition: (position) => ({
+      x: position.x,
+      y: terrain.floorYAt(position.x, position.z, position.y),
+      z: position.z,
+    }),
     dispose: () => {
       if (root.parent) {
         root.parent.remove(root);
       }
+
+      sceneDressingLayer.dispose();
+      root.remove(sceneDressingLayer);
 
       disposeObject(
         root,

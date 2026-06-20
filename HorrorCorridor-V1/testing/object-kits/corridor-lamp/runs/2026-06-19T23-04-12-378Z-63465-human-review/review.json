@@ -1,0 +1,24 @@
+{
+  "categoryScores": {
+    "artifactFreeRender": 42,
+    "geometryDetail": 42,
+    "horrorCorridorFit": 42,
+    "lampIdentity": 42,
+    "lightSourceBelievability": 42,
+    "materialBelievability": 42,
+    "playerDistanceReadability": 42,
+    "rustGrimeQuality": 42,
+    "silhouetteReadability": 42
+  },
+  "firstVisibleFailure": "Mock score below threshold: review-room capture needs a lamp-visible correction.",
+  "humanReadableSummary": "Mock rejected: the review-room lamp needs visible improvement.",
+  "pass": false,
+  "promotionStatus": "retry",
+  "requiredChanges": [
+    "Improve the first visible lamp failure before main-scene promotion."
+  ],
+  "score": 42,
+  "topSemanticDifferences": [
+    "Mock semantic delta: lamp does not yet satisfy isolated human-view target."
+  ]
+}

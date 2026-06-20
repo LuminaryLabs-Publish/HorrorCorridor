@@ -1,0 +1,21 @@
+{
+  "harness": "horror-corridor-visual-match",
+  "mode": "prepare",
+  "options": {
+    "actionDurationMs": 900,
+    "actionProfile": "forward",
+    "autoFix": true,
+    "cdpPort": 9224,
+    "dryRun": true,
+    "maxAttempts": 3,
+    "minScore": 90,
+    "target": "starting-scene",
+    "url": "http://localhost:3000/?debug=frames"
+  },
+  "repoRoot": "/Users/crimsonwheeler/Documents/GitHub/HorrorCorridor/HorrorCorridor-V1",
+  "runDir": "/Users/crimsonwheeler/Documents/GitHub/HorrorCorridor/HorrorCorridor-V1/docs/visual-review/runs/2026-06-19T22-12-23-430Z-submit-test-2",
+  "startedAt": "2026-06-19T22:12:23.432Z",
+  "status": "dry-run-reference-pending",
+  "referencePromptPath": "docs/visual-review/runs/2026-06-19T22-12-23-430Z-submit-test-2/reference/reference-prompt.md",
+  "updatedAt": "2026-06-19T22:12:23.432Z"
+}

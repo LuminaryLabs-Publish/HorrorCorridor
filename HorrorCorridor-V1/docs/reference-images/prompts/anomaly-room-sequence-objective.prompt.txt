@@ -1,0 +1,8 @@
+Use case: stylized-concept
+Asset type: game visual target reference
+Primary request: first-person no-HUD anomaly objective room for HorrorCorridor.
+Scene/backdrop: a wider corridor chamber with three pedestal slots, colored cube anomalies, stained concrete floor, modular brick/block walls, cables, wall panels, pipes, vents, and green atmospheric lighting.
+Subject: the sequence objective area should communicate "place objects here" through world design, pedestal silhouette, colored glow, residue trails, and framing, not HUD text.
+Composition: first-person view entering the room, pedestals in midground, route exits visible at edges, ceiling and wall details readable, no on-screen UI.
+Style: dark readable horror, practical industrial props, warm player spill light, green anomaly glow, procedural PBR grime and wetness.
+Avoid: text labels, menu UI, pure black shadows, clean laboratory look, fantasy magic altar.

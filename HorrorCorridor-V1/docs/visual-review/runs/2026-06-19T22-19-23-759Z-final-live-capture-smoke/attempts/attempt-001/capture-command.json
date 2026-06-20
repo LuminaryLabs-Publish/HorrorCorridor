@@ -1,0 +1,9 @@
+{
+  "command": "node scripts/horror-corridor-live-player-harness.mjs --artifact-dir /Users/crimsonwheeler/Documents/GitHub/HorrorCorridor/HorrorCorridor-V1/docs/visual-review/runs/2026-06-19T22-19-23-759Z-final-live-capture-smoke/attempts/attempt-001/capture --action-profile forward --action-duration-ms 900 --cdp-port 9224 --url http://localhost:3000/?debug=frames --launch-cdp-chrome --start-server",
+  "durationMs": 16252,
+  "error": null,
+  "exitCode": 1,
+  "signal": null,
+  "stderr": "",
+  "stdout": "{\n  \"reportPath\": \"/Users/crimsonwheeler/Documents/GitHub/HorrorCorridor/HorrorCorridor-V1/docs/visual-review/runs/2026-06-19T22-19-23-759Z-final-live-capture-smoke/attempts/attempt-001/capture/report.json\",\n  \"status\": \"failed\"\n}\n"
+}

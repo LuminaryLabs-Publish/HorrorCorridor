@@ -78,6 +78,7 @@ export type GameScreenState = "loading" | "lobby" | "playing" | "paused" | "vict
 
 export type AppScreenState =
   | "START"
+  | "LOADING"
   | "JOIN_MENU"
   | "LOBBY_HOST"
   | "LOBBY_CLIENT"

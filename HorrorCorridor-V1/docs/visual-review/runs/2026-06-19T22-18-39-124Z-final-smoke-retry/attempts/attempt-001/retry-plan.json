@@ -1,0 +1,12 @@
+{
+  "attemptIndex": 1,
+  "createdAt": "2026-06-19T22:18:39.138Z",
+  "firstVisibleFailure": "Mock score is below threshold.",
+  "requiredChanges": [
+    "Mock retry: apply the smallest visible material/lighting/silhouette correction."
+  ],
+  "score": 42,
+  "topSemanticDifferences": [
+    "Mock semantic difference for retry artifact validation."
+  ]
+}

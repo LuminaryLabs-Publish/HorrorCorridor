@@ -1,0 +1,79 @@
+{
+  "schemaVersion": 1,
+  "project": "HorrorCorridor-V1",
+  "purpose": "Track hierarchical visual, gameplay, and validation exploration as durable evidence. Each idea has child tests, artifacts, status, and follow-up links so future runs can expand without forgetting what was tried.",
+  "currentGoal": "Reach a human-readable high-fidelity horror corridor built from dark dirty overgrown terrain, broken-city surfaces, modular corridor tiles, procedural vegetation/object spawning, and screenshot-gated validation.",
+  "statusLegend": {
+    "candidate": "Worth testing, not implemented.",
+    "planned": "Selected for a future cohesive batch.",
+    "in-progress": "Currently being built or validated.",
+    "partially-validated": "Some evidence exists, but not enough for acceptance.",
+    "accepted": "Validated with direct player-view evidence.",
+    "rejected": "Tried and not worth continuing in current form."
+  },
+  "modules": [
+    {
+      "id": "visual-pipeline",
+      "path": "modules/visual-pipeline.json",
+      "owns": [
+        "post-processing",
+        "shader material response",
+        "lighting balance",
+        "triplanar mapping",
+        "texture readability"
+      ]
+    },
+    {
+      "id": "world-modularity",
+      "path": "modules/world-modularity.json",
+      "owns": [
+        "separate terrain walls ceiling props",
+        "brick wall surface kits",
+        "modular wall panels",
+        "raymarch placement",
+        "descriptor ownership"
+      ]
+    },
+    {
+      "id": "overgrown-terrain-corridor",
+      "path": "modules/overgrown-terrain-corridor.json",
+      "owns": [
+        "dark grassy dirty terrain",
+        "terrain shader",
+        "grass and root object spawning",
+        "procedural corridor tile assembly",
+        "broken-city art direction"
+      ]
+    },
+    {
+      "id": "game-state-reference-images",
+      "path": "modules/game-state-reference-images.json",
+      "owns": [
+        "reference prompts",
+        "target images",
+        "game state look goals",
+        "longer-session content targets"
+      ]
+    },
+    {
+      "id": "validation-tree",
+      "path": "modules/validation-tree.json",
+      "owns": [
+        "human-view gates",
+        "luminance gates",
+        "visible prop coverage",
+        "screenshot comparisons",
+        "tried and failed records"
+      ]
+    }
+  ],
+  "activeBranches": [
+    "overgrown-terrain-corridor.dark-dirty-terrain-foundation",
+    "overgrown-terrain-corridor.procedural-corridor-tile-maze",
+    "visual-pipeline.triplanar-surface-projection",
+    "world-modularity.modular-wall-terrain-split",
+    "game-state-reference-images.reference-set-001",
+    "validation-tree.human-readable-corridor-gate"
+  ],
+  "lastUpdated": "2026-06-19"
+}

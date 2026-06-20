@@ -1,0 +1,82 @@
+{
+  "schemaVersion": 1,
+  "moduleId": "validation-tree",
+  "goal": "Fail closed on visual quality by linking every renderer/content idea to player-view screenshot evidence, metrics, and tried/failed records.",
+  "rootGates": [
+    {
+      "id": "human-readable-corridor-gate",
+      "status": "partially-validated",
+      "checks": [
+        {
+          "id": "spawn-screenshot-readable",
+          "status": "partially-validated",
+          "evidence": [
+            "docs/live-player-harness/latest/starting-scene.png",
+            "docs/live-player-harness/latest/report.json"
+          ],
+          "failureMode": "Recent frames are more readable than black-viewport era, but still too flat/dark and not high-fidelity."
+        },
+        {
+          "id": "movement-screenshot-readable",
+          "status": "candidate",
+          "evidence": [],
+          "failureMode": "Need separate before-move and after-move screenshots so movement composition is not hidden by a single capture."
+        },
+        {
+          "id": "visible-wall-material-breakup",
+          "status": "candidate",
+          "evidence": [],
+          "failureMode": "Wall textures currently exist but broad planes still dominate."
+        },
+        {
+          "id": "visible-foreground-entity",
+          "status": "candidate",
+          "evidence": [],
+          "failureMode": "Tables/crates may exist in descriptors but need screenshot-visible foreground or midground proof."
+        }
+      ]
+    },
+    {
+      "id": "experiment-tried-record",
+      "status": "in-progress",
+      "checks": [
+        {
+          "id": "record-hypothesis",
+          "requiredFields": [
+            "hypothesis",
+            "test",
+            "status",
+            "evidence",
+            "decision"
+          ]
+        },
+        {
+          "id": "record-child-tests",
+          "requiredFields": [
+            "parentId",
+            "subtests",
+            "artifacts"
+          ]
+        },
+        {
+          "id": "record-final-decision",
+          "requiredFields": [
+            "accepted",
+            "rejected",
+            "partiallyValidated",
+            "nextBestBatch"
+          ]
+        }
+      ]
+    }
+  ],
+  "nextBestBatch": {
+    "id": "validation-batch-001",
+    "type": "multi-screenshot-human-view-gates",
+    "work": [
+      "Capture spawn, movement, and look-left/look-right frames.",
+      "Score wall/floor separation, visible prop coverage, and midground landmark readability.",
+      "Write results back into this JSON tree after each visual pass."
+    ]
+  }
+}

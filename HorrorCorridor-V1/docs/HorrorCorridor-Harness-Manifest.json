@@ -1,0 +1,59 @@
+{
+  "name": "HorrorCorridor-Harness",
+  "generatedAt": "2026-06-19T22:15:30.665Z",
+  "source": "HorrorCorridor-Harness/domain-service-kit-source.json",
+  "outputs": [
+    "docs/HorrorCorridor-Harness-Guide.md",
+    "docs/HorrorCorridor-Harness-Manifest.json"
+  ],
+  "controlFiles": [
+    {
+      "path": ".agent/start-here.md",
+      "purpose": "Use this workspace to coordinate the HorrorCorridor long-running build toward a high-fidelity procedural horror corridor composed from NexusRealtime kits, public ProtoKits, and local HorrorCorridor ProtoKits."
+    },
+    {
+      "path": ".agent/workflow.md",
+      "purpose": "1. Review `.agent/start-here.md`."
+    },
+    {
+      "path": ".agent/intention.md",
+      "purpose": "Build HorrorCorridor into a high-fidelity procedural cooperative horror corridor using NexusRealtime ecosystem ideas, public ProtoKits where they fit, and local HorrorCorridor ProtoKits where the public ecosystem lacks a needed domain."
+    },
+    {
+      "path": ".agent/live-agent.md",
+      "purpose": "Define how HorrorCorridor should use a long-duration in-game live agent that can observe the player view, choose actions, act through tools, review outcomes, and slowly accumulate durable lessons."
+    },
+    {
+      "path": ".agent/memory.md",
+      "purpose": "`.agent/` is the repo-local control plane. Every future run should start by reviewing `start-here.md`, `workflow.md`, `intention.md`, `live-agent.md`, `memory.md`, `goal.md`, `feedback.md`, and then `change-log.md` before broader repo exploration."
+    },
+    {
+      "path": ".agent/goal.md",
+      "purpose": "Use the NexusRealtime ecosystem on branch family `0.0.2` to compose and build HorrorCorridor into a massive high-fidelity procedural world."
+    },
+    {
+      "path": ".agent/feedback.md",
+      "purpose": "Track direct user corrections that should change how future HorrorCorridor runs are executed."
+    },
+    {
+      "path": "memory.md",
+      "purpose": "HorrorCorridor-V1 is a multiplayer first-person maze horror prototype port. The current priority is preserving prototype feel while incrementally moving runtime, rendering, validation, and content authoring into clearer multi-file architecture."
+    }
+  ],
+  "definitions": [
+    "Kit",
+    "Domain Service Kit",
+    "Preset",
+    "Content Pack",
+    "Preview Surface",
+    "Live Agent",
+    "Reviewer Loop",
+    "Visual Match Loop"
+  ],
+  "promotionPath": [
+    "preview proof",
+    "smoke proof",
+    "live-player proof",
+    "audit and memory update"
+  ]
+}

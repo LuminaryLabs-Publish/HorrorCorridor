@@ -1,0 +1,63 @@
+{
+  "schemaVersion": 1,
+  "moduleId": "game-state-reference-images",
+  "goal": "Maintain target visual references for each major game state so art, lighting, UI absence, and long-session content can be compared against a durable direction.",
+  "referenceSet": {
+    "id": "reference-set-001",
+    "status": "in-progress",
+    "states": [
+      {
+        "id": "solo-spawn-readable-corridor",
+        "gameState": "SOLO_PLAYING_START",
+        "purpose": "Baseline first-person no-HUD corridor readability target.",
+        "promptPath": "../reference-images/prompts/solo-spawn-readable-corridor.prompt.txt",
+        "targetImagePath": "../reference-images/solo-spawn-readable-corridor.png",
+        "status": "planned",
+        "validationUse": [
+          "Compare against starting-scene harness screenshot.",
+          "Check wall/floor/ceiling material breakup and midground route cue."
+        ]
+      },
+      {
+        "id": "anomaly-room-sequence-objective",
+        "gameState": "ANOMALY_OBJECTIVE",
+        "purpose": "Define how the cube/sequence objective space should look without relying on HUD instructions.",
+        "promptPath": "../reference-images/prompts/anomaly-room-sequence-objective.prompt.txt",
+        "targetImagePath": "../reference-images/anomaly-room-sequence-objective.png",
+        "status": "planned",
+        "validationUse": [
+          "Compare anomaly room lighting, pedestal readability, object silhouettes, and placement affordance."
+        ]
+      },
+      {
+        "id": "procedural-loading-section",
+        "gameState": "GENERATING_WORLD",
+        "purpose": "Define staged procedural generation as an inspectable diegetic loading experience.",
+        "promptPath": "../reference-images/prompts/procedural-loading-section.prompt.txt",
+        "targetImagePath": "../reference-images/procedural-loading-section.png",
+        "status": "planned",
+        "validationUse": [
+          "Guide loading scene layout and progress stage readability."
+        ]
+      },
+      {
+        "id": "long-session-deeper-corridor",
+        "gameState": "LONG_SESSION_DEEP_CORRIDOR",
+        "purpose": "Show what later-session content density should become after players have moved through the maze for longer.",
+        "promptPath": "../reference-images/prompts/long-session-deeper-corridor.prompt.txt",
+        "targetImagePath": "../reference-images/long-session-deeper-corridor.png",
+        "status": "planned",
+        "validationUse": [
+          "Guide cumulative content packs: region landmarks, denser props, stronger anomaly traces, and route memory cues."
+        ]
+      }
+    ]
+  },
+  "branchAlignmentQuestion": "Have I checked whether each reference still aligns with the original target of a readable first-person maze horror game and do I need alignment before reconciliation?",
+  "alignment": {
+    "solo-spawn-readable-corridor": "strongly aligned",
+    "anomaly-room-sequence-objective": "strongly aligned",
+    "procedural-loading-section": "strongly aligned",
+    "long-session-deeper-corridor": "strongly aligned"
+  }
+}

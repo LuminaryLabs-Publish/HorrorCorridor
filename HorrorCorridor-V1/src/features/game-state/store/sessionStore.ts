@@ -2,7 +2,7 @@ import { create } from "zustand";
 
 import type { LobbyPlayer, PlayerId, RoomState } from "@/types/shared";
 
-export type SessionMode = "host" | "client";
+export type SessionMode = "solo" | "host" | "client";
 
 export type SessionConnectionStatus =
   | "idle"

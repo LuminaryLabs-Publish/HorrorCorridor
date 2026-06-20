@@ -1,0 +1,6 @@
+{
+  "artifacts": [],
+  "harness": "horror-corridor-live-player-harness",
+  "note": "Dry-run capture copied the reference image as a placeholder because no latest live-player screenshot existed.",
+  "status": "dry-run"
+}

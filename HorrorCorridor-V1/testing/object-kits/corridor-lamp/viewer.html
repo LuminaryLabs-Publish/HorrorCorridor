@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Corridor Lamp Object Review</title>
+    <link rel="stylesheet" href="./review-room.css" />
+  </head>
+  <body>
+    <main class="review-room" data-review-room>
+      <header class="review-header">
+        <div>
+          <p class="eyebrow">HorrorCorridor Object Kit Review</p>
+          <h1>Corridor Lamp Object Review</h1>
+        </div>
+        <div class="score-card" aria-label="current review score">
+          <span class="score-label">Target score</span>
+          <strong>90+</strong>
+          <span class="score-label">Human-view gate</span>
+        </div>
+      </header>
+
+      <section class="review-grid">
+        <aside class="reference-panel" aria-label="reference images and target traits">
+          <h2>References</h2>
+          <figure class="primary-reference">
+            <img
+              src="./references/reference-primary.png"
+              alt="primary generated high quality rusted corridor lamp reference"
+              onerror="this.src='./references/reference-001.svg'; this.closest('figure').classList.add('is-fallback');"
+            />
+            <figcaption>Primary generated target reference</figcaption>
+          </figure>
+          <div class="reference-list">
+            <img src="./references/reference-001.svg" alt="rusted floor lamp reference" />
+            <img src="./references/reference-002.svg" alt="caged industrial lamp head reference" />
+            <img src="./references/reference-003.svg" alt="dirty practical light in corridor reference" />
+            <img src="./references/reference-004.svg" alt="corroded bracket and cable reference" />
+            <img src="./references/reference-005.svg" alt="muddy broken city lamp reference" />
+          </div>
+
+          <div class="target-traits">
+            <h3>Target Traits</h3>
+            <ul>
+              <li>Rusted practical lamp, not cyber neon.</li>
+              <li>Readable pole, base, arm, head, lens, cage, cable.</li>
+              <li>Warm local light that clearly starts at the lamp head.</li>
+              <li>Dirty broken-city horror material: grime, rust, wear.</li>
+              <li>Readable at normal player distance in low light.</li>
+            </ul>
+          </div>
+        </aside>
+
+        <section class="render-panel" aria-label="current lamp render">
+          <div class="render-panel-header">
+            <div>
+              <h2>Current Render</h2>
+              <p id="mode-label">angle: three-quarter / lighting: corridor-dark</p>
+            </div>
+            <div class="status-pill" id="render-status">live three.js</div>
+          </div>
+
+          <div class="canvas-shell">
+            <canvas id="lamp-canvas" width="900" height="620" aria-label="corridor lamp render"></canvas>
+            <div class="scale-guide" aria-hidden="true">
+              <span>2m scale</span>
+              <i></i>
+            </div>
+          </div>
+
+          <div class="controls" aria-label="camera and lighting controls">
+            <button type="button" data-mode="front">front</button>
+            <button type="button" data-mode="side">side</button>
+            <button type="button" data-mode="three-quarter">three-quarter</button>
+            <button type="button" data-mode="top-detail">top-detail</button>
+            <button type="button" data-mode="player-distance">player-distance</button>
+            <button type="button" data-mode="corridor-dark">corridor-dark</button>
+          </div>
+
+          <div class="orbit-controls" aria-label="orbit comparison controls">
+            <h3>8-Angle Orbit Comparison</h3>
+            <p>Used for silhouette ranking. The camera snaps around the same lamp center every 45 degrees.</p>
+            <div class="controls">
+              <button type="button" data-mode="orbit-000">000</button>
+              <button type="button" data-mode="orbit-045">045</button>
+              <button type="button" data-mode="orbit-090">090</button>
+              <button type="button" data-mode="orbit-135">135</button>
+              <button type="button" data-mode="orbit-180">180</button>
+              <button type="button" data-mode="orbit-225">225</button>
+              <button type="button" data-mode="orbit-270">270</button>
+              <button type="button" data-mode="orbit-315">315</button>
+            </div>
+          </div>
+        </section>
+      </section>
+
+      <section class="human-review" aria-label="human review checklist and notes">
+        <div class="checklist">
+          <h2>Human Checklist</h2>
+          <label><input type="checkbox" /> recognizable lamp silhouette</label>
+          <label><input type="checkbox" /> real pole, base, arm, head, cable detail</label>
+          <label><input type="checkbox" /> rust, grime, roughness, and edge wear read at normal size</label>
+          <label><input type="checkbox" /> warm practical light comes from the lamp head</label>
+          <label><input type="checkbox" /> still readable at player-distance view</label>
+          <label><input type="checkbox" /> fits dirty broken-city horror, not neon cyber</label>
+        </div>
+
+        <div class="notes">
+          <h2>Notes + Score</h2>
+          <label>
+            first visible failure
+            <textarea id="first-visible-failure">Unreviewed: capture the review room and compare against the references.</textarea>
+          </label>
+          <label>
+            required change
+            <textarea id="required-change">Choose the smallest visible lever: silhouette, material, lamp-head light origin, scale, or corridor-dark readability.</textarea>
+          </label>
+          <div class="score-row">
+            <label>
+              score
+              <input id="score-input" value="unscored" />
+            </label>
+            <label>
+              promotion status
+              <input id="promotion-status" value="blocked until human-view review passes" />
+            </label>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <script type="module" src="./viewer.mjs"></script>
+  </body>
+</html>

@@ -1,0 +1,104 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "required": [
+    "score",
+    "pass",
+    "firstVisibleFailure",
+    "humanReadableSummary",
+    "topSemanticDifferences",
+    "requiredChanges",
+    "categoryScores",
+    "orbitComparison",
+    "referenceRanking",
+    "promotionStatus"
+  ],
+  "properties": {
+    "score": { "type": "number", "minimum": 0, "maximum": 100 },
+    "pass": { "type": "boolean" },
+    "firstVisibleFailure": { "type": "string" },
+    "humanReadableSummary": { "type": "string" },
+    "topSemanticDifferences": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "requiredChanges": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "categoryScores": {
+      "type": "object",
+      "required": [
+        "lampIdentity",
+        "silhouetteReadability",
+        "geometryDetail",
+        "materialBelievability",
+        "rustGrimeQuality",
+        "lightSourceBelievability",
+        "playerDistanceReadability",
+        "horrorCorridorFit",
+        "artifactFreeRender"
+      ],
+      "properties": {
+        "lampIdentity": { "type": "number", "minimum": 0, "maximum": 100 },
+        "silhouetteReadability": { "type": "number", "minimum": 0, "maximum": 100 },
+        "geometryDetail": { "type": "number", "minimum": 0, "maximum": 100 },
+        "materialBelievability": { "type": "number", "minimum": 0, "maximum": 100 },
+        "rustGrimeQuality": { "type": "number", "minimum": 0, "maximum": 100 },
+        "lightSourceBelievability": { "type": "number", "minimum": 0, "maximum": 100 },
+        "playerDistanceReadability": { "type": "number", "minimum": 0, "maximum": 100 },
+        "horrorCorridorFit": { "type": "number", "minimum": 0, "maximum": 100 },
+        "artifactFreeRender": { "type": "number", "minimum": 0, "maximum": 100 }
+      },
+      "additionalProperties": false
+    },
+    "orbitComparison": {
+      "type": "array",
+      "minItems": 8,
+      "maxItems": 8,
+      "items": {
+        "type": "object",
+        "required": ["angle", "score", "visibleFailure", "bestReferenceMatch"],
+        "properties": {
+          "angle": {
+            "type": "string",
+            "enum": [
+              "orbit-000",
+              "orbit-045",
+              "orbit-090",
+              "orbit-135",
+              "orbit-180",
+              "orbit-225",
+              "orbit-270",
+              "orbit-315"
+            ]
+          },
+          "score": { "type": "number", "minimum": 0, "maximum": 100 },
+          "visibleFailure": { "type": "string" },
+          "bestReferenceMatch": { "type": "string" }
+        },
+        "additionalProperties": false
+      }
+    },
+    "referenceRanking": {
+      "type": "array",
+      "minItems": 5,
+      "maxItems": 5,
+      "items": {
+        "type": "object",
+        "required": ["reference", "rank", "reason"],
+        "properties": {
+          "reference": { "type": "string" },
+          "rank": { "type": "number", "minimum": 1, "maximum": 5 },
+          "reason": { "type": "string" }
+        },
+        "additionalProperties": false
+      }
+    },
+    "promotionStatus": {
+      "type": "string",
+      "enum": ["accept", "retry", "reject", "blocked"]
+    }
+  },
+  "additionalProperties": false
+}

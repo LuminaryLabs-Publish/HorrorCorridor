@@ -1,0 +1,8 @@
+Use case: stylized-concept
+Asset type: game visual target reference
+Primary request: first-person no-HUD HorrorCorridor scene shifted away from neon cyber style into a dark dirty overgrown broken-city corridor maze.
+Scene/backdrop: muddy grassy terrain underfoot, broken concrete and brick corridor walls, rusted utility fragments, roots, weeds, moss, rubble, wet soil, puddles, collapsed boards, scattered trash, and procedural corridor tiles stitched into a maze.
+Subject: a playable first-person corridor route with readable muddy grass terrain, alpha-clipped grass clumps, roots along wall seams, broken city wall modules, one clear midground landmark, warm player spill light, dim cold sky/moon leak, and only a faint sickly anomaly glow in the distance.
+Composition: 75-degree first-person view, no HUD, no text, foreground terrain detail, midground modular corridor tile, visible route around a turn, darkness beyond the readable area.
+Style: grounded survival-horror, abandoned overgrown city understructure, dirty practical lighting, desaturated greens and browns, wet rough materials, not cyberpunk.
+Avoid: neon green cyber city, holographic grid surfaces, clean sci-fi panels, bright terminal UI glow, arcade colors, fantasy forest, daylight scene.

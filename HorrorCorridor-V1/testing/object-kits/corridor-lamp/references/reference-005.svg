@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 420 260">
+  <rect width="420" height="260" fill="#090906"/><rect y="174" width="420" height="86" fill="#252015"/>
+  <path d="M0 202 C70 182 110 216 176 196 C260 171 318 204 420 184 L420 260 L0 260 Z" fill="#312918"/>
+  <g fill="#40351d"><ellipse cx="74" cy="216" rx="26" ry="9"/><ellipse cx="312" cy="205" rx="34" ry="11"/><ellipse cx="360" cy="226" rx="18" ry="7"/></g>
+  <rect x="205" y="52" width="16" height="164" fill="#5a3420"/><rect x="186" y="212" width="58" height="14" fill="#17100b"/>
+  <path d="M214 72 C244 71 263 86 280 104" fill="none" stroke="#18110b" stroke-width="10"/><rect x="272" y="96" width="58" height="36" fill="#653a22"/>
+  <rect x="316" y="104" width="9" height="20" fill="#e8aa62"/><ellipse cx="316" cy="115" rx="88" ry="56" fill="#cc873d" opacity="0.2"/>
+  <text x="18" y="34" fill="#d6b27b" font-family="monospace" font-size="16">mud, rubble, warm local light</text>
+</svg>

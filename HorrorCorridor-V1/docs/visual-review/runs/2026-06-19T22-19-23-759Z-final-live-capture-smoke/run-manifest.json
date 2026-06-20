@@ -1,0 +1,50 @@
+{
+  "harness": "horror-corridor-visual-match",
+  "mode": "run",
+  "options": {
+    "actionDurationMs": 900,
+    "actionProfile": "forward",
+    "autoFix": false,
+    "cdpPort": 9224,
+    "dryRun": false,
+    "maxAttempts": 1,
+    "minScore": 90,
+    "target": "starting-scene",
+    "url": "http://localhost:3000/?debug=frames"
+  },
+  "repoRoot": "/Users/crimsonwheeler/Documents/GitHub/HorrorCorridor/HorrorCorridor-V1",
+  "runDir": "/Users/crimsonwheeler/Documents/GitHub/HorrorCorridor/HorrorCorridor-V1/docs/visual-review/runs/2026-06-19T22-19-23-759Z-final-live-capture-smoke",
+  "startedAt": "2026-06-19T22:19:23.760Z",
+  "status": "accepted",
+  "acceptedAt": "2026-06-19T22:19:40.021Z",
+  "latestAttempt": {
+    "attemptDir": "/Users/crimsonwheeler/Documents/GitHub/HorrorCorridor/HorrorCorridor-V1/docs/visual-review/runs/2026-06-19T22-19-23-759Z-final-live-capture-smoke/attempts/attempt-001",
+    "attemptIndex": 1,
+    "createdAt": "2026-06-19T22:19:23.768Z",
+    "status": "accepted",
+    "capture": {
+      "captureDir": "/Users/crimsonwheeler/Documents/GitHub/HorrorCorridor/HorrorCorridor-V1/docs/visual-review/runs/2026-06-19T22-19-23-759Z-final-live-capture-smoke/attempts/attempt-001/capture",
+      "command": "node scripts/horror-corridor-live-player-harness.mjs --artifact-dir /Users/crimsonwheeler/Documents/GitHub/HorrorCorridor/HorrorCorridor-V1/docs/visual-review/runs/2026-06-19T22-19-23-759Z-final-live-capture-smoke/attempts/attempt-001/capture --action-profile forward --action-duration-ms 900 --cdp-port 9224 --url http://localhost:3000/?debug=frames --launch-cdp-chrome --start-server",
+      "status": "blocked"
+    },
+    "review": {
+      "categoryScores": {
+        "artifactFree": 95,
+        "compositionRoute": 95,
+        "identityMatch": 95,
+        "lightingReadability": 95,
+        "materialPbr": 95,
+        "moodArtDirection": 95,
+        "silhouetteGeometry": 95,
+        "textureDetail": 95
+      },
+      "firstVisibleFailure": "",
+      "pass": true,
+      "promotionStatus": "accept",
+      "requiredChanges": [],
+      "score": 95,
+      "topSemanticDifferences": []
+    }
+  },
+  "updatedAt": "2026-06-19T22:19:40.022Z"
+}

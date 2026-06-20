@@ -1,0 +1,32 @@
+{
+  "harness": "horror-corridor-visual-match",
+  "mode": "run",
+  "options": {
+    "actionDurationMs": 900,
+    "actionProfile": "forward",
+    "autoFix": true,
+    "cdpPort": 9224,
+    "dryRun": true,
+    "maxAttempts": 1,
+    "minScore": 90,
+    "target": "starting-scene",
+    "url": "http://localhost:3000/?debug=frames"
+  },
+  "repoRoot": "/Users/crimsonwheeler/Documents/GitHub/HorrorCorridor/HorrorCorridor-V1",
+  "runDir": "/Users/crimsonwheeler/Documents/GitHub/HorrorCorridor/HorrorCorridor-V1/docs/visual-review/runs/2026-06-19T22-10-40-007Z-mock-accept",
+  "startedAt": "2026-06-19T22:10:40.009Z",
+  "status": "dry-run-blocked",
+  "latestAttempt": {
+    "attemptDir": "/Users/crimsonwheeler/Documents/GitHub/HorrorCorridor/HorrorCorridor-V1/docs/visual-review/runs/2026-06-19T22-10-40-007Z-mock-accept/attempts/attempt-001",
+    "attemptIndex": 1,
+    "createdAt": "2026-06-19T22:10:40.024Z",
+    "status": "blocked",
+    "capture": {
+      "captureDir": "/Users/crimsonwheeler/Documents/GitHub/HorrorCorridor/HorrorCorridor-V1/docs/visual-review/runs/2026-06-19T22-10-40-007Z-mock-accept/attempts/attempt-001/capture",
+      "command": null,
+      "status": "dry-run-no-screenshot"
+    },
+    "error": "starting screenshot was not captured: /Users/crimsonwheeler/Documents/GitHub/HorrorCorridor/HorrorCorridor-V1/docs/visual-review/runs/2026-06-19T22-10-40-007Z-mock-accept/attempts/attempt-001/capture/starting-scene.png"
+  },
+  "updatedAt": "2026-06-19T22:10:40.028Z"
+}

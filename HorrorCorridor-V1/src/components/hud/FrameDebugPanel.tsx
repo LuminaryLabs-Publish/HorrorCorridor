@@ -71,7 +71,7 @@ export default function FrameDebugPanel() {
               </p>
               <p className="mt-1 text-[9px] normal-case tracking-[0.18em] text-[#bde0c0]">
                 players {latestFrame.snapshot.playerCount} | cubes {latestFrame.snapshot.cubeCount} | ooze{" "}
-                {latestFrame.snapshot.oozeCount}
+                {latestFrame.snapshot.oozeCount} | decals {latestFrame.snapshot.decalCount}
               </p>
             </div>
           </div>
@@ -112,6 +112,21 @@ export default function FrameDebugPanel() {
               {latestFrame.cadence.clientUpdatesPerSecond}/s | UI syncs {latestFrame.cadence.uiSyncsPerSecond}/s
             </p>
           </div>
+
+          {latestFrame.sceneDressing ? (
+            <div>
+              <p className="text-[9px] tracking-[0.32em] text-[#8dff9a]">Placement Graph</p>
+              <p className="mt-1 text-[9px] normal-case tracking-[0.18em] text-[#e7ffe9]">
+                anchors {latestFrame.sceneDressing.anchorCount} | sockets {latestFrame.sceneDressing.socketCount} |
+                layouts {latestFrame.sceneDressing.layoutCount} | bundles {latestFrame.sceneDressing.bundleCount}
+              </p>
+              <p className="mt-1 text-[9px] normal-case tracking-[0.18em] text-[#bde0c0]">
+                props {latestFrame.sceneDressing.propCount} | textures {latestFrame.sceneDressing.textureCount} |
+                lights {latestFrame.sceneDressing.lightCount} | checkpoints{" "}
+                {latestFrame.sceneDressing.walkthroughCheckpointCount}
+              </p>
+            </div>
+          ) : null}
 
           <div>
             <p className="text-[9px] tracking-[0.32em] text-[#8dff9a]">Anomaly</p>

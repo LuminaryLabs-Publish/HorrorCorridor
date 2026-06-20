@@ -1,0 +1,8 @@
+Use case: stylized-concept
+Asset type: game visual target reference
+Primary request: later-session deeper corridor target for longer HorrorCorridor play.
+Scene/backdrop: a darker and denser section of the procedural maze after players have explored for a while, with accumulated glowing ooze traces, broken tables, crates, warning panels, cables, pipes, wall stains, and regional landmarks.
+Subject: route memory and tension escalation through visible player traces, denser props, stronger anomaly residue, and a distant objective cue.
+Composition: first-person no-HUD movement frame, foreground hands implied or barely visible, path traces lead around a turn, midground landmarks help orientation, background remains ominous.
+Style: high-fidelity procedural horror game target, readable darkness, modular wall/terrain materials, triplanar brick/block and damp concrete detail, local green light pockets.
+Avoid: combat shooter UI, readable text overlays, empty black corridor, overpopulated clutter blocking movement.

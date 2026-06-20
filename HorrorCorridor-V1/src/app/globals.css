@@ -1,8 +1,10 @@
 @import "tailwindcss";
 
 :root {
-  --background: #020503;
-  --foreground: #9dff9d;
+  --background: #050403;
+  --foreground: #d8d0bb;
+  --font-geist-sans: ui-sans-serif, system-ui, sans-serif;
+  --font-geist-mono: "SFMono-Regular", "Cascadia Code", "Liberation Mono", monospace;
 }
 
 @theme inline {
@@ -22,12 +24,12 @@ body {
   color: var(--foreground);
   font-family: var(--font-geist-mono), monospace;
   background-image:
-    radial-gradient(circle at top, rgba(63, 255, 119, 0.08), transparent 34%),
-    linear-gradient(180deg, rgba(1, 10, 5, 0.98) 0%, rgba(1, 5, 3, 0.96) 46%, rgba(0, 0, 0, 1) 100%);
+    radial-gradient(circle at top, rgba(126, 104, 69, 0.12), transparent 34%),
+    linear-gradient(180deg, rgba(10, 8, 5, 0.98) 0%, rgba(6, 5, 3, 0.96) 46%, rgba(0, 0, 0, 1) 100%);
 }
 
 ::selection {
-  background: rgba(122, 255, 134, 0.25);
+  background: rgba(184, 142, 82, 0.28);
   color: #ffffff;
 }
 

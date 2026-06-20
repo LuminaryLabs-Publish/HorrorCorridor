@@ -1,0 +1,385 @@
+{
+  "schemaVersion": 1,
+  "moduleId": "overgrown-terrain-corridor",
+  "goal": "Shift HorrorCorridor away from neon cyber styling and toward a broken, dark, dirty, overgrown city-like maze where grassy terrain, roots, rubble, and modular corridor tiles are procedurally assembled.",
+  "targetMood": {
+    "use": [
+      "wet soil",
+      "dark grass",
+      "moss",
+      "roots",
+      "broken concrete",
+      "brick",
+      "rusted metal",
+      "collapsed utility objects",
+      "dim sodium or moonlit fill",
+      "faint sickly anomaly glow only as an accent"
+    ],
+    "avoid": [
+      "neon green cyber city",
+      "terminal-grid hologram as the default world style",
+      "clean sci-fi panels",
+      "glowing UI-like surfaces everywhere",
+      "overbright arcade palette"
+    ]
+  },
+  "rootIdeas": [
+    {
+      "id": "dark-dirty-terrain-foundation",
+      "status": "planned",
+      "hypothesis": "The world will feel more physical and less cyber if the floor becomes a terrain domain first: muddy grass, soil, puddles, roots, rubble, and worn path masks.",
+      "subtests": [
+        {
+          "id": "terrain-field-domain-kit",
+          "status": "candidate",
+          "kitResponsibility": "Convert maze walkable cells into terrain patches with slope, wetness, grass density, mud density, rubble density, and path-wear masks.",
+          "acceptance": [
+            "Terrain descriptors are separate from wall/corridor descriptors.",
+            "Walkable maze cells remain collision-safe.",
+            "Debug output reports terrain patch counts and density ranges."
+          ],
+          "children": [
+            {
+              "id": "mud-grass-mask-generation",
+              "status": "candidate",
+              "test": "Generate deterministic grass/mud/puddle masks from maze seed and distance to route center."
+            },
+            {
+              "id": "terrain-safe-zone-rules",
+              "status": "candidate",
+              "test": "Keep spawn, anomaly, cube pickups, and core path clear while still dressing edges."
+            }
+          ]
+        },
+        {
+          "id": "terrain-shader-domain-kit",
+          "status": "candidate",
+          "kitResponsibility": "Provide shader descriptors for triplanar or projected terrain layers: soil, moss, grass, water sheen, rough concrete, and packed dirt.",
+          "acceptance": [
+            "Grass and mud are visible in player screenshots.",
+            "Terrain reads dirty and natural, not glowing cyber green.",
+            "The shader can be tuned by preset without changing generic kit code."
+          ],
+          "children": [
+            {
+              "id": "triplanar-terrain-blend",
+              "status": "candidate",
+              "test": "Blend grass, mud, and broken concrete using world-space noise and cell masks."
+            },
+            {
+              "id": "wetness-roughness-variation",
+              "status": "candidate",
+              "test": "Add procedural roughness/wetness variation so puddles and mud catch local light."
+            }
+          ]
+        },
+        {
+          "id": "grass-object-spawn-kit",
+          "status": "candidate",
+          "kitResponsibility": "Spawn non-blocking grass clumps, weeds, roots, small branches, stones, puddle decals, and trash objects on terrain descriptors.",
+          "acceptance": [
+            "Objects appear on top of terrain, not floating or z-fighting.",
+            "Foreground/midground screenshots show at least one terrain object cluster.",
+            "Object density stays low enough for route readability."
+          ],
+          "children": [
+            {
+              "id": "instanced-grass-clumps",
+              "status": "candidate",
+              "test": "Use alpha-clipped instanced grass cards with dirty desaturated color."
+            },
+            {
+              "id": "root-and-vine-strips",
+              "status": "candidate",
+              "test": "Place root/vine strips along wall/floor junctions using adjacency samples."
+            },
+            {
+              "id": "rubble-and-trash-props",
+              "status": "candidate",
+              "test": "Add broken bottles, bricks, boards, paper, and small debris as non-blocking props."
+            }
+          ]
+        }
+      ],
+      "risks": [
+        "Grass cards can look cheap if alpha clipping, lighting, and density are not controlled.",
+        "Too much floor clutter can hide route readability and ooze trails.",
+        "Green grass can drift back into neon unless palette is desaturated and dirty."
+      ]
+    },
+    {
+      "id": "procedural-corridor-tile-maze",
+      "status": "planned",
+      "hypothesis": "The maze should be assembled from modular broken-city corridor tiles on top of terrain rather than rendered as one uniform wall/floor grid.",
+      "subtests": [
+        {
+          "id": "corridor-tile-domain-kit",
+          "status": "candidate",
+          "kitResponsibility": "Define reusable tile archetypes: straight, corner, T-junction, cross, dead-end, anomaly approach, collapsed side, narrow choke, and overgrown pocket.",
+          "acceptance": [
+            "Each maze cell or cell cluster resolves to a tile archetype.",
+            "Tiles preserve walkable connectivity.",
+            "Tile variants are seeded and deterministic."
+          ],
+          "children": [
+            {
+              "id": "connectivity-signature-classifier",
+              "status": "candidate",
+              "test": "Classify each walkable cell by open north/east/south/west neighbors."
+            },
+            {
+              "id": "tile-variant-selection",
+              "status": "candidate",
+              "test": "Choose visual variants from seed, region, and proximity to objectives."
+            }
+          ]
+        },
+        {
+          "id": "broken-city-wall-kit",
+          "status": "candidate",
+          "kitResponsibility": "Generate modular walls from brick, broken concrete, chain-link, boarded gaps, rusted service doors, and collapsed city fragments.",
+          "acceptance": [
+            "Walls no longer read as large flat green slabs.",
+            "Brick/concrete modules are visible but not overbright.",
+            "Openings, cracks, and damage are decorative first and do not break collision."
+          ],
+          "children": [
+            {
+              "id": "brick-and-concrete-triplanar",
+              "status": "candidate",
+              "test": "Apply broken brick/concrete triplanar shader to wall modules."
+            },
+            {
+              "id": "wall-damage-decal-placement",
+              "status": "candidate",
+              "test": "Place cracks, moss, water stains, and dirt at wall/floor seams."
+            }
+          ]
+        },
+        {
+          "id": "tile-scene-dressing-kit",
+          "status": "candidate",
+          "kitResponsibility": "Attach local dressing to tiles: grass pockets, table remains, benches, crates, pipes, vents, cables, boards, signage fragments, and blocked side paths.",
+          "acceptance": [
+            "Each region has recognizable landmarks.",
+            "Props do not block required routes in the first pass.",
+            "Content density can increase over long-session depth."
+          ],
+          "children": [
+            {
+              "id": "landmark-tile-rules",
+              "status": "candidate",
+              "test": "Guarantee at least one visible landmark near spawn, route branches, and anomaly approach."
+            },
+            {
+              "id": "long-session-density-ramp",
+              "status": "candidate",
+              "test": "Increase vegetation, rubble, anomaly residue, and broken-city props deeper in the maze."
+            }
+          ]
+        }
+      ],
+      "risks": [
+        "Tile modularity can become visually repetitive without variant and dressing rules.",
+        "Tile assembly must not collapse the existing prototype maze behavior.",
+        "Collision should remain grid-owned until visual tiles are validated."
+      ]
+    },
+    {
+      "id": "broken-city-lighting",
+      "status": "candidate",
+      "hypothesis": "Lighting should shift from neon terminal green to practical, dirty environmental light: weak moon/sky leak, sodium spill, warm player light, and rare sickly anomaly accents.",
+      "subtests": [
+        {
+          "id": "dirty-practical-light-kit",
+          "status": "candidate",
+          "kitResponsibility": "Place dim practical lights from broken fixtures, puddle reflections, open ceiling gaps, and anomaly residue.",
+          "acceptance": [
+            "The scene is readable without feeling cyber.",
+            "Green is rare and mainly tied to anomaly/trails.",
+            "Light sources visibly shape terrain, grass, and wall modules."
+          ]
+        },
+        {
+          "id": "terrain-readable-fog-kit",
+          "status": "candidate",
+          "kitResponsibility": "Tune fog around terrain readability: haze should reveal depth, not crush grass/walls into black.",
+          "acceptance": [
+            "Foreground grass and muddy floor remain visible.",
+            "Midground route cue remains visible.",
+            "Background still falls into horror darkness."
+          ]
+        }
+      ],
+      "risks": [
+        "Removing neon green requires alternate readability support from albedo, warm lights, and fog.",
+        "Dirty lighting can become brown mush without screenshot gating."
+      ]
+    }
+  ],
+  "kitInventory": [
+    {
+      "id": "terrain-field-domain-kit",
+      "type": "generic-domain-kit",
+      "provides": [
+        "terrain.patch-descriptors",
+        "terrain.density-fields",
+        "terrain.safe-zones"
+      ],
+      "requires": [
+        "grid-maze.cells",
+        "grid-field.occupancy"
+      ],
+      "customizedByPreset": [
+        "grassDensity",
+        "mudDensity",
+        "wetness",
+        "rubbleDensity",
+        "safeRadius"
+      ]
+    },
+    {
+      "id": "terrain-shader-domain-kit",
+      "type": "generic-domain-kit",
+      "provides": [
+        "shader.terrain-triplanar",
+        "material.terrain-layers"
+      ],
+      "requires": [
+        "terrain.patch-descriptors"
+      ],
+      "customizedByPreset": [
+        "soilPalette",
+        "grassPalette",
+        "wetnessResponse",
+        "roughnessRange"
+      ]
+    },
+    {
+      "id": "grass-object-spawn-kit",
+      "type": "generic-domain-kit",
+      "provides": [
+        "object.grass-clump-descriptors",
+        "object.root-descriptors",
+        "object.rubble-descriptors"
+      ],
+      "requires": [
+        "terrain.patch-descriptors",
+        "raymarch.surface-samples"
+      ],
+      "customizedByPreset": [
+        "grassCardStyles",
+        "rootStyles",
+        "trashStyles",
+        "maxVisibleDensity"
+      ]
+    },
+    {
+      "id": "corridor-tile-domain-kit",
+      "type": "generic-domain-kit",
+      "provides": [
+        "tile.connectivity-signatures",
+        "tile.variant-descriptors",
+        "tile.region-descriptors"
+      ],
+      "requires": [
+        "grid-maze.cells"
+      ],
+      "customizedByPreset": [
+        "tileSet",
+        "variantWeights",
+        "regionThemes"
+      ]
+    },
+    {
+      "id": "broken-city-wall-kit",
+      "type": "generic-domain-kit",
+      "provides": [
+        "wall.module-descriptors",
+        "wall.damage-descriptors",
+        "wall.material-profiles"
+      ],
+      "requires": [
+        "tile.variant-descriptors",
+        "raymarch.wall-samples"
+      ],
+      "customizedByPreset": [
+        "brickPalette",
+        "concretePalette",
+        "damageDensity",
+        "mossDensity"
+      ]
+    },
+    {
+      "id": "tile-scene-dressing-kit",
+      "type": "generic-domain-kit",
+      "provides": [
+        "prop.tile-dressing-descriptors",
+        "landmark.region-markers"
+      ],
+      "requires": [
+        "tile.variant-descriptors",
+        "terrain.patch-descriptors",
+        "prop-descriptor.definitions"
+      ],
+      "customizedByPreset": [
+        "landmarkFrequency",
+        "debrisDensity",
+        "overgrowthDensity"
+      ]
+    },
+    {
+      "id": "dirty-practical-light-kit",
+      "type": "generic-domain-kit",
+      "provides": [
+        "lighting.practical-descriptors",
+        "lighting.readability-samples"
+      ],
+      "requires": [
+        "tile.variant-descriptors",
+        "terrain.patch-descriptors",
+        "raymarch.visibility-samples"
+      ],
+      "customizedByPreset": [
+        "moonFill",
+        "sodiumFill",
+        "playerLightWarmth",
+        "anomalyAccentStrength"
+      ]
+    },
+    {
+      "id": "terrain-walkthrough-validation-kit",
+      "type": "generic-domain-kit",
+      "provides": [
+        "validation.terrain-readable",
+        "validation.route-clearance",
+        "validation.visible-landmarks"
+      ],
+      "requires": [
+        "terrain.patch-descriptors",
+        "tile.variant-descriptors",
+        "render.debug-state"
+      ],
+      "customizedByPreset": [
+        "minTerrainVisibility",
+        "minLandmarkCoverage",
+        "maxClutterCoverage"
+      ]
+    }
+  ],
+  "nextBestBatch": {
+    "id": "overgrown-terrain-batch-001",
+    "type": "art-direction-and-descriptor-foundation",
+    "work": [
+      "Retarget product direction away from neon cyber and toward dirty overgrown broken-city horror.",
+      "Add terrain/tile kit contracts before touching renderer behavior.",
+      "Add one reference prompt for the overgrown corridor spawn target.",
+      "Then implement a small visual spike: terrain shader colors plus alpha-clipped grass cards in solo mode."
+    ],
+    "validation": [
+      "Run build/lint after code changes.",
+      "Use live-player harness screenshot to check terrain readability, visible grass/rubble, and non-cyber palette.",
+      "Record status back into this JSON module."
+    ]
+  }
+}

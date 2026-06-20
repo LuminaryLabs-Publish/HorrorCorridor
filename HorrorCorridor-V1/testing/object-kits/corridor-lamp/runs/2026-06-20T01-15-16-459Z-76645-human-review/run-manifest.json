@@ -1,0 +1,183 @@
+{
+  "completedAt": "2026-06-20T01:15:55.580Z",
+  "captures": [
+    {
+      "mode": "front",
+      "kind": "review",
+      "rawCanvasPath": "testing/object-kits/corridor-lamp/runs/2026-06-20T01-15-16-459Z-76645-human-review/screenshots/raw-canvas-front.png",
+      "reviewRoomPath": "testing/object-kits/corridor-lamp/runs/2026-06-20T01-15-16-459Z-76645-human-review/screenshots/review-room-front.png"
+    },
+    {
+      "mode": "side",
+      "kind": "review",
+      "rawCanvasPath": "testing/object-kits/corridor-lamp/runs/2026-06-20T01-15-16-459Z-76645-human-review/screenshots/raw-canvas-side.png",
+      "reviewRoomPath": "testing/object-kits/corridor-lamp/runs/2026-06-20T01-15-16-459Z-76645-human-review/screenshots/review-room-side.png"
+    },
+    {
+      "mode": "three-quarter",
+      "kind": "review",
+      "rawCanvasPath": "testing/object-kits/corridor-lamp/runs/2026-06-20T01-15-16-459Z-76645-human-review/screenshots/raw-canvas-three-quarter.png",
+      "reviewRoomPath": "testing/object-kits/corridor-lamp/runs/2026-06-20T01-15-16-459Z-76645-human-review/screenshots/review-room-three-quarter.png"
+    },
+    {
+      "mode": "player-distance",
+      "kind": "review",
+      "rawCanvasPath": "testing/object-kits/corridor-lamp/runs/2026-06-20T01-15-16-459Z-76645-human-review/screenshots/raw-canvas-player-distance.png",
+      "reviewRoomPath": "testing/object-kits/corridor-lamp/runs/2026-06-20T01-15-16-459Z-76645-human-review/screenshots/review-room-player-distance.png"
+    },
+    {
+      "mode": "corridor-dark",
+      "kind": "review",
+      "rawCanvasPath": "testing/object-kits/corridor-lamp/runs/2026-06-20T01-15-16-459Z-76645-human-review/screenshots/raw-canvas-corridor-dark.png",
+      "reviewRoomPath": "testing/object-kits/corridor-lamp/runs/2026-06-20T01-15-16-459Z-76645-human-review/screenshots/review-room-corridor-dark.png"
+    },
+    {
+      "mode": "orbit-000",
+      "kind": "orbit",
+      "rawCanvasPath": "testing/object-kits/corridor-lamp/runs/2026-06-20T01-15-16-459Z-76645-human-review/screenshots/raw-canvas-orbit-000.png",
+      "reviewRoomPath": "testing/object-kits/corridor-lamp/runs/2026-06-20T01-15-16-459Z-76645-human-review/screenshots/review-room-orbit-000.png"
+    },
+    {
+      "mode": "orbit-045",
+      "kind": "orbit",
+      "rawCanvasPath": "testing/object-kits/corridor-lamp/runs/2026-06-20T01-15-16-459Z-76645-human-review/screenshots/raw-canvas-orbit-045.png",
+      "reviewRoomPath": "testing/object-kits/corridor-lamp/runs/2026-06-20T01-15-16-459Z-76645-human-review/screenshots/review-room-orbit-045.png"
+    },
+    {
+      "mode": "orbit-090",
+      "kind": "orbit",
+      "rawCanvasPath": "testing/object-kits/corridor-lamp/runs/2026-06-20T01-15-16-459Z-76645-human-review/screenshots/raw-canvas-orbit-090.png",
+      "reviewRoomPath": "testing/object-kits/corridor-lamp/runs/2026-06-20T01-15-16-459Z-76645-human-review/screenshots/review-room-orbit-090.png"
+    },
+    {
+      "mode": "orbit-135",
+      "kind": "orbit",
+      "rawCanvasPath": "testing/object-kits/corridor-lamp/runs/2026-06-20T01-15-16-459Z-76645-human-review/screenshots/raw-canvas-orbit-135.png",
+      "reviewRoomPath": "testing/object-kits/corridor-lamp/runs/2026-06-20T01-15-16-459Z-76645-human-review/screenshots/review-room-orbit-135.png"
+    },
+    {
+      "mode": "orbit-180",
+      "kind": "orbit",
+      "rawCanvasPath": "testing/object-kits/corridor-lamp/runs/2026-06-20T01-15-16-459Z-76645-human-review/screenshots/raw-canvas-orbit-180.png",
+      "reviewRoomPath": "testing/object-kits/corridor-lamp/runs/2026-06-20T01-15-16-459Z-76645-human-review/screenshots/review-room-orbit-180.png"
+    },
+    {
+      "mode": "orbit-225",
+      "kind": "orbit",
+      "rawCanvasPath": "testing/object-kits/corridor-lamp/runs/2026-06-20T01-15-16-459Z-76645-human-review/screenshots/raw-canvas-orbit-225.png",
+      "reviewRoomPath": "testing/object-kits/corridor-lamp/runs/2026-06-20T01-15-16-459Z-76645-human-review/screenshots/review-room-orbit-225.png"
+    },
+    {
+      "mode": "orbit-270",
+      "kind": "orbit",
+      "rawCanvasPath": "testing/object-kits/corridor-lamp/runs/2026-06-20T01-15-16-459Z-76645-human-review/screenshots/raw-canvas-orbit-270.png",
+      "reviewRoomPath": "testing/object-kits/corridor-lamp/runs/2026-06-20T01-15-16-459Z-76645-human-review/screenshots/review-room-orbit-270.png"
+    },
+    {
+      "mode": "orbit-315",
+      "kind": "orbit",
+      "rawCanvasPath": "testing/object-kits/corridor-lamp/runs/2026-06-20T01-15-16-459Z-76645-human-review/screenshots/raw-canvas-orbit-315.png",
+      "reviewRoomPath": "testing/object-kits/corridor-lamp/runs/2026-06-20T01-15-16-459Z-76645-human-review/screenshots/review-room-orbit-315.png"
+    }
+  ],
+  "kit": "corridor-lamp",
+  "playwrightSource": "nexus-simulator",
+  "review": {
+    "categoryScores": {
+      "artifactFreeRender": 95,
+      "geometryDetail": 95,
+      "horrorCorridorFit": 95,
+      "lampIdentity": 95,
+      "lightSourceBelievability": 95,
+      "materialBelievability": 95,
+      "playerDistanceReadability": 95,
+      "rustGrimeQuality": 95,
+      "silhouetteReadability": 95
+    },
+    "firstVisibleFailure": "",
+    "humanReadableSummary": "Mock accepted: the review-room lamp is treated as human-readable.",
+    "pass": true,
+    "promotionStatus": "accept",
+    "orbitComparison": [
+      {
+        "angle": "orbit-000",
+        "bestReferenceMatch": "reference-001",
+        "score": 95,
+        "visibleFailure": ""
+      },
+      {
+        "angle": "orbit-045",
+        "bestReferenceMatch": "reference-001",
+        "score": 95,
+        "visibleFailure": ""
+      },
+      {
+        "angle": "orbit-090",
+        "bestReferenceMatch": "reference-001",
+        "score": 95,
+        "visibleFailure": ""
+      },
+      {
+        "angle": "orbit-135",
+        "bestReferenceMatch": "reference-001",
+        "score": 95,
+        "visibleFailure": ""
+      },
+      {
+        "angle": "orbit-180",
+        "bestReferenceMatch": "reference-001",
+        "score": 95,
+        "visibleFailure": ""
+      },
+      {
+        "angle": "orbit-225",
+        "bestReferenceMatch": "reference-001",
+        "score": 95,
+        "visibleFailure": ""
+      },
+      {
+        "angle": "orbit-270",
+        "bestReferenceMatch": "reference-001",
+        "score": 95,
+        "visibleFailure": ""
+      },
+      {
+        "angle": "orbit-315",
+        "bestReferenceMatch": "reference-001",
+        "score": 95,
+        "visibleFailure": ""
+      }
+    ],
+    "referenceRanking": [
+      {
+        "rank": 1,
+        "reason": "Closest match for rusted practical-lamp silhouette.",
+        "reference": "reference-001"
+      },
+      {
+        "rank": 2,
+        "reason": "Best match for caged lamp-head detail.",
+        "reference": "reference-002"
+      },
+      {
+        "rank": 3,
+        "reason": "Best match for low-light corridor context.",
+        "reference": "reference-003"
+      },
+      {
+        "rank": 4,
+        "reason": "Best match for bracket and cable detail.",
+        "reference": "reference-004"
+      },
+      {
+        "rank": 5,
+        "reason": "Best match for broken-city mood.",
+        "reference": "reference-005"
+      }
+    ],
+    "requiredChanges": [],
+    "score": 95,
+    "topSemanticDifferences": []
+  },
+  "status": "accepted"
+}

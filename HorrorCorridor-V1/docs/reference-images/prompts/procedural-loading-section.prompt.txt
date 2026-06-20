@@ -1,0 +1,8 @@
+Use case: stylized-concept
+Asset type: game visual target reference
+Primary request: diegetic procedural loading section for HorrorCorridor.
+Scene/backdrop: an abstract corridor boot/loading space where maze generation, raymarch sampling, prop placement, material baking, lighting validation, and player handoff are represented as layered green holographic grid scans over dark industrial surfaces.
+Subject: inspectable loading state before gameplay starts, with stage cards embedded into the environment, flickering scanlines, ghosted maze geometry, and no normal gameplay HUD.
+Composition: centered corridor vanishing point, semi-transparent grid and generation layers, readable stage progression without clutter.
+Style: terminal-horror, technical, clean enough for loading feedback, still atmospheric and dark.
+Avoid: generic loading spinner, bright white UI, fantasy magic, unreadable tiny text.

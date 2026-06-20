@@ -1,0 +1,382 @@
+{
+  "artifacts": [
+    "/Users/crimsonwheeler/Documents/GitHub/HorrorCorridor/HorrorCorridor-V1/docs/live-player-harness/direct-test/starting-scene.png",
+    "/Users/crimsonwheeler/Documents/GitHub/HorrorCorridor/HorrorCorridor-V1/docs/live-player-harness/direct-test/report.json"
+  ],
+  "createdAt": "2026-06-19T05:04:20.189Z",
+  "harness": "horror-corridor-live-player-harness",
+  "nexusSimulator": {
+    "commandVocabulary": [
+      "openPage",
+      "click",
+      "holdKey",
+      "assertCanvasExists",
+      "captureScreenshot",
+      "assertGlobalState"
+    ],
+    "root": "/Users/crimsonwheeler/Documents/GitHub/NexusSimulator/NexusSimulator-V1",
+    "source": "local script aligned to NexusSimulator playwright-simtime semantics"
+  },
+  "options": {
+    "artifactDir": "/Users/crimsonwheeler/Documents/GitHub/HorrorCorridor/HorrorCorridor-V1/docs/live-player-harness/direct-test",
+    "browserExecutable": "",
+    "browserEngine": "all",
+    "cdpUrl": "http://127.0.0.1:9224",
+    "cdpPort": 9224,
+    "dryRun": false,
+    "headed": false,
+    "launchCdpChrome": true,
+    "skipBrowser": false,
+    "startServer": true,
+    "url": "http://localhost:3000/?debug=frames",
+    "thresholds": {
+      "centerCropRatio": 0.82,
+      "maxDarkRatio": 0.55,
+      "minLightRatio": 0.15,
+      "minLights": 8,
+      "minMovementDelta": 0.25,
+      "minProps": 48,
+      "minTextures": 96,
+      "maxHudChromeBrightPixels": 25
+    }
+  },
+  "repoRoot": "/Users/crimsonwheeler/Documents/GitHub/HorrorCorridor/HorrorCorridor-V1",
+  "status": "failed",
+  "server": {
+    "started": true
+  },
+  "cdpLaunch": {
+    "launched": false,
+    "message": "CDP already reachable at http://127.0.0.1:9224",
+    "url": "http://127.0.0.1:9224"
+  },
+  "playwrightSource": "nexus-simulator",
+  "cdpProbe": {
+    "defaultUrls": [
+      "http://127.0.0.1:9222",
+      "http://127.0.0.1:9223"
+    ],
+    "reachableUrls": [
+      "http://127.0.0.1:9224",
+      "http://127.0.0.1:9222"
+    ],
+    "requestedUrl": "http://127.0.0.1:9224"
+  },
+  "launchMode": "cdp:http://127.0.0.1:9224",
+  "playMode": "solo",
+  "canvas": {
+    "height": 900,
+    "width": 1400
+  },
+  "consoleErrors": [],
+  "debugAfter": {
+    "enabled": true,
+    "eventCount": 32,
+    "frameCount": 102,
+    "latestFrame": {
+      "frameNumber": 102,
+      "deltaMs": 15.699999999999818,
+      "elapsedMs": 3038.5,
+      "recordedAtMs": 1781845469688,
+      "mode": "solo-sim",
+      "screen": "PLAYING",
+      "pointerLocked": false,
+      "roomId": "solo-corridor-2cjw8qs9zo",
+      "localPlayerId": "solo-player-9or64ys9zo",
+      "localPose": {
+        "position": {
+          "x": 385.7422000000007,
+          "y": 2,
+          "z": 377.5
+        },
+        "rotationY": -1.5707963267948966,
+        "pitch": 0,
+        "velocity": {
+          "x": 0,
+          "y": 0,
+          "z": 0
+        },
+        "carryingCubeId": null
+      },
+      "input": {
+        "moveForward": 0,
+        "moveStrafe": 0,
+        "interact": false,
+        "pause": false,
+        "lookDeltaX": 0,
+        "lookDeltaY": 0,
+        "pointerLocked": false
+      },
+      "snapshot": {
+        "tick": 31,
+        "timestampMs": 1781845469672,
+        "appState": "PLAYING",
+        "gameState": "playing",
+        "playerCount": 1,
+        "cubeCount": 3,
+        "oozeCount": 4,
+        "decalCount": 4,
+        "slotsFilled": 0,
+        "cubeStates": {
+          "ground": 3,
+          "held": 0,
+          "placed": 0
+        },
+        "localPlayer": {
+          "id": "solo-player-9or64ys9zo",
+          "color": "#FF0055",
+          "position": {
+            "x": 385.7422000000007,
+            "y": 2,
+            "z": 377.5
+          },
+          "rotationY": -1.5707963267948966,
+          "pitch": 0
+        }
+      },
+      "cubes": [
+        {
+          "id": "cube_RED",
+          "color": "RED",
+          "state": "ground",
+          "ownerId": null,
+          "position": {
+            "x": 572.5,
+            "y": 0.12,
+            "z": 257.5
+          }
+        },
+        {
+          "id": "cube_GREEN",
+          "color": "GREEN",
+          "state": "ground",
+          "ownerId": null,
+          "position": {
+            "x": 412.5,
+            "y": 0.12,
+            "z": 702.5
+          }
+        },
+        {
+          "id": "cube_BLUE",
+          "color": "BLUE",
+          "state": "ground",
+          "ownerId": null,
+          "position": {
+            "x": 732.5,
+            "y": 0.12,
+            "z": 492.5
+          }
+        }
+      ],
+      "anomaly": {
+        "sequence": [
+          "GREEN",
+          "RED",
+          "BLUE"
+        ],
+        "slots": [
+          null,
+          null,
+          null
+        ]
+      },
+      "cadence": {
+        "networkTickAgeMs": 16,
+        "authoritativePublishesPerSecond": 15,
+        "clientUpdatesPerSecond": 0,
+        "uiSyncsPerSecond": 9
+      },
+      "sceneDressing": {
+        "propCount": 140,
+        "textureCount": 260,
+        "lightCount": 27,
+        "walkthroughCheckpointCount": 8,
+        "validation": {
+          "meetsPropThreshold": true,
+          "meetsTextureThreshold": true,
+          "meetsLightThreshold": true,
+          "readableSpawnView": true
+        }
+      }
+    },
+    "overlayVisible": false
+  },
+  "debugBefore": {
+    "enabled": true,
+    "eventCount": 9,
+    "frameCount": 27,
+    "latestFrame": {
+      "frameNumber": 27,
+      "deltaMs": 16.700000000000045,
+      "elapsedMs": 1789.5,
+      "recordedAtMs": 1781845468438,
+      "mode": "solo-sim",
+      "screen": "PLAYING",
+      "pointerLocked": false,
+      "roomId": "solo-corridor-2cjw8qs9zo",
+      "localPlayerId": "solo-player-9or64ys9zo",
+      "localPose": {
+        "position": {
+          "x": 377.5,
+          "y": 2,
+          "z": 377.5
+        },
+        "rotationY": -1.5707963267948966,
+        "pitch": 0,
+        "velocity": {
+          "x": 0,
+          "y": 0,
+          "z": 0
+        },
+        "carryingCubeId": null
+      },
+      "input": {
+        "moveForward": 0,
+        "moveStrafe": 0,
+        "interact": false,
+        "pause": false,
+        "lookDeltaX": 0,
+        "lookDeltaY": 0,
+        "pointerLocked": false
+      },
+      "snapshot": {
+        "tick": 8,
+        "timestampMs": 1781845468405,
+        "appState": "PLAYING",
+        "gameState": "playing",
+        "playerCount": 1,
+        "cubeCount": 3,
+        "oozeCount": 1,
+        "decalCount": 1,
+        "slotsFilled": 0,
+        "cubeStates": {
+          "ground": 3,
+          "held": 0,
+          "placed": 0
+        },
+        "localPlayer": {
+          "id": "solo-player-9or64ys9zo",
+          "color": "#FF0055",
+          "position": {
+            "x": 377.5,
+            "y": 2,
+            "z": 377.5
+          },
+          "rotationY": -1.5707963267948966,
+          "pitch": 0
+        }
+      },
+      "cubes": [
+        {
+          "id": "cube_RED",
+          "color": "RED",
+          "state": "ground",
+          "ownerId": null,
+          "position": {
+            "x": 572.5,
+            "y": 0.12,
+            "z": 257.5
+          }
+        },
+        {
+          "id": "cube_GREEN",
+          "color": "GREEN",
+          "state": "ground",
+          "ownerId": null,
+          "position": {
+            "x": 412.5,
+            "y": 0.12,
+            "z": 702.5
+          }
+        },
+        {
+          "id": "cube_BLUE",
+          "color": "BLUE",
+          "state": "ground",
+          "ownerId": null,
+          "position": {
+            "x": 732.5,
+            "y": 0.12,
+            "z": 492.5
+          }
+        }
+      ],
+      "anomaly": {
+        "sequence": [
+          "GREEN",
+          "RED",
+          "BLUE"
+        ],
+        "slots": [
+          null,
+          null,
+          null
+        ]
+      },
+      "cadence": {
+        "networkTickAgeMs": 33,
+        "authoritativePublishesPerSecond": 0,
+        "clientUpdatesPerSecond": 0,
+        "uiSyncsPerSecond": 0
+      },
+      "sceneDressing": {
+        "propCount": 140,
+        "textureCount": 260,
+        "lightCount": 27,
+        "walkthroughCheckpointCount": 8,
+        "validation": {
+          "meetsPropThreshold": true,
+          "meetsTextureThreshold": true,
+          "meetsLightThreshold": true,
+          "readableSpawnView": true
+        }
+      }
+    },
+    "overlayVisible": false
+  },
+  "hudChrome": {
+    "bottomLeftBrightPixels": 0,
+    "sampledPixels": 14112,
+    "region": {
+      "left": 0,
+      "top": 774,
+      "right": 112,
+      "bottom": 900
+    }
+  },
+  "luminance": {
+    "average": 17.15369627485904,
+    "crop": {
+      "left": 126,
+      "top": 81,
+      "right": 1274,
+      "bottom": 819,
+      "centerCropRatio": 0.82
+    },
+    "darkRatio": 0.7591097513762594,
+    "height": 900,
+    "lightRatio": 0.08708086645326384,
+    "path": "/Users/crimsonwheeler/Documents/GitHub/HorrorCorridor/HorrorCorridor-V1/docs/live-player-harness/direct-test/starting-scene.png",
+    "width": 1400
+  },
+  "validation": {
+    "gates": {
+      "canvasMounted": true,
+      "hiddenPlayUi": true,
+      "noHudIconChrome": true,
+      "lightCount": true,
+      "luminanceReadable": false,
+      "movementChanged": true,
+      "playingReached": true,
+      "propCount": true,
+      "textureCount": true
+    },
+    "movementDelta": 8.242200000000707,
+    "passed": false
+  },
+  "visibleText": {
+    "length": 0,
+    "sample": ""
+  }
+}

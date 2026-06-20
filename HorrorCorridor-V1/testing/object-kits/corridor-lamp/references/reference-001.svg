@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 420 260">
+  <defs><radialGradient id="g" cx="65%" cy="34%" r="54%"><stop stop-color="#d79a52"/><stop offset="0.26" stop-color="#5c351e"/><stop offset="1" stop-color="#090806"/></radialGradient></defs>
+  <rect width="420" height="260" fill="#0b0907"/><rect y="190" width="420" height="70" fill="#211a12"/>
+  <rect x="190" y="42" width="18" height="178" rx="5" fill="#6c4126"/><rect x="166" y="216" width="72" height="16" fill="#21160f"/>
+  <path d="M199 62 C232 58 247 72 262 92" fill="none" stroke="#20150e" stroke-width="13" stroke-linecap="round"/>
+  <rect x="247" y="78" width="62" height="34" rx="7" fill="#6c4126"/><rect x="292" y="84" width="11" height="23" fill="#e6aa5d"/>
+  <circle cx="296" cy="95" r="66" fill="url(#g)" opacity="0.55"/><text x="18" y="34" fill="#d6b27b" font-family="monospace" font-size="16">rusted practical floor lamp</text>
+</svg>

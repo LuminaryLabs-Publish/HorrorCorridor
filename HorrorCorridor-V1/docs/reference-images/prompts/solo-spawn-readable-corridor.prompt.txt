@@ -1,0 +1,8 @@
+Use case: stylized-concept
+Asset type: game visual target reference
+Primary request: first-person no-HUD horror corridor spawn view for HorrorCorridor.
+Scene/backdrop: a long procedural industrial maze corridor, green-black horror palette, damp floor, modular brick/block walls separated from floor terrain, ceiling service panels, pipes, cables, vents, grime, subtle fog.
+Subject: the playable starting corridor with a clear route cue, readable wall/floor/ceiling separation, local warm player-follow light, green fill lights, one midground landmark, no text, no HUD, no characters.
+Composition: first-person eye height, wide 75-degree field of view, foreground floor texture visible, midground wall modules visible, distant darkness with faint anomaly glow.
+Style: high-fidelity game concept frame, cinematic but playable, dark yet human-readable, procedural PBR material feel, triplanar brick and damp concrete texture cues.
+Avoid: black empty frame, flat slabs, UI panels, readable words, overbright sci-fi neon, cartoon style.

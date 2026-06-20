@@ -27,6 +27,7 @@ import CompleteScreen from "@/components/menus/CompleteScreen";
 import GameCanvas from "./GameCanvas";
 import HUDOverlay from "@/components/hud/HUDOverlay";
 import JoinMenu from "@/components/menus/JoinMenu";
+import LoadingScreen from "@/components/menus/LoadingScreen";
 import LobbyScreen from "@/components/menus/LobbyScreen";
 import PauseMenu from "@/components/menus/PauseMenu";
 import StartMenu from "@/components/menus/StartMenu";
@@ -53,6 +54,19 @@ const makePlayer = (
   connectionState,
 });
 
+const LOADING_STEPS = [
+  "Maze field",
+  "Terrain raycast",
+  "Object kits",
+  "PBR materials",
+  "Lighting pass",
+] as const;
+
+const waitFrame = (): Promise<void> =>
+  new Promise((resolve) => {
+    requestAnimationFrame(() => resolve());
+  });
+
 const makeRoomState = (input: {
   roomId: string;
   joinCode: string;
@@ -72,6 +86,7 @@ const makeRoomState = (input: {
 export default function GameShell() {
   const transportRef = useRef<HostTransportAdapter | ClientTransportAdapter | null>(null);
   const [transport, setTransport] = useState<HostTransportAdapter | ClientTransportAdapter | null>(null);
+  const [loadingStep, setLoadingStep] = useState(0);
   const screen = useUiStore((state) => state.screen);
   const completion = useUiStore((state) => state.completion);
   const setScreen = useUiStore((state) => state.setScreen);
@@ -372,7 +387,75 @@ export default function GameShell() {
     setConnectionStatus("connecting");
   };
 
-  const startPlay = (): void => {
+  const runLoadingSteps = async (): Promise<void> => {
+    setScreen("LOADING");
+    setGameScreen("loading");
+    setOverlay({
+      kind: "loading",
+      message: "Generating corridor kits.",
+      visible: true,
+    });
+
+    for (let index = 0; index < LOADING_STEPS.length; index += 1) {
+      setLoadingStep(index);
+      await waitFrame();
+      await new Promise((resolve) => setTimeout(resolve, 90));
+    }
+  };
+
+  const enterSoloRun = async (): Promise<void> => {
+    destroyTransport();
+    resetUi();
+    await runLoadingSteps();
+    const normalizedName = playerName.trim() || "Wanderer";
+    const nextRoomId = `solo-${makeId("corridor")}`;
+    const nextJoinCode = "SOLO";
+    const soloPlayerId = makeId("solo-player");
+    const soloPlayer = makePlayer(soloPlayerId, normalizedName, true, true);
+    const roomState = makeRoomState({
+      roomId: nextRoomId,
+      joinCode: nextJoinCode,
+      hostId: soloPlayerId,
+      players: [soloPlayer],
+    });
+    const bootstrap = createInitialGameState({
+      roomId: roomState.roomId,
+      joinCode: roomState.joinCode,
+      hostId: soloPlayerId,
+      players: roomState.players,
+      localPlayerId: soloPlayerId,
+      localPlayerName: normalizedName,
+      seedSource: `${roomState.roomId}:procedural-solo`,
+    });
+
+    setSessionMode("solo");
+    setPeerIdentity({
+      peerId: soloPlayerId,
+      playerId: soloPlayerId,
+      displayName: normalizedName,
+      hostPeerId: null,
+    });
+    setConnectionStatus("connected");
+    setRoom(bootstrap.gameState.room);
+    setLobbyPlayers(bootstrap.gameState.room.players);
+    setAuthoritativeSnapshot(bootstrap.snapshot);
+    setScreen("PLAYING");
+    setGameScreen("playing");
+    setPaused(false, "none");
+    setOverlay({
+      kind: "loading",
+      message: "Generated solo procedural corridor.",
+      visible: false,
+    });
+    setReadiness({
+      simulation: true,
+      rendering: true,
+      networking: false,
+      input: true,
+    });
+  };
+
+  const startPlay = async (): Promise<void> => {
     if (sessionMode !== "host") {
       toggleReady();
       return;
@@ -384,6 +467,7 @@ export default function GameShell() {
 
     const localPlayerId = peerIdentity.playerId ?? room.hostId ?? `${sessionMode}-player`;
     const localPlayerName = peerIdentity.displayName || "Host";
+    await runLoadingSteps();
     const bootstrap = createInitialGameState({
       roomId: room.roomId,
       joinCode: room.joinCode,
@@ -497,40 +581,45 @@ export default function GameShell() {
   );
 
   const currentPlayers = room?.players ?? lobbyPlayers;
+  const isCleanPlayScreen = screen === "PLAYING";
 
   return (
-    <div className="relative min-h-screen overflow-hidden bg-[#020403] text-lime-100">
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(63,255,119,0.08),transparent_34%),linear-gradient(180deg,rgba(1,10,5,0.98)_0%,rgba(1,5,3,0.96)_46%,rgba(0,0,0,1)_100%)]" />
-      <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(rgba(127,255,140,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(127,255,140,0.03)_1px,transparent_1px)] bg-[size:40px_40px] opacity-30" />
-
+    <div className="relative min-h-screen overflow-hidden bg-[#050403] text-lime-100">
       <div className="relative flex min-h-screen flex-col">
-        <header className="flex items-center justify-between gap-4 border-b border-lime-400/10 bg-black/50 px-5 py-4 backdrop-blur-sm">
-          <div>
-            <p className="text-[10px] uppercase tracking-[0.45em] text-lime-300/70">
-              Horror Corridor
-            </p>
-            <h1 className="mt-1 text-xl font-semibold uppercase tracking-[0.28em] text-white">
-              Prototype Port
-            </h1>
-          </div>
-          <div className="flex flex-wrap items-center gap-2 text-[11px] uppercase tracking-[0.22em] text-lime-200/80">
-            <span className="rounded-full border border-lime-400/20 bg-lime-400/5 px-3 py-1">
-              Room: {room?.joinCode ?? peerIdentity.hostPeerId ?? "----"}
-            </span>
-            <span className="rounded-full border border-lime-400/20 bg-lime-400/5 px-3 py-1">
-              Mode: {sessionMode}
-            </span>
-            <span className="rounded-full border border-lime-400/20 bg-lime-400/5 px-3 py-1">
-              Status: {connectionStatus}
-            </span>
-          </div>
-        </header>
+        {!isCleanPlayScreen ? (
+          <header className="flex items-center justify-between gap-4 border-b border-lime-400/10 bg-black/50 px-5 py-4 backdrop-blur-sm">
+            <div>
+              <p className="text-[10px] uppercase tracking-[0.45em] text-lime-300/70">
+                Horror Corridor
+              </p>
+              <h1 className="mt-1 text-xl font-semibold uppercase tracking-[0.28em] text-white">
+                Prototype Port
+              </h1>
+            </div>
+            <div className="flex flex-wrap items-center gap-2 text-[11px] uppercase tracking-[0.22em] text-lime-200/80">
+              <span className="rounded-full border border-lime-400/20 bg-lime-400/5 px-3 py-1">
+                Room: {room?.joinCode ?? peerIdentity.hostPeerId ?? "----"}
+              </span>
+              <span className="rounded-full border border-lime-400/20 bg-lime-400/5 px-3 py-1">
+                Mode: {sessionMode}
+              </span>
+              <span className="rounded-full border border-lime-400/20 bg-lime-400/5 px-3 py-1">
+                Status: {connectionStatus}
+              </span>
+            </div>
+          </header>
+        ) : null}
 
         <main className="relative flex flex-1">
+          {screen === "LOADING" ? (
+            <LoadingScreen steps={LOADING_STEPS} activeStep={loadingStep} />
+          ) : null}
+
           {screen === "START" ? (
             <StartMenu
               sessionMode={sessionMode}
               connectionStatus={connectionStatus}
+              onSoloRun={enterSoloRun}
               onHostGame={enterHostLobby}
               onJoinGame={() => setScreen("JOIN_MENU")}
             />

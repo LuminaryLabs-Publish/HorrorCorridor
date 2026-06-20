@@ -1,0 +1,53 @@
+{
+  "completedAt": "2026-06-19T23:08:23.866Z",
+  "captures": [
+    {
+      "mode": "front",
+      "rawCanvasPath": "testing/object-kits/corridor-lamp/runs/2026-06-19T23-08-12-862Z-74681-human-review/screenshots/raw-canvas-front.png",
+      "reviewRoomPath": "testing/object-kits/corridor-lamp/runs/2026-06-19T23-08-12-862Z-74681-human-review/screenshots/review-room-front.png"
+    },
+    {
+      "mode": "side",
+      "rawCanvasPath": "testing/object-kits/corridor-lamp/runs/2026-06-19T23-08-12-862Z-74681-human-review/screenshots/raw-canvas-side.png",
+      "reviewRoomPath": "testing/object-kits/corridor-lamp/runs/2026-06-19T23-08-12-862Z-74681-human-review/screenshots/review-room-side.png"
+    },
+    {
+      "mode": "three-quarter",
+      "rawCanvasPath": "testing/object-kits/corridor-lamp/runs/2026-06-19T23-08-12-862Z-74681-human-review/screenshots/raw-canvas-three-quarter.png",
+      "reviewRoomPath": "testing/object-kits/corridor-lamp/runs/2026-06-19T23-08-12-862Z-74681-human-review/screenshots/review-room-three-quarter.png"
+    },
+    {
+      "mode": "player-distance",
+      "rawCanvasPath": "testing/object-kits/corridor-lamp/runs/2026-06-19T23-08-12-862Z-74681-human-review/screenshots/raw-canvas-player-distance.png",
+      "reviewRoomPath": "testing/object-kits/corridor-lamp/runs/2026-06-19T23-08-12-862Z-74681-human-review/screenshots/review-room-player-distance.png"
+    },
+    {
+      "mode": "corridor-dark",
+      "rawCanvasPath": "testing/object-kits/corridor-lamp/runs/2026-06-19T23-08-12-862Z-74681-human-review/screenshots/raw-canvas-corridor-dark.png",
+      "reviewRoomPath": "testing/object-kits/corridor-lamp/runs/2026-06-19T23-08-12-862Z-74681-human-review/screenshots/review-room-corridor-dark.png"
+    }
+  ],
+  "kit": "corridor-lamp",
+  "playwrightSource": "nexus-simulator",
+  "review": {
+    "categoryScores": {
+      "artifactFreeRender": 95,
+      "geometryDetail": 95,
+      "horrorCorridorFit": 95,
+      "lampIdentity": 95,
+      "lightSourceBelievability": 95,
+      "materialBelievability": 95,
+      "playerDistanceReadability": 95,
+      "rustGrimeQuality": 95,
+      "silhouetteReadability": 95
+    },
+    "firstVisibleFailure": "",
+    "humanReadableSummary": "Mock accepted: the review-room lamp is treated as human-readable.",
+    "pass": true,
+    "promotionStatus": "accept",
+    "requiredChanges": [],
+    "score": 95,
+    "topSemanticDifferences": []
+  },
+  "status": "accepted"
+}

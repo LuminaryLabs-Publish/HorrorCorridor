@@ -12,6 +12,7 @@ import SettingsOverlay from "./SettingsOverlay";
 
 const objectiveByScreen: Record<AppScreenState, string> = {
   START: "AWAITING ENTRY",
+  LOADING: "GENERATING CORRIDOR",
   JOIN_MENU: "ENTER ROOM CODE",
   LOBBY_HOST: "HOST THE ROOM",
   LOBBY_CLIENT: "READY THE CLIENT",
@@ -35,7 +36,6 @@ const cubeColorCss = new Map(
 
 export default function HUDOverlay() {
   const screen = useUiStore((state) => state.screen);
-  const pauseState = useUiStore((state) => state.pause);
   const room = useSessionStore((state) => state.room);
   const peerIdentity = useSessionStore((state) => state.peerIdentity);
   const sessionMode = useSessionStore((state) => state.sessionMode);
@@ -43,8 +43,20 @@ export default function HUDOverlay() {
   const overlay = useUiStore((state) => state.overlay);
   const toggleSettingsOverlay = useUiStore((state) => state.toggleSettingsOverlay);
 
-  if (screen !== "PLAYING" && screen !== "PAUSED" && screen !== "COMPLETED") {
+  if (screen !== "PLAYING" && screen !== "COMPLETED") {
     return null;
+  }
+
+  if (screen === "PLAYING") {
+    return (
+      <div className="pointer-events-none absolute inset-0 z-30 font-mono">
+        <SettingsOverlay
+          isOpen={overlay.visible && overlay.kind === "settings"}
+          onClose={() => toggleSettingsOverlay(false)}
+        />
+        <FrameDebugPanel />
+      </div>
+    );
   }
 
   const snapshot = authoritativeSnapshot;
@@ -54,12 +66,7 @@ export default function HUDOverlay() {
   const heldLabel = toColorLabel(cubeColorById(heldCube));
   const objective = objectiveByScreen[screen];
   const screenLabel = screen.replaceAll("_", " ");
-  const hint =
-    screen === "PLAYING"
-      ? "OPEN SETTINGS FOR CONTROLS."
-      : screen === "PAUSED"
-        ? "PAUSED. PRESS P TO RESUME OR ESC TO RELEASE POINTER."
-        : "RUN COMPLETE. USE THE OVERLAY TO RETURN TO THE LOBBY OR TITLE.";
+  const hint = "RUN COMPLETE. USE THE OVERLAY TO RETURN TO THE LOBBY OR TITLE.";
 
   return (
     <div className="pointer-events-none absolute inset-0 z-30 font-mono text-[11px] uppercase tracking-[0.26em] text-[#9dff9d] [text-shadow:0_0_8px_rgba(120,255,140,0.16)]">
@@ -118,9 +125,7 @@ export default function HUDOverlay() {
       <div className="absolute right-4 top-4 w-[min(18rem,calc(100vw-2rem))] text-right">
         <div className="border border-[#7aff86]/25 bg-[rgba(0,7,2,0.58)] p-3 backdrop-blur-md">
           <p className="text-[9px] tracking-[0.46em] text-[#b8ffbf]/70">STATUS</p>
-          <p className="mt-2 text-sm tracking-[0.2em] text-white">
-            {pauseState.isPaused ? "PAUSED" : "ACTIVE"}
-          </p>
+          <p className="mt-2 text-sm tracking-[0.2em] text-white">COMPLETE</p>
           <p className="mt-3 text-[9px] tracking-[0.46em] text-[#b8ffbf]/70">HINT</p>
           <p className="mt-2 text-[10px] leading-6 tracking-[0.22em] text-[#d6ffd8] normal-case">
             {hint}

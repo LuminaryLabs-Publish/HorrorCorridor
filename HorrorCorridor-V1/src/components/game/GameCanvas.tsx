@@ -62,9 +62,12 @@ import {
 
 import { createAnimationLoop } from "@/features/render/three/animationLoop";
 import { createCamera } from "@/features/render/three/createCamera";
+import type { CorridorPostProcessing } from "@/features/render/three/createPostProcessing";
+import { createPostProcessing } from "@/features/render/three/createPostProcessing";
 import { createRenderer } from "@/features/render/three/createRenderer";
 import { createScene } from "@/features/render/three/createScene";
 import { buildMazeWorld } from "@/features/render/three/worldBuilder";
+import type { SceneDressingSummary } from "@/features/render/three/sceneDressingDescriptors";
 import { MINIMAP_CANVAS_ID, drawMinimapFrame } from "@/components/hud/Minimap";
 
 import PointerLockGate from "./PointerLockGate";
@@ -72,6 +75,10 @@ import PointerLockGate from "./PointerLockGate";
 const MAX_PIXEL_RATIO = 1;
 const UI_SYNC_INTERVAL_MS = 100;
 const CADENCE_WINDOW_MS = 1000;
+const CAMERA_WALK_SHAKE_FREQUENCY = 0.012;
+const CAMERA_WALK_SHAKE_Y = 0.035;
+const CAMERA_WALK_SHAKE_X = 0.014;
+const CAMERA_WALK_ROLL = 0.006;
 const cubeHexByName = new Map<MazeCubeColorName, MazeCubeColorHex>(
   CUBE_COLORS.map((color) => [color.name, color.hex] as const),
 );
@@ -80,6 +87,7 @@ const resizeRenderer = (
   renderer: WebGLRenderer,
   camera: PerspectiveCamera,
   mount: HTMLDivElement,
+  postProcessing?: CorridorPostProcessing,
 ): void => {
   const width = mount.clientWidth;
   const height = mount.clientHeight;
@@ -88,21 +96,32 @@ const resizeRenderer = (
     return;
   }
 
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, MAX_PIXEL_RATIO));
+  const pixelRatio = Math.min(window.devicePixelRatio || 1, MAX_PIXEL_RATIO);
+  renderer.setPixelRatio(pixelRatio);
   renderer.setSize(width, height, false);
   camera.aspect = width / height;
   camera.updateProjectionMatrix();
+  postProcessing?.resize(width, height, pixelRatio);
 };
 
 const syncCameraFromPlayer = (
   camera: PerspectiveCamera,
   position: Readonly<{ x: number; y: number; z: number }>,
   viewAngles: Readonly<{ yaw: number; pitch: number }>,
+  elapsedMs = 0,
+  movementSpeed = 0,
 ): void => {
+  const shakeAmount = Math.min(1, Math.max(0, movementSpeed / 9));
+  const step = elapsedMs * CAMERA_WALK_SHAKE_FREQUENCY;
+  const sideBob = Math.sin(step) * CAMERA_WALK_SHAKE_X * shakeAmount;
+  const verticalBob = Math.abs(Math.cos(step * 0.5)) * CAMERA_WALK_SHAKE_Y * shakeAmount;
+  const roll = Math.sin(step * 0.72) * CAMERA_WALK_ROLL * shakeAmount;
+
   camera.rotation.order = "YXZ";
-  camera.position.set(position.x, position.y, position.z);
+  camera.position.set(position.x + sideBob, position.y + verticalBob, position.z);
   camera.rotation.y = viewAngles.yaw;
   camera.rotation.x = viewAngles.pitch;
+  camera.rotation.z = roll;
 };
 
 const mazeCellToWorld = (x: number, y: number): Readonly<{ x: number; y: number; z: number }> => ({
@@ -144,6 +163,7 @@ const createRuntimeDebugFrameRecord = (input: Readonly<{
   viewAngles: Readonly<{ yaw: number; pitch: number }>;
   inputSnapshot: ReturnType<typeof toPlayerInputSnapshot>;
   cadence: RuntimeCadenceState;
+  sceneDressing: SceneDressingSummary | null;
 }>): Parameters<typeof recordRuntimeDebugFrame>[0] => {
   const localSnapshotPlayer =
     input.snapshot?.players.find((player) => player.id === input.localPlayerId) ?? null;
@@ -179,6 +199,7 @@ const createRuntimeDebugFrameRecord = (input: Readonly<{
       playerCount: input.snapshot?.players.length ?? 0,
       cubeCount: input.snapshot?.cubes.length ?? 0,
       oozeCount: input.snapshot?.oozeTrail.length ?? 0,
+      decalCount: input.snapshot?.oozeTrail.length ?? 0,
       slotsFilled: input.snapshot?.anomaly.slots.filter((slot) => slot !== null).length ?? 0,
       cubeStates,
       localPlayer: localSnapshotPlayer
@@ -214,6 +235,7 @@ const createRuntimeDebugFrameRecord = (input: Readonly<{
       clientUpdatesPerSecond: input.cadence.clientUpdatesPerSecond,
       uiSyncsPerSecond: input.cadence.uiSyncsPerSecond,
     },
+    sceneDressing: input.sceneDressing,
   };
 };
 
@@ -393,10 +415,13 @@ export default function GameCanvas({ transport }: GameCanvasProps) {
       const camera = createCamera({
         aspect: mount.clientWidth > 0 && mount.clientHeight > 0 ? mount.clientWidth / mount.clientHeight : 1,
       });
+      const postProcessing = createPostProcessing(renderer, scene, camera);
       const world = buildMazeWorld(maze);
       const pointerLockTarget = mount;
       const session = useSessionStore.getState();
       const isHostSession = session.sessionMode === "host";
+      const isSoloSession = session.sessionMode === "solo";
+      const isAuthoritativeLocalSession = isHostSession || isSoloSession;
       const isHostTransport = transport?.role === "host";
       const isClientTransport = transport?.role === "client";
       const localPlayerId =
@@ -753,11 +778,11 @@ export default function GameCanvas({ transport }: GameCanvasProps) {
           payload: {
             action,
             distanceToEnd: Number(distanceToEnd.toFixed(2)),
-            host: isHostSession,
+            host: isAuthoritativeLocalSession,
           },
         });
 
-        if (isHostSession) {
+        if (isAuthoritativeLocalSession) {
           const nextState = applyNetworkInteractionRequest(currentGameState, {
             playerId: localPlayerId,
             action,
@@ -825,6 +850,11 @@ export default function GameCanvas({ transport }: GameCanvasProps) {
           return;
         }
 
+        if (event.code === "KeyQ" && !event.repeat) {
+          toggleSettingsOverlay();
+          return;
+        }
+
         const button = keyboardCodeToPlayerInputButton(event.code);
 
         if (!button || event.repeat) {
@@ -846,11 +876,6 @@ export default function GameCanvas({ transport }: GameCanvasProps) {
 
         if (button === "interact") {
           applyInteraction();
-        }
-
-        if (event.code === "KeyQ") {
-          toggleSettingsOverlay();
-          return;
         }
 
         inputRef.current = setPlayerInputButton(inputRef.current, button, true);
@@ -895,11 +920,11 @@ export default function GameCanvas({ transport }: GameCanvasProps) {
 
       const resizeObserver =
         typeof ResizeObserver !== "undefined"
-          ? new ResizeObserver(() => resizeRenderer(renderer, camera, mount))
+          ? new ResizeObserver(() => resizeRenderer(renderer, camera, mount, postProcessing))
           : null;
 
       const onResize = (): void => {
-        resizeRenderer(renderer, camera, mount);
+        resizeRenderer(renderer, camera, mount, postProcessing);
       };
 
       mount.appendChild(renderer.domElement);
@@ -910,9 +935,9 @@ export default function GameCanvas({ transport }: GameCanvasProps) {
       setInputFlags(toPlayerInputSnapshot(inputRef.current));
       setAuthoritativeSnapshot(latestHostSnapshot);
       patchReadiness({
-        simulation: isHostSession || isClientTransport,
+        simulation: isAuthoritativeLocalSession || isClientTransport,
         rendering: true,
-        networking: true,
+        networking: !isSoloSession,
         input: true,
       });
       setPaused(false, "none");
@@ -957,6 +982,7 @@ export default function GameCanvas({ transport }: GameCanvasProps) {
               viewAngles: viewAnglesRef.current,
               inputSnapshot: toPlayerInputSnapshot(inputRef.current),
               cadence: frameCadence,
+              sceneDressing: world.getSceneDressingSummary(),
             }),
           );
         };
@@ -965,13 +991,21 @@ export default function GameCanvas({ transport }: GameCanvasProps) {
           mode: RuntimeDebugFrameMode,
           snapshotForFrame: ReplicatedGameSnapshot | null,
         ): void => {
-          syncCameraFromPlayer(camera, poseRef.current.position, viewAnglesRef.current);
+          const cameraPosition = world.getTerrainEyePosition(poseRef.current.position);
+          syncCameraFromPlayer(
+            camera,
+            cameraPosition,
+            viewAnglesRef.current,
+            elapsedMs,
+            Math.hypot(poseRef.current.velocity.x, poseRef.current.velocity.z),
+          );
           world.update(elapsedMs, {
             snapshot: snapshotForFrame,
             localPlayerId,
             localPlayerPosition: poseRef.current.position,
+            localViewAngles: viewAnglesRef.current,
           });
-          minimapCanvasRef.current ??= document.getElementById(MINIMAP_CANVAS_ID) as HTMLCanvasElement | null;
+          minimapCanvasRef.current = document.getElementById(MINIMAP_CANVAS_ID) as HTMLCanvasElement | null;
           drawMinimapFrame({
             canvas: minimapCanvasRef.current,
             snapshot: snapshotForFrame,
@@ -980,19 +1014,19 @@ export default function GameCanvas({ transport }: GameCanvasProps) {
             yaw: viewAnglesRef.current.yaw,
           });
           captureFrame(mode, snapshotForFrame);
-          renderer.render(scene, camera);
+          postProcessing.render();
         };
 
         if ((uiState.screen === "PAUSED" || uiState.screen === "COMPLETED") && pointerLockedRef.current) {
           releasePointerLock();
         }
 
-        const latestSnapshot = isHostSession
+        const latestSnapshot = isAuthoritativeLocalSession
           ? latestHostSnapshot
           : useRuntimeStore.getState().authoritativeSnapshot;
         const shouldAdvanceSimulation = uiState.screen === "PLAYING";
 
-        if (shouldAdvanceSimulation && isHostSession) {
+        if (shouldAdvanceSimulation && isAuthoritativeLocalSession) {
           const { nextViewAngles, resolvedPose } = stepLocalPose(deltaMs);
 
           poseRef.current = resolvedPose;
@@ -1023,7 +1057,7 @@ export default function GameCanvas({ transport }: GameCanvasProps) {
           }
 
           syncRuntimeStores(recordedAtMs);
-          renderFrame("host-sim", latestHostSnapshot);
+          renderFrame(isSoloSession ? "solo-sim" : "host-sim", latestHostSnapshot);
           return;
         }
 
@@ -1083,6 +1117,7 @@ export default function GameCanvas({ transport }: GameCanvasProps) {
         document.removeEventListener("mousemove", onMouseMove);
         window.removeEventListener("blur", onBlur);
         world.dispose();
+        postProcessing.dispose();
         renderer.dispose();
 
         if (mount.contains(renderer.domElement)) {
@@ -1127,6 +1162,7 @@ export default function GameCanvas({ transport }: GameCanvasProps) {
       title="Maze runtime"
       description="A real maze world is active here. Move with WASD or arrow keys immediately, or capture the mouse to look around."
       isLocked={isPointerLocked}
+      showChrome={false}
       onCapture={() => {
         mountRef.current?.requestPointerLock();
       }}

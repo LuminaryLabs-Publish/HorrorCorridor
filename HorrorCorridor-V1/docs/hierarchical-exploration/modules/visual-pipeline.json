@@ -1,0 +1,97 @@
+{
+  "schemaVersion": 1,
+  "moduleId": "visual-pipeline",
+  "goal": "Make the corridor readable and high-fidelity from a player perspective using lighting, post-processing, shaders, texturing, and screenshot validation.",
+  "rootIdeas": [
+    {
+      "id": "triplanar-surface-projection",
+      "status": "planned",
+      "hypothesis": "Triplanar mapping will make walls, floors, ceilings, and props easier to texture without UV seams or stretched procedural maps.",
+      "whyItMatters": "Current generated textures are present but still read as broad dark surfaces. Projection by world normal should let brick, damp concrete, grime, and metal panels wrap consistently across modular surfaces.",
+      "subtests": [
+        {
+          "id": "wall-brick-triplanar",
+          "status": "candidate",
+          "test": "Apply a green-black worn brick/block shader to wall surfaces only.",
+          "acceptance": [
+            "Wall silhouette remains horror-dark but visible.",
+            "Brick/block pattern is readable in spawn and movement screenshots.",
+            "No obvious texture stretching on corners."
+          ],
+          "artifacts": []
+        },
+        {
+          "id": "floor-damp-concrete-triplanar",
+          "status": "candidate",
+          "test": "Apply damp concrete with roughness and grime variation to floor/terrain surfaces only.",
+          "acceptance": [
+            "Floor reads separate from wall.",
+            "Wet/grime breakup is visible near camera.",
+            "Movement screenshots preserve route readability."
+          ],
+          "artifacts": []
+        },
+        {
+          "id": "ceiling-service-panel-triplanar",
+          "status": "candidate",
+          "test": "Apply dark ceiling service-panel breakup without making the upper frame noisy.",
+          "acceptance": [
+            "Upper frame is no longer blank black.",
+            "Ceiling does not compete with route direction.",
+            "Light falloff still feels local."
+          ],
+          "artifacts": []
+        }
+      ],
+      "risks": [
+        "Too much texture contrast can flatten fog and destroy horror mood.",
+        "Shader complexity can hurt frame time if applied naively to every instanced mesh.",
+        "World-space projection must keep deterministic seeds so screenshots remain comparable."
+      ]
+    },
+    {
+      "id": "post-process-readable-horror",
+      "status": "planned",
+      "hypothesis": "A real renderer-owned exposure/gamma/vignette/noise pass will control readability better than CSS overlay effects.",
+      "subtests": [
+        {
+          "id": "exposure-lift-midtones",
+          "status": "candidate",
+          "test": "Lift midtones while preserving black horror shadows.",
+          "acceptance": [
+            "Live-player luminance passes.",
+            "Human view does not look washed out.",
+            "Props and walls remain legible during movement."
+          ],
+          "artifacts": [
+            "docs/live-player-harness/latest/report.json"
+          ]
+        },
+        {
+          "id": "film-noise-after-exposure",
+          "status": "candidate",
+          "test": "Apply subtle noise after exposure so darkness has texture instead of flat black.",
+          "acceptance": [
+            "Noise is visible only as atmosphere.",
+            "It does not obscure UI-free gameplay or route visibility."
+          ],
+          "artifacts": []
+        }
+      ],
+      "risks": [
+        "Post-processing can pass metrics while still feeling muddy.",
+        "CSS overlay and renderer post-process can double-darken if both remain active."
+      ]
+    }
+  ],
+  "nextBestBatch": {
+    "id": "visual-pipeline-batch-001",
+    "type": "shader-material-readability",
+    "work": [
+      "Split static world materials by surface domain: wall, floor, ceiling, trim.",
+      "Add first triplanar shader for wall brick/block pattern.",
+      "Add screenshot-gated comparison for visible wall texture in spawn and movement frames."
+    ],
+    "blockedBy": []
+  }
+}

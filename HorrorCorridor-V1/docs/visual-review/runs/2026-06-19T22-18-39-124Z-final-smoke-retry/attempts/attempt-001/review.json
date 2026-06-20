@@ -1,0 +1,22 @@
+{
+  "categoryScores": {
+    "artifactFree": 42,
+    "compositionRoute": 42,
+    "identityMatch": 42,
+    "lightingReadability": 42,
+    "materialPbr": 42,
+    "moodArtDirection": 42,
+    "silhouetteGeometry": 42,
+    "textureDetail": 42
+  },
+  "firstVisibleFailure": "Mock score is below threshold.",
+  "pass": false,
+  "promotionStatus": "retry",
+  "requiredChanges": [
+    "Mock retry: apply the smallest visible material/lighting/silhouette correction."
+  ],
+  "score": 42,
+  "topSemanticDifferences": [
+    "Mock semantic difference for retry artifact validation."
+  ]
+}

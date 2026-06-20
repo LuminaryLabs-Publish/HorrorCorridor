@@ -1,0 +1,93 @@
+{
+  "schemaVersion": 1,
+  "moduleId": "world-modularity",
+  "goal": "Separate terrain, walls, ceiling, props, decals, and lights into modular descriptor/render ownership so content kits can compose richer scenes without hardcoded one-offs.",
+  "rootIdeas": [
+    {
+      "id": "modular-wall-terrain-split",
+      "status": "planned",
+      "hypothesis": "Separating wall geometry/material descriptors from floor terrain descriptors will make brick, panel, damage, grime, and collision ownership easier to evolve.",
+      "whyItMatters": "The current corridor has floor/wall separation, but wall surfaces are still visually monolithic. A separate wall domain lets the renderer apply brick/panel kits while floor keeps damp terrain/grime kits.",
+      "subtests": [
+        {
+          "id": "surface-domain-descriptors",
+          "status": "candidate",
+          "test": "Emit explicit descriptors for wall, floor, ceiling, trim, decal, prop, and light surfaces.",
+          "acceptance": [
+            "Render layer can choose materials by surface domain without checking raw maze cell values everywhere.",
+            "Debug extract reports counts per surface domain.",
+            "No change to movement or collision."
+          ],
+          "artifacts": []
+        },
+        {
+          "id": "brick-wall-kit",
+          "status": "candidate",
+          "test": "Add a generic wall-surface kit with brick/block and panel profile presets.",
+          "acceptance": [
+            "HorrorCorridor-specific brick colors live in preset/config.",
+            "Generic kit does not import game constants.",
+            "Wall pattern is visible in player screenshot."
+          ],
+          "artifacts": []
+        },
+        {
+          "id": "floor-terrain-kit",
+          "status": "candidate",
+          "test": "Add separate floor terrain material profiles for damp concrete, slime residue, and worn route marks.",
+          "acceptance": [
+            "Floor projection and wall projection can be tuned independently.",
+            "Ooze/trail decals remain readable on top."
+          ],
+          "artifacts": []
+        }
+      ],
+      "risks": [
+        "Over-separating geometry can increase draw calls if instancing is not preserved.",
+        "Material domains must remain descriptor-driven, not hardcoded into gameplay state."
+      ]
+    },
+    {
+      "id": "long-session-content-composition",
+      "status": "candidate",
+      "hypothesis": "Longer play requires cumulative content layers: route landmarks, anomaly states, prop clusters, traversal pressure, and recovery cues.",
+      "subtests": [
+        {
+          "id": "landmark-prop-clusters",
+          "status": "candidate",
+          "test": "Generate recognizably different corridor regions with tables, crates, pipes, panels, cables, stains, and lights.",
+          "acceptance": [
+            "Players can describe where they are without using minimap only.",
+            "At least one midground landmark appears in standard validation screenshots."
+          ],
+          "artifacts": []
+        },
+        {
+          "id": "progressive-anomaly-dressing",
+          "status": "candidate",
+          "test": "Change dressing density and lighting as players approach objectives.",
+          "acceptance": [
+            "Anomaly zones feel different from normal corridors.",
+            "Objective direction is implied by world content, not HUD text."
+          ],
+          "artifacts": []
+        }
+      ],
+      "risks": [
+        "More content can reduce readability if lighting balance is not kept as the acceptance gate."
+      ]
+    }
+  ],
+  "nextBestBatch": {
+    "id": "world-modularity-batch-001",
+    "type": "surface-domain-descriptor-split",
+    "work": [
+      "Introduce surface-domain descriptors.",
+      "Keep existing instanced world render path stable.",
+      "Route wall/floor/ceiling materials through separate descriptor profiles."
+    ],
+    "blockedBy": [
+      "Need one current screenshot baseline before changing material domains."
+    ]
+  }
+}

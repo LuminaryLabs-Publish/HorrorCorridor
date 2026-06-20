@@ -1,0 +1,18 @@
+{
+  "categoryScores": {
+    "artifactFree": 90,
+    "compositionRoute": 90,
+    "identityMatch": 90,
+    "lightingReadability": 90,
+    "materialPbr": 90,
+    "moodArtDirection": 90,
+    "silhouetteGeometry": 90,
+    "textureDetail": 90
+  },
+  "firstVisibleFailure": "",
+  "pass": true,
+  "promotionStatus": "accept",
+  "requiredChanges": [],
+  "score": 90,
+  "topSemanticDifferences": []
+}

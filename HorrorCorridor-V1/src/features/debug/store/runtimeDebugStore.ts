@@ -11,7 +11,7 @@ const DEBUG_OVERLAY_STORAGE_KEY = "horror-corridor:runtime-debug-overlay";
 const MAX_RUNTIME_DEBUG_FRAMES = 180;
 const MAX_RUNTIME_DEBUG_EVENTS = 80;
 
-export type RuntimeDebugFrameMode = "host-sim" | "client-sim" | "snapshot-replay" | "idle";
+export type RuntimeDebugFrameMode = "solo-sim" | "host-sim" | "client-sim" | "snapshot-replay" | "idle";
 
 export type RuntimeDebugLocalPose = Readonly<{
   position: WorldPosition;
@@ -49,6 +49,23 @@ export type RuntimeDebugCadenceRecord = Readonly<{
   uiSyncsPerSecond: number;
 }>;
 
+export type RuntimeDebugSceneDressingRecord = Readonly<{
+  propCount: number;
+  textureCount: number;
+  lightCount: number;
+  walkthroughCheckpointCount: number;
+  anchorCount: number;
+  socketCount: number;
+  layoutCount: number;
+  bundleCount: number;
+  validation: Readonly<{
+    meetsPropThreshold: boolean;
+    meetsTextureThreshold: boolean;
+    meetsLightThreshold: boolean;
+    readableSpawnView: boolean;
+  }>;
+}>;
+
 export type RuntimeDebugFrameRecord = Readonly<{
   frameNumber: number;
   deltaMs: number;
@@ -69,6 +86,7 @@ export type RuntimeDebugFrameRecord = Readonly<{
     playerCount: number;
     cubeCount: number;
     oozeCount: number;
+    decalCount: number;
     slotsFilled: number;
     cubeStates: Readonly<{
       ground: number;
@@ -80,6 +98,7 @@ export type RuntimeDebugFrameRecord = Readonly<{
   cubes: readonly RuntimeDebugCubeRecord[];
   anomaly: RuntimeDebugAnomalyRecord;
   cadence: RuntimeDebugCadenceRecord;
+  sceneDressing: RuntimeDebugSceneDressingRecord | null;
 }>;
 
 export type RuntimeDebugEventRecord = Readonly<{
@@ -175,6 +194,14 @@ const cloneFrameRecord = (frame: RuntimeDebugFrameRecord): RuntimeDebugFrameReco
   cadence: {
     ...frame.cadence,
   },
+  sceneDressing: frame.sceneDressing
+    ? {
+        ...frame.sceneDressing,
+        validation: {
+          ...frame.sceneDressing.validation,
+        },
+      }
+    : null,
 });
 
 const cloneEventRecord = (event: RuntimeDebugEventRecord): RuntimeDebugEventRecord => ({
