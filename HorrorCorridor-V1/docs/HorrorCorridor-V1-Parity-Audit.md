@@ -511,6 +511,7 @@
 - **Progress note (2026-06-19):** Added an isolated human-view review room for `corridor-lamp` and improved the production lamp renderer/light anchor. This creates the preview-proof lane that was missing for lamp work: the review room shows references, current render, lighting/angle context, scale/corridor context, checklist, notes, and score in one captured page. `node --check`, `npx tsc --noEmit`, `npm run lint`, `npm run smoke:protokits`, accepted mock review, below-threshold retry artifact generation, and a readability metric on `review-room-corridor-dark.png` passed. `SCENE-002` remains `Partially Fixed` because the lamp has not yet passed a real Codex/human `>=90` isolated review or been revalidated in the main starting scene.
 - **Progress note (2026-06-19):** Extended the lamp preview proof to include 8-angle orbit comparison. `npm run review:object-kit -- corridor-lamp --mock-score 95 --no-codex` captured 13 views total: 5 primary review views and 8 orbit views. `npm run review:object-kit -- corridor-lamp --mock-score 42 --no-codex` also captured 13 views and wrote a retry plan. The schema now requires per-orbit scoring and reference ranking, so a lamp can no longer pass from one flattering angle if side/back silhouettes fail.
 - **Progress note (2026-06-19):** Split the lamp object kit into nine local sub-kits with inline configs and descriptor ownership. This moves the target reference breakdown into enforceable domains: foundation/base, pole, armature, lamp head, cable/conduit, fasteners, material, light, and validation. Smoke validation now proves those part kits are present in the full domain manifest instead of only relying on the rendered `lamp-post` count.
+- **Progress note (2026-06-20):** Added `wound-triangle-mesh-domain-kit` and 10 unpromoted mesh-generating object kits: rusted service door, chain-link fence, broken generator, concrete jersey barrier, storm drain culvert, collapsed signpost, industrial shelving, hanging chain hook, barrel cluster, and broken concrete stair. Each kit has inline mesh-profile config and emits explicit indexed descriptors with positions, indices, normals, UVs, material slots, bounds, sockets, and `outward-ccw` winding. `npm run smoke:protokits` now validates `descriptorCount=10`, zero mesh descriptor failures, full domain manifest coverage, and scene-object review material/shader coverage. `npm run review:object-kit -- rusted-service-door --mock-score 95 --no-codex` captured 13 human-view screenshots through the generic object review room. `SCENE-002` remains `Partially Fixed` because these kits are intentionally not promoted into live scene placement until real isolated review and player-view proof pass.
 
 ### `OOZE-002`
 - **Severity:** `P2`
@@ -591,6 +592,7 @@
 - Whether procedural PBR-style material descriptors should grow real normal/roughness/metalness texture maps per material family or stay lightweight for runtime performance.
 - Whether active pointer-lock movement/look in a manual session reveals any remaining visibility drift that the detached non-pointer-lock screenshot does not show.
 - Whether the corridor lamp passes a real human/LLM isolated review at `>=90` using the new full review-room screenshots rather than the current mock-score validation path.
+- Whether the 10 new mesh-generating object kits pass real human/LLM review at `>=90`; current proof is descriptor smoke plus one mock-score capture for `rusted-service-door`, not final visual promotion.
 
 ## 7. Build / Runtime Blockers
 
@@ -604,10 +606,11 @@
 ## 8. Highest-Leverage Fix Order
 
 1. Run the real corridor-lamp object review: `npm run review:object-kit -- corridor-lamp` without mock scoring, inspect the full review-room screenshots, and only promote the lamp if `player-distance`, `corridor-dark`, and all 8 orbit views pass at `>=90`.
-2. Continue `SCENE-002` through `npm run visual:match`: generate/register the current target reference, capture the fresh starting scene, score it against the reference, then let the bounded auto-fix loop target the first below-90 semantic failure.
-3. Add isolated preview surfaces for each explicit object kit, then replace remaining blocky props with stronger mesh profiles for wall panels, tables, crates, vents, boxes, pipes, cables, rubble, broken-wall/brick pieces, and facade chunks while preserving the shared triplanar/PBR shader path.
-4. Improve the open-sky roofline and skyline breakup so the top half of frame no longer reads as a flat uniform cap over the corridor.
-5. Add stronger kit-driven focal/anomaly lighting and route landmarks while preserving the passing no-HUD and luminance gates.
+2. Run real isolated review for the new mesh-object kits starting with `rusted-service-door`, `broken-generator`, and `concrete-jersey-barrier`; only then wire passing kits into `sceneDressingDescriptors.ts` placement weights.
+3. Continue `SCENE-002` through `npm run visual:match`: generate/register the current target reference, capture the fresh starting scene, score it against the reference, then let the bounded auto-fix loop target the first below-90 semantic failure.
+4. Replace remaining blocky live props with promoted mesh-object profiles while preserving the shared triplanar/PBR shader path.
+5. Improve the open-sky roofline and skyline breakup so the top half of frame no longer reads as a flat uniform cap over the corridor.
+6. Add stronger kit-driven focal/anomaly lighting and route landmarks while preserving the passing no-HUD and luminance gates.
 6. Strengthen foreground and midground prop material specificity so rusted metal, damp concrete, roots, moss, mud, and rubble read as distinct surfaces.
 7. Add first-person bobbing hands as foreground render objects tied to movement/carry/interact state.
 8. Keep `npm run smoke:protokits` in the required validation path and reopen `VALIDATION-003` only if the route/bootstrap reliability regresses.
@@ -635,4 +638,4 @@
 
 ## 10. Suggested Next Prompt
 
-Next batch: start from `.agent/`, run `npm run visual:match -- prepare --target starting-scene --slug starting-scene`, register or generate the one target reference image, then run the visual-match loop against the live starting scene. Use the first below-90 semantic failure to drive the next narrow `SCENE-002` fix, then continue object-kit preview surfaces through preview -> smoke -> live-player promotion.
+Next batch: start from `.agent/`, run real non-mock object reviews for `corridor-lamp`, `rusted-service-door`, `broken-generator`, and `concrete-jersey-barrier`, then promote only passing kits into live scene placement. After promotion, run `npm run smoke:protokits`, `npm run validate:live-player`, and `npm run visual:match` against the starting scene so `SCENE-002` remains driven by player-view proof rather than descriptor counts alone.

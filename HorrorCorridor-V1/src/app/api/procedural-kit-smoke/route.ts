@@ -4,9 +4,12 @@ import { generateMaze } from "@/features/maze/domain/generateMaze";
 import { createSceneDressingManifest } from "@/features/render/three/sceneDressingDescriptors";
 import {
   corridorLampPartProfileKitIds,
+  createMeshObjectDescriptorCatalog,
   createHorrorCorridorDomainKits,
   createHorrorCorridorPreset,
+  meshGeneratingObjectDomainKitIds,
   reviewSceneObjectKitCoverage,
+  validateMeshObjectDescriptorCatalog,
 } from "@/protokits";
 
 const countBy = <T,>(items: readonly T[], keyOf: (item: T) => string): Record<string, number> =>
@@ -27,6 +30,9 @@ export function GET(request: Request) {
   const domainKits = createHorrorCorridorDomainKits({ preset });
   const domainKitIds = domainKits.domainManifest.kits.map((kit) => kit.id);
   const missingLampPartKitIds = corridorLampPartProfileKitIds.filter((kitId) => !domainKitIds.includes(kitId));
+  const missingMeshObjectKitIds = meshGeneratingObjectDomainKitIds.filter((kitId) => !domainKitIds.includes(kitId));
+  const meshObjectDescriptors = createMeshObjectDescriptorCatalog();
+  const meshObjectDescriptorFailures = validateMeshObjectDescriptorCatalog();
   const maze = generateMaze({
     size: preset.maze.gridSize,
     seed,
@@ -65,6 +71,9 @@ export function GET(request: Request) {
     kitReview.missingMaterialFamilies.length === 0 ? null : "scene-object-material-family-coverage",
     kitReview.missingShaderProfiles.length === 0 ? null : "scene-object-shader-profile-coverage",
     missingLampPartKitIds.length === 0 ? null : "corridor-lamp-part-kit-manifest-coverage",
+    missingMeshObjectKitIds.length === 0 ? null : "mesh-object-kit-manifest-coverage",
+    meshObjectDescriptors.length === 10 ? null : "mesh-object-kit-count",
+    meshObjectDescriptorFailures.length === 0 ? null : "mesh-object-descriptor-validation",
   ].filter((failure): failure is string => failure !== null);
 
   return NextResponse.json(
@@ -79,6 +88,18 @@ export function GET(request: Request) {
       domainManifest: {
         kitCount: domainKitIds.length,
         missingLampPartKitIds,
+        missingMeshObjectKitIds,
+      },
+      meshObjectKits: {
+        descriptorCount: meshObjectDescriptors.length,
+        failures: meshObjectDescriptorFailures,
+        objects: meshObjectDescriptors.map((descriptor) => ({
+          kitId: descriptor.kitId,
+          partCount: descriptor.parts.length,
+          propKind: descriptor.propKind,
+          triangleCount: descriptor.parts.reduce((count, part) => count + part.indices.length / 3, 0),
+          triangleWinding: descriptor.triangleWinding,
+        })),
       },
       sample: {
         props: manifest.props.slice(0, 8),

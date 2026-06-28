@@ -1,5 +1,6 @@
 import type { HorrorCorridorPreset } from "./presets/horror-corridor-preset";
 import { corridorLampPartProfileKitIds } from "./corridor-lamp-object-kit";
+import { meshObjectCatalog } from "./mesh-object-kit-catalog";
 
 export type SceneObjectKitReviewEntry = Readonly<{
   kitId: string;
@@ -136,6 +137,13 @@ export const createSceneObjectKitReview = (
     materialFamilies: ["muddy-grass", "root-fiber"],
     shaderProfiles: [objectProfile(preset, "grass-clump"), objectProfile(preset, "root-strip")],
   },
+  ...meshObjectCatalog.map((entry) => ({
+    kitId: entry.profile.kitId,
+    title: entry.profile.title,
+    propKinds: [entry.profile.propKind],
+    materialFamilies: entry.profile.materialFamilies,
+    shaderProfiles: [objectProfile(preset, entry.profile.propKind)],
+  })),
 ];
 
 export const reviewSceneObjectKitCoverage = (

@@ -18,11 +18,6 @@ const NEXUS_SIMULATOR_ROOT =
   process.env.NEXUS_SIMULATOR_ROOT ?? "/Users/crimsonwheeler/Documents/GitHub/NexusSimulator/NexusSimulator-V1";
 const DEFAULT_CODEX_PATH = "/Applications/Codex.app/Contents/Resources/codex";
 const DEFAULT_PORT = 4179;
-const OBJECT_KIT_ID = "corridor-lamp";
-const VIEWER_ROOT = join(REPO_ROOT, "testing", "object-kits", OBJECT_KIT_ID);
-const RUNS_ROOT = join(VIEWER_ROOT, "runs");
-const SCHEMA_PATH = join(VIEWER_ROOT, "review-output.schema.json");
-const PRIMARY_REFERENCE_PATH = join(VIEWER_ROOT, "references", "reference-primary.png");
 const REVIEW_MODES = ["front", "side", "three-quarter", "player-distance", "corridor-dark"];
 const ORBIT_MODES = [
   "orbit-000",
@@ -61,6 +56,20 @@ function toRepoRelative(path) {
 
 function ensureDir(dir) {
   mkdirSync(dir, { recursive: true });
+}
+
+function createKitContext(kit) {
+  const viewerRoot = join(REPO_ROOT, "testing", "object-kits", kit);
+  return {
+    kit,
+    primaryReferencePath: join(viewerRoot, "references", "reference-primary.png"),
+    runsRoot: join(viewerRoot, "runs"),
+    schemaPath: existsSync(join(viewerRoot, "review-output.schema.json"))
+      ? join(viewerRoot, "review-output.schema.json")
+      : join(REPO_ROOT, "testing", "object-kits", "corridor-lamp", "review-output.schema.json"),
+    viewerHtml: join(viewerRoot, "viewer.html"),
+    viewerRoot,
+  };
 }
 
 function writeJson(path, value) {
@@ -117,7 +126,7 @@ function printHelp() {
   console.log(`Object Kit Review Harness
 
 Usage:
-  npm run review:object-kit -- corridor-lamp [options]
+  npm run review:object-kit -- <object-kit-slug> [options]
 
 Options:
   --dry-run              Write manifests/prompts without browser or Codex execution
@@ -129,7 +138,7 @@ Options:
 `);
 }
 
-function installPrimaryReference(referenceImage) {
+function installPrimaryReference(context, referenceImage) {
   if (!referenceImage) return null;
   if (!existsSync(referenceImage) || !statSync(referenceImage).isFile()) {
     throw new Error(`reference image not found: ${referenceImage}`);
@@ -137,20 +146,20 @@ function installPrimaryReference(referenceImage) {
   if (extname(referenceImage).toLowerCase() !== ".png") {
     throw new Error("--reference-image currently expects a PNG file");
   }
-  ensureDir(dirname(PRIMARY_REFERENCE_PATH));
-  copyFileSync(referenceImage, PRIMARY_REFERENCE_PATH);
+  ensureDir(dirname(context.primaryReferencePath));
+  copyFileSync(referenceImage, context.primaryReferencePath);
   const metadata = {
     copiedAt: nowIso(),
     source: referenceImage,
-    target: PRIMARY_REFERENCE_PATH,
+    target: context.primaryReferencePath,
   };
-  writeJson(join(VIEWER_ROOT, "references", "reference-primary.json"), metadata);
+  writeJson(join(context.viewerRoot, "references", "reference-primary.json"), metadata);
   return metadata;
 }
 
-function createRunDir(options) {
+function createRunDir(context, options) {
   if (options.runDir) return options.runDir;
-  return join(RUNS_ROOT, `${slugTime()}-${process.pid}-human-review`);
+  return join(context.runsRoot, `${slugTime()}-${process.pid}-human-review`);
 }
 
 function loadPlaywright() {
@@ -283,9 +292,9 @@ function validateReview(review) {
   };
 }
 
-function buildReviewPrompt(runDir, captures) {
+function buildReviewPrompt(context, runDir, captures) {
   return [
-    "Review the HorrorCorridor corridor-lamp object from a human viewer perspective.",
+    `Review the HorrorCorridor ${context.kit} object from a human viewer perspective.`,
     "",
     "The attached images are full review-room screenshots, not only raw WebGL frames.",
     "Judge the current lamp against the references, checklist, notes, camera mode, and lighting mode visible in the review room.",
@@ -295,10 +304,10 @@ function buildReviewPrompt(runDir, captures) {
     "Pass only if the lamp would look convincing to a person at normal browser size and player distance.",
     "",
     "Required focus:",
-    "- rusted practical lamp, not cyber neon",
-    "- readable silhouette with pole, base, arm, head, cage/lens, cable",
-    "- warm light visibly originates from lamp head",
-    "- material reads as grime/rust/rough PBR hardware",
+    "- object identity is readable from player-distance",
+    "- silhouette has meaningful authored parts, not random primitives",
+    "- material reads as grime/rust/concrete/PBR broken-city hardware",
+    "- lighting and scale context match a dirty horror corridor",
     "- corridor-dark and player-distance views are both readable",
     "",
     `Run folder: ${toRepoRelative(runDir)}`,
@@ -318,11 +327,11 @@ function buildReviewPrompt(runDir, captures) {
   ].join("\n");
 }
 
-function runCodexReview(runDir, captures) {
+function runCodexReview(context, runDir, captures) {
   const codexPath = findCodex();
   if (!codexPath) throw new Error("Codex CLI not found");
   const reviewPath = join(runDir, "review.json");
-  const prompt = buildReviewPrompt(runDir, captures);
+  const prompt = buildReviewPrompt(context, runDir, captures);
   const promptPath = join(runDir, "review-prompt.md");
   writeText(promptPath, prompt);
   const args = [
@@ -336,7 +345,7 @@ function runCodexReview(runDir, captures) {
     "--ephemeral",
     "--json",
     "--output-schema",
-    SCHEMA_PATH,
+    context.schemaPath,
     "--output-last-message",
     reviewPath,
   ];
@@ -363,30 +372,33 @@ function runCodexReview(runDir, captures) {
   return validateReview(JSON.parse(readFileSync(reviewPath, "utf8")));
 }
 
-async function captureReviewRoom(options, runDir) {
+async function captureReviewRoom(context, options, runDir) {
   const { module: playwright, source } = loadPlaywright();
   const server = await startStaticServer(options.port);
   const browser = await playwright.chromium.launch({
     headless: true,
     args: ["--no-sandbox", "--disable-setuid-sandbox"],
   });
-  const context = await browser.newContext({ viewport: { width: 1440, height: 1000 } });
-  const page = await context.newPage();
+  const browserContext = await browser.newContext({ viewport: { width: 1440, height: 1000 } });
+  const page = await browserContext.newPage();
   const captures = [];
 
   try {
     for (const mode of VIEW_MODES) {
-      const url = `http://127.0.0.1:${options.port}/testing/object-kits/corridor-lamp/viewer.html?mode=${mode}`;
+      const url = `http://127.0.0.1:${options.port}/testing/object-kits/${context.kit}/viewer.html?mode=${mode}`;
       await page.goto(url, { waitUntil: "domcontentloaded" });
       await page.waitForLoadState("load", { timeout: 10000 }).catch(() => undefined);
-      await page.waitForFunction(() => Boolean(window.__corridorLampReviewRoom), null, { timeout: 15000 });
-      await page.evaluate((nextMode) => window.__corridorLampReviewRoom.setMode(nextMode), mode);
+      await page.waitForFunction(() => Boolean(window.__objectKitReviewRoom || window.__corridorLampReviewRoom), null, { timeout: 15000 });
+      await page.evaluate((nextMode) => {
+        const room = window.__objectKitReviewRoom || window.__corridorLampReviewRoom;
+        room.setMode(nextMode);
+      }, mode);
       await page.waitForTimeout(300);
       const reviewRoomPath = join(runDir, "screenshots", `review-room-${mode}.png`);
       const rawCanvasPath = join(runDir, "screenshots", `raw-canvas-${mode}.png`);
       ensureDir(dirname(reviewRoomPath));
       await page.screenshot({ fullPage: true, path: reviewRoomPath });
-      await page.locator("#lamp-canvas").screenshot({ path: rawCanvasPath });
+      await page.locator("#object-canvas, #lamp-canvas").screenshot({ path: rawCanvasPath });
       captures.push({
         kind: ORBIT_MODES.includes(mode) ? "orbit" : "review",
         mode,
@@ -415,7 +427,7 @@ function writeRetryPlan(runDir, review) {
 
 function writeFinalReport(runDir, review, captures) {
   const lines = [
-    "# Corridor Lamp Object Review",
+    "# Object Kit Review",
     "",
     `Status: ${review.pass ? "accepted" : "needs-fix"}`,
     `Score: ${review.score}`,
@@ -454,35 +466,36 @@ async function main() {
     printHelp();
     return;
   }
-  if (kit !== OBJECT_KIT_ID) {
-    throw new Error(`only ${OBJECT_KIT_ID} is supported in this first review harness`);
+  const context = createKitContext(kit);
+  if (!existsSync(context.viewerHtml)) {
+    throw new Error(`review viewer not found for ${kit}: ${toRepoRelative(context.viewerHtml)}`);
   }
 
-  const runDir = createRunDir(args);
+  const runDir = createRunDir(context, args);
   ensureDir(runDir);
-  const primaryReference = installPrimaryReference(args.referenceImage);
+  const primaryReference = installPrimaryReference(context, args.referenceImage);
   writeJson(join(runDir, "run-manifest.json"), {
     createdAt: nowIso(),
     dryRun: args.dryRun,
     kit,
     mockScore: args.mockScore,
     primaryReference,
-    reviewRoom: toRepoRelative(join(VIEWER_ROOT, "viewer.html")),
+    reviewRoom: toRepoRelative(context.viewerHtml),
     status: "running",
   });
 
   if (args.dryRun) {
     writeJson(join(runDir, "review.json"), mockReview(args.mockScore ?? 90));
-    writeText(join(runDir, "final-report.md"), "# Corridor Lamp Object Review\n\nDry run only.");
+    writeText(join(runDir, "final-report.md"), `# ${kit} Object Review\n\nDry run only.`);
     console.log(JSON.stringify({ runDir, status: "dry-run" }, null, 2));
     return;
   }
 
-  const { captures, playwrightSource } = await captureReviewRoom(args, runDir);
+  const { captures, playwrightSource } = await captureReviewRoom(context, args, runDir);
   const review =
     args.mockScore !== null || args.noCodex
       ? validateReview(mockReview(args.mockScore ?? 90))
-      : runCodexReview(runDir, captures);
+      : runCodexReview(context, runDir, captures);
   writeJson(join(runDir, "review.json"), review);
   if (!review.pass) {
     writeRetryPlan(runDir, review);

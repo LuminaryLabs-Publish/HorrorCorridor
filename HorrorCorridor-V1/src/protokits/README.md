@@ -24,6 +24,22 @@ Generic domains:
 - `scene-generation-domain-kit`: composition of props, textures, lights, walkthroughs, and validation.
 - `render-validation-domain-kit`: render/debug assertions.
 - `corridor-lamp-object-kit`: composed lamp object kit. It is intentionally split into scoped part-profile kits for foundation, pole, armature, lamp head, cable/conduit, fasteners, material, light, and validation so each visible reference feature has its own inline config and descriptor ownership.
+- `wound-triangle-mesh-domain-kit`: shared explicit indexed-triangle mesh contract with positions, indices, normals, UVs, material slots, bounds, sockets, and outward counter-clockwise winding validation.
+
+Mesh-generating object kits:
+
+- `rusted-service-door-object-kit`
+- `chain-link-fence-object-kit`
+- `broken-generator-object-kit`
+- `concrete-jersey-barrier-object-kit`
+- `storm-drain-culvert-object-kit`
+- `collapsed-signpost-object-kit`
+- `industrial-shelving-object-kit`
+- `hanging-chain-hook-object-kit`
+- `barrel-cluster-object-kit`
+- `broken-concrete-stair-object-kit`
+
+These are registered as domain/object kits and validated by `npm run smoke:protokits`, but they are not promoted into live scene placement until their isolated human-view review rooms pass.
 
 Customization lives in `presets/horror-corridor-preset.ts`.
 

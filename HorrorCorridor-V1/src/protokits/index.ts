@@ -40,6 +40,13 @@ export {
   type BrokenCityWallDomainKitConfig,
 } from "./broken-city-wall-kit";
 export {
+  createBarrelClusterObjectKit,
+  barrelClusterObjectKitConfig,
+  barrelClusterObjectProfile,
+  generateBarrelClusterMesh,
+  type BarrelClusterObjectKitConfig,
+} from "./barrel-cluster-object-kit";
+export {
   createBuildingFacadeObjectKit,
   type BuildingFacadeObjectKitConfig,
 } from "./building-facade-object-kit";
@@ -52,6 +59,20 @@ export {
   type BrickRubbleObjectKitConfig,
 } from "./brick-rubble-object-kit";
 export {
+  createBrokenConcreteStairObjectKit,
+  brokenConcreteStairObjectKitConfig,
+  brokenConcreteStairObjectProfile,
+  generateBrokenConcreteStairMesh,
+  type BrokenConcreteStairObjectKitConfig,
+} from "./broken-concrete-stair-object-kit";
+export {
+  createBrokenGeneratorObjectKit,
+  brokenGeneratorObjectKitConfig,
+  brokenGeneratorObjectProfile,
+  generateBrokenGeneratorMesh,
+  type BrokenGeneratorObjectKitConfig,
+} from "./broken-generator-object-kit";
+export {
   createCableRunObjectKit,
   type CableRunObjectKitConfig,
 } from "./cable-run-object-kit";
@@ -59,6 +80,27 @@ export {
   createCeilingServiceStripObjectKit,
   type CeilingServiceStripObjectKitConfig,
 } from "./ceiling-service-strip-object-kit";
+export {
+  createChainLinkFenceObjectKit,
+  chainLinkFenceObjectKitConfig,
+  chainLinkFenceObjectProfile,
+  generateChainLinkFenceMesh,
+  type ChainLinkFenceObjectKitConfig,
+} from "./chain-link-fence-object-kit";
+export {
+  createCollapsedSignpostObjectKit,
+  collapsedSignpostObjectKitConfig,
+  collapsedSignpostObjectProfile,
+  generateCollapsedSignpostMesh,
+  type CollapsedSignpostObjectKitConfig,
+} from "./collapsed-signpost-object-kit";
+export {
+  createConcreteJerseyBarrierObjectKit,
+  concreteJerseyBarrierObjectKitConfig,
+  concreteJerseyBarrierObjectProfile,
+  generateConcreteJerseyBarrierMesh,
+  type ConcreteJerseyBarrierObjectKitConfig,
+} from "./concrete-jersey-barrier-object-kit";
 export {
   createCorrodedTableObjectKit,
   type CorrodedTableObjectKitConfig,
@@ -106,6 +148,20 @@ export {
   createGrassObjectSpawnDomainKit,
   type GrassObjectSpawnDomainKitConfig,
 } from "./grass-object-spawn-kit";
+export {
+  createHangingChainHookObjectKit,
+  hangingChainHookObjectKitConfig,
+  hangingChainHookObjectProfile,
+  generateHangingChainHookMesh,
+  type HangingChainHookObjectKitConfig,
+} from "./hanging-chain-hook-object-kit";
+export {
+  createIndustrialShelvingObjectKit,
+  industrialShelvingObjectKitConfig,
+  industrialShelvingObjectProfile,
+  generateIndustrialShelvingMesh,
+  type IndustrialShelvingObjectKitConfig,
+} from "./industrial-shelving-object-kit";
 export {
   createLightingDescriptorDomainKit,
   type LightingDescriptorDomainKitConfig,
@@ -167,6 +223,23 @@ export {
   type RaymarchSamplingDomainKitConfig,
 } from "./raymarch-sampling-domain-kit";
 export {
+  createMeshGeneratingObjectKit,
+  createMeshGeneratingObjectKitConfig,
+  createMeshObjectDescriptor,
+  type MeshGeneratingObjectKitConfig,
+  type MeshObjectPartShape,
+  type MeshObjectPartSpec,
+  type MeshObjectProfile,
+} from "./mesh-object-kit";
+export {
+  createMeshObjectDescriptorCatalog,
+  meshGeneratingObjectDomainKitIds,
+  meshGeneratingObjectKitIds,
+  meshObjectCatalog,
+  validateMeshObjectDescriptorCatalog,
+  type MeshObjectCatalogEntry,
+} from "./mesh-object-kit-catalog";
+export {
   createSceneBundleDomainKit,
   type SceneBundleDomainKitConfig,
 } from "./scene-bundle-domain-kit";
@@ -178,6 +251,13 @@ export {
   createRustStreakTextureKit,
   type RustStreakTextureKitConfig,
 } from "./rust-streak-texture-kit";
+export {
+  createRustedServiceDoorObjectKit,
+  rustedServiceDoorObjectKitConfig,
+  rustedServiceDoorObjectProfile,
+  generateRustedServiceDoorMesh,
+  type RustedServiceDoorObjectKitConfig,
+} from "./rusted-service-door-object-kit";
 export {
   createSceneObjectKitReview,
   reviewSceneObjectKitCoverage,
@@ -225,6 +305,13 @@ export {
   type StorageCrateObjectKitConfig,
 } from "./storage-crate-object-kit";
 export {
+  createStormDrainCulvertObjectKit,
+  stormDrainCulvertObjectKitConfig,
+  stormDrainCulvertObjectProfile,
+  generateStormDrainCulvertMesh,
+  type StormDrainCulvertObjectKitConfig,
+} from "./storm-drain-culvert-object-kit";
+export {
   createUtilityCrateObjectKit,
   type UtilityCrateObjectKitConfig,
 } from "./utility-crate-object-kit";
@@ -241,6 +328,19 @@ export {
   createWetConcreteTextureKit,
   type WetConcreteTextureKitConfig,
 } from "./wet-concrete-texture-kit";
+export {
+  createWoundTriangleMeshDomainKit,
+  createWoundBoxMeshPart,
+  createWoundTrapezoidMeshPart,
+  validateWoundMeshObjectDescriptor,
+  woundTriangleMeshDomainKitConfig,
+  type WoundMeshMaterialSlot,
+  type WoundMeshObjectDescriptor,
+  type WoundMeshPartDescriptor,
+  type WoundMeshVector2,
+  type WoundMeshVector3,
+  type WoundTriangleMeshDomainKitConfig,
+} from "./wound-triangle-mesh-domain-kit";
 export {
   createHorrorCorridorContentPacks,
   createHorrorCorridorPreset,

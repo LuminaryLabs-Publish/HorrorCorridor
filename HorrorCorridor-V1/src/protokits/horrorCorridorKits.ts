@@ -1,11 +1,17 @@
 import { createGridMazeDomainKit } from "./grid-maze-domain-kit";
 import { createGridFieldDomainKit } from "./grid-field-domain-kit";
 import { createBrokenCityWallDomainKit } from "./broken-city-wall-kit";
+import { createBarrelClusterObjectKit } from "./barrel-cluster-object-kit";
 import { createBuildingFacadeObjectKit } from "./building-facade-object-kit";
 import { createBrickCourseTextureKit } from "./brick-course-texture-kit";
 import { createBrickRubbleObjectKit } from "./brick-rubble-object-kit";
+import { createBrokenConcreteStairObjectKit } from "./broken-concrete-stair-object-kit";
+import { createBrokenGeneratorObjectKit } from "./broken-generator-object-kit";
 import { createCableRunObjectKit } from "./cable-run-object-kit";
 import { createCeilingServiceStripObjectKit } from "./ceiling-service-strip-object-kit";
+import { createChainLinkFenceObjectKit } from "./chain-link-fence-object-kit";
+import { createCollapsedSignpostObjectKit } from "./collapsed-signpost-object-kit";
+import { createConcreteJerseyBarrierObjectKit } from "./concrete-jersey-barrier-object-kit";
 import { createCorrodedTableObjectKit } from "./corroded-table-object-kit";
 import {
   createCorridorLampArmatureProfileKit,
@@ -24,6 +30,8 @@ import { createDampMudTextureKit } from "./damp-mud-texture-kit";
 import { createDebrisScatterObjectKit } from "./debris-scatter-object-kit";
 import { createFlashlightDomainKit } from "./flashlight-domain-kit";
 import { createGrassObjectSpawnDomainKit } from "./grass-object-spawn-kit";
+import { createHangingChainHookObjectKit } from "./hanging-chain-hook-object-kit";
+import { createIndustrialShelvingObjectKit } from "./industrial-shelving-object-kit";
 import { createInventoryDomainKit } from "./inventory-domain-kit";
 import { createLightingDescriptorDomainKit } from "./lighting-descriptor-domain-kit";
 import { createLightingPlacementDomainKit } from "./lighting-placement-domain-kit";
@@ -40,6 +48,7 @@ import { createPropMaterialFidelityDomainKit } from "./prop-material-fidelity-do
 import { createRaymarchSamplingDomainKit } from "./raymarch-sampling-domain-kit";
 import { createRenderValidationDomainKit } from "./render-validation-domain-kit";
 import { createRockClusterObjectKit } from "./rock-cluster-object-kit";
+import { createRustedServiceDoorObjectKit } from "./rusted-service-door-object-kit";
 import { createRustStreakTextureKit } from "./rust-streak-texture-kit";
 import { createSceneDressingDomainKit } from "./scene-dressing-domain-kit";
 import { createSceneGenerationDomainKit } from "./scene-generation-domain-kit";
@@ -51,11 +60,13 @@ import { createTerrainShaderDomainKit } from "./terrain-shader-domain-kit";
 import { createTriangleSurfaceSamplerDomainKit } from "./triangle-surface-sampler-domain-kit";
 import { createTrailDecalDomainKit } from "./trail-decal-domain-kit";
 import { createStorageCrateObjectKit } from "./storage-crate-object-kit";
+import { createStormDrainCulvertObjectKit } from "./storm-drain-culvert-object-kit";
 import { createUtilityCrateObjectKit } from "./utility-crate-object-kit";
 import { createVentObjectKit } from "./vent-object-kit";
 import { createWalkthroughDomainKit } from "./walkthrough-domain-kit";
 import { createWallPanelObjectKit } from "./wall-panel-object-kit";
 import { createWetConcreteTextureKit } from "./wet-concrete-texture-kit";
+import { createWoundTriangleMeshDomainKit } from "./wound-triangle-mesh-domain-kit";
 import { createSocketGraphDomainKit } from "./socket-graph-domain-kit";
 import { createFootprintLayoutDomainKit } from "./footprint-layout-domain-kit";
 import { createSceneBundleDomainKit } from "./scene-bundle-domain-kit";
@@ -107,6 +118,7 @@ export const createHorrorCorridorDomainKits = (input: HorrorCorridorDomainKitInp
     createRaymarchSamplingDomainKit(preset.raymarchSampling),
     createTriangleSurfaceSamplerDomainKit(preset.triangleSurfaceSampler),
     createSocketGraphDomainKit(preset.socketGraph),
+    createWoundTriangleMeshDomainKit(),
     createBrokenCityWallDomainKit(preset.brokenCityWall),
     createOpenSkyProjectionDomainKit(preset.openSkyProjection),
     createWallPanelObjectKit(
@@ -166,6 +178,16 @@ export const createHorrorCorridorDomainKits = (input: HorrorCorridorDomainKitInp
     createPedestalDressingObjectKit(
       objectKitConfig(preset, ["pedestal-dressing"], ["painted-utility"], preset.smallObjectKits.utilityCrateStack.palette, 6),
     ),
+    createRustedServiceDoorObjectKit(),
+    createChainLinkFenceObjectKit(),
+    createBrokenGeneratorObjectKit(),
+    createConcreteJerseyBarrierObjectKit(),
+    createStormDrainCulvertObjectKit(),
+    createCollapsedSignpostObjectKit(),
+    createIndustrialShelvingObjectKit(),
+    createHangingChainHookObjectKit(),
+    createBarrelClusterObjectKit(),
+    createBrokenConcreteStairObjectKit(),
     createBrickCourseTextureKit(preset.proceduralTextureKits.brickCourse),
     createDampMudTextureKit(preset.proceduralTextureKits.dampMud),
     createRustStreakTextureKit(preset.proceduralTextureKits.rustStreak),
