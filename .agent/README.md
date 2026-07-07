@@ -5,10 +5,10 @@ This root `.agent` folder stores public-safe repo breakdowns, tracker runs, kit 
 ## Latest Entry
 
 ```txt
-.agent/trackers/2026-07-07T13-41-22-04-00/project-breakdown.md
+.agent/trackers/2026-07-07T14-51-44-04-00/project-breakdown.md
 ```
 
-Focus: interaction preflight reason catalog and command replay fixture follow-up for the oldest eligible tracked Publish repo. This pass narrows the command-result work to the first gameplay legality seam: pickup, drop, anomaly placement, anomaly removal, pose, request-sync, and ooze updates need explicit accepted/rejected/unchanged/publish-only result records before render, world-builder, or broad PeerJS extraction.
+Focus: command result envelopes and publish decision snapshots for the oldest eligible tracked Publish repo. This pass narrows the next implementation seam to explicit accepted/rejected/unchanged/publish-only result records, stable publish/skip/recovery/victory decisions, command journals, runtime debug projection, and DOM-free replay fixtures before render, world-builder, or broad PeerJS extraction.
 
 ## Registry
 
@@ -16,11 +16,12 @@ Focus: interaction preflight reason catalog and command replay fixture follow-up
 .agent/kit-registry.json
 ```
 
-The registry tracks current source-owned service surfaces, implemented ProtoKit/catalog surfaces, mesh object kits, texture kits, command envelope and acceptance policy targets, the new `interaction-preflight-reason-catalog-kit`, `interaction-preflight-diagnostics-kit`, `command-result-rejection-contract-kit`, `player-pose-command-result-kit`, `interaction-command-result-kit`, `ooze-command-result-kit`, `snapshot-publish-metadata-kit`, `command-result-journal-kit`, `command-replay-fixture-kit`, command fixtures, replay fixtures, and the next build slice.
+The registry tracks current source-owned service surfaces, implemented ProtoKit/catalog surfaces, mesh object kits, texture kits, command envelope and acceptance targets, `command-result-envelope-kit`, `publish-decision-snapshot-kit`, `interaction-preflight-reason-catalog-kit`, `interaction-preflight-diagnostics-kit`, `player-pose-command-result-kit`, `interaction-command-result-kit`, `ooze-command-result-kit`, `command-result-journal-kit`, `runtime-debug-result-projection-kit`, `command-replay-fixture-kit`, and the next build slice.
 
 ## Previous Entries
 
 ```txt
+.agent/trackers/2026-07-07T13-41-22-04-00/project-breakdown.md
 .agent/trackers/2026-07-07T11-51-17-04-00/project-breakdown.md
 .agent/trackers/2026-07-07T10-41-32-04-00/project-breakdown.md
 .agent/trackers/2026-07-07T09-28-43-04-00/project-breakdown.md
@@ -35,27 +36,33 @@ The registry tracks current source-owned service surfaces, implemented ProtoKit/
 ## Current next slice
 
 ```txt
-HorrorCorridor Interaction Preflight Reason Catalog + Command Replay Fixture Cutover
+HorrorCorridor Command Result Envelope + Publish Decision Snapshot Fixture Cutover
 ```
 
 Build order:
 
 ```txt
 keep solo, host, and client play working
--> add interaction-preflight-reason-catalog-kit before touching render or PeerJS extraction
--> define stable reasons: not_playing, missing_player, already_carrying, no_carried_cube, no_nearby_cube, too_far_from_anomaly, no_open_slot, wrong_slot, no_placed_cube, missing_anomaly_cell, unknown_interaction_action
--> add interaction-preflight-diagnostics-kit that returns checked playerId, cubeId, slotId, distanceToEnd, carriedCubeId, candidateCubeId, selectedSlotId, and rule name
--> wrap pickUpCube, dropCube, placeCubeAtEndAnomaly, and removeCubeFromEndAnomaly with preflight functions before applying effects
--> keep existing interactionRules exports compatible while adding result-returning variants
--> add command-result-rejection-contract-kit fields: commandId, type, actorId, accepted, rejected, rejectionReason, changed, events, publishDecision, publishReason, beforeTick, afterTick, diagnostics
--> add player-pose-command-result-kit around applyNetworkPlayerUpdate
--> add ooze-command-result-kit around advanceOozeTrail with deterministic RNG required in fixtures
--> add snapshot-publish-metadata-kit and make request-sync publish-only with accepted=true changed=false publishReason=recovery
--> add command-result-journal-kit with accepted, rejected, unchanged, and publish-only counts
--> extend runtime debug frames with lastCommandId, lastCommandType, lastResultStatus, lastRejectionReason, lastPublishReason, publishDecision, and journal counts
--> add DOM-free fixtures for missing-player pose, unchanged pose, illegal pickup, legal pickup, illegal place, legal place, wrong-slot remove, request-sync, seeded ooze, and victory
--> add command-replay-fixture-kit to replay command journals and compare normalized final snapshots
--> defer render extraction, world-builder extraction, broad PeerJS adapter extraction, and new visual-kit work
+-> add command-result-envelope-kit as a DOM-free source boundary
+-> define result statuses: accepted, rejected, unchanged, publish-only
+-> define stable rejection reasons: not_playing, missing_player, already_carrying, no_carried_cube, no_nearby_cube, too_far_from_anomaly, no_open_slot, wrong_slot, no_placed_cube, missing_anomaly_cell, unknown_interaction_action, unknown_network_action
+-> define publish decisions: publish, skip, recovery, victory
+-> keep current interactionRules exports compatible
+-> add result-returning interaction variants for pickup, drop, place, and remove
+-> keep current networkRules exports compatible
+-> add applyNetworkPlayerUpdateWithResult and applyNetworkInteractionRequestWithResult
+-> classify missing-player pose updates as rejected missing_player
+-> classify identical pose updates as accepted unchanged
+-> classify request-sync as publish-only recovery
+-> classify toggle-ready and cancel as publish-only or skipped by explicit policy instead of silent default
+-> add publish-decision-snapshot-kit around buildReplicatedSnapshot and createFullSyncMessage seams
+-> change GameCanvas host/local authority paths to consume result metadata while preserving current behavior
+-> add command-result-journal-kit with accepted, rejected, unchanged, publish-only, publish, skip, recovery, and victory counts
+-> extend RuntimeDebugFrameRecord with latestCommandResult, latestPublishDecision, and commandJournal counts
+-> expose the same data through window.__HORROR_CORRIDOR_DEBUG__.extractState()
+-> add DOM-free fixtures for missing-player pose, unchanged pose, illegal pickup, legal pickup, illegal place, legal place, wrong-slot remove, request-sync recovery, seeded ooze unchanged, seeded ooze changed, and victory publish
+-> add command replay fixture that replays result-bearing envelopes and compares normalized final snapshots
+-> defer render extraction, world-builder extraction, broad PeerJS adapter extraction, and new object/texture visual work
 ```
 
 ## Tracker Layout
