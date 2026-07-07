@@ -1,94 +1,102 @@
 {
   "schemaVersion": 2,
   "repository": "LuminaryLabs-Publish/HorrorCorridor",
-  "generatedAt": "2026-07-07T07:10:27-04:00",
-  "status": "command-reducer-replay-followup",
+  "generatedAt": "2026-07-07T08:20:44-04:00",
+  "status": "command-application-contract-followup",
+  "latestTracker": ".agent/trackers/2026-07-07T08-20-44-04-00/project-breakdown.md",
   "sourceRoots": [
     "HorrorCorridor-V1/src/components/game",
     "HorrorCorridor-V1/src/features",
     "HorrorCorridor-V1/src/protokits",
     "HorrorCorridor-V1/scripts"
   ],
-  "latestTracker": ".agent/trackers/2026-07-07T07-10-27-04-00/project-breakdown.md",
   "interactionLoop": {
     "current": [
       "start-menu",
       "solo-host-or-join",
-      "lobby-or-solo-bootstrap",
+      "room-identity-and-lobby",
+      "peer-host-or-client-connect",
       "loading-readiness-steps",
-      "seeded-maze-snapshot",
-      "first-person-navigation",
-      "host-or-solo-authoritative-local-mutation",
-      "client-predictive-pose-update",
+      "seeded-maze-bootstrap",
+      "game-canvas-runtime-init",
+      "pointer-lock-first-person-navigation",
+      "direct-local-authoritative-mutation",
+      "client-player-update-and-try-interact-send",
+      "host-message-rule-application",
       "cube-pickup-carry-drop-place-remove",
-      "end-anomaly-ordered-sequence",
-      "ooze-spawn-decay-cadence",
+      "ordered-sequence-validation",
+      "ooze-host-cadence",
       "replicated-snapshot-publish",
-      "victory-or-correction",
-      "return-to-lobby-or-title"
+      "render-minimap-hud-debug",
+      "victory-or-return"
     ],
     "target": [
-      "session-domain-service creates room mode",
-      "peer-room-sync-service owns transport messages",
-      "maze-bootstrap-service creates deterministic snapshot",
-      "player-service emits pose/input commands",
-      "host-authority-command-service validates and applies every state mutation",
-      "cube-interaction-service applies legal interaction commands",
-      "anomaly-sequence-service evaluates objective state",
-      "ooze-navigation-service advances through seeded command ticks",
+      "session-domain-service creates room/session state",
+      "peer-room-sync-service translates transport messages into commands",
+      "maze-bootstrap-service creates deterministic GameState and snapshot",
+      "first-person-player-service emits pose/action frames",
+      "host-authority-command-service validates and applies every gameplay mutation",
+      "cube-interaction-service applies legal cube effects through command results",
+      "sequence-objective-service evaluates victory/correction through command results",
+      "ooze-navigation-service advances through seeded ADVANCE_OOZE commands",
+      "snapshot-publish-contract-service emits snapshots with publish reasons",
       "maze-render-service consumes snapshots and descriptor feeds only",
-      "runtime-debug-service records service-level diagnostics",
+      "runtime-debug-service records command/cadence/snapshot diagnostics",
       "command-journal-replay-service proves deterministic replay parity"
     ]
   },
   "domains": [
     {
       "id": "application-shell",
-      "description": "Next app, React client components, package scripts, static route shell, HUD/menu composition, and app route."
+      "description": "Next app, client route, React shell, package scripts, menu screens, HUD overlay, and clean play surface."
     },
     {
-      "id": "app-session",
-      "description": "Start, host, join, solo, lobby, loading, pause, completion, room identity, join code, player identity, ready state, and screen state."
+      "id": "session-lifecycle",
+      "description": "Start, host lobby, client lobby, solo bootstrap, loading steps, pause, completion, room ID, join code, peer identity, player identity, and readiness flags."
     },
     {
-      "id": "peer-sync",
-      "description": "PeerJS host/client lifecycle, lobby events, start-game messages, full sync, player updates, interaction requests, and host-authoritative reconciliation."
+      "id": "peer-networking",
+      "description": "PeerJS host/client transport, status mapping, lobby events, start-game, full-sync, player-update, interaction-request, and broadcast cadence."
     },
     {
       "id": "maze-bootstrap",
-      "description": "Seed hashing, grid generation, maze cells, maze lookup, cube spawns, sequence slots, player spawns, and replicated snapshot creation."
+      "description": "Seed hashing, maze generation, maze snapshots, cube spawn snapshots, sequence slot initialization, player initialization, and replicated snapshot creation."
     },
     {
       "id": "first-person-player",
-      "description": "Keyboard input, pointer lock, yaw/pitch, camera-relative movement, collision, local pose, velocity, camera bob, and carrying state."
+      "description": "Keyboard mapping, pointer lock, mouse look, yaw/pitch, movement integration, maze collision, local pose, camera bob, and carry state."
     },
     {
       "id": "host-authority",
-      "description": "Command validation, local and remote command application, tick ownership, full-sync reason creation, illegal request rejection, and replay journal boundaries."
+      "description": "Command validation, command application, rejected command reporting, publish reason output, and journal entry creation."
     },
     {
       "id": "cube-interaction",
-      "description": "Nearest cube selection, pickup, drop, anomaly placement, anomaly removal, held-cube sync, slot assignment, and request legality."
+      "description": "Nearest cube selection, pickup, drop, end anomaly placement, end anomaly removal, held-cube sync, slot assignment, and legal distance checks."
     },
     {
       "id": "sequence-objective",
-      "description": "Ordered color sequence validation, slot solved state, exact-order match, victory transition, and correction reversal."
+      "description": "Ordered color sequence, slot evaluation, solved count, exact-order validation, victory transition, and correction reversal."
     },
     {
       "id": "ooze-navigation",
-      "description": "Trail spawn, spacing guard, max decal cap, decay interval, seeded or fallback RNG, scale decay, ooze count, and decal render feed."
+      "description": "Ooze spawn, decay, spacing guard, max cap, seeded RNG injection, trail scaling, ooze level, and decal feed."
+    },
+    {
+      "id": "snapshot-publishing",
+      "description": "Replicated snapshot building, full sync message output, publish reason handling, host broadcast, and replay snapshot comparison."
     },
     {
       "id": "maze-render",
-      "description": "Three renderer, camera, post-processing, terrain projection, static maze instancing, cube/player sync, flashlight, ooze decals, minimap, scene dressing, and disposal."
+      "description": "Three renderer, camera, post-processing, terrain projection, maze world, cube/player sync, flashlight, ooze decals, scene dressing, minimap, and disposal."
     },
     {
-      "id": "protokit-content",
-      "description": "Content pack manifest, preset, object kits, texture kits, procedural materials, scene dressing descriptors, and validation scripts."
+      "id": "content-protokits",
+      "description": "Horror preset, mesh object kits, procedural texture kits, scene dressing descriptors, validation descriptors, and object-kit review."
     },
     {
-      "id": "runtime-diagnostics",
-      "description": "Runtime debug events, debug frames, cadence summaries, live-agent harnesses, object-kit review, visual matching, live-player validation, and target command journal smoke."
+      "id": "diagnostics-validation",
+      "description": "Runtime debug store, debug events, debug frames, cadence summaries, live-agent scripts, live-player harness, smoke scripts, and target replay parity reports."
     }
   ],
   "kits": [
@@ -111,12 +119,10 @@
         "start-play",
         "run-loading-steps",
         "return-to-lobby",
-        "return-to-start",
-        "toggle-ready",
-        "screen-transition-commands",
+        "return-to-title",
         "readiness-state"
       ],
-      "nextAction": "Extract session/lobby/loading orchestration out of GameShell while keeping GameShell as the React host."
+      "nextAction": "Extract room/lobby/loading orchestration out of GameShell while preserving the current React host."
     },
     {
       "id": "peer-room-sync-domain-kit",
@@ -139,10 +145,10 @@
         "full-sync-message",
         "player-update-message",
         "interaction-request-message",
-        "host-authoritative-snapshot-publish",
-        "client-predictive-update-send"
+        "client-message-to-command",
+        "host-snapshot-broadcast"
       ],
-      "nextAction": "Move protocol handling, request validation, and publish cadence out of component files."
+      "nextAction": "Convert transport messages into command objects before host mutation."
     },
     {
       "id": "maze-snapshot-bootstrap-kit",
@@ -158,12 +164,12 @@
         "maze-generation",
         "maze-cell-snapshot",
         "maze-lookup",
-        "cube-snapshot",
+        "cube-spawn-snapshot",
         "sequence-slot-bootstrap",
         "player-spawn-bootstrap",
         "replicated-snapshot-bootstrap"
       ],
-      "nextAction": "Promote bootstrap state creation into an explicit deterministic kit consumed by solo, host, and replay fixtures."
+      "nextAction": "Keep as deterministic input to live play, smoke fixtures, and command replay."
     },
     {
       "id": "first-person-corridor-player-kit",
@@ -184,35 +190,34 @@
         "camera-relative-movement",
         "maze-collision-resolution",
         "local-pose-step",
-        "pose-snapshot-output",
+        "pose-action-frame-output",
         "walk-camera-bob"
       ],
-      "nextAction": "Split DOM input capture from pure pose stepping so tests and host authority can run without React or WebGL."
+      "nextAction": "Split DOM input capture from pure pose/action-frame stepping."
     },
     {
       "id": "host-authority-command-kit",
       "status": "target-extract",
       "kind": "domain-service-kit",
       "sourceFiles": [
-        "HorrorCorridor-V1/src/components/game/GameCanvas.tsx",
         "HorrorCorridor-V1/src/features/game-state/domain/networkRules.ts",
         "HorrorCorridor-V1/src/features/game-state/domain/interactionRules.ts",
         "HorrorCorridor-V1/src/features/game-state/domain/winRules.ts",
-        "HorrorCorridor-V1/src/features/game-state/domain/oozeRules.ts"
+        "HorrorCorridor-V1/src/features/game-state/domain/oozeRules.ts",
+        "HorrorCorridor-V1/src/components/game/GameCanvas.tsx"
       ],
       "provides": [
         "define-command-types",
+        "apply-command",
         "validate-player-pose-update",
         "validate-interaction-request",
-        "apply-host-command",
-        "apply-client-command",
-        "apply-local-solo-command",
-        "authoritative-tick-advance",
-        "full-sync-reason-output",
-        "illegal-command-rejection",
-        "command-journal-record"
+        "advance-ooze-command",
+        "state-events-rejected-output",
+        "rejection-reason-output",
+        "publish-reason-output",
+        "command-journal-entry-output"
       ],
-      "nextAction": "Make solo, host, and client request paths use the same command reducer before state mutation."
+      "nextAction": "Make solo, host, and client request paths use one command application contract before state mutation."
     },
     {
       "id": "cube-carry-interaction-kit",
@@ -220,8 +225,7 @@
       "kind": "domain-service-kit",
       "sourceFiles": [
         "HorrorCorridor-V1/src/features/game-state/domain/interactionRules.ts",
-        "HorrorCorridor-V1/src/features/game-state/domain/networkRules.ts",
-        "HorrorCorridor-V1/src/components/game/GameCanvas.tsx"
+        "HorrorCorridor-V1/src/features/game-state/domain/networkRules.ts"
       ],
       "provides": [
         "nearest-loose-cube-selection",
@@ -230,17 +234,17 @@
         "place-cube-at-end-anomaly",
         "remove-cube-from-end-anomaly",
         "held-cube-sync",
-        "interaction-request-application"
+        "slot-assignment",
+        "legal-distance-check"
       ],
-      "nextAction": "Expose a single request/apply API for local host, remote client, and replay smoke fixtures."
+      "nextAction": "Keep legality checks, but call them through TRY_INTERACT command results."
     },
     {
       "id": "end-anomaly-sequence-kit",
       "status": "candidate-extract",
       "kind": "domain-service-kit",
       "sourceFiles": [
-        "HorrorCorridor-V1/src/features/game-state/domain/winRules.ts",
-        "HorrorCorridor-V1/src/features/game-state/domain/interactionRules.ts"
+        "HorrorCorridor-V1/src/features/game-state/domain/winRules.ts"
       ],
       "provides": [
         "slot-evaluation",
@@ -249,7 +253,7 @@
         "victory-transition",
         "victory-reversal-on-correction"
       ],
-      "nextAction": "Add headless tests for correct order, wrong order, removal, and replayed correction."
+      "nextAction": "Evaluate objective state only as part of command application."
     },
     {
       "id": "ooze-trail-navigation-kit",
@@ -267,7 +271,24 @@
         "seeded-rng-injection",
         "ooze-decal-render-feed"
       ],
-      "nextAction": "Separate ooze simulation from decal rendering and route advancement through command ticks with seeded RNG injection in fixtures."
+      "nextAction": "Route advancement through ADVANCE_OOZE command with seeded RNG context."
+    },
+    {
+      "id": "snapshot-publish-contract-kit",
+      "status": "target-add",
+      "kind": "domain-service-kit",
+      "sourceFiles": [
+        "HorrorCorridor-V1/src/features/networking/protocol/syncSnapshot.ts",
+        "HorrorCorridor-V1/src/components/game/GameCanvas.tsx"
+      ],
+      "provides": [
+        "build-authoritative-snapshot",
+        "attach-publish-reason",
+        "attach-command-metadata",
+        "emit-full-sync-message",
+        "compare-replay-snapshot"
+      ],
+      "nextAction": "Make publishAuthoritativeState a thin caller around this service."
     },
     {
       "id": "maze-world-render-kit",
@@ -297,7 +318,7 @@
         "minimap-draw",
         "scene-dressing-summary"
       ],
-      "nextAction": "Make render consume snapshots and descriptor feeds only. Do not let render own simulation rules."
+      "nextAction": "Make render consume snapshots and descriptor feeds only."
     },
     {
       "id": "runtime-debug-frame-kit",
@@ -317,9 +338,9 @@
         "cadence-summary",
         "debug-overlay-toggle",
         "live-player-validation",
-        "target-command-diagnostics"
+        "command-level-diagnostics"
       ],
-      "nextAction": "Emit one stable diagnostics snapshot from the runtime service layer, not from GameCanvas internals."
+      "nextAction": "Add lastCommandType, rejectedCommandCount, journalLength, lastPublishReason, and replayParityStatus."
     },
     {
       "id": "command-journal-replay-kit",
@@ -337,7 +358,7 @@
         "assert-deterministic-parity",
         "emit-replay-report"
       ],
-      "nextAction": "Add a Node-runnable fixture that boots a seeded snapshot, applies commands, and verifies the final replicated snapshot."
+      "nextAction": "Boot a seeded state, apply command JSON, and verify the final replicated snapshot."
     },
     {
       "id": "snapshot-contract-smoke-kit",
@@ -348,141 +369,112 @@
       ],
       "provides": [
         "solo-bootstrap-smoke",
-        "pose-collision-smoke",
+        "pose-update-smoke",
         "cube-roundtrip-smoke",
         "wrong-order-correction-smoke",
-        "victory-smoke",
         "ooze-cap-decay-smoke",
+        "victory-smoke",
         "replay-parity-smoke"
       ],
-      "nextAction": "Create stable fixtures for host-authority acceptance before doing another render or content pass."
+      "nextAction": "Create stable smoke fixtures for the command application contract."
     },
     {
       "id": "wound-triangle-mesh-domain-kit",
-      "status": "implemented-source",
-      "kind": "descriptor-kit",
-      "sourceFiles": [
-        "HorrorCorridor-V1/src/protokits/wound-triangle-mesh-domain-kit/index.ts"
-      ],
+      "status": "implemented-protokit",
+      "kind": "mesh-domain-kit",
       "provides": [
-        "wound-mesh-object-descriptor-validation",
-        "mesh-object-descriptor-contract"
-      ],
-      "nextAction": "Keep as shared descriptor validation base for object kit promotion."
+        "triangle-wound-mesh-generation",
+        "mesh-descriptor-validation"
+      ]
     },
     {
       "id": "mesh-object-kit-catalog",
-      "status": "implemented-source",
-      "kind": "catalog-kit",
-      "sourceFiles": [
-        "HorrorCorridor-V1/src/protokits/mesh-object-kit-catalog.ts"
-      ],
+      "status": "implemented-catalog",
+      "kind": "object-kit-catalog",
       "provides": [
-        "mesh-object-catalog",
-        "mesh-generating-object-kit-ids",
-        "mesh-generating-domain-kit-ids",
-        "descriptor-catalog-create",
-        "descriptor-catalog-validate"
-      ],
-      "containsKits": [
-        "rusted-service-door-object-kit",
-        "chain-link-fence-object-kit",
-        "broken-generator-object-kit",
-        "concrete-jersey-barrier-object-kit",
-        "storm-drain-culvert-object-kit",
-        "collapsed-signpost-object-kit",
-        "industrial-shelving-object-kit",
-        "hanging-chain-hook-object-kit",
-        "barrel-cluster-object-kit",
-        "broken-concrete-stair-object-kit"
-      ],
-      "nextAction": "Add promotion state for every mesh object kit only after command authority is deterministic."
+        "object-kit-registry",
+        "industrial-horror-prop-descriptors"
+      ]
     },
     {
       "id": "horror-corridor-preset-kit",
-      "status": "implemented-source",
+      "status": "implemented-preset",
       "kind": "preset-kit",
-      "sourceFiles": [
-        "HorrorCorridor-V1/src/protokits/presets/horror-corridor-preset.ts"
-      ],
       "provides": [
-        "maze-preset",
-        "sequence-objective-preset",
-        "inventory-preset",
-        "spatial-interaction-preset",
-        "trail-decal-preset",
-        "terrain-field-preset",
-        "terrain-shader-preset",
-        "procedural-texture-kit-preset",
-        "object-placement-preset",
-        "scene-dressing-preset",
-        "lighting-placement-preset",
-        "flashlight-preset",
-        "walkthrough-preset",
-        "render-validation-preset"
-      ],
-      "nextAction": "Use this preset as the source of truth for runtime kit configuration after authority and replay fixtures are stable."
+        "broken-city-industrial-overgrowth-style",
+        "scene-dressing-defaults"
+      ]
     },
     {
       "id": "procedural-texture-kit-family",
-      "status": "implemented-source",
+      "status": "implemented-family",
       "kind": "texture-kit-family",
-      "sourceFiles": [
-        "HorrorCorridor-V1/src/protokits/brick-course-texture-kit/index.ts",
-        "HorrorCorridor-V1/src/protokits/damp-mud-texture-kit/index.ts",
-        "HorrorCorridor-V1/src/protokits/rust-streak-texture-kit/index.ts",
-        "HorrorCorridor-V1/src/protokits/moss-grime-texture-kit/index.ts",
-        "HorrorCorridor-V1/src/protokits/wet-concrete-texture-kit/index.ts"
-      ],
       "provides": [
-        "brick-course-texture",
-        "damp-mud-texture",
-        "rust-streak-texture",
-        "moss-grime-texture",
-        "wet-concrete-texture"
-      ],
-      "nextAction": "Attach material outputs to render validation and scene dressing summaries after service authority is cut over."
+        "brick-course-texture-kit",
+        "damp-mud-texture-kit",
+        "rust-streak-texture-kit",
+        "moss-grime-texture-kit",
+        "wet-concrete-texture-kit"
+      ]
     }
   ],
-  "serviceCutoverOrder": [
-    "corridor-session-domain-kit",
-    "peer-room-sync-domain-kit",
-    "maze-snapshot-bootstrap-kit",
-    "first-person-corridor-player-kit",
-    "host-authority-command-kit",
-    "command-journal-replay-kit",
-    "cube-carry-interaction-kit",
-    "end-anomaly-sequence-kit",
-    "ooze-trail-navigation-kit",
-    "runtime-debug-frame-kit",
-    "snapshot-contract-smoke-kit",
-    "maze-world-render-kit"
+  "meshObjectKits": [
+    "rusted-service-door-object-kit",
+    "chain-link-fence-object-kit",
+    "broken-generator-object-kit",
+    "concrete-jersey-barrier-object-kit",
+    "storm-drain-culvert-object-kit",
+    "collapsed-signpost-object-kit",
+    "industrial-shelving-object-kit",
+    "hanging-chain-hook-object-kit",
+    "barrel-cluster-object-kit",
+    "broken-concrete-stair-object-kit"
   ],
-  "recommendedSmokeFixtures": [
-    "solo-start-produces-authoritative-snapshot",
-    "player-movement-respects-maze-collision",
-    "host-authority-command-journal-replays",
-    "cube-pickup-drop-roundtrip",
-    "cube-place-correct-order-victory",
-    "cube-place-wrong-order-then-correct",
-    "ooze-spawn-cap-decay-with-seeded-rng",
-    "host-publishes-snapshot-cadence",
-    "mesh-object-catalog-validates-all-descriptors"
+  "textureKits": [
+    "brick-course-texture-kit",
+    "damp-mud-texture-kit",
+    "rust-streak-texture-kit",
+    "moss-grime-texture-kit",
+    "wet-concrete-texture-kit"
   ],
   "nextSlice": {
-    "id": "HorrorCorridor Command Reducer Replay Cutover",
+    "name": "HorrorCorridor Command Application Contract + Snapshot Publish Cutover",
+    "goal": "Move every authoritative gameplay mutation behind one command result contract and make snapshot publishing consume command results instead of GameCanvas-owned state transitions.",
     "buildOrder": [
-      "keep-current-playable-flow",
-      "add-pure-host-authority-command-kit",
-      "define-player-interaction-ooze-sync-command-types",
-      "route-solo-through-command-reducer",
-      "route-peer-messages-through-command-reducer",
-      "move-sequence-validation-behind-command-reducer",
-      "move-ooze-advance-behind-command-reducer",
-      "return-state-events-rejected-publishReason-journalEntry",
-      "make-GameCanvas-dispatch-commands-and-consume-snapshots",
-      "add-command-journal-replay-fixture",
-      "add-snapshot-contract-smoke-fixtures"
+      "keep-current-solo-host-client-play-working",
+      "add-host-authority-command-kit",
+      "define-player-pose-update-try-interact-advance-ooze-pause-resume-request-sync-complete-run",
+      "define-apply-command-state-command-context-result",
+      "return-state-events-rejected-rejection-reason-publish-reason-journal-entry",
+      "route-applyNetworkPlayerUpdate-through-PLAYER_POSE_UPDATE",
+      "route-applyNetworkInteractionRequest-through-TRY_INTERACT",
+      "route-validateOrderedSequenceCompletion-through-command-application",
+      "route-advanceOozeTrail-through-ADVANCE_OOZE",
+      "add-snapshot-publish-contract-kit",
+      "route-solo-and-host-through-command-service",
+      "add-command-journal-replay-kit",
+      "add-snapshot-contract-smoke-kit",
+      "extend-runtime-debug-frame-kit-command-diagnostics"
+    ],
+    "acceptanceTargets": [
+      "npm run lint",
+      "npm run smoke:protokits",
+      "npm run validate:live-player:dev",
+      "host-authority-command-kit-runs-without-react-or-three",
+      "solo-and-host-share-command-path",
+      "illegal-try-interact-returns-rejected-status",
+      "advance-ooze-is-seeded-and-replayable",
+      "snapshot-publish-contract-kit-produces-stable-snapshots",
+      "command-journal-replay-reaches-identical-final-snapshot",
+      "runtime-debug-exposes-command-level-diagnostics"
     ]
-  }
+  },
+  "changeLog": [
+    ".agent/trackers/2026-07-07T16-25-00-04-00/project-breakdown.md",
+    ".agent/trackers/2026-07-07T03-38-41-04-00/project-breakdown.md",
+    ".agent/trackers/2026-07-07T04-50-42-04-00/project-breakdown.md",
+    ".agent/trackers/2026-07-07T06-01-21-04-00/project-breakdown.md",
+    ".agent/trackers/2026-07-07T07-10-27-04-00/project-breakdown.md",
+    ".agent/trackers/2026-07-07T08-20-44-04-00/project-breakdown.md"
+  ]
 }
