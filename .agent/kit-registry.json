@@ -1,0 +1,365 @@
+{
+  "schemaVersion": 1,
+  "repository": "LuminaryLabs-Publish/HorrorCorridor",
+  "generatedAt": "2026-07-07T04:50:42-04:00",
+  "status": "documentation-registry",
+  "sourceRoots": [
+    "HorrorCorridor-V1/src/components/game",
+    "HorrorCorridor-V1/src/features",
+    "HorrorCorridor-V1/src/protokits",
+    "HorrorCorridor-V1/scripts"
+  ],
+  "interactionLoop": [
+    "start-menu",
+    "solo-host-or-join",
+    "lobby-or-solo-bootstrap",
+    "loading-readiness-steps",
+    "seeded-maze-snapshot",
+    "first-person-navigation",
+    "cube-pickup-carry-drop-place",
+    "end-anomaly-ordered-sequence",
+    "victory-or-correction",
+    "return-to-lobby-or-title"
+  ],
+  "domains": [
+    {
+      "id": "app-session",
+      "description": "Start, host, join, solo, lobby, loading, pause, completion, room identity, and screen state."
+    },
+    {
+      "id": "peer-sync",
+      "description": "PeerJS host/client lifecycle, lobby events, start game, full sync, player updates, interaction requests, and host authoritative reconciliation."
+    },
+    {
+      "id": "maze-simulation",
+      "description": "Seeded maze generation, maze cells, maze lookup, cube spawn snapshots, player spawn snapshots, sequence slots, and replicated game snapshot construction."
+    },
+    {
+      "id": "first-person-player",
+      "description": "Pointer lock, keyboard input, yaw/pitch look, camera-relative movement, collision, and local pose sync."
+    },
+    {
+      "id": "cube-interaction",
+      "description": "Nearest cube detection, pickup, drop, carry sync, end anomaly placement, and anomaly removal."
+    },
+    {
+      "id": "sequence-objective",
+      "description": "Ordered color sequence validation, slot state, solved count, victory transition, and correction path."
+    },
+    {
+      "id": "ooze-navigation",
+      "description": "Ooze trail spawn, spacing, max cap, decay interval, scale decay, and decal summary."
+    },
+    {
+      "id": "maze-render",
+      "description": "Three renderer, camera, post-processing, terrain projection, static maze instancing, cube sync, players, flashlight, ooze decals, minimap, scene dressing, and disposal."
+    },
+    {
+      "id": "protokit-content",
+      "description": "Content pack manifest, preset, object kits, texture kits, procedural materials, scene dressing descriptors, and review/smoke scripts."
+    },
+    {
+      "id": "runtime-diagnostics",
+      "description": "Runtime debug events, debug frames, cadence tracking, live-agent harnesses, object kit review, visual matching, and player validation."
+    }
+  ],
+  "kits": [
+    {
+      "id": "corridor-session-domain-kit",
+      "status": "candidate-extract",
+      "kind": "domain-service-kit",
+      "sourceFiles": [
+        "HorrorCorridor-V1/src/components/game/GameShell.tsx",
+        "HorrorCorridor-V1/src/features/game-state/store/sessionStore.ts",
+        "HorrorCorridor-V1/src/features/game-state/store/uiStore.ts"
+      ],
+      "provides": [
+        "enterSoloRun",
+        "enterHostLobby",
+        "enterClientLobby",
+        "startPlay",
+        "returnToLobby",
+        "returnToStart",
+        "toggleReady",
+        "room-state-creation",
+        "loading-step-playback",
+        "screen-transition-commands"
+      ],
+      "nextAction": "Extract session/lobby/loading orchestration out of GameShell while keeping GameShell as the React composition host."
+    },
+    {
+      "id": "peer-room-sync-domain-kit",
+      "status": "candidate-extract",
+      "kind": "domain-service-kit",
+      "sourceFiles": [
+        "HorrorCorridor-V1/src/features/networking/peer/createHost.ts",
+        "HorrorCorridor-V1/src/features/networking/peer/createClient.ts",
+        "HorrorCorridor-V1/src/features/networking/protocol/syncSnapshot.ts",
+        "HorrorCorridor-V1/src/features/networking/protocol/messageTypes.ts",
+        "HorrorCorridor-V1/src/components/game/GameShell.tsx",
+        "HorrorCorridor-V1/src/components/game/GameCanvas.tsx"
+      ],
+      "provides": [
+        "host-transport",
+        "client-transport",
+        "lobby-event-broadcast",
+        "start-game-message",
+        "full-sync-message",
+        "player-update-message",
+        "interaction-request-message",
+        "host-authoritative-snapshot-publish"
+      ],
+      "nextAction": "Move protocol handling and publish cadence out of component files."
+    },
+    {
+      "id": "maze-snapshot-bootstrap-kit",
+      "status": "candidate-extract",
+      "kind": "domain-service-kit",
+      "sourceFiles": [
+        "HorrorCorridor-V1/src/features/game-state/domain/createInitialGameState.ts",
+        "HorrorCorridor-V1/src/features/maze/domain/generateMaze.ts",
+        "HorrorCorridor-V1/src/features/maze/domain/mazePathing.ts"
+      ],
+      "provides": [
+        "seed-hash",
+        "maze-generation",
+        "maze-cell-snapshot",
+        "cube-snapshot",
+        "sequence-slot-bootstrap",
+        "player-spawn-bootstrap",
+        "replicated-snapshot-bootstrap"
+      ],
+      "nextAction": "Promote bootstrap state creation into an explicit kit consumed by solo and host start paths."
+    },
+    {
+      "id": "first-person-corridor-player-kit",
+      "status": "candidate-extract",
+      "kind": "domain-service-kit",
+      "sourceFiles": [
+        "HorrorCorridor-V1/src/features/player/domain/input.ts",
+        "HorrorCorridor-V1/src/features/player/domain/cameraLook.ts",
+        "HorrorCorridor-V1/src/features/player/domain/movement.ts",
+        "HorrorCorridor-V1/src/features/player/domain/collision.ts",
+        "HorrorCorridor-V1/src/components/game/GameCanvas.tsx"
+      ],
+      "provides": [
+        "keyboard-code-to-button",
+        "pointer-lock-state",
+        "look-delta-accumulation",
+        "yaw-pitch-advance",
+        "camera-relative-movement",
+        "maze-collision-resolution",
+        "local-pose-step"
+      ],
+      "nextAction": "Make movement, look, collision, and input stepping callable outside GameCanvas."
+    },
+    {
+      "id": "cube-carry-interaction-kit",
+      "status": "candidate-extract",
+      "kind": "domain-service-kit",
+      "sourceFiles": [
+        "HorrorCorridor-V1/src/features/game-state/domain/interactionRules.ts",
+        "HorrorCorridor-V1/src/features/game-state/domain/networkRules.ts",
+        "HorrorCorridor-V1/src/components/game/GameCanvas.tsx"
+      ],
+      "provides": [
+        "nearest-loose-cube-selection",
+        "pickup-cube",
+        "drop-cube",
+        "place-cube-at-end-anomaly",
+        "remove-cube-from-end-anomaly",
+        "held-cube-sync",
+        "interaction-request-application"
+      ],
+      "nextAction": "Move local and network interaction decision routing into one testable service."
+    },
+    {
+      "id": "end-anomaly-sequence-kit",
+      "status": "candidate-extract",
+      "kind": "domain-service-kit",
+      "sourceFiles": [
+        "HorrorCorridor-V1/src/features/game-state/domain/winRules.ts",
+        "HorrorCorridor-V1/src/features/game-state/domain/interactionRules.ts"
+      ],
+      "provides": [
+        "slot-evaluation",
+        "solved-count",
+        "exact-order-match",
+        "victory-transition",
+        "victory-reversal-on-correction"
+      ],
+      "nextAction": "Add headless tests for correct order, wrong order, removal, and replayed correction."
+    },
+    {
+      "id": "ooze-trail-navigation-kit",
+      "status": "candidate-extract",
+      "kind": "domain-service-kit",
+      "sourceFiles": [
+        "HorrorCorridor-V1/src/features/game-state/domain/oozeRules.ts",
+        "HorrorCorridor-V1/src/features/render/three/worldBuilder.ts"
+      ],
+      "provides": [
+        "spawn-ooze-trail",
+        "decay-ooze-trail",
+        "advance-ooze-trail",
+        "ooze-level-summary",
+        "ooze-decal-render-feed"
+      ],
+      "nextAction": "Separate ooze simulation from decal rendering and add cap/decay smoke tests."
+    },
+    {
+      "id": "maze-world-render-kit",
+      "status": "candidate-extract",
+      "kind": "render-kit",
+      "sourceFiles": [
+        "HorrorCorridor-V1/src/features/render/three/worldBuilder.ts",
+        "HorrorCorridor-V1/src/features/render/three/createRenderer.ts",
+        "HorrorCorridor-V1/src/features/render/three/createCamera.ts",
+        "HorrorCorridor-V1/src/features/render/three/createPostProcessing.ts",
+        "HorrorCorridor-V1/src/features/render/three/sceneDressingDescriptors.ts",
+        "HorrorCorridor-V1/src/features/render/three/sceneDressingRenderer.ts",
+        "HorrorCorridor-V1/src/features/render/three/terrainSurface.ts"
+      ],
+      "provides": [
+        "renderer-create-resize-dispose",
+        "camera-create-sync",
+        "post-processing-render",
+        "static-maze-instancing",
+        "terrain-eye-position",
+        "scene-dressing-layer",
+        "cube-mesh-sync",
+        "player-mesh-sync",
+        "flashlight-sync",
+        "ooze-decal-sync",
+        "scene-dressing-summary"
+      ],
+      "nextAction": "Split worldBuilder into static layer, dynamic snapshot layer, terrain projection, dressing, and disposal services."
+    },
+    {
+      "id": "runtime-debug-frame-kit",
+      "status": "candidate-extract",
+      "kind": "diagnostics-kit",
+      "sourceFiles": [
+        "HorrorCorridor-V1/src/features/debug/store/runtimeDebugStore.ts",
+        "HorrorCorridor-V1/src/components/game/GameCanvas.tsx",
+        "HorrorCorridor-V1/scripts/horror-corridor-live-agent.mjs",
+        "HorrorCorridor-V1/scripts/horror-corridor-live-player-harness.mjs"
+      ],
+      "provides": [
+        "runtime-debug-init",
+        "runtime-debug-clear",
+        "runtime-event-record",
+        "runtime-frame-record",
+        "cadence-summary",
+        "debug-overlay-toggle",
+        "live-player-validation"
+      ],
+      "nextAction": "Move debug-frame record creation and cadence tracking out of GameCanvas."
+    },
+    {
+      "id": "wound-triangle-mesh-domain-kit",
+      "status": "implemented-source",
+      "kind": "descriptor-kit",
+      "sourceFiles": [
+        "HorrorCorridor-V1/src/protokits/wound-triangle-mesh-domain-kit/index.ts"
+      ],
+      "provides": [
+        "wound-mesh-object-descriptor-validation",
+        "mesh-object-descriptor-contract"
+      ],
+      "nextAction": "Keep as shared descriptor validation base for object kit promotion."
+    },
+    {
+      "id": "mesh-object-kit-catalog",
+      "status": "implemented-source",
+      "kind": "catalog-kit",
+      "sourceFiles": [
+        "HorrorCorridor-V1/src/protokits/mesh-object-kit-catalog.ts"
+      ],
+      "provides": [
+        "mesh-object-catalog",
+        "mesh-generating-object-kit-ids",
+        "mesh-generating-domain-kit-ids",
+        "descriptor-catalog-create",
+        "descriptor-catalog-validate"
+      ],
+      "containsKits": [
+        "rusted-service-door-object-kit",
+        "chain-link-fence-object-kit",
+        "broken-generator-object-kit",
+        "concrete-jersey-barrier-object-kit",
+        "storm-drain-culvert-object-kit",
+        "collapsed-signpost-object-kit",
+        "industrial-shelving-object-kit",
+        "hanging-chain-hook-object-kit",
+        "barrel-cluster-object-kit",
+        "broken-concrete-stair-object-kit"
+      ],
+      "nextAction": "Add promotion status for every mesh object kit: descriptor, smoke, review-room, live-wired."
+    },
+    {
+      "id": "horror-corridor-preset-kit",
+      "status": "implemented-source",
+      "kind": "preset-kit",
+      "sourceFiles": [
+        "HorrorCorridor-V1/src/protokits/presets/horror-corridor-preset.ts"
+      ],
+      "provides": [
+        "maze-preset",
+        "sequence-objective-preset",
+        "inventory-preset",
+        "spatial-interaction-preset",
+        "trail-decal-preset",
+        "terrain-field-preset",
+        "terrain-shader-preset",
+        "procedural-texture-kit-preset",
+        "object-placement-preset",
+        "scene-dressing-preset",
+        "lighting-placement-preset",
+        "render-validation-preset"
+      ],
+      "nextAction": "Use this preset as the source of truth for runtime kit configuration instead of splitting constants across component files."
+    },
+    {
+      "id": "procedural-texture-kit-family",
+      "status": "implemented-source",
+      "kind": "texture-kit-family",
+      "sourceFiles": [
+        "HorrorCorridor-V1/src/protokits/brick-course-texture-kit/index.ts",
+        "HorrorCorridor-V1/src/protokits/damp-mud-texture-kit/index.ts",
+        "HorrorCorridor-V1/src/protokits/rust-streak-texture-kit/index.ts",
+        "HorrorCorridor-V1/src/protokits/moss-grime-texture-kit/index.ts",
+        "HorrorCorridor-V1/src/protokits/wet-concrete-texture-kit/index.ts"
+      ],
+      "provides": [
+        "brick-course-texture",
+        "damp-mud-texture",
+        "rust-streak-texture",
+        "moss-grime-texture",
+        "wet-concrete-texture"
+      ],
+      "nextAction": "Attach material outputs to render validation and scene dressing summaries."
+    }
+  ],
+  "serviceCutoverOrder": [
+    "corridor-session-domain-kit",
+    "peer-room-sync-domain-kit",
+    "maze-snapshot-bootstrap-kit",
+    "first-person-corridor-player-kit",
+    "cube-carry-interaction-kit",
+    "end-anomaly-sequence-kit",
+    "ooze-trail-navigation-kit",
+    "maze-world-render-kit",
+    "runtime-debug-frame-kit"
+  ],
+  "recommendedSmokeFixtures": [
+    "solo-start-produces-authoritative-snapshot",
+    "player-movement-respects-maze-collision",
+    "cube-pickup-drop-roundtrip",
+    "cube-place-correct-order-victory",
+    "cube-place-wrong-order-then-correct",
+    "ooze-spawn-cap-decay",
+    "host-publishes-snapshot-cadence",
+    "mesh-object-catalog-validates-all-descriptors"
+  ]
+}
