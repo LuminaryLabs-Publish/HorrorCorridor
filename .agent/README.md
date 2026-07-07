@@ -5,10 +5,10 @@ This root `.agent` folder stores public-safe repo breakdowns, tracker runs, kit 
 ## Latest Entry
 
 ```txt
-.agent/trackers/2026-07-07T10-41-32-04-00/project-breakdown.md
+.agent/trackers/2026-07-07T11-51-17-04-00/project-breakdown.md
 ```
 
-Focus: host command envelope adapter and snapshot publish fixture follow-up for the next eligible Publish repo in the tracked rotation. This pass narrows the previous command-result boundary into the first executable authority seam: normalize local, host, client, and fixture mutations into canonical command envelopes, then make snapshot publishing consume command result metadata.
+Focus: command result rejection contract and snapshot metadata fixture follow-up for the next eligible Publish repo in the tracked rotation. This pass narrows the previous host command envelope boundary into the first reducer-level execution seam: every authoritative state mutation should produce explicit accepted, rejected, changed, publish, event, and diagnostics metadata before broad render or transport extraction.
 
 ## Registry
 
@@ -16,11 +16,12 @@ Focus: host command envelope adapter and snapshot publish fixture follow-up for 
 .agent/kit-registry.json
 ```
 
-The registry tracks current source-owned service surfaces, implemented ProtoKit/catalog surfaces, the `host-command-envelope-adapter-kit`, `command-acceptance-policy-kit`, `host-authority-command-kit`, `command-result-contract-kit`, `snapshot-publish-fixture-kit`, `command-result-journal-kit`, `command-journal-replay-kit`, replay/smoke fixtures, and the next build slice.
+The registry tracks current source-owned service surfaces, implemented ProtoKit/catalog surfaces, mesh object kits, texture kits, command envelope and acceptance policy targets, the new `command-result-rejection-contract-kit`, `player-pose-command-result-kit`, `interaction-command-result-kit`, `ooze-command-result-kit`, `snapshot-publish-metadata-kit`, `command-result-journal-kit`, command fixtures, replay fixtures, and the next build slice.
 
 ## Previous Entries
 
 ```txt
+.agent/trackers/2026-07-07T10-41-32-04-00/project-breakdown.md
 .agent/trackers/2026-07-07T09-28-43-04-00/project-breakdown.md
 .agent/trackers/2026-07-07T08-20-44-04-00/project-breakdown.md
 .agent/trackers/2026-07-07T07-10-27-04-00/project-breakdown.md
@@ -33,27 +34,28 @@ The registry tracks current source-owned service surfaces, implemented ProtoKit/
 ## Current next slice
 
 ```txt
-HorrorCorridor Host Command Envelope + Snapshot Publish Fixture Cutover
+HorrorCorridor Command Result Rejection Contract + Snapshot Metadata Fixture Cutover
 ```
 
 Build order:
 
 ```txt
-keep current solo, host, and client play working
--> add host-command-envelope-adapter-kit as a React-free / Three-free / Zustand-free / PeerJS-free domain module
--> define PLAYER_POSE_UPDATE, TRY_INTERACT, ADVANCE_OOZE, REQUEST_SYNC, PAUSE, RESUME, and COMPLETE_RUN commands
--> normalize local authoritative pose updates and remote PLAYER_UPDATE messages into PLAYER_POSE_UPDATE envelopes
--> normalize local and remote interaction requests into TRY_INTERACT envelopes
--> normalize host cadence ooze updates into ADVANCE_OOZE envelopes with deterministic RNG context
--> add command-acceptance-policy-kit for room, actor, source, screen, and command-type checks
--> add command-result-contract-kit around existing networkRules, interactionRules, winRules, and oozeRules effects
--> add command-result-journal-kit for accepted and rejected outcomes
--> add snapshot-publish-fixture-kit so publishAuthoritativeState consumes publishReason from command results
--> convert publishAuthoritativeState into a thin snapshot/write/broadcast caller
--> add command fixture JSON for pose update, illegal interact, legal pickup, correct placement, wrong-order correction, seeded ooze, request-sync, and victory
--> add replay parity fixture with normalized final snapshot comparison
--> extend runtime debug frames with command and publish metadata
--> defer render extraction until command envelope, publish fixture, and replay fixture pass
+keep solo, host, and client play working
+-> add command-result-rejection-contract-kit before moving the whole runtime through command envelopes
+-> define CommandResult fields: commandId, type, actorId, accepted, rejected, rejectionReason, changed, events, publishDecision, publishReason, beforeTick, afterTick, diagnostics
+-> add player-pose-command-result-kit around applyNetworkPlayerUpdate
+-> return rejected=true with reason=missing_player for unknown player updates
+-> return changed=false with reason=unchanged_pose for valid no-change pose updates
+-> add interaction-command-result-kit with preflight reason mapping before calling existing interactionRules effects
+-> map illegal pickup/drop/place/remove to stable reasons
+-> add ooze-command-result-kit around advanceOozeTrail with deterministic RNG required in fixtures
+-> add snapshot-publish-metadata-kit to derive publishDecision from CommandResult
+-> keep request-sync as publish-only with accepted=true, changed=false, publishReason=recovery
+-> add command-result-journal-kit with accepted, rejected, and unchanged counts
+-> extend runtime debug frame shape with last command, rejection, publish, and journal fields
+-> add command-result-fixture-kit with scripted pose, illegal pickup, legal pickup, illegal place, legal place, request-sync, seeded ooze, and victory examples
+-> add replay-parity-smoke-kit after fixture result shape is stable
+-> defer render extraction, world-builder extraction, and broad PeerJS adapter extraction until command result fixtures pass
 ```
 
 ## Tracker Layout
