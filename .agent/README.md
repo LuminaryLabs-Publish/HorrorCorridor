@@ -2,6 +2,14 @@
 
 This root `.agent` folder stores public-safe repo breakdowns, tracker runs, and next-work analysis for `LuminaryLabs-Publish/HorrorCorridor`.
 
+## Latest Entry
+
+```txt
+.agent/trackers/2026-07-07T03-38-41-04-00/project-breakdown.md
+```
+
+Focus: follow-up architecture breakdown for the oldest eligible Publish repo, with emphasis on extracting `GameShell` and `GameCanvas` into session, sync, interaction, objective, ooze-trail, render, and diagnostics service kits.
+
 ## Tracker Layout
 
 ```txt
