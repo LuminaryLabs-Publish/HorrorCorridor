@@ -1,9 +1,9 @@
 {
-  "schemaVersion": 2,
+  "schemaVersion": 3,
   "repository": "LuminaryLabs-Publish/HorrorCorridor",
-  "generatedAt": "2026-07-07T10:41:32-04:00",
-  "status": "host-command-envelope-publish-fixture-followup",
-  "latestTracker": ".agent/trackers/2026-07-07T10-41-32-04-00/project-breakdown.md",
+  "generatedAt": "2026-07-07T11:51:17-04:00",
+  "status": "command-result-rejection-snapshot-metadata-followup",
+  "latestTracker": ".agent/trackers/2026-07-07T11-51-17-04-00/project-breakdown.md",
   "sourceRoots": [
     "HorrorCorridor-V1/src/components/game",
     "HorrorCorridor-V1/src/features",
@@ -37,6 +37,7 @@
       "direct-local-authoritative-mutation",
       "client-player-update-and-try-interact-send",
       "host-message-rule-application",
+      "silent-unchanged-state-for-invalid-interactions",
       "cube-pickup-carry-drop-place-remove",
       "ordered-sequence-validation",
       "ooze-host-cadence",
@@ -45,58 +46,87 @@
       "victory-or-return"
     ],
     "target": [
-      "session-domain-service creates room/session state",
-      "peer-room-sync-service translates transport messages into command envelopes",
-      "local simulation emits command envelopes for pose and ooze cadence",
-      "maze-bootstrap-service creates deterministic GameState and initial snapshot",
-      "host-command-envelope-adapter-kit normalizes command identity and payload",
-      "command-acceptance-policy-kit validates room actor source screen and type",
-      "host-authority-command-kit applies every authoritative mutation",
-      "command-result-contract-kit records changed rejected events publish metadata",
-      "snapshot-publish-fixture-kit consumes command result publish policy",
-      "runtime-debug-frame-kit records command and publish diagnostics",
+      "session-service creates room/session state",
+      "peer-sync-service translates transport messages into command envelopes",
+      "local simulation emits pose and ooze command envelopes",
+      "command-acceptance-policy validates actor room source state and type",
+      "command-result-rejection-contract-kit wraps every authoritative mutation",
+      "player-pose-command-result-kit reports accepted changed unchanged or missing player",
+      "interaction-command-result-kit reports explicit legality reasons",
+      "ooze-command-result-kit uses deterministic RNG context in fixtures",
+      "snapshot-publish-metadata-kit derives publish decision from result metadata",
+      "runtime-debug-frame-kit records command result and publish diagnostics",
       "command-journal-replay-kit proves deterministic final snapshot parity"
     ]
   },
   "domains": [
     "application-shell",
+    "next-client-runtime",
+    "react-game-surface",
     "session-lifecycle",
+    "room-identity",
+    "join-code-routing",
+    "peer-identity",
     "peer-networking",
+    "host-transport",
+    "client-transport",
     "network-message-protocol",
     "host-message-ingress",
     "client-message-egress",
-    "local-authoritative-simulation",
-    "maze-bootstrap",
+    "loading-readiness",
+    "seeded-maze-bootstrap",
     "maze-cell-lookup",
+    "maze-pathing",
+    "cube-spawn-bootstrap",
+    "anomaly-sequence-bootstrap",
+    "replicated-snapshot-bootstrap",
     "first-person-input",
     "pointer-lock-control",
-    "player-look-and-movement",
-    "maze-collision",
+    "keyboard-input",
+    "mouse-look-input",
+    "player-view-angles",
+    "player-movement-integration",
+    "maze-collision-resolution",
     "local-pose-prediction",
+    "camera-bob",
+    "local-carry-state-sync",
     "host-authority",
-    "host-command-envelope-adapter",
+    "local-authoritative-simulation",
+    "remote-authoritative-ingress",
     "command-envelope-contract",
     "command-acceptance-policy",
     "command-result-contract",
+    "command-result-rejection-policy",
     "command-result-journal",
     "command-journal-replay",
+    "player-pose-command-result",
     "cube-carry-interaction",
-    "end-anomaly-sequence",
-    "objective-completion",
+    "nearest-cube-selection",
+    "carried-cube-state",
+    "end-anomaly-distance-check",
+    "slot-assignment",
+    "sequence-objective",
+    "ordered-sequence-validation",
     "victory-completion",
-    "reverse-correction",
-    "ordered-slot-state",
-    "ooze-navigation",
+    "correction-reversal",
+    "ooze-trail-navigation",
+    "ooze-decay",
+    "ooze-spawn",
+    "ooze-spacing-guard",
+    "ooze-max-cap",
     "ooze-seeded-rng",
-    "ooze-decay-and-spawn",
-    "replicated-snapshot-build",
+    "snapshot-build",
     "snapshot-publish-contract",
+    "snapshot-publish-metadata",
     "snapshot-publish-fixture",
     "full-sync-message-output",
     "runtime-debug-event-log",
     "runtime-debug-frame-log",
     "cadence-diagnostics",
     "render-world-snapshot-consumption",
+    "three-renderer",
+    "post-processing",
+    "maze-world-rendering",
     "minimap-rendering",
     "scene-dressing-descriptors",
     "mesh-object-kit-catalog",
@@ -126,16 +156,17 @@
       "map-connection-status",
       "send-lobby-events",
       "send-start-game",
-      "send-sync",
+      "send-full-sync",
       "send-player-update",
       "send-try-interact",
       "receive-host-messages",
-      "message-to-command-envelope"
+      "map-transport-message-to-command-envelope"
     ],
     "maze-bootstrap-service": [
       "hash-seed",
       "generate-maze",
       "build-cell-lookup",
+      "build-paths-from-end-to-cube-spawns",
       "create-player-spawns",
       "create-cube-spawns",
       "initialize-anomaly-sequence-slots",
@@ -143,87 +174,68 @@
       "create-initial-replicated-snapshot"
     ],
     "first-person-player-service": [
-      "keyboard-code-to-button",
-      "pointer-lock-state",
-      "mouse-look-delta",
-      "yaw-pitch-advance",
-      "movement-integration",
-      "maze-collision-resolution",
-      "local-pose-snapshot",
-      "camera-bob-sync",
-      "target-player-pose-update-command-output"
+      "keyboard-code-to-player-input-button",
+      "set-player-input-button",
+      "accumulate-player-look-delta",
+      "clear-player-look-delta",
+      "apply-player-look-delta",
+      "create-player-view-angles",
+      "advance-player-movement",
+      "resolve-maze-collision",
+      "sync-camera-from-player",
+      "to-player-input-snapshot"
     ],
-    "host-command-envelope-adapter-service": [
-      "normalize-local-pose-update",
-      "normalize-client-player-update-message",
-      "normalize-local-try-interact",
-      "normalize-client-try-interact-message",
-      "normalize-advance-ooze-cadence",
-      "normalize-request-sync",
-      "attach-command-id",
-      "attach-actor-id",
-      "attach-source",
-      "attach-sequence",
-      "attach-timestamp-ms",
-      "attach-request-id",
-      "attach-payload"
+    "command-result-rejection-service": [
+      "create-accepted-result",
+      "create-rejected-result",
+      "classify-noop-as-rejected-or-unchanged",
+      "attach-rejection-reason",
+      "attach-changed-flag",
+      "attach-event-list",
+      "attach-publish-metadata",
+      "attach-diagnostics-payload"
     ],
-    "command-acceptance-policy-service": [
-      "reject-unknown-command-type",
-      "reject-missing-actor",
-      "reject-room-mismatch",
-      "reject-stale-source",
-      "reject-interaction-outside-playing",
-      "accept-request-sync-as-publish-only",
-      "classify-changed-unchanged-result"
-    ],
-    "network-rule-service": [
-      "apply-player-update",
-      "apply-interaction-request",
+    "player-pose-command-result-service": [
+      "validate-player-exists",
+      "validate-pose-payload",
+      "apply-pose-update",
       "sync-held-cubes-to-players",
-      "unsupported-action-noop",
-      "gap-game-state-only-result",
-      "target-command-result-wrapper"
+      "emit-pose-changed-event",
+      "emit-missing-player-rejection"
     ],
-    "interaction-service": [
-      "interaction-readiness-check",
-      "player-lookup",
-      "carried-cube-check",
-      "nearest-loose-cube-selection",
-      "anomaly-distance-check",
-      "slot-assignment",
-      "pickup-cube",
-      "drop-cube",
-      "place-cube-at-anomaly",
-      "remove-cube-from-anomaly",
-      "sequence-progress-sync",
-      "target-rejection-reason-output"
+    "interaction-command-result-service": [
+      "preflight-interaction-state",
+      "preflight-player-exists",
+      "preflight-carried-cube-state",
+      "preflight-nearest-cube",
+      "preflight-end-anomaly-distance",
+      "preflight-slot-availability",
+      "apply-pickup-cube",
+      "apply-drop-cube",
+      "apply-place-cube-at-anomaly",
+      "apply-remove-cube-from-anomaly",
+      "emit-interaction-accepted-event",
+      "emit-interaction-rejected-reason"
     ],
-    "sequence-objective-service": [
-      "slot-solution-evaluation",
-      "solved-count",
-      "exact-order-validation",
-      "victory-transition",
-      "correction-reversal",
-      "target-sequence-event-output"
-    ],
-    "ooze-service": [
-      "resolve-rng",
+    "ooze-command-result-service": [
+      "resolve-deterministic-rng",
       "decay-ooze-trail",
       "spawn-ooze-trail",
       "enforce-spacing",
       "enforce-max-cap",
       "update-ooze-level",
-      "target-deterministic-command-context-rng"
+      "emit-ooze-changed-event",
+      "emit-ooze-unchanged-event"
     ],
     "snapshot-publish-service": [
       "increment-authoritative-tick",
       "attach-room-phase-updated-at",
       "build-replicated-snapshot",
       "attach-publish-reason",
+      "attach-publish-decision",
       "set-runtime-store-snapshot",
       "broadcast-full-sync",
-      "target-consume-command-result-publish-reason"
+      "compare-fixture-snapshot"
     ],
     "diagnostics-service": [
       "runtime-debug-init",
@@ -231,10 +243,11 @@
       "runtime-event-record",
       "runtime-frame-record",
       "cadence-summary",
-      "scene-dressing-summary",
-      "target-command-envelope-diagnostics",
-      "target-command-result-diagnostics",
-      "target-publish-decision-diagnostics"
+      "attach-last-command-type",
+      "attach-last-command-id",
+      "attach-last-rejection-reason",
+      "attach-journal-length",
+      "attach-last-publish-decision"
     ],
     "replay-service": [
       "serialize-command-envelope",
@@ -265,7 +278,7 @@
         "return-to-title",
         "readiness-state"
       ],
-      "nextAction": "Extract room/lobby/loading orchestration after command authority is stable."
+      "nextAction": "Extract after command result and publish metadata contracts are stable."
     },
     {
       "id": "peer-room-sync-domain-kit",
@@ -283,7 +296,7 @@
         "message-to-command-envelope",
         "host-snapshot-broadcast"
       ],
-      "nextAction": "Convert transport messages into command envelopes before host mutation."
+      "nextAction": "Keep transport stable while command result metadata is added beneath it."
     },
     {
       "id": "maze-snapshot-bootstrap-kit",
@@ -299,7 +312,7 @@
         "player-spawn-bootstrap",
         "replicated-snapshot-bootstrap"
       ],
-      "nextAction": "Keep as deterministic input to live play, smoke fixtures, and command replay."
+      "nextAction": "Keep as deterministic input to result fixtures and replay."
     },
     {
       "id": "first-person-corridor-player-kit",
@@ -316,23 +329,7 @@
         "pose-intent-output",
         "walk-camera-bob"
       ],
-      "nextAction": "Split DOM input capture from pure pose/action intent stepping after pose update commands are accepted."
-    },
-    {
-      "id": "host-command-envelope-adapter-kit",
-      "status": "target-add",
-      "kind": "domain-service-kit",
-      "provides": [
-        "normalize-local-pose-update",
-        "normalize-client-player-update",
-        "normalize-local-try-interact",
-        "normalize-client-try-interact",
-        "normalize-advance-ooze",
-        "normalize-request-sync",
-        "command-source-classification",
-        "command-sequence-assignment"
-      ],
-      "nextAction": "Create the first command boundary in front of all authoritative mutation paths."
+      "nextAction": "Split DOM capture from pure pose stepping after pose result metadata lands."
     },
     {
       "id": "command-envelope-contract-kit",
@@ -348,7 +345,7 @@
         "request-id",
         "payload-schema"
       ],
-      "nextAction": "Normalize local, host, client, and smoke inputs into one command envelope shape."
+      "nextAction": "Keep as the canonical input shape for result wrappers."
     },
     {
       "id": "command-acceptance-policy-kit",
@@ -363,247 +360,171 @@
         "request-sync-publish-only-policy",
         "rejection-reason-output"
       ],
-      "nextAction": "Make invalid commands explicit rejections instead of silent no-op state returns."
+      "nextAction": "Make invalid commands explicit rejections instead of silent no-op returns."
     },
     {
-      "id": "host-authority-command-kit",
-      "status": "target-extract",
-      "kind": "domain-service-kit",
-      "provides": [
-        "define-command-types",
-        "apply-command",
-        "validate-player-pose-update",
-        "validate-interaction-request",
-        "advance-ooze-command",
-        "state-events-rejected-output",
-        "rejection-reason-output",
-        "publish-reason-output",
-        "command-journal-entry-output"
-      ],
-      "nextAction": "Make solo, host, and client request paths use one command application contract before state mutation."
-    },
-    {
-      "id": "command-result-contract-kit",
-      "status": "target-add",
+      "id": "command-result-rejection-contract-kit",
+      "status": "target-add-now",
       "kind": "contract-kit",
       "provides": [
-        "state-output",
-        "changed-flag",
+        "accepted-flag",
         "rejected-flag",
         "rejection-reason",
-        "events-list",
+        "changed-flag",
+        "event-list",
+        "publish-decision",
         "publish-reason",
-        "journal-entry",
-        "diagnostics-output"
+        "before-after-tick",
+        "diagnostics-payload"
       ],
-      "nextAction": "Replace GameState-only returns with a result envelope suitable for publishing, replay, and debugging."
+      "nextAction": "Add this before broad runtime routing so illegal actions become fixture-readable."
     },
     {
-      "id": "command-result-journal-kit",
-      "status": "target-add",
-      "kind": "validation-kit",
-      "provides": [
-        "append-accepted-result",
-        "append-rejected-result",
-        "journal-length",
-        "last-command-summary",
-        "last-publish-reason",
-        "replay-input-export"
-      ],
-      "nextAction": "Record accepted and rejected outcomes separately for diagnostics and replay."
-    },
-    {
-      "id": "cube-carry-interaction-kit",
-      "status": "candidate-extract",
+      "id": "player-pose-command-result-kit",
+      "status": "target-add-now",
       "kind": "domain-service-kit",
       "provides": [
-        "nearest-loose-cube-selection",
-        "pickup-cube",
-        "drop-cube",
-        "place-cube-at-end-anomaly",
-        "remove-cube-from-end-anomaly",
-        "held-cube-sync",
-        "slot-assignment",
-        "legal-distance-check"
+        "validate-player-exists",
+        "validate-pose-payload",
+        "apply-pose-update",
+        "pose-changed-event",
+        "missing-player-rejection",
+        "unchanged-pose-classification"
       ],
-      "nextAction": "Keep legality checks, but call them through TRY_INTERACT command results."
+      "nextAction": "Wrap applyNetworkPlayerUpdate without breaking existing call sites."
     },
     {
-      "id": "end-anomaly-sequence-kit",
-      "status": "candidate-extract",
+      "id": "interaction-command-result-kit",
+      "status": "target-add-now",
       "kind": "domain-service-kit",
       "provides": [
-        "slot-evaluation",
-        "solved-count",
-        "exact-order-match",
-        "victory-transition",
-        "victory-reversal-on-correction"
+        "preflight-pickup",
+        "preflight-drop",
+        "preflight-place",
+        "preflight-remove",
+        "legal-effect-apply",
+        "stable-rejection-reasons",
+        "interaction-events"
       ],
-      "nextAction": "Evaluate objective state only as part of command application events."
+      "nextAction": "Map existing interactionRules no-op paths to stable reasons."
     },
     {
-      "id": "ooze-trail-navigation-kit",
-      "status": "candidate-extract",
+      "id": "ooze-command-result-kit",
+      "status": "target-add-now",
       "kind": "domain-service-kit",
       "provides": [
-        "spawn-ooze-trail",
-        "decay-ooze-trail",
-        "advance-ooze-trail",
-        "ooze-level-summary",
-        "seeded-rng-injection",
-        "ooze-decal-render-feed"
+        "deterministic-rng-context",
+        "advance-ooze-result",
+        "decay-event",
+        "spawn-event",
+        "unchanged-event",
+        "ooze-snapshot-summary"
       ],
-      "nextAction": "Route advancement through ADVANCE_OOZE command with seeded RNG context."
+      "nextAction": "Require seeded RNG in command fixtures while preserving live fallback behavior."
+    },
+    {
+      "id": "snapshot-publish-metadata-kit",
+      "status": "target-add-now",
+      "kind": "contract-kit",
+      "provides": [
+        "publish-decision",
+        "publish-reason",
+        "result-to-sync-reason",
+        "no-publish-decision",
+        "recovery-publish-decision",
+        "victory-publish-decision"
+      ],
+      "nextAction": "Make publishAuthoritativeState consume result metadata instead of ad hoc string reasons."
     },
     {
       "id": "snapshot-publish-fixture-kit",
       "status": "target-add",
-      "kind": "validation-kit",
+      "kind": "fixture-kit",
       "provides": [
-        "resync-publish-fixture",
-        "recovery-publish-fixture",
-        "no-change-skip-fixture",
-        "victory-publish-fixture",
-        "publish-reason-assertion",
-        "broadcast-decision-assertion"
+        "resync-fixture",
+        "recovery-fixture",
+        "no-publish-fixture",
+        "victory-fixture",
+        "snapshot-metadata-assertions"
       ],
-      "nextAction": "Prove publishAuthoritativeState can consume command result publish metadata."
+      "nextAction": "Assert publish metadata after result wrappers exist."
     },
     {
-      "id": "snapshot-publish-contract-kit",
-      "status": "target-add",
+      "id": "command-result-journal-kit",
+      "status": "target-add-now",
       "kind": "domain-service-kit",
       "provides": [
-        "build-authoritative-snapshot",
-        "attach-publish-reason",
-        "attach-command-metadata",
-        "emit-full-sync-message",
-        "compare-replay-snapshot"
+        "accepted-results",
+        "rejected-results",
+        "unchanged-results",
+        "last-command-summary",
+        "last-publish-summary",
+        "journal-length",
+        "replay-export"
       ],
-      "nextAction": "Make publishAuthoritativeState a thin caller around command-result-driven snapshot publishing."
+      "nextAction": "Feed diagnostics and replay fixtures."
     },
     {
       "id": "command-result-fixture-kit",
-      "status": "target-add",
-      "kind": "validation-kit",
+      "status": "target-add-now",
+      "kind": "fixture-kit",
       "provides": [
         "pose-update-fixture",
-        "legal-pickup-fixture",
         "illegal-pickup-fixture",
-        "correct-placement-fixture",
-        "wrong-order-correction-fixture",
-        "seeded-ooze-fixture",
+        "legal-pickup-fixture",
+        "illegal-place-fixture",
+        "legal-place-fixture",
         "request-sync-fixture",
+        "seeded-ooze-fixture",
         "victory-fixture"
       ],
-      "nextAction": "Create small command/result fixtures before adding larger replay tests."
+      "nextAction": "Add DOM-free result smoke before render extraction."
     },
     {
       "id": "command-journal-replay-kit",
       "status": "target-add",
-      "kind": "validation-kit",
+      "kind": "replay-kit",
       "provides": [
-        "serialize-command-envelope",
-        "serialize-command-result",
-        "append-command-result",
-        "replay-command-journal",
-        "compare-final-snapshot",
-        "assert-deterministic-parity",
-        "emit-replay-report"
+        "journal-serialization",
+        "journal-replay",
+        "volatile-field-normalization",
+        "final-snapshot-compare",
+        "parity-report"
       ],
-      "nextAction": "Boot a seeded state, apply command JSON, and verify the final replicated snapshot."
-    },
-    {
-      "id": "snapshot-contract-smoke-kit",
-      "status": "target-add",
-      "kind": "smoke-kit",
-      "provides": [
-        "solo-bootstrap-smoke",
-        "pose-update-smoke",
-        "cube-roundtrip-smoke",
-        "wrong-order-correction-smoke",
-        "ooze-cap-decay-smoke",
-        "victory-smoke",
-        "replay-parity-smoke"
-      ],
-      "nextAction": "Create stable smoke fixtures for command envelope, publish fixture, and replay parity contracts."
-    },
-    {
-      "id": "maze-world-render-kit",
-      "status": "candidate-extract",
-      "kind": "render-kit",
-      "provides": [
-        "renderer-create-resize-dispose",
-        "camera-create-sync",
-        "post-processing-render",
-        "static-maze-instancing",
-        "terrain-eye-position",
-        "scene-dressing-layer",
-        "cube-mesh-sync",
-        "player-mesh-sync",
-        "flashlight-sync",
-        "ooze-decal-sync",
-        "minimap-draw",
-        "scene-dressing-summary"
-      ],
-      "nextAction": "Defer until command and publish fixtures are stable."
+      "nextAction": "Run after command result fixture shape is stable."
     },
     {
       "id": "runtime-debug-frame-kit",
-      "status": "candidate-extract",
+      "status": "implemented-extend",
       "kind": "diagnostics-kit",
       "provides": [
-        "runtime-debug-init",
-        "runtime-debug-clear",
-        "runtime-event-record",
-        "runtime-frame-record",
+        "frame-record",
+        "event-record",
         "cadence-summary",
-        "debug-overlay-toggle",
-        "live-player-validation",
-        "command-result-diagnostics",
-        "publish-decision-diagnostics"
+        "snapshot-summary",
+        "target-command-result-fields",
+        "target-publish-decision-fields"
       ],
-      "nextAction": "Add lastCommandType, lastCommandId, rejectedCommandCount, journalLength, lastPublishReason, and replayParityStatus."
+      "nextAction": "Extend frame records with command result and publish metadata."
     },
     {
-      "id": "wound-triangle-mesh-domain-kit",
-      "status": "implemented-protokit",
-      "kind": "mesh-domain-kit",
+      "id": "maze-world-render-kit",
+      "status": "implemented-defer-extraction",
+      "kind": "render-kit",
       "provides": [
-        "triangle-wound-mesh-generation",
-        "mesh-descriptor-validation"
-      ]
-    },
-    {
-      "id": "mesh-object-kit-catalog",
-      "status": "implemented-catalog",
-      "kind": "object-kit-catalog",
-      "provides": [
-        "object-kit-registry",
-        "industrial-horror-prop-descriptors"
-      ]
-    },
-    {
-      "id": "horror-corridor-preset-kit",
-      "status": "implemented-preset",
-      "kind": "preset-kit",
-      "provides": [
-        "broken-city-industrial-overgrowth-style",
-        "scene-dressing-defaults"
-      ]
-    },
-    {
-      "id": "procedural-texture-kit-family",
-      "status": "implemented-family",
-      "kind": "texture-kit-family",
-      "provides": [
-        "brick-course-texture-kit",
-        "damp-mud-texture-kit",
-        "rust-streak-texture-kit",
-        "moss-grime-texture-kit",
-        "wet-concrete-texture-kit"
-      ]
+        "three-world-attach",
+        "snapshot-render-sync",
+        "scene-dressing-summary",
+        "world-dispose"
+      ],
+      "nextAction": "Do not extract until command result fixtures and replay pass."
     }
+  ],
+  "implementedProtoKitSurfaces": [
+    "wound-triangle-mesh-domain-kit",
+    "mesh-object-kit-catalog",
+    "horror-corridor-preset-kit",
+    "procedural-texture-kit-family"
   ],
   "meshObjectKits": [
     "rusted-service-door-object-kit",
@@ -625,49 +546,29 @@
     "wet-concrete-texture-kit"
   ],
   "nextSlice": {
-    "name": "HorrorCorridor Host Command Envelope + Snapshot Publish Fixture Cutover",
-    "goal": "Create the first authoritative command envelope seam, then make snapshot publishing consume command result metadata instead of inferring publish behavior inside GameCanvas.tsx.",
-    "buildOrder": [
-      "keep-current-solo-host-client-play-working",
-      "add-host-command-envelope-adapter-kit",
-      "define-player-pose-update-try-interact-advance-ooze-request-sync-pause-resume-complete-run",
-      "normalize-local-and-remote-pose-updates",
-      "normalize-local-and-remote-interaction-requests",
-      "normalize-host-cadence-ooze-updates-with-deterministic-rng",
-      "add-command-acceptance-policy-kit",
-      "add-command-result-contract-kit-around-existing-effects",
-      "add-command-result-journal-kit",
-      "add-snapshot-publish-fixture-kit",
-      "make-publishAuthoritativeState-consume-command-result-publishReason",
-      "add-command-fixture-json",
-      "add-replay-parity-fixture",
-      "extend-runtime-debug-frame-kit-command-and-publish-fields",
-      "defer-render-extraction"
-    ],
+    "name": "HorrorCorridor Command Result Rejection Contract + Snapshot Metadata Fixture Cutover",
+    "intent": "Make every authoritative reducer produce explicit accepted, rejected, changed, publish, and diagnostic metadata before broader command routing or render extraction.",
     "acceptanceTargets": [
       "npm run lint",
       "npm run smoke:protokits",
       "npm run validate:live-player:dev",
-      "host-command-envelope-adapter-kit-imports-no-react-three-zustand-peerjs",
-      "command-envelope-includes-commandId-type-actorId-source-sequence-timestampMs-requestId-payload",
-      "player-update-and-local-pose-become-player-pose-update-envelopes",
-      "try-interact-illegal-attempt-returns-rejected-true-with-reason",
-      "advance-ooze-uses-deterministic-rng-in-fixtures",
-      "publishAuthoritativeState-consumes-command-result-publishReason",
-      "snapshot-publish-fixture-covers-resync-recovery-no-change-victory",
-      "command-result-journal-records-accepted-and-rejected-outcomes",
-      "command-journal-replay-reaches-identical-normalized-final-snapshot",
-      "runtime-debug-exposes-command-and-publish-metadata"
+      "command-result-rejection-contract-kit imports no React Three Zustand or PeerJS",
+      "CommandResult exposes accepted rejected rejectionReason changed events publishDecision and publishReason",
+      "unknown player pose update returns rejected=true with reason=missing_player",
+      "illegal pickup returns rejected=true with reason=no_nearby_cube or already_carrying",
+      "illegal place returns rejected=true with reason=too_far_from_anomaly no_carried_cube or no_open_slot",
+      "request-sync returns accepted=true changed=false publishDecision=publish publishReason=recovery",
+      "ADVANCE_OOZE fixture injects deterministic RNG and produces stable snapshot output",
+      "snapshot-publish-metadata-kit covers resync recovery no-publish and victory decisions",
+      "command-result-journal-kit records accepted rejected and unchanged counts",
+      "runtime debug frame includes command result and publish metadata",
+      "replay fixture reaches identical normalized final snapshot after volatile fields are removed"
     ]
   },
-  "changeLog": [
-    ".agent/trackers/2026-07-07T16-25-00-04-00/project-breakdown.md",
-    ".agent/trackers/2026-07-07T03-38-41-04-00/project-breakdown.md",
-    ".agent/trackers/2026-07-07T04-50-42-04-00/project-breakdown.md",
-    ".agent/trackers/2026-07-07T06-01-21-04-00/project-breakdown.md",
-    ".agent/trackers/2026-07-07T07-10-27-04-00/project-breakdown.md",
-    ".agent/trackers/2026-07-07T08-20-44-04-00/project-breakdown.md",
-    ".agent/trackers/2026-07-07T09-28-43-04-00/project-breakdown.md",
-    ".agent/trackers/2026-07-07T10-41-32-04-00/project-breakdown.md"
+  "deferred": [
+    "render extraction",
+    "world-builder extraction",
+    "broad PeerJS adapter extraction",
+    "new visual-kit work"
   ]
 }
