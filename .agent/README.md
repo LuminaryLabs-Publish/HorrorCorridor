@@ -5,10 +5,10 @@ This root `.agent` folder stores public-safe repo breakdowns, tracker runs, kit 
 ## Latest Entry
 
 ```txt
-.agent/trackers/2026-07-07T09-28-43-04-00/project-breakdown.md
+.agent/trackers/2026-07-07T10-41-32-04-00/project-breakdown.md
 ```
 
-Focus: command result metadata and replay fixture follow-up for the next eligible Publish repo in the tracked rotation. This pass narrows the previous command-application contract into a concrete command envelope, command result, snapshot publish, replay journal, diagnostics, and smoke-fixture boundary.
+Focus: host command envelope adapter and snapshot publish fixture follow-up for the next eligible Publish repo in the tracked rotation. This pass narrows the previous command-result boundary into the first executable authority seam: normalize local, host, client, and fixture mutations into canonical command envelopes, then make snapshot publishing consume command result metadata.
 
 ## Registry
 
@@ -16,11 +16,12 @@ Focus: command result metadata and replay fixture follow-up for the next eligibl
 .agent/kit-registry.json
 ```
 
-The registry tracks current source-owned service surfaces, implemented ProtoKit/catalog surfaces, the `host-authority-command-kit`, `command-envelope-contract-kit`, `command-result-contract-kit`, `snapshot-publish-contract-kit`, `command-result-fixture-kit`, `command-journal-replay-kit`, `snapshot-contract-smoke-kit`, service cutover order, recommended smoke fixtures, and the next build slice.
+The registry tracks current source-owned service surfaces, implemented ProtoKit/catalog surfaces, the `host-command-envelope-adapter-kit`, `command-acceptance-policy-kit`, `host-authority-command-kit`, `command-result-contract-kit`, `snapshot-publish-fixture-kit`, `command-result-journal-kit`, `command-journal-replay-kit`, replay/smoke fixtures, and the next build slice.
 
 ## Previous Entries
 
 ```txt
+.agent/trackers/2026-07-07T09-28-43-04-00/project-breakdown.md
 .agent/trackers/2026-07-07T08-20-44-04-00/project-breakdown.md
 .agent/trackers/2026-07-07T07-10-27-04-00/project-breakdown.md
 .agent/trackers/2026-07-07T06-01-21-04-00/project-breakdown.md
@@ -32,26 +33,27 @@ The registry tracks current source-owned service surfaces, implemented ProtoKit/
 ## Current next slice
 
 ```txt
-HorrorCorridor Command Result Metadata + Replay Fixture Cutover
+HorrorCorridor Host Command Envelope + Snapshot Publish Fixture Cutover
 ```
 
 Build order:
 
 ```txt
 keep current solo, host, and client play working
--> add command-envelope-contract-kit with commandId, type, actorId, source, sequence, timestampMs, payload, and requestId
--> add command-result-contract-kit with state, changed, rejected, rejectionReason, events, publishReason, journalEntry, and diagnostics
--> implement host-authority-command-kit as a React-free / Three-free domain module
--> wrap applyNetworkPlayerUpdate as PLAYER_POSE_UPDATE command application
--> wrap applyNetworkInteractionRequest as TRY_INTERACT command application
--> wrap advanceOozeTrail as ADVANCE_OOZE command application with seeded RNG context
--> keep interactionRules legality logic as the effect layer under command application
--> move sequence validation into command application result events
--> make publishAuthoritativeState consume command results rather than infer publish reasons locally
--> add command-result-fixture-kit for legal pickup, illegal pickup, place correct cube, wrong-order correction, seeded ooze, and victory
--> add command-journal-replay-kit that replays command envelopes and compares normalized snapshots
--> extend runtime debug frames with lastCommandType, lastCommandId, rejectedCommandCount, journalLength, lastPublishReason, and replayParityStatus
--> add smoke fixtures that can run without DOM, React, Three, PeerJS, or pointer lock
+-> add host-command-envelope-adapter-kit as a React-free / Three-free / Zustand-free / PeerJS-free domain module
+-> define PLAYER_POSE_UPDATE, TRY_INTERACT, ADVANCE_OOZE, REQUEST_SYNC, PAUSE, RESUME, and COMPLETE_RUN commands
+-> normalize local authoritative pose updates and remote PLAYER_UPDATE messages into PLAYER_POSE_UPDATE envelopes
+-> normalize local and remote interaction requests into TRY_INTERACT envelopes
+-> normalize host cadence ooze updates into ADVANCE_OOZE envelopes with deterministic RNG context
+-> add command-acceptance-policy-kit for room, actor, source, screen, and command-type checks
+-> add command-result-contract-kit around existing networkRules, interactionRules, winRules, and oozeRules effects
+-> add command-result-journal-kit for accepted and rejected outcomes
+-> add snapshot-publish-fixture-kit so publishAuthoritativeState consumes publishReason from command results
+-> convert publishAuthoritativeState into a thin snapshot/write/broadcast caller
+-> add command fixture JSON for pose update, illegal interact, legal pickup, correct placement, wrong-order correction, seeded ooze, request-sync, and victory
+-> add replay parity fixture with normalized final snapshot comparison
+-> extend runtime debug frames with command and publish metadata
+-> defer render extraction until command envelope, publish fixture, and replay fixture pass
 ```
 
 ## Tracker Layout
