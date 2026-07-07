@@ -5,10 +5,10 @@ This root `.agent` folder stores public-safe repo breakdowns, tracker runs, kit 
 ## Latest Entry
 
 ```txt
-.agent/trackers/2026-07-07T16-09-54-04-00/project-breakdown.md
+.agent/trackers/2026-07-07T17-20-57-04-00/project-breakdown.md
 ```
 
-Focus: local and host authority result cutover for the oldest eligible tracked Publish repo. This pass keeps the next implementation boundary on explicit command result envelopes, stable rejection reasons, publish decisions, runtime debug projection, and DOM-free replay parity before renderer, world-builder, PeerJS, or visual-kit extraction.
+Focus: command result source cutover for the oldest eligible tracked Publish repo. This pass keeps the implementation boundary on DOM-free result contracts, stable status/reason catalogs, result-returning rule wrappers, publish decision helpers, runtime debug result projection, and replay fixtures before renderer, world-builder, PeerJS, or visual object-kit extraction.
 
 ## Registry
 
@@ -16,11 +16,12 @@ Focus: local and host authority result cutover for the oldest eligible tracked P
 .agent/kit-registry.json
 ```
 
-The registry tracks current source-owned service surfaces, implemented ProtoKit/catalog surfaces, mesh object kits, texture kits, command envelope and acceptance targets, `command-result-envelope-kit`, `publish-decision-snapshot-kit`, `interaction-preflight-reason-catalog-kit`, `interaction-preflight-diagnostics-kit`, `player-pose-command-result-kit`, `interaction-command-result-kit`, `ooze-command-result-kit`, `command-result-journal-kit`, `runtime-debug-result-projection-kit`, `local-authority-result-consumer-kit`, `host-authority-result-consumer-kit`, `command-replay-fixture-kit`, and the next build slice.
+The registry tracks current source-owned service surfaces, implemented ProtoKit/catalog surfaces, mesh object kits, texture kits, command envelope and acceptance targets, `command-result-contract-kit`, `command-result-envelope-kit`, `interaction-preflight-reason-catalog-kit`, `interaction-command-result-kit`, `player-pose-command-result-kit`, `request-sync-command-result-kit`, `ready-cancel-command-result-kit`, `victory-command-result-kit`, `publish-decision-snapshot-kit`, `command-result-journal-kit`, `runtime-debug-result-projection-kit`, `local-authority-result-consumer-kit`, `host-authority-result-consumer-kit`, `command-replay-fixture-kit`, and the next build slice.
 
 ## Previous Entries
 
 ```txt
+.agent/trackers/2026-07-07T16-09-54-04-00/project-breakdown.md
 .agent/trackers/2026-07-07T14-51-44-04-00/project-breakdown.md
 .agent/trackers/2026-07-07T13-41-22-04-00/project-breakdown.md
 .agent/trackers/2026-07-07T11-51-17-04-00/project-breakdown.md
@@ -37,31 +38,30 @@ The registry tracks current source-owned service surfaces, implemented ProtoKit/
 ## Current next slice
 
 ```txt
-HorrorCorridor Local/Host Result Cutover + Fixture Parity Gate
+HorrorCorridor Command Result Source Cutover + Debug Projection Lock
 ```
 
 Build order:
 
 ```txt
-keep solo, host, and client play working
--> add command-result-contract-kit types first
--> add command-result-envelope-kit as DOM-free source code under game-state/domain
--> add stable result statuses: accepted, rejected, unchanged, publish-only
--> add stable rejection reasons for every current silent no-op path
--> add publish decisions: publish, skip, recovery, victory
--> keep current interactionRules and networkRules exports returning GameState
--> add result-returning interaction and network rule wrappers
--> make legacy exports call result wrappers and return result.state
+preserve solo, host, and client visible behavior
+-> add DOM-free command result contract types
+-> add stable status, reason, and publish decision catalogs
+-> add result factories
+-> add interaction preflight helpers for pickup/drop/place/remove
+-> add result-returning interaction wrappers
+-> make existing interaction exports return result.state
+-> add result-returning network player update wrapper
+-> add result-returning network interaction wrapper
+-> make existing network exports return result.state
 -> classify request-sync as publish-only recovery
--> classify toggle-ready and cancel through explicit policy
--> add publish-decision-snapshot-kit near buildReplicatedSnapshot/createFullSyncMessage seams
--> update GameCanvas local applyInteraction to journal rejected commands without publishing
--> update GameCanvas host TRY_INTERACT path to skip rejected command publishes and publish request-sync recovery
--> preserve current victory behavior while attaching victory publish decision
--> extend RuntimeDebugFrameRecord and debug extractState with latest result, latest publish decision, and command journal counts
--> add DOM-free fixtures for every result status and publish decision
--> add replay parity fixture comparing normalized final replicated snapshots
--> defer render extraction, world-builder extraction, broad PeerJS adapter extraction, and visual object-kit work
+-> classify toggle-ready and cancel as explicit skipped commands
+-> add command result journal shape
+-> add publish decision snapshot helper
+-> add local/host result consumer functions in GameCanvas only after source wrappers are in place
+-> extend RuntimeDebugFrameRecord with latestCommandResult and latestPublishDecision
+-> add replay fixtures for accepted, rejected, unchanged, publish-only, recovery, and victory
+-> defer renderer, minimap, post-processing, PeerJS adapter, and visual-kit extraction
 ```
 
 ## Tracker Layout
