@@ -5,10 +5,10 @@ This root `.agent` folder stores public-safe repo breakdowns, tracker runs, kit 
 ## Latest Entry
 
 ```txt
-.agent/trackers/2026-07-07T17-20-57-04-00/project-breakdown.md
+.agent/trackers/2026-07-07T18-41-07-04-00/project-breakdown.md
 ```
 
-Focus: command result source cutover for the oldest eligible tracked Publish repo. This pass keeps the implementation boundary on DOM-free result contracts, stable status/reason catalogs, result-returning rule wrappers, publish decision helpers, runtime debug result projection, and replay fixtures before renderer, world-builder, PeerJS, or visual object-kit extraction.
+Focus: result envelope fixture gate for the oldest eligible tracked Publish repo. This pass keeps the implementation boundary on DOM-free command result contracts, stable rejection reasons, publish decision metadata, source wrapper compatibility, host/local result consumers, runtime debug result projection, and replay fixtures before renderer, world-builder, PeerJS, or visual object-kit extraction.
 
 ## Registry
 
@@ -21,6 +21,7 @@ The registry tracks current source-owned service surfaces, implemented ProtoKit/
 ## Previous Entries
 
 ```txt
+.agent/trackers/2026-07-07T17-20-57-04-00/project-breakdown.md
 .agent/trackers/2026-07-07T16-09-54-04-00/project-breakdown.md
 .agent/trackers/2026-07-07T14-51-44-04-00/project-breakdown.md
 .agent/trackers/2026-07-07T13-41-22-04-00/project-breakdown.md
@@ -38,29 +39,32 @@ The registry tracks current source-owned service surfaces, implemented ProtoKit/
 ## Current next slice
 
 ```txt
-HorrorCorridor Command Result Source Cutover + Debug Projection Lock
+HorrorCorridor Result Envelope Fixture Gate + Host Publish Policy Lock
 ```
 
 Build order:
 
 ```txt
 preserve solo, host, and client visible behavior
--> add DOM-free command result contract types
--> add stable status, reason, and publish decision catalogs
--> add result factories
--> add interaction preflight helpers for pickup/drop/place/remove
--> add result-returning interaction wrappers
--> make existing interaction exports return result.state
--> add result-returning network player update wrapper
+-> add DOM-free command result type definitions
+-> add stable CommandStatus values: accepted, rejected, unchanged, publish-only
+-> add stable CommandReason catalog for all silent no-op paths
+-> add stable PublishDecision values: publish, skip, recovery, victory, no-op
+-> add command result factories
+-> add interaction preflight helpers beside current interaction rules
+-> add result-returning wrappers for pickup, drop, place, and remove
+-> keep current interaction exports returning result.state
+-> add result-returning player update wrapper
 -> add result-returning network interaction wrapper
--> make existing network exports return result.state
+-> keep current network exports returning result.state
 -> classify request-sync as publish-only recovery
 -> classify toggle-ready and cancel as explicit skipped commands
--> add command result journal shape
+-> add command result journal records
 -> add publish decision snapshot helper
--> add local/host result consumer functions in GameCanvas only after source wrappers are in place
--> extend RuntimeDebugFrameRecord with latestCommandResult and latestPublishDecision
--> add replay fixtures for accepted, rejected, unchanged, publish-only, recovery, and victory
+-> wire local-authority consumer after source wrappers exist
+-> wire host-authority consumer after source wrappers exist
+-> extend RuntimeDebugFrameRecord with latestCommandResult, latestPublishDecision, and journal counts
+-> add DOM-free replay fixtures for accepted, rejected, unchanged, publish-only, recovery, and victory paths
 -> defer renderer, minimap, post-processing, PeerJS adapter, and visual-kit extraction
 ```
 
