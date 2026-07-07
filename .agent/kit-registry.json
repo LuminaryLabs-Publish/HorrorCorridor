@@ -1,9 +1,9 @@
 {
-  "schemaVersion": 7,
+  "schemaVersion": 8,
   "repository": "LuminaryLabs-Publish/HorrorCorridor",
-  "generatedAt": "2026-07-07T17:20:57-04:00",
-  "status": "command-result-source-cutover-debug-projection-lock-planned",
-  "latestTracker": ".agent/trackers/2026-07-07T17-20-57-04-00/project-breakdown.md",
+  "generatedAt": "2026-07-07T18:41:07-04:00",
+  "status": "result-envelope-fixture-gate-host-publish-policy-lock-planned",
+  "latestTracker": ".agent/trackers/2026-07-07T18-41-07-04-00/project-breakdown.md",
   "sourceRoots": [
     "HorrorCorridor-V1/src/components/game",
     "HorrorCorridor-V1/src/features",
@@ -22,16 +22,17 @@
     "excludedRepo": "LuminaryLabs-Publish/TheCavalryOfRome",
     "reason": "HorrorCorridor was the oldest eligible tracked non-Cavalry Publish repo by latest central ledger timestamp at the start of the run.",
     "checkedTimestamps": {
-      "HorrorCorridor": "2026-07-07T16:09:54-04:00",
-      "TheOpenAbove": "2026-07-07T16:21:09-04:00",
-      "AetherVale": "2026-07-07T16:29:18-04:00",
-      "PhantomCommand": "2026-07-07T16:30:00-04:00",
-      "PrehistoricRush": "2026-07-07T16:40:29-04:00",
-      "MyCozyIsland": "2026-07-07T16:49:08-04:00",
-      "IntoTheMeadow": "2026-07-07T16:58:09-04:00",
-      "ZombieOrchard": "2026-07-07T17:10:21-04:00"
+      "HorrorCorridor": "2026-07-07T17:20:57-04:00",
+      "TheOpenAbove": "2026-07-07T17:29:51-04:00",
+      "AetherVale": "2026-07-07T17-38-46-04-00",
+      "PhantomCommand": "2026-07-07T17:49:34-04:00",
+      "PrehistoricRush": "2026-07-07T18:00:19-04:00",
+      "MyCozyIsland": "2026-07-07T18:10:03-04:00",
+      "IntoTheMeadow": "2026-07-07T18:19:15-04:00",
+      "ZombieOrchard": "2026-07-07T18:28:54-04:00"
     }
   },
+  "currentNextSlice": "HorrorCorridor Result Envelope Fixture Gate + Host Publish Policy Lock",
   "interactionLoop": {
     "current": [
       "start-menu",
@@ -60,7 +61,7 @@
       "command-result-envelope-kit wraps pose, interaction, ooze, request-sync, toggle-ready, cancel, and victory outcomes",
       "interaction-preflight-reason-catalog-kit classifies every silent no-op branch",
       "result-returning rule wrappers preserve current GameState APIs",
-      "publish-decision-snapshot-kit derives publish, skip, recovery, or victory behavior",
+      "publish-decision-snapshot-kit derives publish, skip, recovery, victory, or no-op behavior",
       "local-authority-result-consumer-kit journals local rejected commands without publishing",
       "host-authority-result-consumer-kit skips rejected TRY_INTERACT publishes and publishes recovery requests",
       "runtime-debug-result-projection-kit exposes latest result and journal counters",
@@ -71,6 +72,11 @@
     "application-shell",
     "next-client-runtime",
     "react-game-surface",
+    "ui-screen-routing",
+    "settings-overlay",
+    "completion-routing",
+    "pause-state",
+    "readiness-state",
     "session-lifecycle",
     "room-identity",
     "join-code-routing",
@@ -81,13 +87,17 @@
     "network-message-protocol",
     "host-message-ingress",
     "client-message-egress",
-    "loading-readiness",
+    "replicated-snapshot-protocol",
+    "full-sync-output",
+    "request-sync-recovery",
     "seeded-maze-bootstrap",
     "maze-cell-lookup",
     "maze-pathing",
     "cube-spawn-bootstrap",
     "anomaly-sequence-bootstrap",
-    "replicated-snapshot-bootstrap",
+    "sequence-slot-authority",
+    "ordered-sequence-validation",
+    "victory-completion",
     "first-person-input",
     "pointer-lock-control",
     "keyboard-input",
@@ -95,8 +105,8 @@
     "player-view-angles",
     "player-movement-integration",
     "maze-collision-resolution",
-    "local-pose-prediction",
     "camera-bob",
+    "local-pose-prediction",
     "local-carry-state-sync",
     "host-authority",
     "local-authoritative-simulation",
@@ -122,9 +132,10 @@
     "carried-cube-state",
     "end-anomaly-distance-check",
     "slot-assignment",
-    "sequence-objective",
-    "ordered-sequence-validation",
-    "victory-completion",
+    "pickup-preflight",
+    "drop-preflight",
+    "place-preflight",
+    "remove-preflight",
     "correction-reversal",
     "ooze-trail-navigation",
     "ooze-decay",
@@ -137,7 +148,6 @@
     "snapshot-publish-metadata",
     "publish-decision-snapshot",
     "snapshot-publish-fixture",
-    "full-sync-message-output",
     "runtime-debug-event-log",
     "runtime-debug-frame-log",
     "runtime-debug-result-projection",
@@ -170,7 +180,7 @@
       "pause-resume",
       "commit-completion",
       "return-routing",
-      "readiness-state"
+      "patch-readiness-state"
     ],
     "peer-sync-service": [
       "create-host-transport",
@@ -224,6 +234,7 @@
       "return-preflight-diagnostics"
     ],
     "command-result-envelope-service": [
+      "create-command-envelope",
       "create-accepted-result",
       "create-rejected-result",
       "create-unchanged-result",
@@ -299,195 +310,78 @@
     ]
   },
   "kits": [
-    {
-      "id": "corridor-session-domain-kit",
-      "status": "candidate-extract",
-      "kind": "domain-service-kit",
-      "provides": ["room identity", "lobby state", "readiness", "screen transitions"],
-      "nextAction": "Extract only after command result and replay fixture contracts are stable."
-    },
-    {
-      "id": "peer-room-sync-domain-kit",
-      "status": "candidate-extract",
-      "kind": "domain-service-kit",
-      "provides": ["host transport", "client transport", "full sync", "player update", "try interact"],
-      "nextAction": "Keep transport stable while result metadata is added beneath it."
-    },
-    {
-      "id": "maze-snapshot-bootstrap-kit",
-      "status": "candidate-extract",
-      "kind": "domain-service-kit",
-      "provides": ["seed hash", "maze generation", "cube spawns", "sequence slots", "initial replicated snapshot"],
-      "nextAction": "Keep as deterministic input to result fixtures and replay."
-    },
-    {
-      "id": "first-person-corridor-player-kit",
-      "status": "candidate-extract",
-      "kind": "domain-service-kit",
-      "provides": ["keyboard input", "pointer lock", "look delta", "movement", "collision", "camera sync"],
-      "nextAction": "Wrap pose updates in command results before extracting player runtime."
-    },
-    {
-      "id": "command-result-contract-kit",
-      "status": "next-cut",
-      "kind": "contract-kit",
-      "provides": ["CommandResult type", "CommandStatus type", "CommandReason type", "PublishDecision type"],
-      "nextAction": "Implement first so wrappers and consumers share one result shape."
-    },
-    {
-      "id": "command-result-envelope-kit",
-      "status": "next-cut",
-      "kind": "contract-kit",
-      "provides": ["accepted result", "rejected result", "unchanged result", "publish-only result", "before/after metadata"],
-      "nextAction": "Implement as DOM-free source boundary under game-state/domain."
-    },
-    {
-      "id": "interaction-preflight-reason-catalog-kit",
-      "status": "next-cut",
-      "kind": "policy-kit",
-      "provides": ["not_playing", "missing_player", "already_carrying", "no_carried_cube", "no_nearby_cube", "too_far_from_anomaly", "no_open_slot", "wrong_slot", "no_placed_cube", "missing_anomaly_cell", "unknown_interaction_action"],
-      "nextAction": "Classify every current unchanged interaction path before mutation."
-    },
-    {
-      "id": "interaction-preflight-diagnostics-kit",
-      "status": "next-cut",
-      "kind": "diagnostics-kit",
-      "provides": ["playerId", "cubeId", "slotId", "distance", "targetSlot", "carriedCubeId"],
-      "nextAction": "Expose machine-readable diagnostics for rejected interactions."
-    },
-    {
-      "id": "player-pose-command-result-kit",
-      "status": "next-cut",
-      "kind": "domain-service-kit",
-      "provides": ["pose accepted", "pose rejected", "pose unchanged", "missing player reason"],
-      "nextAction": "Wrap applyNetworkPlayerUpdate and keep legacy GameState return."
-    },
-    {
-      "id": "interaction-command-result-kit",
-      "status": "next-cut",
-      "kind": "domain-service-kit",
-      "provides": ["pickup result", "drop result", "place result", "remove result", "legacy interaction adapters"],
-      "nextAction": "Wrap pickUpCube, dropCube, placeCubeAtEndAnomaly, and removeCubeFromEndAnomaly."
-    },
-    {
-      "id": "ooze-command-result-kit",
-      "status": "next-cut",
-      "kind": "domain-service-kit",
-      "provides": ["ooze tick result", "ooze unchanged", "ooze spawn events", "ooze decay events"],
-      "nextAction": "Add after interaction and pose result seams are stable."
-    },
-    {
-      "id": "request-sync-command-result-kit",
-      "status": "next-cut",
-      "kind": "contract-kit",
-      "provides": ["publish-only recovery result", "request-sync reason", "recovery publish decision"],
-      "nextAction": "Replace action-string recovery publish branching with result metadata."
-    },
-    {
-      "id": "ready-cancel-command-result-kit",
-      "status": "next-cut",
-      "kind": "policy-kit",
-      "provides": ["toggle-ready skipped policy", "cancel skipped policy", "lobby-policy-deferred reason"],
-      "nextAction": "Stop these actions from falling through default unchanged state."
-    },
-    {
-      "id": "victory-command-result-kit",
-      "status": "next-cut",
-      "kind": "domain-service-kit",
-      "provides": ["victory event", "completion publish decision", "sequence-complete reason"],
-      "nextAction": "Attach victory metadata without changing current completion routing."
-    },
-    {
-      "id": "publish-decision-snapshot-kit",
-      "status": "next-cut",
-      "kind": "snapshot-kit",
-      "provides": ["publish decision", "publish reason", "recovery publish", "victory publish", "skip publish"],
-      "nextAction": "Use result metadata to replace implicit publish decisions."
-    },
-    {
-      "id": "command-result-journal-kit",
-      "status": "next-cut",
-      "kind": "journal-kit",
-      "provides": ["accepted count", "rejected count", "unchanged count", "publish-only count", "latest result"],
-      "nextAction": "Keep bounded records for debug and replay."
-    },
-    {
-      "id": "runtime-debug-result-projection-kit",
-      "status": "next-cut",
-      "kind": "diagnostics-kit",
-      "provides": ["latestCommandResult", "latestPublishDecision", "latestRejectionReason", "journalCounts"],
-      "nextAction": "Extend RuntimeDebugFrameRecord and debug extractState."
-    },
-    {
-      "id": "local-authority-result-consumer-kit",
-      "status": "next-cut",
-      "kind": "consumer-kit",
-      "provides": ["local rejected journal", "local publish skip", "local changed publish", "local victory decision"],
-      "nextAction": "Use in GameCanvas applyInteraction after source wrappers exist."
-    },
-    {
-      "id": "host-authority-result-consumer-kit",
-      "status": "next-cut",
-      "kind": "consumer-kit",
-      "provides": ["host rejected skip", "host recovery publish", "host changed publish", "host victory decision"],
-      "nextAction": "Use in GameCanvas host message ingress after source wrappers exist."
-    },
-    {
-      "id": "command-replay-fixture-kit",
-      "status": "next-cut",
-      "kind": "fixture-kit",
-      "provides": ["command replay", "normalized snapshot compare", "status matrix", "publish decision matrix"],
-      "nextAction": "Add DOM-free fixture coverage before renderer or transport extraction."
-    },
-    {
-      "id": "maze-world-render-kit",
-      "status": "implemented-current",
-      "kind": "render-kit",
-      "provides": ["maze world", "scene dressing", "cube objects", "anomaly visuals", "lighting"],
-      "nextAction": "Do not extract further until command result fixtures pass."
-    },
-    {
-      "id": "mesh-object-kit-catalog",
-      "status": "implemented-current",
-      "kind": "object-kit-catalog",
-      "provides": ["service door", "chain-link fence", "generator", "barrier", "culvert", "signpost", "shelving", "chain hook", "barrel cluster", "stair object"],
-      "nextAction": "Keep as visual catalog while authority work proceeds."
-    },
-    {
-      "id": "procedural-texture-kit-family",
-      "status": "implemented-current",
-      "kind": "texture-kit-family",
-      "provides": ["brick course", "damp mud", "rust streak", "moss grime", "wet concrete"],
-      "nextAction": "Keep as visual catalog while authority work proceeds."
-    }
+    {"id": "corridor-session-domain-kit", "status": "candidate-extract", "kind": "domain-service-kit", "provides": ["room identity", "lobby state", "readiness", "screen transitions"], "nextAction": "Extract only after command result and replay fixture contracts are stable."},
+    {"id": "peer-room-sync-domain-kit", "status": "candidate-extract", "kind": "domain-service-kit", "provides": ["host transport", "client transport", "full sync", "player update", "try interact"], "nextAction": "Keep transport stable while result metadata is added beneath it."},
+    {"id": "maze-snapshot-bootstrap-kit", "status": "candidate-extract", "kind": "domain-service-kit", "provides": ["seed hash", "maze generation", "cube spawns", "sequence slots", "initial replicated snapshot"], "nextAction": "Keep deterministic for replay fixtures."},
+    {"id": "first-person-corridor-player-kit", "status": "candidate-extract", "kind": "domain-service-kit", "provides": ["keyboard input", "pointer lock", "look delta", "movement", "collision", "camera sync"], "nextAction": "Wrap pose updates in command results before extracting player runtime."},
+    {"id": "host-command-envelope-adapter-kit", "status": "candidate-extract", "kind": "adapter-kit", "provides": ["network action normalization", "sender room binding", "request metadata"], "nextAction": "Use after the command result contract lands."},
+    {"id": "host-authority-command-kit", "status": "candidate-extract", "kind": "authority-kit", "provides": ["host player updates", "host interaction requests", "host snapshot publication"], "nextAction": "Replace inline publish decisions only after wrappers exist."},
+    {"id": "command-envelope-contract-kit", "status": "next-cut", "kind": "contract-kit", "provides": ["CommandEnvelope", "source metadata", "actor metadata", "request id"], "nextAction": "Normalize local and network actions into one command stream."},
+    {"id": "command-acceptance-policy-kit", "status": "next-cut", "kind": "policy-kit", "provides": ["source validation", "actor validation", "room validation", "payload validation"], "nextAction": "Reject malformed or unauthorized commands before mutation."},
+    {"id": "command-result-contract-kit", "status": "next-cut", "kind": "contract-kit", "provides": ["CommandResult", "CommandStatus", "CommandReason", "PublishDecision"], "nextAction": "Implement first so wrappers and consumers share one result shape."},
+    {"id": "command-result-envelope-kit", "status": "next-cut", "kind": "contract-kit", "provides": ["accepted result", "rejected result", "unchanged result", "publish-only result", "before after state metadata"], "nextAction": "Wrap every rule outcome without changing visible behavior."},
+    {"id": "command-result-status-policy-kit", "status": "next-cut", "kind": "policy-kit", "provides": ["accepted", "rejected", "unchanged", "publish-only"], "nextAction": "Use stable status values in docs, fixtures, debug frames, and consumers."},
+    {"id": "command-result-rejection-contract-kit", "status": "next-cut", "kind": "contract-kit", "provides": ["not-playing", "player-missing", "already-carrying", "cube-missing", "cube-out-of-range", "no-carried-cube", "anomaly-missing", "anomaly-out-of-range", "slot-unavailable", "slot-order-mismatch"], "nextAction": "Name every previous silent unchanged branch."},
+    {"id": "interaction-preflight-reason-catalog-kit", "status": "next-cut", "kind": "policy-kit", "provides": ["pickup reasons", "drop reasons", "place reasons", "remove reasons"], "nextAction": "Add beside interactionRules.ts before changing exports."},
+    {"id": "interaction-preflight-diagnostics-kit", "status": "next-cut", "kind": "diagnostic-kit", "provides": ["distance to cube", "distance to anomaly", "slot diagnostics", "candidate cube id"], "nextAction": "Include compact diagnostics in rejected results and debug projection."},
+    {"id": "player-pose-command-result-kit", "status": "next-cut", "kind": "reducer-kit", "provides": ["result-returning player update", "missing-player rejection", "held-cube sync metadata"], "nextAction": "Wrap applyNetworkPlayerUpdate without breaking callers."},
+    {"id": "interaction-command-result-kit", "status": "next-cut", "kind": "reducer-kit", "provides": ["result-returning pickup", "result-returning drop", "result-returning place", "result-returning remove"], "nextAction": "Preserve legacy state-returning exports through result.state."},
+    {"id": "ooze-command-result-kit", "status": "next-cut", "kind": "reducer-kit", "provides": ["ooze changed flag", "spawn count", "decay count", "cap metadata"], "nextAction": "Wrap after player and interaction results are stable."},
+    {"id": "request-sync-command-result-kit", "status": "next-cut", "kind": "policy-kit", "provides": ["publish-only recovery", "no state mutation", "full sync reason"], "nextAction": "Replace action-type-only recovery branching in GameCanvas."},
+    {"id": "ready-cancel-command-result-kit", "status": "next-cut", "kind": "policy-kit", "provides": ["toggle-ready skipped metadata", "cancel skipped metadata"], "nextAction": "Keep skipped until lobby command policy exists."},
+    {"id": "victory-command-result-kit", "status": "next-cut", "kind": "event-kit", "provides": ["victory event", "completion publish decision", "completion routing hint"], "nextAction": "Expose victory transition through result events."},
+    {"id": "snapshot-publish-metadata-kit", "status": "next-cut", "kind": "contract-kit", "provides": ["publish reason", "publish sequence", "published at", "room phase update"], "nextAction": "Attach to every publish decision."},
+    {"id": "publish-decision-snapshot-kit", "status": "next-cut", "kind": "policy-kit", "provides": ["publish", "skip", "recovery", "victory", "no-op"], "nextAction": "Make local and host consumers share publish policy."},
+    {"id": "snapshot-publish-fixture-kit", "status": "next-cut", "kind": "fixture-kit", "provides": ["snapshot normalization", "publish decision evidence", "fixture comparison"], "nextAction": "Assert rejected commands do not publish and recovery commands do."},
+    {"id": "command-result-journal-kit", "status": "next-cut", "kind": "journal-kit", "provides": ["accepted records", "rejected records", "unchanged records", "publish-only records", "journal counts"], "nextAction": "Use in runtime debug and replay."},
+    {"id": "command-result-fixture-kit", "status": "next-cut", "kind": "fixture-kit", "provides": ["accepted fixture", "rejected fixture", "unchanged fixture", "publish-only fixture"], "nextAction": "Add DOM-free fixtures before touching GameCanvas consumers."},
+    {"id": "command-replay-fixture-kit", "status": "next-cut", "kind": "fixture-kit", "provides": ["command journal replay", "volatile field normalization", "final snapshot parity"], "nextAction": "Gate subsequent host/render extraction."},
+    {"id": "runtime-debug-frame-kit", "status": "implemented", "kind": "diagnostic-kit", "provides": ["frame records", "event records", "window debug export"], "nextAction": "Extend with latest command result and publish decision."},
+    {"id": "runtime-debug-result-projection-kit", "status": "next-cut", "kind": "diagnostic-kit", "provides": ["latest command result", "latest publish decision", "journal counts", "last rejection reason"], "nextAction": "Project through RuntimeDebugFrameRecord after source results exist."},
+    {"id": "local-authority-result-consumer-kit", "status": "next-cut", "kind": "consumer-kit", "provides": ["local accepted publish", "local rejected journal", "local no publish skip"], "nextAction": "Wire inside GameCanvas only after wrappers pass fixture gates."},
+    {"id": "host-authority-result-consumer-kit", "status": "next-cut", "kind": "consumer-kit", "provides": ["host accepted publish", "host rejected skip", "request-sync recovery publish"], "nextAction": "Replace host TRY_INTERACT publish-after-application behavior."},
+    {"id": "replay-parity-smoke-kit", "status": "next-cut", "kind": "validation-kit", "provides": ["DOM-free replay smoke", "snapshot parity report", "journal coverage"], "nextAction": "Run before renderer or transport extraction."},
+    {"id": "maze-world-render-kit", "status": "implemented", "kind": "render-kit", "provides": ["maze world", "scene attachment", "world update", "scene dressing summary"], "nextAction": "Defer extraction until result replay gate passes."},
+    {"id": "wound-triangle-mesh-domain-kit", "status": "implemented", "kind": "object-kit", "provides": ["triangle mesh object conventions"], "nextAction": "Keep for future visual object expansion."},
+    {"id": "mesh-object-kit-catalog", "status": "implemented", "kind": "catalog-kit", "provides": ["object kit ids", "scene dressing kit list"], "nextAction": "Defer new object kits until gameplay authority is proven."},
+    {"id": "horror-corridor-preset-kit", "status": "implemented", "kind": "preset-kit", "provides": ["corridor visual preset", "object palette", "texture palette"], "nextAction": "Use after command/replay source lock."},
+    {"id": "procedural-texture-kit-family", "status": "implemented", "kind": "texture-kit", "provides": ["brick course", "damp mud", "rust streak", "moss grime", "wet concrete"], "nextAction": "Defer expansion."},
+    {"id": "rusted-service-door-object-kit", "status": "cataloged", "kind": "object-kit", "provides": ["service door prop"], "nextAction": "Defer."},
+    {"id": "chain-link-fence-object-kit", "status": "cataloged", "kind": "object-kit", "provides": ["fence prop"], "nextAction": "Defer."},
+    {"id": "broken-generator-object-kit", "status": "cataloged", "kind": "object-kit", "provides": ["generator prop"], "nextAction": "Defer."},
+    {"id": "concrete-jersey-barrier-object-kit", "status": "cataloged", "kind": "object-kit", "provides": ["barrier prop"], "nextAction": "Defer."},
+    {"id": "storm-drain-culvert-object-kit", "status": "cataloged", "kind": "object-kit", "provides": ["culvert prop"], "nextAction": "Defer."},
+    {"id": "collapsed-signpost-object-kit", "status": "cataloged", "kind": "object-kit", "provides": ["signpost prop"], "nextAction": "Defer."},
+    {"id": "industrial-shelving-object-kit", "status": "cataloged", "kind": "object-kit", "provides": ["shelving prop"], "nextAction": "Defer."},
+    {"id": "hanging-chain-hook-object-kit", "status": "cataloged", "kind": "object-kit", "provides": ["chain hook prop"], "nextAction": "Defer."},
+    {"id": "barrel-cluster-object-kit", "status": "cataloged", "kind": "object-kit", "provides": ["barrel cluster prop"], "nextAction": "Defer."},
+    {"id": "broken-concrete-stair-object-kit", "status": "cataloged", "kind": "object-kit", "provides": ["broken stair prop"], "nextAction": "Defer."},
+    {"id": "brick-course-texture-kit", "status": "cataloged", "kind": "texture-kit", "provides": ["brick course material"], "nextAction": "Defer."},
+    {"id": "damp-mud-texture-kit", "status": "cataloged", "kind": "texture-kit", "provides": ["damp mud material"], "nextAction": "Defer."},
+    {"id": "rust-streak-texture-kit", "status": "cataloged", "kind": "texture-kit", "provides": ["rust streak material"], "nextAction": "Defer."},
+    {"id": "moss-grime-texture-kit", "status": "cataloged", "kind": "texture-kit", "provides": ["moss grime material"], "nextAction": "Defer."},
+    {"id": "wet-concrete-texture-kit", "status": "cataloged", "kind": "texture-kit", "provides": ["wet concrete material"], "nextAction": "Defer."}
   ],
-  "nextSlice": {
-    "title": "HorrorCorridor Command Result Source Cutover + Debug Projection Lock",
-    "buildOrder": [
-      "preserve solo, host, and client visible behavior",
-      "add DOM-free command result contract types",
-      "add stable status, reason, and publish decision catalogs",
-      "add result factories",
-      "add interaction preflight helpers for pickup/drop/place/remove",
-      "add result-returning interaction wrappers",
-      "make existing interaction exports return result.state",
-      "add result-returning network player update wrapper",
-      "add result-returning network interaction wrapper",
-      "make existing network exports return result.state",
-      "classify request-sync as publish-only recovery",
-      "classify toggle-ready and cancel as explicit skipped commands",
-      "add command result journal shape",
-      "add publish decision snapshot helper",
-      "add local/host result consumer functions in GameCanvas only after source wrappers are in place",
-      "extend RuntimeDebugFrameRecord with latestCommandResult and latestPublishDecision",
-      "add replay fixtures for accepted, rejected, unchanged, publish-only, recovery, and victory",
-      "keep renderer, minimap, post-processing, PeerJS adapter, and visual-kit extraction deferred"
-    ]
-  },
-  "validation": {
-    "runtimeSourceChanged": false,
-    "localBuildRun": false,
-    "localSmokeRun": false,
-    "reason": "documentation-only breakdown run through GitHub connector"
-  }
+  "acceptanceGates": [
+    "applyNetworkInteractionRequest still returns GameState for existing callers",
+    "new result wrapper returns CommandResult for the same inputs",
+    "all previous unchanged interaction paths expose stable rejection or unchanged reasons",
+    "request-sync returns publish-only recovery metadata",
+    "toggle-ready and cancel return explicit skipped metadata",
+    "local rejected interaction does not publish",
+    "host rejected TRY_INTERACT does not publish",
+    "runtime debug extractState exposes latest command result and publish decision after at least one command",
+    "DOM-free replay fixture compares normalized final replicated snapshots"
+  ],
+  "deferred": [
+    "renderer extraction",
+    "minimap extraction",
+    "post-processing extraction",
+    "PeerJS adapter extraction",
+    "visual object-kit implementation",
+    "texture-kit expansion",
+    "new maze themes",
+    "new enemy systems",
+    "new objective chains"
+  ]
 }
