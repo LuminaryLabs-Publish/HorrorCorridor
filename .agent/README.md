@@ -5,10 +5,10 @@ This root `.agent` folder stores public-safe repo breakdowns, tracker runs, kit 
 ## Latest Entry
 
 ```txt
-.agent/trackers/2026-07-07T04-50-42-04-00/project-breakdown.md
+.agent/trackers/2026-07-07T06-01-21-04-00/project-breakdown.md
 ```
 
-Focus: service-registry follow-up for the oldest eligible Publish repo, adding a canonical kit registry and documenting the cutover from component-owned behavior into session, peer sync, player, interaction, objective, ooze, render, and diagnostics kits.
+Focus: host-authority contract follow-up for the oldest eligible Publish repo in the tracked rotation. This pass documents the service cutover from component-owned gameplay behavior into a pure command reducer that can validate solo, host, and client actions through the same authority surface.
 
 ## Registry
 
@@ -16,13 +16,34 @@ Focus: service-registry follow-up for the oldest eligible Publish repo, adding a
 .agent/kit-registry.json
 ```
 
-The registry tracks current source-owned kit surfaces, implemented ProtoKit/catalog surfaces, runtime extraction candidates, service cutover order, and recommended smoke fixtures.
+The registry now tracks current source-owned kit surfaces, implemented ProtoKit/catalog surfaces, the new `host-authority-command-kit`, service cutover order, recommended command-journal smoke fixtures, and the next build slice.
 
 ## Previous Entries
 
 ```txt
+.agent/trackers/2026-07-07T04-50-42-04-00/project-breakdown.md
 .agent/trackers/2026-07-07T03-38-41-04-00/project-breakdown.md
 .agent/trackers/2026-07-07T16-25-00-04-00/project-breakdown.md
+```
+
+## Current next slice
+
+```txt
+HorrorCorridor Host Authority Contract Cutover
+```
+
+Build order:
+
+```txt
+keep current playable flow
+-> add pure host-authority-command-kit
+-> define player/update/interaction command types
+-> route solo and host play through one command reducer
+-> route client TRY_INTERACT and PLAYER_UPDATE through the same reducer
+-> move sequence validation and ooze advance behind host authority
+-> make GameCanvas dispatch commands and consume snapshots
+-> add command journal replay fixture
+-> add deterministic smoke fixtures
 ```
 
 ## Tracker Layout
