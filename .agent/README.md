@@ -5,10 +5,10 @@ This root `.agent` folder stores public-safe repo breakdowns, tracker runs, kit 
 ## Latest Entry
 
 ```txt
-.agent/trackers/2026-07-07T11-51-17-04-00/project-breakdown.md
+.agent/trackers/2026-07-07T13-41-22-04-00/project-breakdown.md
 ```
 
-Focus: command result rejection contract and snapshot metadata fixture follow-up for the next eligible Publish repo in the tracked rotation. This pass narrows the previous host command envelope boundary into the first reducer-level execution seam: every authoritative state mutation should produce explicit accepted, rejected, changed, publish, event, and diagnostics metadata before broad render or transport extraction.
+Focus: interaction preflight reason catalog and command replay fixture follow-up for the oldest eligible tracked Publish repo. This pass narrows the command-result work to the first gameplay legality seam: pickup, drop, anomaly placement, anomaly removal, pose, request-sync, and ooze updates need explicit accepted/rejected/unchanged/publish-only result records before render, world-builder, or broad PeerJS extraction.
 
 ## Registry
 
@@ -16,11 +16,12 @@ Focus: command result rejection contract and snapshot metadata fixture follow-up
 .agent/kit-registry.json
 ```
 
-The registry tracks current source-owned service surfaces, implemented ProtoKit/catalog surfaces, mesh object kits, texture kits, command envelope and acceptance policy targets, the new `command-result-rejection-contract-kit`, `player-pose-command-result-kit`, `interaction-command-result-kit`, `ooze-command-result-kit`, `snapshot-publish-metadata-kit`, `command-result-journal-kit`, command fixtures, replay fixtures, and the next build slice.
+The registry tracks current source-owned service surfaces, implemented ProtoKit/catalog surfaces, mesh object kits, texture kits, command envelope and acceptance policy targets, the new `interaction-preflight-reason-catalog-kit`, `interaction-preflight-diagnostics-kit`, `command-result-rejection-contract-kit`, `player-pose-command-result-kit`, `interaction-command-result-kit`, `ooze-command-result-kit`, `snapshot-publish-metadata-kit`, `command-result-journal-kit`, `command-replay-fixture-kit`, command fixtures, replay fixtures, and the next build slice.
 
 ## Previous Entries
 
 ```txt
+.agent/trackers/2026-07-07T11-51-17-04-00/project-breakdown.md
 .agent/trackers/2026-07-07T10-41-32-04-00/project-breakdown.md
 .agent/trackers/2026-07-07T09-28-43-04-00/project-breakdown.md
 .agent/trackers/2026-07-07T08-20-44-04-00/project-breakdown.md
@@ -34,28 +35,27 @@ The registry tracks current source-owned service surfaces, implemented ProtoKit/
 ## Current next slice
 
 ```txt
-HorrorCorridor Command Result Rejection Contract + Snapshot Metadata Fixture Cutover
+HorrorCorridor Interaction Preflight Reason Catalog + Command Replay Fixture Cutover
 ```
 
 Build order:
 
 ```txt
 keep solo, host, and client play working
--> add command-result-rejection-contract-kit before moving the whole runtime through command envelopes
--> define CommandResult fields: commandId, type, actorId, accepted, rejected, rejectionReason, changed, events, publishDecision, publishReason, beforeTick, afterTick, diagnostics
+-> add interaction-preflight-reason-catalog-kit before touching render or PeerJS extraction
+-> define stable reasons: not_playing, missing_player, already_carrying, no_carried_cube, no_nearby_cube, too_far_from_anomaly, no_open_slot, wrong_slot, no_placed_cube, missing_anomaly_cell, unknown_interaction_action
+-> add interaction-preflight-diagnostics-kit that returns checked playerId, cubeId, slotId, distanceToEnd, carriedCubeId, candidateCubeId, selectedSlotId, and rule name
+-> wrap pickUpCube, dropCube, placeCubeAtEndAnomaly, and removeCubeFromEndAnomaly with preflight functions before applying effects
+-> keep existing interactionRules exports compatible while adding result-returning variants
+-> add command-result-rejection-contract-kit fields: commandId, type, actorId, accepted, rejected, rejectionReason, changed, events, publishDecision, publishReason, beforeTick, afterTick, diagnostics
 -> add player-pose-command-result-kit around applyNetworkPlayerUpdate
--> return rejected=true with reason=missing_player for unknown player updates
--> return changed=false with reason=unchanged_pose for valid no-change pose updates
--> add interaction-command-result-kit with preflight reason mapping before calling existing interactionRules effects
--> map illegal pickup/drop/place/remove to stable reasons
 -> add ooze-command-result-kit around advanceOozeTrail with deterministic RNG required in fixtures
--> add snapshot-publish-metadata-kit to derive publishDecision from CommandResult
--> keep request-sync as publish-only with accepted=true, changed=false, publishReason=recovery
--> add command-result-journal-kit with accepted, rejected, and unchanged counts
--> extend runtime debug frame shape with last command, rejection, publish, and journal fields
--> add command-result-fixture-kit with scripted pose, illegal pickup, legal pickup, illegal place, legal place, request-sync, seeded ooze, and victory examples
--> add replay-parity-smoke-kit after fixture result shape is stable
--> defer render extraction, world-builder extraction, and broad PeerJS adapter extraction until command result fixtures pass
+-> add snapshot-publish-metadata-kit and make request-sync publish-only with accepted=true changed=false publishReason=recovery
+-> add command-result-journal-kit with accepted, rejected, unchanged, and publish-only counts
+-> extend runtime debug frames with lastCommandId, lastCommandType, lastResultStatus, lastRejectionReason, lastPublishReason, publishDecision, and journal counts
+-> add DOM-free fixtures for missing-player pose, unchanged pose, illegal pickup, legal pickup, illegal place, legal place, wrong-slot remove, request-sync, seeded ooze, and victory
+-> add command-replay-fixture-kit to replay command journals and compare normalized final snapshots
+-> defer render extraction, world-builder extraction, broad PeerJS adapter extraction, and new visual-kit work
 ```
 
 ## Tracker Layout
