@@ -2,7 +2,7 @@
 
 **Repository:** `LuminaryLabs-Publish/HorrorCorridor`
 
-**Updated:** `2026-07-08T08:29:35-04:00`
+**Updated:** `2026-07-08T09:40:52-04:00`
 
 ## Authority and command gaps
 
@@ -19,7 +19,8 @@
 - no CommandResult envelope exists for before/after state, changed flag, events, diagnostics, and source metadata.
 - no publish-decision snapshot exists to classify publish, skip, recovery, victory, or no-op behavior.
 - a source-backed publish-decision routing matrix is documented but not implemented.
-- a source-edit cutover queue is now documented but not implemented.
+- a source-edit cutover queue is documented but not implemented.
+- a command-result wire contract is documented but not implemented.
 ```
 
 ## Debug and replay gaps
