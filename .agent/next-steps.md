@@ -2,12 +2,12 @@
 
 **Repository:** `LuminaryLabs-Publish/HorrorCorridor`
 
-**Updated:** `2026-07-08T07:01:54-04:00`
+**Updated:** `2026-07-08T08:29:35-04:00`
 
 ## Current next build slice
 
 ```txt
-HorrorCorridor Command Result Fixture Gate: Publish Decision Routing Matrix Implementation
+HorrorCorridor Command Result Fixture Gate: Source Edit Cutover Queue
 ```
 
 Start from:
@@ -17,6 +17,7 @@ Start from:
 .agent/command-authority-audit/result-reason-matrix.md
 .agent/command-authority-audit/command-result-fixture-acceptance-ledger.md
 .agent/command-authority-audit/publish-decision-routing-matrix.md
+.agent/command-authority-audit/2026-07-08T08-29-35-04-00-source-edit-cutover-queue.md
 ```
 
 ## Build checklist
@@ -28,7 +29,7 @@ Start from:
 [ ] Add interaction preflight helpers beside interactionRules.
 [ ] Add result-returning wrappers for pickup, drop, place, and remove.
 [ ] Keep legacy interaction exports returning result.state.
-[ ] Add result-returning wrappers for player update and network interaction request.
+[ ] Add result-returning wrappers for player update, held cube sync, and network interaction request.
 [ ] Keep legacy network exports returning result.state.
 [ ] Classify request-sync as publish-only recovery.
 [ ] Classify toggle-ready and cancel as explicit skipped commands until lobby policy exists.
@@ -64,6 +65,43 @@ HorrorCorridor-V1/src/features/debug/store/runtimeDebugStore.ts
 HorrorCorridor-V1/src/components/game/GameCanvas.tsx
 ```
 
+## Implementation order
+
+```txt
+1. commandTypes.ts
+   - define CommandEnvelope, CommandSource, CommandStatus, CommandReason, CommandResult, PublishDecision, CommandEvent, CommandSnapshotSummary.
+
+2. commandReasons.ts
+   - export stable reason constants and reason family helpers.
+
+3. commandResults.ts
+   - build accepted, rejected, unchanged, publish-only, skipped, and victory result constructors.
+   - calculate changed from object identity and optional snapshot summary.
+
+4. publishDecisions.ts
+   - map result.status/result.changed to publish, skip, recovery, no-op, or victory.
+
+5. commandJournal.ts
+   - append result records and expose accepted/rejected/unchanged/publishOnly/skipped/victory counts.
+
+6. interactionPreflight.ts
+   - split current silent `return state` branches into named preflight results.
+
+7. interactionResultRules.ts
+   - wrap pickUpCube, dropCube, placeCubeAtEndAnomaly, and removeCubeFromEndAnomaly.
+   - keep existing `interactionRules.ts` behavior stable.
+
+8. networkResultRules.ts
+   - wrap applyNetworkPlayerUpdate, syncHeldCubesToPlayers, applyNetworkInteractionRequest, request-sync, toggle-ready, cancel, and default.
+   - keep existing `networkRules.ts` behavior stable.
+
+9. scripts/horror-corridor-command-fixture.mjs
+   - run the acceptance matrix without DOM, canvas, PeerJS, or browser state.
+
+10. runtimeDebugStore.ts / GameCanvas.tsx
+   - consume result metadata only after the headless fixture passes.
+```
+
 ## Required command reason families
 
 ```txt
@@ -72,6 +110,7 @@ accepted:drop
 accepted:place
 accepted:remove
 accepted:player-update
+accepted:held-cube-sync
 accepted:ooze-tick
 victory:ordered-sequence-complete
 
@@ -118,6 +157,7 @@ skipped:unknown-action
 [ ] skipped unknown action
 [ ] accepted player update
 [ ] unchanged player update for missing player
+[ ] accepted held cube sync
 [ ] unchanged held-cube already synced
 [ ] ooze tick spawn
 [ ] ooze tick decay
