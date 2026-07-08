@@ -2,7 +2,7 @@
 
 **Repository:** `LuminaryLabs-Publish/HorrorCorridor`
 
-**Updated:** `2026-07-08T02:19:36-04:00`
+**Updated:** `2026-07-08T05:00:17-04:00`
 
 ## Available validation commands
 
@@ -31,44 +31,70 @@ npm run validate:live-player:dev
 6. npm run review:object-kit
 ```
 
-## Required fixture matrix
+## Required command fixture matrix
 
 ```txt
-accepted pickup
-rejected pickup, no nearby cube
-accepted drop
-rejected drop, no carried cube
-accepted place at anomaly
-rejected place, too far from anomaly
-rejected place, no free slot
-accepted remove from anomaly
-rejected remove, wrong slot
-network player update accepted
-network player update missing player unchanged
-request-sync publish-only recovery
-toggle-ready skipped
-cancel skipped
-unknown action skipped
-ooze tick accepted or unchanged with reason
-victory completion accepted
+accepted pickup near loose cube
+rejected pickup while already carrying
+rejected pickup with no nearby cube
+accepted drop while carrying
+rejected drop without carried cube
+accepted place near anomaly with carried cube
+rejected place too far from anomaly
+rejected place with no free slot
+accepted remove last anomaly cube
+rejected remove wrong slot
+publish-only request-sync
+skipped toggle-ready
+skipped cancel
+skipped unknown action
+accepted player update
+unchanged player update for missing player
+accepted or unchanged ooze tick with reason
+victory ordered-sequence completion
 ```
 
 ## Expected proof output
 
 ```txt
-- command id
-- command source
-- command type
-- status
-- reason
-- before tick
-- after tick
-- changed flag
-- publish decision
-- publish reason
-- final snapshot summary
-- volatile fields normalized
-- replay parity passed or failed
+command id
+command source
+command type
+status
+reason
+before tick
+after tick
+changed flag
+publish decision
+publish reason
+final snapshot summary
+volatile fields normalized
+replay parity passed or failed
+```
+
+## Volatile fields allowed to normalize
+
+```txt
+timestampMs
+room.updatedAtMs
+runtime frame counters
+randomized debug ids
+network cadence ages
+```
+
+## Fields not allowed to normalize
+
+```txt
+command status
+command reason
+publish decision
+sequence slots
+cube ownership
+cube visibility
+held cube state
+player pose
+victory state
+final snapshot facts
 ```
 
 ## Validation performed in this documentation pass
@@ -76,12 +102,13 @@ victory completion accepted
 ```txt
 [done] GitHub connector read of current Publish repo list.
 [done] GitHub connector read of central LuminaryLabs-Dev/LuminaryLabs Publish ledger search results.
-[done] GitHub connector read of HorrorCorridor repo-local agent tracker state.
+[done] GitHub connector read of HorrorCorridor repo-local agent state.
 [done] GitHub connector read of package scripts.
-[done] GitHub connector read of GameCanvas runtime loop.
 [done] GitHub connector read of networkRules authority seam.
 [done] GitHub connector read of interactionRules silent no-op branches.
+[done] GitHub connector read of runtimeDebugStore export shape.
 [done] Documentation-only .agent audit files written to main.
+[done] Central LuminaryLabs internal change-log and HorrorCorridor ledger pointers written to main.
 ```
 
 ## Validation not performed in this documentation pass
@@ -92,6 +119,7 @@ victory completion accepted
 [not-run] npm run lint
 [not-run] npm run smoke:protokits
 [not-run] npm run harness:horror-corridor
+[not-run] node scripts/horror-corridor-command-fixture.mjs
 [not-run] npm run validate:live-player:dev
 [not-run] browser route check
 [not-run] live host/client multiplayer check
@@ -102,3 +130,5 @@ victory completion accepted
 ## Current validation risk
 
 Current runtime may be functionally playable, but the next implementation pass cannot safely claim command authority correctness until the command result fixture matrix exists and passes.
+
+The next proof should be headless first. Browser and live multiplayer validation should follow only after the command result fixture proves local and host authority decisions.
