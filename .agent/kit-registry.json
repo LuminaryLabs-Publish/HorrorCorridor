@@ -1,9 +1,9 @@
 {
-  "schemaVersion": 9,
+  "schemaVersion": 10,
   "repository": "LuminaryLabs-Publish/HorrorCorridor",
-  "generatedAt": "2026-07-07T20:00:46-04:00",
-  "status": "command-result-source-cutover-replay-fixture-smoke-lock-planned",
-  "latestTracker": ".agent/trackers/2026-07-07T20-00-46-04-00/project-breakdown.md",
+  "generatedAt": "2026-07-07T21:18:45-04:00",
+  "status": "host-result-journal-publish-decision-fixture-lock-planned",
+  "latestTracker": ".agent/trackers/2026-07-07T21-18-45-04-00/project-breakdown.md",
   "sourceRoots": [
     "HorrorCorridor-V1/src/components/game",
     "HorrorCorridor-V1/src/features",
@@ -22,17 +22,17 @@
     "excludedRepo": "LuminaryLabs-Publish/TheCavalryOfRome",
     "reason": "HorrorCorridor was the oldest eligible tracked non-Cavalry Publish repo by latest central ledger timestamp at the start of the run.",
     "checkedTimestamps": {
-      "HorrorCorridor": "2026-07-07T18:41:07-04:00",
-      "TheOpenAbove": "2026-07-07T18:49:32-04:00",
-      "AetherVale": "2026-07-07T19:01:37-04:00",
-      "PhantomCommand": "2026-07-07T19:08:52-04:00",
-      "PrehistoricRush": "2026-07-07T19:18:58-04:00",
-      "MyCozyIsland": "2026-07-07T19:29:28-04:00",
-      "IntoTheMeadow": "2026-07-07T19:42:05-04:00",
-      "ZombieOrchard": "2026-07-07T19:51:43-04:00"
+      "HorrorCorridor": "2026-07-07T20:00:46-04:00",
+      "TheOpenAbove": "2026-07-07T20:10:49-04:00",
+      "AetherVale": "2026-07-07T20:21:40-04:00",
+      "PhantomCommand": "2026-07-07T20:31:21-04:00",
+      "PrehistoricRush": "2026-07-07T20:38:27-04:00",
+      "MyCozyIsland": "2026-07-07T20:50:10-04:00",
+      "IntoTheMeadow": "2026-07-07T20:59:30-04:00",
+      "ZombieOrchard": "2026-07-07T21:09:57-04:00"
     }
   },
-  "currentNextSlice": "HorrorCorridor Command Result Source Cutover + Replay Fixture Smoke Lock",
+  "currentNextSlice": "HorrorCorridor Host Result Journal + Publish Decision Fixture Lock",
   "interactionLoop": {
     "current": [
       "start-menu",
@@ -167,147 +167,17 @@
     "replay-parity-validation"
   ],
   "services": {
-    "session-service": [
-      "create-room-id",
-      "create-join-code",
-      "create-player-identity",
-      "create-room-state",
-      "run-loading-readiness",
-      "enter-solo-mode",
-      "enter-host-lobby",
-      "enter-client-lobby",
-      "start-play",
-      "pause-resume",
-      "commit-completion",
-      "return-routing",
-      "patch-readiness-state"
-    ],
-    "peer-sync-service": [
-      "create-host-transport",
-      "create-client-transport",
-      "map-connection-status",
-      "send-lobby-events",
-      "send-start-game",
-      "send-full-sync",
-      "send-player-update",
-      "send-try-interact",
-      "receive-host-messages",
-      "map-transport-message-to-command-envelope"
-    ],
-    "maze-bootstrap-service": [
-      "hash-seed",
-      "generate-maze",
-      "build-cell-lookup",
-      "build-paths-from-end-to-cube-spawns",
-      "create-player-spawns",
-      "create-cube-spawns",
-      "initialize-anomaly-sequence-slots",
-      "create-initial-game-state",
-      "create-initial-replicated-snapshot"
-    ],
-    "first-person-player-service": [
-      "keyboard-code-to-player-input-button",
-      "set-player-input-button",
-      "accumulate-player-look-delta",
-      "clear-player-look-delta",
-      "apply-player-look-delta",
-      "create-player-view-angles",
-      "advance-player-movement",
-      "resolve-maze-collision",
-      "sync-camera-from-player",
-      "to-player-input-snapshot"
-    ],
-    "interaction-preflight-service": [
-      "validate-game-playing",
-      "find-player",
-      "find-carried-cube",
-      "find-nearest-loose-cube",
-      "resolve-end-anomaly-cell",
-      "check-end-anomaly-distance",
-      "resolve-target-slot",
-      "resolve-last-occupied-slot",
-      "classify-pickup-reason",
-      "classify-drop-reason",
-      "classify-place-reason",
-      "classify-remove-reason",
-      "return-stable-rejection-reason",
-      "return-preflight-diagnostics"
-    ],
-    "command-result-envelope-service": [
-      "create-command-envelope",
-      "create-accepted-result",
-      "create-rejected-result",
-      "create-unchanged-result",
-      "create-publish-only-result",
-      "attach-command-metadata",
-      "attach-result-status",
-      "attach-rejection-reason",
-      "attach-changed-flag",
-      "attach-event-list",
-      "attach-before-after-tick",
-      "attach-before-after-snapshot-summary",
-      "attach-diagnostics-payload",
-      "preserve-legacy-gamestate-return-api"
-    ],
-    "publish-decision-service": [
-      "derive-publish-decision-from-result",
-      "publish-after-changed-command",
-      "skip-publish-after-rejected-command",
-      "publish-recovery-after-request-sync",
-      "skip-publish-after-toggle-ready-or-cancel",
-      "publish-victory-after-sequence-complete",
-      "attach-publish-reason",
-      "attach-publish-sequence",
-      "attach-room-phase-updated-at",
-      "build-replicated-snapshot",
-      "set-runtime-store-snapshot",
-      "broadcast-full-sync",
-      "compare-fixture-snapshot"
-    ],
-    "local-authority-result-consumer-service": [
-      "consume-local-pose-result",
-      "consume-local-interaction-result",
-      "journal-rejected-local-command",
-      "skip-local-publish-for-rejection",
-      "publish-local-changed-command",
-      "preserve-current-local-victory-routing"
-    ],
-    "host-authority-result-consumer-service": [
-      "consume-host-player-update-result",
-      "consume-host-interaction-result",
-      "skip-rejected-try-interact-publish",
-      "publish-request-sync-recovery",
-      "skip-toggle-ready-or-cancel-until-lobby-policy-exists",
-      "publish-changed-host-command",
-      "preserve-current-host-victory-routing"
-    ],
-    "diagnostics-service": [
-      "runtime-debug-init",
-      "runtime-debug-clear",
-      "runtime-event-record",
-      "runtime-frame-record",
-      "cadence-summary",
-      "attach-last-command-type",
-      "attach-last-command-id",
-      "attach-last-result-status",
-      "attach-last-rejection-reason",
-      "attach-last-publish-decision",
-      "attach-last-publish-reason",
-      "attach-journal-counts",
-      "window-debug-extract-state"
-    ],
-    "replay-service": [
-      "serialize-command-envelope",
-      "serialize-command-result",
-      "append-accepted-result",
-      "append-rejected-result",
-      "append-unchanged-result",
-      "append-publish-only-result",
-      "replay-command-journal",
-      "normalize-volatile-fields",
-      "compare-final-snapshot",
-      "emit-parity-report"
-    ]
+    "session-service": ["create-room-id", "create-join-code", "create-player-identity", "create-room-state", "run-loading-readiness", "enter-solo-mode", "enter-host-lobby", "enter-client-lobby", "start-play", "pause-resume", "commit-completion", "return-routing", "patch-readiness-state"],
+    "peer-sync-service": ["create-host-transport", "create-client-transport", "map-connection-status", "send-lobby-events", "send-start-game", "send-full-sync", "send-player-update", "send-try-interact", "receive-host-messages", "map-transport-message-to-command-envelope"],
+    "maze-bootstrap-service": ["hash-seed", "generate-maze", "build-cell-lookup", "build-paths-from-end-to-cube-spawns", "create-player-spawns", "create-cube-spawns", "initialize-anomaly-sequence-slots", "create-initial-game-state", "create-initial-replicated-snapshot"],
+    "first-person-player-service": ["keyboard-code-to-player-input-button", "set-player-input-button", "accumulate-player-look-delta", "clear-player-look-delta", "apply-player-look-delta", "create-player-view-angles", "advance-player-movement", "resolve-maze-collision", "sync-camera-from-player", "to-player-input-snapshot"],
+    "interaction-preflight-service": ["validate-game-playing", "find-player", "find-carried-cube", "find-nearest-loose-cube", "resolve-end-anomaly-cell", "check-end-anomaly-distance", "resolve-target-slot", "resolve-last-occupied-slot", "classify-pickup-reason", "classify-drop-reason", "classify-place-reason", "classify-remove-reason", "return-stable-rejection-reason", "return-preflight-diagnostics"],
+    "command-result-envelope-service": ["create-command-envelope", "create-accepted-result", "create-rejected-result", "create-unchanged-result", "create-publish-only-result", "attach-command-metadata", "attach-result-status", "attach-rejection-reason", "attach-changed-flag", "attach-event-list", "attach-before-after-tick", "attach-before-after-snapshot-summary", "attach-diagnostics-payload", "preserve-legacy-gamestate-return-api"],
+    "publish-decision-service": ["derive-publish-decision-from-result", "publish-after-changed-command", "skip-publish-after-rejected-command", "publish-recovery-after-request-sync", "skip-publish-after-toggle-ready-or-cancel", "publish-victory-after-sequence-complete", "attach-publish-reason", "attach-publish-sequence", "attach-room-phase-updated-at", "build-replicated-snapshot", "set-runtime-store-snapshot", "broadcast-full-sync", "compare-fixture-snapshot"],
+    "local-authority-result-consumer-service": ["consume-local-pose-result", "consume-local-interaction-result", "journal-rejected-local-command", "skip-local-publish-for-rejection", "publish-local-changed-command", "preserve-current-local-victory-routing"],
+    "host-authority-result-consumer-service": ["consume-host-player-update-result", "consume-host-interaction-result", "skip-rejected-try-interact-publish", "publish-request-sync-recovery", "skip-toggle-ready-or-cancel-until-lobby-policy-exists", "publish-changed-host-command", "preserve-current-host-victory-routing"],
+    "diagnostics-service": ["runtime-debug-init", "runtime-debug-clear", "runtime-event-record", "runtime-frame-record", "cadence-summary", "attach-last-command-type", "attach-last-command-id", "attach-last-result-status", "attach-last-rejection-reason", "attach-last-publish-decision", "attach-last-publish-reason", "attach-journal-counts", "window-debug-extract-state"],
+    "replay-service": ["serialize-command-envelope", "serialize-command-result", "append-accepted-result", "append-rejected-result", "append-unchanged-result", "append-publish-only-result", "replay-command-journal", "normalize-volatile-fields", "compare-final-snapshot", "emit-parity-report"]
   },
   "kits": [
     {"id": "corridor-session-domain-kit", "status": "candidate-extract", "kind": "domain-service-kit", "provides": ["room identity", "lobby state", "readiness", "screen transitions"], "nextAction": "Extract only after command result and replay fixture contracts are stable."},
@@ -363,7 +233,7 @@
     {"id": "wet-concrete-texture-kit", "status": "implemented-source", "kind": "texture-kit", "provides": ["wet concrete texture"], "nextAction": "Deferred visual expansion."}
   ],
   "nextBuildOrder": [
-    "preserve current solo, host, client, rendering, minimap, debug overlay, and network behavior",
+    "preserve current solo, host, client, rendering, minimap, debug overlay, and PeerJS behavior",
     "add command result type definitions under game-state/domain without moving renderer code",
     "define CommandStatus accepted/rejected/unchanged/publish-only",
     "define CommandReason catalog for all silent no-op branches",
@@ -382,7 +252,7 @@
     "wire host-authority consumer to skip rejected TRY_INTERACT publishes and publish request-sync recovery",
     "extend runtime debug frame with latestCommandResult, latestPublishDecision, and commandJournal",
     "add DOM-free fixtures for accepted pickup, rejected pickup, accepted place, rejected place, request-sync recovery, and victory completion",
-    "defer PeerJS extraction, renderer extraction, minimap extraction, and object-kit visual expansion"
+    "defer PeerJS extraction, renderer extraction, minimap extraction, postprocess extraction, and object-kit visual expansion"
   ],
   "validationPlan": [
     "npm run lint",
