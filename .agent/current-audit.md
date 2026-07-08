@@ -2,55 +2,55 @@
 
 **Repository:** `LuminaryLabs-Publish/HorrorCorridor`
 
-**Audit timestamp:** `2026-07-08T11:09:38-04:00`
+**Audit timestamp:** `2026-07-08T12-29-17-04:00`
 
 ## Summary
 
-`HorrorCorridor` is playable and structurally rich, but command authority remains too implicit for safe host/client parity claims.
+`HorrorCorridor` is playable and structurally rich, but command authority is still too implicit for safe host/client parity claims.
 
-The current source contains real runtime services: session flow, seeded maze bootstrap, first-person input, cube interaction, ordered anomaly victory, host/client sync, ooze cadence, Three.js rendering, minimap, runtime debug frames/events, and validation scripts.
-
-This pass did not change runtime code. It refreshed repo-local `.agent` state and added a command-result source wire map that translates the prior command-result wire contract into exact files, result wrappers, fixture rows, debug projection fields, and `GameCanvas.tsx` stop lines.
+This pass did not change runtime source. It refreshed repo-local `.agent` state and added a consumer acceptance map that narrows the next implementation from broad source-wire planning into the exact local-authority, host-authority, debug-projection, and fixture-consumer seams.
 
 ## Repo selection
 
-The full accessible `LuminaryLabs-Publish` repo list was checked during this pass.
+The accessible `LuminaryLabs-Publish` repo list was checked during this pass.
 
 ```txt
-LuminaryLabs-Publish/IntoTheMeadow       tracked; root .agent observed
 LuminaryLabs-Publish/HorrorCorridor      selected fallback follow-up
-LuminaryLabs-Publish/AetherVale          tracked; root .agent observed
-LuminaryLabs-Publish/ZombieOrchard       tracked; root .agent observed
-LuminaryLabs-Publish/TheUnmappedHouse    tracked; root .agent observed
-LuminaryLabs-Publish/MyCozyIsland        tracked; root .agent observed
-LuminaryLabs-Publish/TheOpenAbove        tracked; root .agent observed
-LuminaryLabs-Publish/PhantomCommand      tracked; root .agent observed
+LuminaryLabs-Publish/AetherVale          tracked; root .agent represented centrally
+LuminaryLabs-Publish/TheOpenAbove        tracked; root .agent represented centrally
 LuminaryLabs-Publish/TheCavalryOfRome    excluded by rule
-LuminaryLabs-Publish/PrehistoricRush     tracked; root .agent observed
+LuminaryLabs-Publish/PhantomCommand      tracked; root .agent represented centrally
+LuminaryLabs-Publish/PrehistoricRush     tracked; root .agent represented centrally
+LuminaryLabs-Publish/ZombieOrchard       tracked; root .agent observed directly this run
+LuminaryLabs-Publish/IntoTheMeadow       tracked; root .agent represented centrally
+LuminaryLabs-Publish/MyCozyIsland        tracked; root .agent represented centrally
+LuminaryLabs-Publish/TheUnmappedHouse    tracked; root .agent represented centrally
 ```
 
 `TheCavalryOfRome` remains excluded by standing rule.
 
-Central ledger state showed tracked entries for the eligible Publish repos. Root `.agent/START_HERE.md` state was observed for checked eligible repos.
+Central ledger state showed tracked entries for the eligible Publish repos. Root `.agent` state was represented in central summary/ledger data, and `ZombieOrchard` plus `HorrorCorridor` were read directly during the selection pass.
 
-Because no new untracked eligible repo was found, this run selected `HorrorCorridor` as the oldest eligible fallback by latest observed repo-local alignment time. The implementation seam is not missing documentation anymore; it is missing source-level command result proof.
+Because no new untracked eligible repo was found, this run selected `HorrorCorridor` as an eligible fallback. The implementation seam is not missing documentation anymore; it is missing source-level command result proof and consumer wiring.
 
 ## Evidence checked
 
 ```txt
-LuminaryLabs-Publish organization repo list
+LuminaryLabs-Publish organization repo list through installation 142700432
+LuminaryLabs-Dev/LuminaryLabs:repo-checks/reports/latest-summary.md
 LuminaryLabs-Dev/LuminaryLabs:repo-ledger/LuminaryLabs-Publish/HorrorCorridor.md
+LuminaryLabs-Dev/LuminaryLabs:repo-ledger/LuminaryLabs-Publish/ZombieOrchard.md
 LuminaryLabs-Publish/HorrorCorridor:.agent/START_HERE.md
 LuminaryLabs-Publish/HorrorCorridor:.agent/current-audit.md
 LuminaryLabs-Publish/HorrorCorridor:.agent/next-steps.md
 LuminaryLabs-Publish/HorrorCorridor:.agent/known-gaps.md
 LuminaryLabs-Publish/HorrorCorridor:.agent/validation.md
 LuminaryLabs-Publish/HorrorCorridor:.agent/kit-registry.json
-LuminaryLabs-Publish/HorrorCorridor:.agent/command-authority-audit/2026-07-08T09-40-52-04-00-command-result-wire-contract.md
-LuminaryLabs-Publish/HorrorCorridor:HorrorCorridor-V1/package.json
+LuminaryLabs-Publish/HorrorCorridor:.agent/command-authority-audit/2026-07-08T11-09-38-04-00-command-result-source-wire-map.md
 LuminaryLabs-Publish/HorrorCorridor:HorrorCorridor-V1/src/components/game/GameCanvas.tsx
 LuminaryLabs-Publish/HorrorCorridor:HorrorCorridor-V1/src/features/game-state/domain/networkRules.ts
 LuminaryLabs-Publish/HorrorCorridor:HorrorCorridor-V1/src/features/game-state/domain/interactionRules.ts
+LuminaryLabs-Publish/HorrorCorridor:HorrorCorridor-V1/src/features/debug/store/runtimeDebugStore.ts
 ```
 
 ## Current interaction loop
@@ -102,26 +102,10 @@ input or peer message
 -> CommandResult
 -> PublishDecision
 -> CommandJournal
+-> LocalAuthorityCommandConsumer or HostAuthorityCommandConsumer
 -> RuntimeDebug result projection
 -> DOM-free fixture replay
 -> final snapshot parity comparison
-```
-
-## Current source-backed services
-
-```txt
-app/session service
-peer sync service
-maze bootstrap service
-first-person player service
-interaction preflight service
-command result envelope service
-publish decision service
-diagnostics and replay service
-render service
-minimap service
-validation/harness service
-object/texture kit catalog service
 ```
 
 ## All domains in use
@@ -186,6 +170,9 @@ victory-command-result
 command-result-journal
 command-result-fixture-matrix
 command-replay-fixture
+local-authority-command-consumer
+host-authority-command-consumer
+runtime-debug-command-projection
 cube-carry-interaction
 nearest-cube-selection
 carried-cube-state
@@ -211,8 +198,6 @@ runtime-debug-event-log
 runtime-debug-frame-log
 runtime-debug-result-projection
 cadence-diagnostics
-local-authority-result-consumer
-host-authority-result-consumer
 render-world-snapshot-consumption
 three-renderer
 post-processing
@@ -224,6 +209,25 @@ procedural-texture-kit-family
 static-smoke-validation
 live-player-validation
 replay-parity-validation
+```
+
+## Current source-backed services
+
+```txt
+app/session service
+peer sync service
+maze bootstrap service
+first-person player service
+interaction preflight service
+command result envelope service
+publish decision service
+local authority result consumer service
+host authority result consumer service
+diagnostics and replay service
+render service
+minimap service
+validation/harness service
+object/texture kit catalog service
 ```
 
 ## Current risk
@@ -245,18 +249,18 @@ Runtime debug does not yet expose latest command result, rejection reason, publi
 ## Follow-up artifacts added
 
 ```txt
-.agent/architecture-audit/2026-07-08T11-09-38-04-00-dsk-domain-breakdown.md
-.agent/render-audit/2026-07-08T11-09-38-04-00-runtime-readback-command-overlay-map.md
-.agent/gameplay-audit/2026-07-08T11-09-38-04-00-command-result-gameplay-loop.md
-.agent/command-authority-audit/2026-07-08T11-09-38-04-00-command-result-source-wire-map.md
-.agent/trackers/2026-07-08T11-09-38-04-00/project-breakdown.md
-.agent/turn-ledger/2026-07-08T11-09-38-04-00.md
+.agent/architecture-audit/2026-07-08T12-29-17-04-00-dsk-domain-breakdown.md
+.agent/render-audit/2026-07-08T12-29-17-04-00-command-debug-readback-map.md
+.agent/gameplay-audit/2026-07-08T12-29-17-04-00-local-host-authority-loop.md
+.agent/command-authority-audit/2026-07-08T12-29-17-04-00-consumer-acceptance-map.md
+.agent/trackers/2026-07-08T12-29-17-04-00/project-breakdown.md
+.agent/turn-ledger/2026-07-08T12-29-17-04-00.md
 ```
 
 ## Current next slice
 
 ```txt
-HorrorCorridor Command Result Source Wire Map
+HorrorCorridor Command Result Consumer Acceptance Map + Fixture Gate
 ```
 
 This should happen before PeerJS extraction, renderer extraction, minimap extraction, postprocess extraction, scene dressing, object-kit visual expansion, or new level content.
