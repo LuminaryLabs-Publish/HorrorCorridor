@@ -2,13 +2,13 @@
 
 **Repository:** `LuminaryLabs-Publish/HorrorCorridor`
 
-**Audit timestamp:** `2026-07-08T13:59:50-04:00`
+**Audit timestamp:** `2026-07-08T15:39:43-04:00`
 
 ## Summary
 
-`HorrorCorridor` is playable and structurally rich, but command authority still needs an explicit consumer bridge before any renderer, PeerJS, minimap, post-process, scene dressing, or new content work.
+`HorrorCorridor` is playable and structurally rich, but command authority remains the next safest proof boundary.
 
-This pass did not change runtime source. It refreshed repo-local `.agent` state and added a GameCanvas command-consumer wire map that turns the next implementation into a small, fixture-first handoff.
+This pass did not change runtime source. It refreshed repo-local `.agent` state and narrowed the next implementation to a source-file manifest, legacy adapter boundary, and DOM-free command fixture before any `GameCanvas.tsx` rewiring.
 
 ## Repo selection
 
@@ -16,27 +16,29 @@ The accessible `LuminaryLabs-Publish` repo list was checked during this pass.
 
 ```txt
 LuminaryLabs-Publish/HorrorCorridor      selected fallback follow-up
-LuminaryLabs-Publish/IntoTheMeadow       tracked; latest central commit observed this hour
-LuminaryLabs-Publish/AetherVale          tracked; latest central commit observed this hour
-LuminaryLabs-Publish/TheOpenAbove        tracked; latest central commit observed this hour
-LuminaryLabs-Publish/PhantomCommand      tracked; latest central commit observed this hour
-LuminaryLabs-Publish/PrehistoricRush     tracked; latest central commit observed this hour
-LuminaryLabs-Publish/ZombieOrchard       tracked; latest central commit observed this hour
-LuminaryLabs-Publish/MyCozyIsland        tracked; latest central commit observed this hour
-LuminaryLabs-Publish/TheUnmappedHouse    tracked; latest central commit observed this hour
+LuminaryLabs-Publish/IntoTheMeadow       tracked / latest sampled alignment 2026-07-08T15-28-13-04-00
+LuminaryLabs-Publish/AetherVale          tracked / latest sampled alignment 2026-07-08T15-20-41-04-00
+LuminaryLabs-Publish/TheOpenAbove        tracked / latest sampled alignment 2026-07-08T15-11-18-04-00
+LuminaryLabs-Publish/PhantomCommand      tracked / latest sampled alignment 2026-07-08T14-08-24-04-00
+LuminaryLabs-Publish/PrehistoricRush     tracked / latest sampled alignment 2026-07-08T14:51:11-04:00
+LuminaryLabs-Publish/ZombieOrchard       tracked / latest sampled alignment 2026-07-08T14:18:45-04:00
+LuminaryLabs-Publish/MyCozyIsland        tracked / latest sampled alignment 2026-07-08T14-58-49-04-00
+LuminaryLabs-Publish/TheUnmappedHouse    tracked / latest sampled alignment 2026-07-08T14-31-06-04-00
 LuminaryLabs-Publish/TheCavalryOfRome    excluded by rule
 ```
 
 `TheCavalryOfRome` remains excluded by standing rule.
 
-No new untracked eligible repo was found. `HorrorCorridor` was selected as the oldest high-value command-authority fallback in the observed current cycle.
+No new untracked eligible repo was found. `HorrorCorridor` was selected as the oldest current eligible fallback because the command-result fixture files are still absent and the command authority seam is still highest value.
 
 ## Evidence checked
 
 ```txt
 LuminaryLabs-Publish repository search list
-LuminaryLabs-Dev/LuminaryLabs recent central commits
 LuminaryLabs-Dev/LuminaryLabs:repo-ledger/LuminaryLabs-Publish/HorrorCorridor.md
+LuminaryLabs-Dev/LuminaryLabs:repo-ledger/LuminaryLabs-Publish/IntoTheMeadow.md
+LuminaryLabs-Dev/LuminaryLabs:repo-ledger/LuminaryLabs-Publish/MyCozyIsland.md
+LuminaryLabs-Dev/LuminaryLabs:repo-ledger/LuminaryLabs-Publish/PrehistoricRush.md
 LuminaryLabs-Publish/HorrorCorridor:.agent/START_HERE.md
 LuminaryLabs-Publish/HorrorCorridor:.agent/current-audit.md
 LuminaryLabs-Publish/HorrorCorridor:.agent/next-steps.md
@@ -47,7 +49,6 @@ LuminaryLabs-Publish/HorrorCorridor:HorrorCorridor-V1/package.json
 LuminaryLabs-Publish/HorrorCorridor:HorrorCorridor-V1/src/components/game/GameCanvas.tsx
 LuminaryLabs-Publish/HorrorCorridor:HorrorCorridor-V1/src/features/game-state/domain/networkRules.ts
 LuminaryLabs-Publish/HorrorCorridor:HorrorCorridor-V1/src/features/game-state/domain/interactionRules.ts
-LuminaryLabs-Publish/HorrorCorridor:HorrorCorridor-V1/src/features/debug/store/runtimeDebugStore.ts
 ```
 
 ## Current interaction loop
@@ -83,7 +84,8 @@ local solo/host interact
 client TRY_INTERACT
 -> host applies applyNetworkInteractionRequest
 -> rejected/invalid commands can collapse to unchanged GameState
--> host still needs decision metadata for publish/skip/recovery/victory
+-> host still calls publishAuthoritativeState(event action === request-sync ? recovery : resync)
+-> host needs decision metadata for publish, skip, recovery, and victory
 
 client PLAYER_UPDATE
 -> host applies applyNetworkPlayerUpdate
@@ -193,6 +195,8 @@ peer sync service
 maze bootstrap service
 first-person player service
 interaction preflight service
+legacy GameState interaction service
+legacy GameState network service
 command result envelope service
 publish decision service
 local authority result consumer service
@@ -223,18 +227,18 @@ Runtime debug does not yet expose latest command result, rejection reason, publi
 ## Follow-up artifacts added
 
 ```txt
-.agent/architecture-audit/2026-07-08T13-59-50-04-00-gamecanvas-command-consumer-dsk-breakdown.md
-.agent/render-audit/2026-07-08T13-59-50-04-00-runtime-debug-publish-readback.md
-.agent/gameplay-audit/2026-07-08T13-59-50-04-00-local-host-publish-gate.md
-.agent/command-authority-audit/2026-07-08T13-59-50-04-00-gamecanvas-consumer-wire-map.md
-.agent/trackers/2026-07-08T13-59-50-04-00/project-breakdown.md
-.agent/turn-ledger/2026-07-08T13-59-50-04-00.md
+.agent/architecture-audit/2026-07-08T15-39-43-04-00-command-fixture-source-manifest.md
+.agent/render-audit/2026-07-08T15-39-43-04-00-debug-command-projection-readback.md
+.agent/gameplay-audit/2026-07-08T15-39-43-04-00-local-host-command-fixture-boundary.md
+.agent/command-authority-audit/2026-07-08T15-39-43-04-00-source-file-manifest-and-adapter-boundary.md
+.agent/trackers/2026-07-08T15-39-43-04-00/project-breakdown.md
+.agent/turn-ledger/2026-07-08T15-39-43-04-00.md
 ```
 
 ## Current next slice
 
 ```txt
-HorrorCorridor GameCanvas Command Consumer Wire Map + Fixture Gate
+HorrorCorridor Command Fixture Source File Manifest + Legacy Adapter Boundary
 ```
 
 This should happen before PeerJS extraction, renderer extraction, minimap extraction, postprocess extraction, scene dressing, object-kit visual expansion, or new level content.
