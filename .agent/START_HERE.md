@@ -2,7 +2,7 @@
 
 **Repository:** `LuminaryLabs-Publish/HorrorCorridor`
 
-**Last aligned:** `2026-07-08T13:59:50-04:00`
+**Last aligned:** `2026-07-08T15:39:43-04:00`
 
 ## Purpose
 
@@ -20,26 +20,26 @@ The player starts from a menu, enters solo/host/client mode, moves through a see
 
 ## Current selection reason
 
-The accessible `LuminaryLabs-Publish` repo list was read and compared against the central `LuminaryLabs-Dev/LuminaryLabs` ledger/recent change state.
+The accessible `LuminaryLabs-Publish` repo list was read and compared against the central `LuminaryLabs-Dev/LuminaryLabs` ledger state.
 
 ```txt
 LuminaryLabs-Publish/HorrorCorridor      selected fallback follow-up
-LuminaryLabs-Publish/IntoTheMeadow       tracked; latest central commit observed this hour
-LuminaryLabs-Publish/AetherVale          tracked; latest central commit observed this hour
-LuminaryLabs-Publish/TheOpenAbove        tracked; latest central commit observed this hour
-LuminaryLabs-Publish/PhantomCommand      tracked; latest central commit observed this hour
-LuminaryLabs-Publish/PrehistoricRush     tracked; latest central commit observed this hour
-LuminaryLabs-Publish/ZombieOrchard       tracked; latest central commit observed this hour
-LuminaryLabs-Publish/MyCozyIsland        tracked; latest central commit observed this hour
-LuminaryLabs-Publish/TheUnmappedHouse    tracked; latest central commit observed this hour
+LuminaryLabs-Publish/IntoTheMeadow       tracked / latest sampled alignment 2026-07-08T15-28-13-04-00
+LuminaryLabs-Publish/AetherVale          tracked / latest sampled alignment 2026-07-08T15-20-41-04-00
+LuminaryLabs-Publish/TheOpenAbove        tracked / latest sampled alignment 2026-07-08T15-11-18-04-00
+LuminaryLabs-Publish/PhantomCommand      tracked / latest sampled alignment 2026-07-08T14-08-24-04-00
+LuminaryLabs-Publish/PrehistoricRush     tracked / latest sampled alignment 2026-07-08T14:51:11-04:00
+LuminaryLabs-Publish/ZombieOrchard       tracked / latest sampled alignment 2026-07-08T14:18:45-04:00
+LuminaryLabs-Publish/MyCozyIsland        tracked / latest sampled alignment 2026-07-08T14-58-49-04-00
+LuminaryLabs-Publish/TheUnmappedHouse    tracked / latest sampled alignment 2026-07-08T14-31-06-04-00
 LuminaryLabs-Publish/TheCavalryOfRome    excluded by rule
 ```
 
-No non-Cavalry repo was found that was fully new, absent from central tracking, undocumented, or missing root `.agent` state.
+No non-Cavalry repo was found that was fully new, absent from central tracking, undocumented, recently added but undocumented, or missing sampled root `.agent/START_HERE.md` state.
 
 `TheCavalryOfRome` remains excluded by standing rule.
 
-This pass selected `LuminaryLabs-Publish/HorrorCorridor` as the oldest high-value command-authority fallback in the observed current cycle. The remaining seam is the local/host command-consumer bridge between result-returning domain rules and `GameCanvas.tsx` publish behavior.
+This pass selected `LuminaryLabs-Publish/HorrorCorridor` because it is the oldest current eligible fallback and because the command fixture source files still do not exist while `GameCanvas.tsx` continues to consume `GameState`-returning rule functions directly.
 
 ## Current route
 
@@ -97,16 +97,26 @@ local input or peer message
 .agent/known-gaps.md
 .agent/next-steps.md
 .agent/validation.md
-.agent/architecture-audit/2026-07-08T13-59-50-04-00-gamecanvas-command-consumer-dsk-breakdown.md
-.agent/render-audit/2026-07-08T13-59-50-04-00-runtime-debug-publish-readback.md
-.agent/gameplay-audit/2026-07-08T13-59-50-04-00-local-host-publish-gate.md
-.agent/command-authority-audit/2026-07-08T13-59-50-04-00-gamecanvas-consumer-wire-map.md
-.agent/trackers/2026-07-08T13-59-50-04-00/project-breakdown.md
-.agent/turn-ledger/2026-07-08T13-59-50-04-00.md
 .agent/kit-registry.json
+.agent/architecture-audit/2026-07-08T15-39-43-04-00-command-fixture-source-manifest.md
+.agent/render-audit/2026-07-08T15-39-43-04-00-debug-command-projection-readback.md
+.agent/gameplay-audit/2026-07-08T15-39-43-04-00-local-host-command-fixture-boundary.md
+.agent/command-authority-audit/2026-07-08T15-39-43-04-00-source-file-manifest-and-adapter-boundary.md
+.agent/trackers/2026-07-08T15-39-43-04-00/project-breakdown.md
+.agent/turn-ledger/2026-07-08T15-39-43-04-00.md
 ```
 
 ## Source files to inspect next
+
+```txt
+HorrorCorridor-V1/package.json
+HorrorCorridor-V1/src/components/game/GameCanvas.tsx
+HorrorCorridor-V1/src/features/game-state/domain/interactionRules.ts
+HorrorCorridor-V1/src/features/game-state/domain/networkRules.ts
+HorrorCorridor-V1/src/features/debug/store/runtimeDebugStore.ts
+```
+
+## Source files to create before GameCanvas rewiring
 
 ```txt
 HorrorCorridor-V1/src/features/game-state/domain/commandTypes.ts
@@ -120,8 +130,6 @@ HorrorCorridor-V1/src/features/game-state/domain/networkResultRules.ts
 HorrorCorridor-V1/src/features/game-state/domain/localAuthorityCommandConsumer.ts
 HorrorCorridor-V1/src/features/game-state/domain/hostAuthorityCommandConsumer.ts
 HorrorCorridor-V1/scripts/horror-corridor-command-fixture.mjs
-HorrorCorridor-V1/src/features/debug/store/runtimeDebugStore.ts
-HorrorCorridor-V1/src/components/game/GameCanvas.tsx
 ```
 
 ## Main rule
@@ -132,7 +140,7 @@ Move command legality into result-returning domain kits, prove local/host consum
 
 ## Current next safe ledge
 
-Build the **HorrorCorridor GameCanvas Command Consumer Wire Map + Fixture Gate**.
+Build the **HorrorCorridor Command Fixture Source File Manifest + Legacy Adapter Boundary**.
 
 Preserve existing solo, host, client, renderer, minimap, debug overlay, and PeerJS behavior while adding result-returning wrappers and local/host command consumers beside the current `GameState`-returning rule functions.
 
