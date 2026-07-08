@@ -2,12 +2,12 @@
 
 **Repository:** `LuminaryLabs-Publish/HorrorCorridor`
 
-**Updated:** `2026-07-08T09:40:52-04:00`
+**Updated:** `2026-07-08T11:09:38-04:00`
 
 ## Current next build slice
 
 ```txt
-HorrorCorridor Command Result Wire Contract + Fixture Boundary
+HorrorCorridor Command Result Source Wire Map
 ```
 
 Start from:
@@ -19,18 +19,22 @@ Start from:
 .agent/command-authority-audit/publish-decision-routing-matrix.md
 .agent/command-authority-audit/2026-07-08T08-29-35-04-00-source-edit-cutover-queue.md
 .agent/command-authority-audit/2026-07-08T09-40-52-04-00-command-result-wire-contract.md
+.agent/command-authority-audit/2026-07-08T11-09-38-04-00-command-result-source-wire-map.md
 ```
 
 ## Build checklist
 
 ```txt
 [ ] Preserve current solo, host, client, renderer, minimap, debug overlay, and PeerJS behavior.
-[ ] Add CommandEnvelope, CommandStatus, CommandReason, CommandResult, and PublishDecision contracts under game-state/domain.
+[ ] Add CommandEnvelope, CommandStatus, CommandReason, CommandResult, CommandSnapshotSummary, CommandEvent, and PublishDecision contracts under game-state/domain.
 [ ] Define stable CommandReason values for every current silent no-op branch in networkRules.ts and interactionRules.ts.
+[ ] Add command result constructors and snapshot summary helpers.
+[ ] Add publish decision helper before GameCanvas consumes the result metadata.
+[ ] Add command journal helpers and summary counters.
 [ ] Add interaction preflight helpers beside interactionRules.
 [ ] Add result-returning wrappers for pickup, drop, place, and remove.
 [ ] Keep legacy interaction exports returning result.state.
-[ ] Add result-returning wrappers for player update, held cube sync, and network interaction request.
+[ ] Add result-returning wrappers for player update, held-cube sync, and network interaction request.
 [ ] Keep legacy network exports returning result.state.
 [ ] Classify request-sync as publish-only recovery.
 [ ] Classify toggle-ready and cancel as explicit skipped commands until lobby policy exists.
@@ -39,10 +43,9 @@ Start from:
 [ ] Classify accepted unchanged results as no-op.
 [ ] Classify rejected TRY_INTERACT results as skip.
 [ ] Classify ordered sequence completion as explicit victory.
-[ ] Add command result journal counters.
-[ ] Add publish decision snapshot helper.
 [ ] Add DOM-free command fixture script before changing GameCanvas publish logic.
-[ ] Add fixture rows for accepted, rejected, unchanged, publish-only, skipped, and victory result classes.
+[ ] Add fixture rows for accepted, rejected, unchanged, publish-only, skipped, ooze, and victory result classes.
+[ ] Add package script for the command fixture after the script exists.
 [ ] Wire runtime debug result projection only after the headless fixture passes.
 [ ] Wire local-authority consumer to journal rejections and only publish accepted changed/victory results.
 [ ] Wire host-authority consumer to skip rejected TRY_INTERACT publishes and publish request-sync recovery.
@@ -62,6 +65,7 @@ HorrorCorridor-V1/src/features/game-state/domain/interactionPreflight.ts
 HorrorCorridor-V1/src/features/game-state/domain/interactionResultRules.ts
 HorrorCorridor-V1/src/features/game-state/domain/networkResultRules.ts
 HorrorCorridor-V1/scripts/horror-corridor-command-fixture.mjs
+HorrorCorridor-V1/package.json
 HorrorCorridor-V1/src/features/debug/store/runtimeDebugStore.ts
 HorrorCorridor-V1/src/components/game/GameCanvas.tsx
 ```
@@ -77,7 +81,7 @@ HorrorCorridor-V1/src/components/game/GameCanvas.tsx
 
 3. commandResults.ts
    - build accepted, rejected, unchanged, publish-only, skipped, and victory result constructors.
-   - calculate changed from object identity and optional snapshot summary.
+   - calculate changed from object identity and snapshot summary.
 
 4. publishDecisions.ts
    - map result.status/result.changed to publish, skip, recovery, no-op, or victory.
@@ -86,20 +90,23 @@ HorrorCorridor-V1/src/components/game/GameCanvas.tsx
    - append result records and expose accepted/rejected/unchanged/publishOnly/skipped/victory counts.
 
 6. interactionPreflight.ts
-   - split current silent `return state` branches into named preflight results.
+   - split current silent return state branches into named preflight results.
 
 7. interactionResultRules.ts
    - wrap pickUpCube, dropCube, placeCubeAtEndAnomaly, and removeCubeFromEndAnomaly.
-   - keep existing `interactionRules.ts` behavior stable.
+   - keep existing interactionRules.ts behavior stable.
 
 8. networkResultRules.ts
    - wrap applyNetworkPlayerUpdate, syncHeldCubesToPlayers, applyNetworkInteractionRequest, request-sync, toggle-ready, cancel, and default.
-   - keep existing `networkRules.ts` behavior stable.
+   - keep existing networkRules.ts behavior stable.
 
 9. scripts/horror-corridor-command-fixture.mjs
-   - run the acceptance matrix without DOM, canvas, PeerJS, or browser state.
+   - run the acceptance matrix without DOM, canvas, PeerJS, Three.js, or browser state.
 
-10. runtimeDebugStore.ts / GameCanvas.tsx
+10. package.json
+   - add a command fixture script only after the fixture exists.
+
+11. runtimeDebugStore.ts / GameCanvas.tsx
    - consume result metadata only after the headless fixture passes.
 ```
 
@@ -163,6 +170,7 @@ skipped:unknown-action
 [ ] ooze tick spawn
 [ ] ooze tick decay
 [ ] ooze tick no-state-diff
+[ ] victory ordered-sequence completion
 ```
 
 ## Publish decision acceptance matrix
@@ -171,7 +179,7 @@ skipped:unknown-action
 [ ] accepted changed -> publish
 [ ] accepted unchanged -> no-op
 [ ] rejected -> skip
-[ ] unchanged -> skip
+[ ] unchanged -> skip or no-op by helper type
 [ ] publish-only -> recovery
 [ ] skipped -> skip
 [ ] victory -> victory
@@ -180,17 +188,17 @@ skipped:unknown-action
 ## Acceptance checks
 
 ```txt
+node scripts/horror-corridor-command-fixture.mjs
 npm run lint
 npm run smoke:protokits
 npm run harness:horror-corridor
-node scripts/horror-corridor-command-fixture.mjs
 npm run validate:live-player:dev
 npm run review:object-kit
 ```
 
 ## Stop condition
 
-Stop after command result contracts, reason catalog, publish decision helper, runtime debug projection, and DOM-free fixture matrix are implemented or documented enough to prove accepted, rejected, unchanged, publish-only, skipped, and victory command parity.
+Stop after command result contracts, reason catalog, publish decision helper, command journal, runtime debug projection, and DOM-free fixture matrix are implemented or documented enough to prove accepted, rejected, unchanged, publish-only, skipped, and victory command parity.
 
 Do not continue into renderer extraction, PeerJS extraction, minimap extraction, postprocess extraction, scene dressing, new level content, or new visual content in the same implementation pass.
 
