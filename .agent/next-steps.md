@@ -2,12 +2,12 @@
 
 **Repository:** `LuminaryLabs-Publish/HorrorCorridor`
 
-**Updated:** `2026-07-08T08:29:35-04:00`
+**Updated:** `2026-07-08T09:40:52-04:00`
 
 ## Current next build slice
 
 ```txt
-HorrorCorridor Command Result Fixture Gate: Source Edit Cutover Queue
+HorrorCorridor Command Result Wire Contract + Fixture Boundary
 ```
 
 Start from:
@@ -18,6 +18,7 @@ Start from:
 .agent/command-authority-audit/command-result-fixture-acceptance-ledger.md
 .agent/command-authority-audit/publish-decision-routing-matrix.md
 .agent/command-authority-audit/2026-07-08T08-29-35-04-00-source-edit-cutover-queue.md
+.agent/command-authority-audit/2026-07-08T09-40-52-04-00-command-result-wire-contract.md
 ```
 
 ## Build checklist
@@ -40,11 +41,11 @@ Start from:
 [ ] Classify ordered sequence completion as explicit victory.
 [ ] Add command result journal counters.
 [ ] Add publish decision snapshot helper.
+[ ] Add DOM-free command fixture script before changing GameCanvas publish logic.
+[ ] Add fixture rows for accepted, rejected, unchanged, publish-only, skipped, and victory result classes.
+[ ] Wire runtime debug result projection only after the headless fixture passes.
 [ ] Wire local-authority consumer to journal rejections and only publish accepted changed/victory results.
 [ ] Wire host-authority consumer to skip rejected TRY_INTERACT publishes and publish request-sync recovery.
-[ ] Extend runtime debug frame/export with latestCommandResult, latestPublishDecision, latestRejectionReason, commandJournalCounts, and latestFixtureParity.
-[ ] Add DOM-free command fixture script.
-[ ] Add fixtures for accepted pickup, rejected pickup, accepted drop, rejected drop, accepted place, rejected place, accepted remove, rejected remove, request-sync recovery, skipped toggle-ready/cancel/unknown, player update, held-cube sync, ooze tick, and victory completion.
 [ ] Normalize only volatile fields in fixture comparison.
 [ ] Defer PeerJS extraction, renderer extraction, minimap extraction, postprocess extraction, scene dressing, and object-kit visual expansion.
 ```
