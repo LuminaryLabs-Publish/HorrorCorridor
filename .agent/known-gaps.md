@@ -2,7 +2,7 @@
 
 **Repository:** `LuminaryLabs-Publish/HorrorCorridor`
 
-**Updated:** `2026-07-08T07:01:54-04:00`
+**Updated:** `2026-07-08T08:29:35-04:00`
 
 ## Authority and command gaps
 
@@ -11,12 +11,15 @@
 - networkRules returns GameState only.
 - invalid pickup, drop, place, and remove branches silently return unchanged state.
 - request-sync, toggle-ready, cancel, and default network actions return unchanged state without result metadata.
+- syncHeldCubesToPlayers has accepted and unchanged paths but no result metadata.
+- applyNetworkPlayerUpdate returns unchanged state for missing players without reason metadata.
 - local authority uses object identity to decide whether to publish after interaction.
 - host authority can publish after TRY_INTERACT even when the command produced no meaningful state change.
 - no stable CommandReason catalog exists for rejected, skipped, unchanged, publish-only, or victory commands.
 - no CommandResult envelope exists for before/after state, changed flag, events, diagnostics, and source metadata.
 - no publish-decision snapshot exists to classify publish, skip, recovery, victory, or no-op behavior.
-- no source-backed publish-decision routing matrix exists yet; the matrix is now documented but not implemented.
+- a source-backed publish-decision routing matrix is documented but not implemented.
+- a source-edit cutover queue is now documented but not implemented.
 ```
 
 ## Debug and replay gaps
@@ -25,8 +28,8 @@
 - runtime debug frames expose cadence, snapshot, cube, anomaly, input, and scene dressing data, but not command-result data.
 - runtime debug exports do not expose latestCommandResult, latestPublishDecision, latestRejectionReason, commandJournal, or latestFixtureParity.
 - no DOM-free replay fixture proves accepted/rejected/unchanged/publish-only/final-victory snapshot parity.
-- no fixture matrix covers request-sync recovery, ignored toggle-ready/cancel, player update, ooze tick, and victory completion.
-- fixture ids, expected statuses, expected publish decisions, and non-normalizable fields are now documented but not source-backed.
+- no fixture matrix covers request-sync recovery, ignored toggle-ready/cancel, player update, held-cube sync, ooze tick, and victory completion.
+- fixture ids, expected statuses, expected publish decisions, and non-normalizable fields are documented but not source-backed.
 ```
 
 ## Publish-decision gaps
@@ -35,6 +38,7 @@
 - accepted changed commands need explicit publish decisions.
 - accepted unchanged commands need explicit no-op decisions.
 - rejected TRY_INTERACT commands need explicit skip decisions.
+- unchanged player/held-cube sync needs explicit skip or no-op decisions.
 - request-sync needs explicit recovery/full-sync decision metadata.
 - toggle-ready and cancel need explicit skipped policy metadata until lobby policy exists.
 - unknown/default actions need explicit skipped:unknown-action metadata.
