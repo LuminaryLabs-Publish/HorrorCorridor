@@ -2,7 +2,7 @@
 
 **Repository:** `LuminaryLabs-Publish/HorrorCorridor`
 
-**Updated:** `2026-07-08T02:19:36-04:00`
+**Updated:** `2026-07-08T06:28:31-04:00`
 
 ## Authority and command gaps
 
@@ -16,6 +16,7 @@
 - no stable CommandReason catalog exists for rejected, skipped, unchanged, publish-only, or victory commands.
 - no CommandResult envelope exists for before/after state, changed flag, events, diagnostics, and source metadata.
 - no publish-decision snapshot exists to classify publish, skip, recovery, victory, or no-op behavior.
+- no command fixture acceptance ledger existed before this pass; it now exists but is not implemented in source.
 ```
 
 ## Debug and replay gaps
@@ -25,6 +26,7 @@
 - runtime debug exports do not expose latestCommandResult, latestPublishDecision, latestRejectionReason, commandJournal, or latestFixtureParity.
 - no DOM-free replay fixture proves accepted/rejected/unchanged/publish-only final snapshot parity.
 - no fixture matrix covers request-sync recovery, ignored toggle-ready/cancel, player update, ooze tick, and victory completion.
+- fixture ids, expected statuses, expected publish decisions, and non-normalizable fields are now documented but not source-backed.
 ```
 
 ## Domain extraction gaps
@@ -52,6 +54,7 @@
 - npm run lint was not run in this documentation-only pass.
 - npm run smoke:protokits was not run in this documentation-only pass.
 - npm run harness:horror-corridor was not run in this documentation-only pass.
+- node scripts/horror-corridor-command-fixture.mjs does not exist yet.
 - npm run validate:live-player:dev was not run in this documentation-only pass.
 - no browser route check was run in this documentation-only pass.
 - no live host/client multiplayer check was run in this documentation-only pass.
