@@ -2,7 +2,7 @@
 
 **Repository:** `LuminaryLabs-Publish/HorrorCorridor`
 
-**Updated:** `2026-07-08T09:40:52-04:00`
+**Updated:** `2026-07-08T11:09:38-04:00`
 
 ## Available validation commands
 
@@ -23,10 +23,10 @@ npm run validate:live-player:dev
 ## Validation target for the next implementation pass
 
 ```txt
-1. npm run lint
-2. npm run smoke:protokits
-3. npm run harness:horror-corridor
-4. node scripts/horror-corridor-command-fixture.mjs
+1. node scripts/horror-corridor-command-fixture.mjs
+2. npm run lint
+3. npm run smoke:protokits
+4. npm run harness:horror-corridor
 5. npm run validate:live-player:dev
 6. npm run review:object-kit
 ```
@@ -65,7 +65,7 @@ victory ordered-sequence completion
 accepted changed -> publish
 accepted unchanged -> no-op
 rejected -> skip
-unchanged -> skip
+unchanged -> skip or no-op by helper type
 publish-only -> recovery
 skipped -> skip
 victory -> victory
@@ -122,6 +122,7 @@ final snapshot facts
 ```txt
 [done] GitHub connector read of current Publish repo list.
 [done] GitHub connector read of central LuminaryLabs-Dev/LuminaryLabs Publish ledger context.
+[done] GitHub connector root .agent/START_HERE.md checks for eligible non-Cavalry repos.
 [done] GitHub connector read of HorrorCorridor repo-local agent state.
 [done] GitHub connector read of package validation scripts.
 [done] GitHub connector read of GameCanvas runtime/publish/render loop.
