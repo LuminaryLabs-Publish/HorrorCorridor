@@ -1,14 +1,14 @@
 {
-  "schemaVersion": 16,
+  "schemaVersion": 17,
   "repository": "LuminaryLabs-Publish/HorrorCorridor",
-  "generatedAt": "2026-07-08T13:59:50-04:00",
-  "status": "gamecanvas-command-consumer-wire-map-fixture-gate-planned",
-  "latestTracker": ".agent/trackers/2026-07-08T13-59-50-04-00/project-breakdown.md",
-  "latestTurnLedger": ".agent/turn-ledger/2026-07-08T13-59-50-04-00.md",
-  "latestArchitectureAudit": ".agent/architecture-audit/2026-07-08T13-59-50-04-00-gamecanvas-command-consumer-dsk-breakdown.md",
-  "latestRenderAudit": ".agent/render-audit/2026-07-08T13-59-50-04-00-runtime-debug-publish-readback.md",
-  "latestGameplayAudit": ".agent/gameplay-audit/2026-07-08T13-59-50-04-00-local-host-publish-gate.md",
-  "latestCommandAuthorityAudit": ".agent/command-authority-audit/2026-07-08T13-59-50-04-00-gamecanvas-consumer-wire-map.md",
+  "generatedAt": "2026-07-08T15:39:43-04:00",
+  "status": "command-fixture-source-file-manifest-and-legacy-adapter-boundary-planned",
+  "latestTracker": ".agent/trackers/2026-07-08T15-39-43-04-00/project-breakdown.md",
+  "latestTurnLedger": ".agent/turn-ledger/2026-07-08T15-39-43-04-00.md",
+  "latestArchitectureAudit": ".agent/architecture-audit/2026-07-08T15-39-43-04-00-command-fixture-source-manifest.md",
+  "latestRenderAudit": ".agent/render-audit/2026-07-08T15-39-43-04-00-debug-command-projection-readback.md",
+  "latestGameplayAudit": ".agent/gameplay-audit/2026-07-08T15-39-43-04-00-local-host-command-fixture-boundary.md",
+  "latestCommandAuthorityAudit": ".agent/command-authority-audit/2026-07-08T15-39-43-04-00-source-file-manifest-and-adapter-boundary.md",
   "sourceRoots": [
     "HorrorCorridor-V1/src/components/game",
     "HorrorCorridor-V1/src/features",
@@ -25,21 +25,21 @@
   "selection": {
     "selectedRepo": "LuminaryLabs-Publish/HorrorCorridor",
     "excludedRepo": "LuminaryLabs-Publish/TheCavalryOfRome",
-    "reason": "No checked non-Cavalry repo was fully new, central-ledger absent, undocumented, or missing root .agent state. HorrorCorridor was selected as the oldest high-value command-authority fallback in the observed current cycle.",
+    "reason": "No checked non-Cavalry repo was fully new, central-ledger absent, undocumented, recently added but undocumented, or missing sampled root .agent/START_HERE.md state. HorrorCorridor was selected as the oldest current eligible fallback because the command-result fixture files remain absent and the local/host command authority seam is still highest value.",
     "publishReposChecked": [
-      "LuminaryLabs-Publish/HorrorCorridor",
       "LuminaryLabs-Publish/IntoTheMeadow",
+      "LuminaryLabs-Publish/HorrorCorridor",
       "LuminaryLabs-Publish/AetherVale",
+      "LuminaryLabs-Publish/ZombieOrchard",
+      "LuminaryLabs-Publish/TheUnmappedHouse",
+      "LuminaryLabs-Publish/MyCozyIsland",
       "LuminaryLabs-Publish/TheOpenAbove",
       "LuminaryLabs-Publish/PhantomCommand",
-      "LuminaryLabs-Publish/PrehistoricRush",
-      "LuminaryLabs-Publish/ZombieOrchard",
-      "LuminaryLabs-Publish/MyCozyIsland",
-      "LuminaryLabs-Publish/TheUnmappedHouse",
-      "LuminaryLabs-Publish/TheCavalryOfRome"
+      "LuminaryLabs-Publish/TheCavalryOfRome",
+      "LuminaryLabs-Publish/PrehistoricRush"
     ]
   },
-  "currentNextSlice": "HorrorCorridor GameCanvas Command Consumer Wire Map + Fixture Gate",
+  "currentNextSlice": "HorrorCorridor Command Fixture Source File Manifest + Legacy Adapter Boundary",
   "interactionLoop": {
     "current": [
       "start-menu",
@@ -120,7 +120,7 @@
     {"id": "ordered-anomaly-sequence-kit", "status": "implemented-source", "kind": "domain-kit", "provides": ["sequence slots", "ordered color validation", "victory state"]},
     {"id": "command-envelope-contract-kit", "status": "planned-next", "kind": "contract-kit", "provides": ["command id", "source", "player id", "action", "payload"]},
     {"id": "command-reason-catalog-kit", "status": "planned-next", "kind": "catalog-kit", "provides": ["stable rejection reasons", "stable skipped reasons", "stable publish-only reasons"]},
-    {"id": "command-result-envelope-kit", "status": "planned-next", "kind": "envelope-kit", "provides": ["before state", "after state", "changed flag", "reason", "events"]},
+    {"id": "command-result-envelope-kit", "status": "planned-next", "kind": "envelope-kit", "provides": ["before state", "after state", "changed flag", "reason", "events", "legacy adapter"]},
     {"id": "publish-decision-snapshot-kit", "status": "planned-next", "kind": "policy-kit", "provides": ["publish", "skip", "recovery", "no-op", "victory"]},
     {"id": "command-result-journal-kit", "status": "planned-next", "kind": "diagnostic-kit", "provides": ["accepted counts", "rejected counts", "latest reason", "latest decision"]},
     {"id": "local-authority-result-consumer-kit", "status": "planned-next", "kind": "consumer-kit", "provides": ["local publish decision", "local rejection journaling", "local victory commit"]},
