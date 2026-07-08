@@ -2,7 +2,7 @@
 
 **Repository:** `LuminaryLabs-Publish/HorrorCorridor`
 
-**Last aligned:** `2026-07-08T02:19:36-04:00`
+**Last aligned:** `2026-07-08T03:50:37-04:00`
 
 ## Purpose
 
@@ -18,6 +18,16 @@ The current runtime uses Next, React, Three.js, Zustand, and PeerJS.
 
 The player starts from a menu, enters solo/host/client mode, moves through a seeded corridor maze, manipulates colored cubes, solves an ordered anomaly sequence, avoids growing ooze pressure, and reaches a victory/completion screen.
 
+## Current selection reason
+
+The full accessible `LuminaryLabs-Publish` repo list was compared against the central `LuminaryLabs-Dev/LuminaryLabs` ledger.
+
+No new untracked eligible repo was found, and eligible non-Cavalry repos already had root `.agent/START_HERE.md` state.
+
+This pass therefore continued the oldest eligible tracked Publish repo fallback: `LuminaryLabs-Publish/HorrorCorridor`.
+
+`LuminaryLabs-Publish/TheCavalryOfRome` remains excluded by standing rule.
+
 ## First files to read
 
 ```txt
@@ -28,8 +38,10 @@ The player starts from a menu, enters solo/host/client mode, moves through a see
 .agent/architecture-audit/domain-service-breakdown.md
 .agent/render-audit/render-surface-audit.md
 .agent/gameplay-audit/authority-loop-audit.md
-.agent/trackers/2026-07-08T02-19-36-04-00/project-breakdown.md
-.agent/turn-ledger/2026-07-08T02-19-36-04-00.md
+.agent/command-authority-audit/result-reason-matrix.md
+.agent/trackers/2026-07-08T03-50-37-04-00/project-breakdown.md
+.agent/turn-ledger/2026-07-08T03-50-37-04-00.md
+.agent/kit-registry.json
 ```
 
 ## Source files to inspect next
@@ -55,3 +67,9 @@ Move command legality into result-returning domain kits, then let local authorit
 Build `HorrorCorridor Command Reason Catalog + Result Journal Fixture Gate`.
 
 Preserve the existing solo, host, client, renderer, minimap, debug overlay, and PeerJS behavior while adding command result contracts beside the current `GameState`-returning rule functions.
+
+Start with the new command authority matrix:
+
+```txt
+.agent/command-authority-audit/result-reason-matrix.md
+```
