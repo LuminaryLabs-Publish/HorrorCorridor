@@ -5,10 +5,10 @@ This root `.agent` folder stores public-safe repo breakdowns, tracker runs, kit 
 ## Latest Entry
 
 ```txt
-.agent/trackers/2026-07-07T22-41-23-04-00/project-breakdown.md
+.agent/trackers/2026-07-08T00-00-20-04-00/project-breakdown.md
 ```
 
-Focus: command result replay harness and host publish gate for the oldest eligible tracked Publish repo. This pass keeps the implementation boundary on stable `CommandResult` records, interaction rejection reasons, publish decision metadata, local/host result consumers, runtime debug result projection, replay journals, and DOM-free command replay fixtures before PeerJS, renderer, minimap, postprocess, or object-kit extraction.
+Focus: command result fixture matrix and publish decision acceptance gate for the oldest eligible tracked Publish repo. This pass keeps the implementation boundary on stable `CommandResult` records, interaction rejection reasons, publish decision metadata, local/host result consumers, runtime debug result projection, replay journals, and DOM-free fixture parity before PeerJS, renderer, minimap, postprocess, or object-kit extraction.
 
 ## Registry
 
@@ -16,11 +16,12 @@ Focus: command result replay harness and host publish gate for the oldest eligib
 .agent/kit-registry.json
 ```
 
-The registry tracks current source-owned service surfaces, implemented object/texture kits, source-backed runtime services, command envelope and acceptance targets, `command-result-contract-kit`, `command-result-envelope-kit`, `interaction-preflight-reason-catalog-kit`, `interaction-command-result-kit`, `player-pose-command-result-kit`, `request-sync-command-result-kit`, `ready-cancel-command-result-kit`, `victory-command-result-kit`, `publish-decision-snapshot-kit`, `command-result-journal-kit`, `runtime-debug-result-projection-kit`, `local-authority-result-consumer-kit`, `host-authority-result-consumer-kit`, `command-replay-fixture-kit`, and the next build slice.
+The registry tracks current source-owned service surfaces, implemented object/texture kits, source-backed runtime services, command envelope and acceptance targets, `command-result-contract-kit`, `command-result-envelope-kit`, `interaction-preflight-reason-catalog-kit`, `interaction-command-result-kit`, `player-pose-command-result-kit`, `request-sync-command-result-kit`, `ready-cancel-command-result-kit`, `victory-command-result-kit`, `publish-decision-snapshot-kit`, `command-result-journal-kit`, `command-result-fixture-matrix-kit`, `runtime-debug-result-projection-kit`, `local-authority-result-consumer-kit`, `host-authority-result-consumer-kit`, `command-replay-fixture-kit`, and the next build slice.
 
 ## Previous Entries
 
 ```txt
+.agent/trackers/2026-07-07T22-41-23-04-00/project-breakdown.md
 .agent/trackers/2026-07-07T21-18-45-04-00/project-breakdown.md
 .agent/trackers/2026-07-07T20-00-46-04-00/project-breakdown.md
 .agent/trackers/2026-07-07T18-41-07-04-00/project-breakdown.md
@@ -42,7 +43,7 @@ The registry tracks current source-owned service surfaces, implemented object/te
 ## Current next slice
 
 ```txt
-HorrorCorridor Command Result Replay Harness + Host Publish Gate
+HorrorCorridor Command Result Fixture Matrix + Publish Decision Acceptance Gate
 ```
 
 Build order:
@@ -51,7 +52,7 @@ Build order:
 preserve current solo, host, client, rendering, minimap, debug overlay, and PeerJS behavior
 -> add command result type definitions under game-state/domain without moving renderer code
 -> define CommandStatus: accepted, rejected, unchanged, publish-only
--> define CommandReason catalog for every silent no-op branch
+-> define CommandReason catalog for every current silent no-op branch
 -> define PublishDecision: publish, skip, recovery, victory, no-op
 -> add result factories with beforeTick, afterTick, changed, events, source, and diagnostics
 -> add interaction preflight helpers beside interactionRules
@@ -65,8 +66,8 @@ preserve current solo, host, client, rendering, minimap, debug overlay, and Peer
 -> add publish decision snapshot helper
 -> wire local-authority consumer to journal rejections and only publish accepted changed/victory results
 -> wire host-authority consumer to skip rejected TRY_INTERACT publishes and publish request-sync recovery
--> extend runtime debug frame with latestCommandResult, latestPublishDecision, and commandJournal
--> add DOM-free fixtures for accepted pickup, rejected pickup, accepted place, rejected place, request-sync recovery, and victory completion
+-> extend runtime debug frame/export with latestCommandResult, latestPublishDecision, commandJournal, and latestFixtureParity
+-> add DOM-free fixtures for accepted pickup, rejected pickup, accepted drop, rejected drop, accepted place, rejected place, request-sync recovery, ignored toggle-ready/cancel, and victory completion
 -> defer PeerJS extraction, renderer extraction, minimap extraction, postprocess extraction, and object-kit visual expansion
 ```
 
