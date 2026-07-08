@@ -2,7 +2,7 @@
 
 **Repository:** `LuminaryLabs-Publish/HorrorCorridor`
 
-**Updated:** `2026-07-08T12-29-17-04:00`
+**Updated:** `2026-07-08T13:59:50-04:00`
 
 ## Authority and command gaps
 
@@ -14,15 +14,16 @@
 - syncHeldCubesToPlayers has accepted and unchanged paths but no result metadata.
 - applyNetworkPlayerUpdate returns unchanged state for missing players without reason metadata.
 - local authority uses object identity to decide whether to publish after interaction.
-- host authority can publish after TRY_INTERACT even when the command produced no meaningful state change.
-- host authority always publishes after PLAYER_UPDATE even when the player is missing or the pose did not change.
+- host authority needs a single consumer path for PLAYER_UPDATE, TRY_INTERACT, request-sync, skipped actions, and victory.
+- host authority can publish or recover without a first-class PublishDecision record.
 - no stable CommandReason catalog exists for rejected, skipped, unchanged, publish-only, or victory commands.
 - no CommandResult envelope exists for before/after state, changed flag, events, diagnostics, and source metadata.
 - no publish-decision snapshot exists to classify publish, skip, recovery, victory, or no-op behavior.
 - no explicit local-authority result consumer exists.
 - no explicit host-authority result consumer exists.
 - command-result source wire map is documented but not implemented.
-- consumer acceptance map is now documented but not implemented.
+- consumer acceptance map is documented but not implemented.
+- GameCanvas consumer wire map is documented but not implemented.
 ```
 
 ## Source wire gaps
@@ -40,13 +41,14 @@
 - hostAuthorityCommandConsumer.ts does not exist.
 - scripts/horror-corridor-command-fixture.mjs does not exist.
 - package.json does not yet include a command fixture script.
+- GameCanvas.tsx still consumes GameState-returning rules directly.
 ```
 
 ## Debug and replay gaps
 
 ```txt
 - runtime debug frames expose cadence, snapshot, cube, anomaly, input, and scene dressing data, but not command-result data.
-- runtime debug exports do not expose latestCommandResult, latestPublishDecision, latestRejectionReason, commandJournal, or latestFixtureParity.
+- runtime debug exports do not expose latestCommandResult, latestPublishDecision, latestRejectionReason, latestConsumerAction, commandJournal, or latestFixtureParity.
 - no DOM-free replay fixture proves accepted/rejected/unchanged/publish-only/final-victory snapshot parity.
 - no fixture matrix covers request-sync recovery, ignored toggle-ready/cancel, player update, held-cube sync, ooze tick, and victory completion.
 - fixture ids, expected statuses, expected publish decisions, and non-normalizable fields are documented but not source-backed.
@@ -109,4 +111,5 @@
 - do not rewrite GameCanvas wholesale
 - do not change routes or deployment first
 - do not remove existing solo, host, client, minimap, debug, or PeerJS behavior
+- do not edit GameCanvas before the domain fixture exists and passes
 ```
