@@ -2,7 +2,7 @@
 
 **Repository:** `LuminaryLabs-Publish/HorrorCorridor`
 
-**Updated:** `2026-07-08T13:59:50-04:00`
+**Updated:** `2026-07-08T15:39:43-04:00`
 
 ## Authority and command gaps
 
@@ -24,6 +24,7 @@
 - command-result source wire map is documented but not implemented.
 - consumer acceptance map is documented but not implemented.
 - GameCanvas consumer wire map is documented but not implemented.
+- command fixture source file manifest is documented but not implemented.
 ```
 
 ## Source wire gaps
