@@ -2,15 +2,15 @@
 
 **Repository:** `LuminaryLabs-Publish/HorrorCorridor`
 
-**Audit timestamp:** `2026-07-08T08:29:35-04:00`
+**Audit timestamp:** `2026-07-08T09:40:52-04:00`
 
 ## Summary
 
-`HorrorCorridor` is a playable cooperative first-person horror maze, but its command authority seam is still too implicit for safe host/client parity claims.
+`HorrorCorridor` is playable and structurally rich, but command authority remains too implicit for safe host/client parity claims.
 
-The source already has real runtime services: session flow, seeded maze bootstrap, first-person input, cube interaction, ordered anomaly victory, host/client sync, ooze cadence, Three.js rendering, minimap, runtime debug frames/events, and validation scripts.
+The current source contains real runtime services: session flow, seeded maze bootstrap, first-person input, cube interaction, ordered anomaly victory, host/client sync, ooze cadence, Three.js rendering, minimap, runtime debug frames/events, and validation scripts.
 
-This pass did not change runtime code. It updated the repo-local `.agent` state and added a source-edit cutover queue so the next implementation pass has an exact file order, wrapper boundary, stop line, and fixture proof target.
+This pass did not change runtime code. It refreshed repo-local `.agent` state and added a command-result wire contract that turns the existing source-edit queue into a fixture-readable implementation boundary.
 
 ## Repo selection
 
@@ -31,26 +31,24 @@ LuminaryLabs-Publish/TheUnmappedHouse
 
 `TheCavalryOfRome` remains excluded by standing rule.
 
-Central ledger and latest-summary state showed tracked entries for the eligible Publish repos. Root `.agent/START_HERE.md` state was present for the sampled eligible checked repos.
+Central ledger state showed tracked entries for the eligible Publish repos. Root `.agent/START_HERE.md` state is present on the checked eligible repos.
 
-Because no new untracked eligible repo was found in this pass, this run selected `HorrorCorridor` as the oldest eligible fallback follow-up after newer PrehistoricRush and TheUnmappedHouse alignments. HorrorCorridor was already documented, but it still needed a source-edit cutover queue that turns the command-result acceptance ledger and publish-decision matrix into implementation order.
+Because no new untracked eligible repo was found, this run selected `HorrorCorridor` as the oldest accessible non-Cavalry fallback repo. The implementation seam is not missing documentation anymore; it is missing source-level command result proof.
 
 ## Evidence checked
 
 ```txt
 LuminaryLabs-Publish installation repo list
-LuminaryLabs-Dev/LuminaryLabs:repo-checks/reports/latest-summary.md
 LuminaryLabs-Dev/LuminaryLabs:repo-ledger/LuminaryLabs-Publish/HorrorCorridor.md
 LuminaryLabs-Publish/HorrorCorridor:.agent/START_HERE.md
 LuminaryLabs-Publish/HorrorCorridor:.agent/current-audit.md
 LuminaryLabs-Publish/HorrorCorridor:.agent/next-steps.md
 LuminaryLabs-Publish/HorrorCorridor:.agent/known-gaps.md
 LuminaryLabs-Publish/HorrorCorridor:.agent/validation.md
-LuminaryLabs-Publish/HorrorCorridor:.agent/kit-registry.json
+LuminaryLabs-Publish/HorrorCorridor:HorrorCorridor-V1/package.json
+LuminaryLabs-Publish/HorrorCorridor:HorrorCorridor-V1/src/components/game/GameCanvas.tsx
 LuminaryLabs-Publish/HorrorCorridor:HorrorCorridor-V1/src/features/game-state/domain/networkRules.ts
 LuminaryLabs-Publish/HorrorCorridor:HorrorCorridor-V1/src/features/game-state/domain/interactionRules.ts
-LuminaryLabs-Publish/PrehistoricRush:.agent/START_HERE.md
-LuminaryLabs-Publish/TheUnmappedHouse:.agent/START_HERE.md
 ```
 
 ## Current interaction loop
@@ -245,17 +243,18 @@ Runtime debug does not yet expose latest command result, rejection reason, publi
 ## Follow-up artifacts added
 
 ```txt
-.agent/architecture-audit/2026-07-08T08-29-35-04-00-dsk-domain-breakdown.md
-.agent/render-audit/2026-07-08T08-29-35-04-00-render-authority-readback.md
-.agent/command-authority-audit/2026-07-08T08-29-35-04-00-source-edit-cutover-queue.md
-.agent/trackers/2026-07-08T08-29-35-04-00/project-breakdown.md
-.agent/turn-ledger/2026-07-08T08-29-35-04-00.md
+.agent/architecture-audit/2026-07-08T09-40-52-04-00-dsk-domain-breakdown.md
+.agent/render-audit/2026-07-08T09-40-52-04-00-render-authority-readback.md
+.agent/gameplay-audit/2026-07-08T09-40-52-04-00-command-result-gameplay-loop.md
+.agent/command-authority-audit/2026-07-08T09-40-52-04-00-command-result-wire-contract.md
+.agent/trackers/2026-07-08T09-40-52-04-00/project-breakdown.md
+.agent/turn-ledger/2026-07-08T09-40-52-04-00.md
 ```
 
 ## Current next slice
 
 ```txt
-HorrorCorridor Command Result Fixture Gate: Source Edit Cutover Queue
+HorrorCorridor Command Result Wire Contract + Fixture Boundary
 ```
 
 This should happen before PeerJS extraction, renderer extraction, minimap extraction, postprocess extraction, scene dressing, object-kit visual expansion, or new level content.
