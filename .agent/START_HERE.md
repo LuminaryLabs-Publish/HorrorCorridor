@@ -2,7 +2,7 @@
 
 **Repository:** `LuminaryLabs-Publish/HorrorCorridor`
 
-**Last aligned:** `2026-07-08T03:50:37-04:00`
+**Last aligned:** `2026-07-08T05:00:17-04:00`
 
 ## Purpose
 
@@ -39,9 +39,17 @@ This pass therefore continued the oldest eligible tracked Publish repo fallback:
 .agent/render-audit/render-surface-audit.md
 .agent/gameplay-audit/authority-loop-audit.md
 .agent/command-authority-audit/result-reason-matrix.md
+.agent/command-authority-audit/fixture-gate-implementation-map.md
+.agent/trackers/2026-07-08T05-00-17-04-00/project-breakdown.md
+.agent/turn-ledger/2026-07-08T05-00-17-04-00.md
+.agent/kit-registry.json
+```
+
+Earlier high-value entries:
+
+```txt
 .agent/trackers/2026-07-08T03-50-37-04-00/project-breakdown.md
 .agent/turn-ledger/2026-07-08T03-50-37-04-00.md
-.agent/kit-registry.json
 ```
 
 ## Source files to inspect next
@@ -52,8 +60,6 @@ HorrorCorridor-V1/src/components/game/GameCanvas.tsx
 HorrorCorridor-V1/src/features/game-state/domain/networkRules.ts
 HorrorCorridor-V1/src/features/game-state/domain/interactionRules.ts
 HorrorCorridor-V1/src/features/debug/store/runtimeDebugStore.ts
-HorrorCorridor-V1/src/features/render/three/worldBuilder.ts
-HorrorCorridor-V1/src/features/networking/protocol/syncSnapshot.ts
 ```
 
 ## Main rule
@@ -64,12 +70,12 @@ Move command legality into result-returning domain kits, then let local authorit
 
 ## Current next safe ledge
 
-Build `HorrorCorridor Command Reason Catalog + Result Journal Fixture Gate`.
+Build the **HorrorCorridor Command Result Fixture Gate**.
 
-Preserve the existing solo, host, client, renderer, minimap, debug overlay, and PeerJS behavior while adding command result contracts beside the current `GameState`-returning rule functions.
+Preserve the existing solo, host, client, renderer, minimap, debug overlay, and PeerJS behavior while adding result-returning wrappers beside the current `GameState`-returning rule functions.
 
-Start with the new command authority matrix:
+Start with the implementation map:
 
 ```txt
-.agent/command-authority-audit/result-reason-matrix.md
+.agent/command-authority-audit/fixture-gate-implementation-map.md
 ```
