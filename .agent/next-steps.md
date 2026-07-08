@@ -2,12 +2,12 @@
 
 **Repository:** `LuminaryLabs-Publish/HorrorCorridor`
 
-**Updated:** `2026-07-08T12-29-17-04:00`
+**Updated:** `2026-07-08T13:59:50-04:00`
 
 ## Current next build slice
 
 ```txt
-HorrorCorridor Command Result Consumer Acceptance Map + Fixture Gate
+HorrorCorridor GameCanvas Command Consumer Wire Map + Fixture Gate
 ```
 
 Start from:
@@ -21,6 +21,7 @@ Start from:
 .agent/command-authority-audit/2026-07-08T09-40-52-04-00-command-result-wire-contract.md
 .agent/command-authority-audit/2026-07-08T11-09-38-04-00-command-result-source-wire-map.md
 .agent/command-authority-audit/2026-07-08T12-29-17-04-00-consumer-acceptance-map.md
+.agent/command-authority-audit/2026-07-08T13-59-50-04-00-gamecanvas-consumer-wire-map.md
 ```
 
 ## Build checklist
@@ -30,7 +31,7 @@ Start from:
 [ ] Add CommandEnvelope, CommandStatus, CommandReason, CommandResult, CommandSnapshotSummary, CommandEvent, and PublishDecision contracts under game-state/domain.
 [ ] Define stable CommandReason values for every current silent no-op branch in networkRules.ts and interactionRules.ts.
 [ ] Add command result constructors and snapshot summary helpers.
-[ ] Add publish decision helper before GameCanvas consumes the result metadata.
+[ ] Add publish decision helper before GameCanvas consumes result metadata.
 [ ] Add command journal helpers and summary counters.
 [ ] Add interaction preflight helpers beside interactionRules.
 [ ] Add result-returning wrappers for pickup, drop, place, and remove.
@@ -44,14 +45,15 @@ Start from:
 [ ] Classify accepted unchanged results as no-op.
 [ ] Classify rejected TRY_INTERACT results as skip.
 [ ] Classify ordered sequence completion as explicit victory.
-[ ] Add localAuthorityCommandConsumer that journals local results, skips rejected/no-op broadcasts, and publishes accepted/victory results.
+[ ] Add localAuthorityCommandConsumer that journals local results, skips rejected/no-op broadcasts, and publishes accepted changed/victory results.
 [ ] Add hostAuthorityCommandConsumer that classifies PLAYER_UPDATE, TRY_INTERACT, request-sync, skipped, rejected, recovery, and victory paths.
 [ ] Add DOM-free command fixture script before changing GameCanvas publish logic.
 [ ] Add fixture rows for accepted, rejected, unchanged, publish-only, skipped, ooze, and victory result classes.
 [ ] Add package script for the command fixture after the script exists.
-[ ] Wire runtime debug result projection only after the headless fixture passes.
+[ ] Add RuntimeDebugCommandProjection type and projection helper after the headless fixture passes.
 [ ] Wire local-authority consumer to journal rejections and only publish accepted changed/victory results.
 [ ] Wire host-authority consumer to skip rejected TRY_INTERACT publishes and publish request-sync recovery.
+[ ] Replace GameCanvas object-identity publish checks only after fixture proof.
 [ ] Normalize only volatile fields in fixture comparison.
 [ ] Defer PeerJS extraction, renderer extraction, minimap extraction, postprocess extraction, scene dressing, and object-kit visual expansion.
 ```
@@ -120,8 +122,12 @@ HorrorCorridor-V1/src/components/game/GameCanvas.tsx
 12. package.json
    - add a command fixture script only after the fixture exists.
 
-13. runtimeDebugStore.ts / GameCanvas.tsx
-   - consume result metadata only after the headless fixture passes.
+13. runtimeDebugStore.ts
+   - add RuntimeDebugCommandProjection and latest command debug export fields after fixture proof.
+
+14. GameCanvas.tsx
+   - replace local object-identity publish gate with localAuthorityCommandConsumer.
+   - replace host message publish gate with hostAuthorityCommandConsumer.
 ```
 
 ## Required command reason families
