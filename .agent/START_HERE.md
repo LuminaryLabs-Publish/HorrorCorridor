@@ -2,7 +2,7 @@
 
 **Repository:** `LuminaryLabs-Publish/HorrorCorridor`
 
-**Last aligned:** `2026-07-08T12-29-17-04:00`
+**Last aligned:** `2026-07-08T13:59:50-04:00`
 
 ## Purpose
 
@@ -20,26 +20,26 @@ The player starts from a menu, enters solo/host/client mode, moves through a see
 
 ## Current selection reason
 
-The accessible `LuminaryLabs-Publish` repo list was read from the GitHub App installation and compared against the central `LuminaryLabs-Dev/LuminaryLabs` repo-ledger/status-summary state.
+The accessible `LuminaryLabs-Publish` repo list was read and compared against the central `LuminaryLabs-Dev/LuminaryLabs` ledger/recent change state.
 
 ```txt
 LuminaryLabs-Publish/HorrorCorridor      selected fallback follow-up
-LuminaryLabs-Publish/AetherVale          tracked; root .agent represented centrally
-LuminaryLabs-Publish/TheOpenAbove        tracked; root .agent represented centrally
+LuminaryLabs-Publish/IntoTheMeadow       tracked; latest central commit observed this hour
+LuminaryLabs-Publish/AetherVale          tracked; latest central commit observed this hour
+LuminaryLabs-Publish/TheOpenAbove        tracked; latest central commit observed this hour
+LuminaryLabs-Publish/PhantomCommand      tracked; latest central commit observed this hour
+LuminaryLabs-Publish/PrehistoricRush     tracked; latest central commit observed this hour
+LuminaryLabs-Publish/ZombieOrchard       tracked; latest central commit observed this hour
+LuminaryLabs-Publish/MyCozyIsland        tracked; latest central commit observed this hour
+LuminaryLabs-Publish/TheUnmappedHouse    tracked; latest central commit observed this hour
 LuminaryLabs-Publish/TheCavalryOfRome    excluded by rule
-LuminaryLabs-Publish/PhantomCommand      tracked; root .agent represented centrally
-LuminaryLabs-Publish/PrehistoricRush     tracked; root .agent represented centrally
-LuminaryLabs-Publish/ZombieOrchard       tracked; root .agent observed directly this run
-LuminaryLabs-Publish/IntoTheMeadow       tracked; root .agent represented centrally
-LuminaryLabs-Publish/MyCozyIsland        tracked; root .agent represented centrally
-LuminaryLabs-Publish/TheUnmappedHouse    tracked; root .agent represented centrally
 ```
 
 No non-Cavalry repo was found that was fully new, absent from central tracking, undocumented, or missing root `.agent` state.
 
 `TheCavalryOfRome` remains excluded by standing rule.
 
-This pass selected `LuminaryLabs-Publish/HorrorCorridor` as the oldest eligible fallback among the sampled current ledger states. The remaining high-value seam is not more renderer detail; it is the command-authority consumer seam between result-returning rule wrappers and `GameCanvas.tsx` local/host publishing.
+This pass selected `LuminaryLabs-Publish/HorrorCorridor` as the oldest high-value command-authority fallback in the observed current cycle. The remaining seam is the local/host command-consumer bridge between result-returning domain rules and `GameCanvas.tsx` publish behavior.
 
 ## Current route
 
@@ -51,7 +51,7 @@ HorrorCorridor-V1/package.json
   -> renderer/camera/postprocess/world/minimap/debug initialization
   -> pointer-lock input and local pose prediction
   -> networkRules.ts and interactionRules.ts
-  -> publishAuthoritativeState()
+  -> publishAuthoritativeState(reason)
   -> runtime debug frames/events
 ```
 
@@ -83,9 +83,9 @@ local input or peer message
   -> CommandResult
   -> PublishDecision
   -> CommandJournal
-  -> local-authority-result-consumer or host-authority-result-consumer
+  -> LocalAuthorityCommandConsumer or HostAuthorityCommandConsumer
+  -> RuntimeDebugCommandProjection
   -> publishAuthoritativeState only when the decision allows it
-  -> RuntimeDebug command projection
   -> DOM-free fixture replay
   -> browser/live validation after fixture proof
 ```
@@ -97,12 +97,12 @@ local input or peer message
 .agent/known-gaps.md
 .agent/next-steps.md
 .agent/validation.md
-.agent/architecture-audit/2026-07-08T12-29-17-04-00-dsk-domain-breakdown.md
-.agent/render-audit/2026-07-08T12-29-17-04-00-command-debug-readback-map.md
-.agent/gameplay-audit/2026-07-08T12-29-17-04-00-local-host-authority-loop.md
-.agent/command-authority-audit/2026-07-08T12-29-17-04-00-consumer-acceptance-map.md
-.agent/trackers/2026-07-08T12-29-17-04-00/project-breakdown.md
-.agent/turn-ledger/2026-07-08T12-29-17-04-00.md
+.agent/architecture-audit/2026-07-08T13-59-50-04-00-gamecanvas-command-consumer-dsk-breakdown.md
+.agent/render-audit/2026-07-08T13-59-50-04-00-runtime-debug-publish-readback.md
+.agent/gameplay-audit/2026-07-08T13-59-50-04-00-local-host-publish-gate.md
+.agent/command-authority-audit/2026-07-08T13-59-50-04-00-gamecanvas-consumer-wire-map.md
+.agent/trackers/2026-07-08T13-59-50-04-00/project-breakdown.md
+.agent/turn-ledger/2026-07-08T13-59-50-04-00.md
 .agent/kit-registry.json
 ```
 
@@ -117,6 +117,8 @@ HorrorCorridor-V1/src/features/game-state/domain/commandJournal.ts
 HorrorCorridor-V1/src/features/game-state/domain/interactionPreflight.ts
 HorrorCorridor-V1/src/features/game-state/domain/interactionResultRules.ts
 HorrorCorridor-V1/src/features/game-state/domain/networkResultRules.ts
+HorrorCorridor-V1/src/features/game-state/domain/localAuthorityCommandConsumer.ts
+HorrorCorridor-V1/src/features/game-state/domain/hostAuthorityCommandConsumer.ts
 HorrorCorridor-V1/scripts/horror-corridor-command-fixture.mjs
 HorrorCorridor-V1/src/features/debug/store/runtimeDebugStore.ts
 HorrorCorridor-V1/src/components/game/GameCanvas.tsx
@@ -126,12 +128,12 @@ HorrorCorridor-V1/src/components/game/GameCanvas.tsx
 
 Do not let `GameCanvas.tsx`, PeerJS event handlers, DOM input, renderer code, object identity checks, or silent unchanged-state returns own command authority long term.
 
-Move command legality into result-returning domain kits, then let local authority, host authority, runtime debug, renderer debug overlay, replay fixtures, and future external GameHost diagnostics consume those command results.
+Move command legality into result-returning domain kits, prove local/host consumer behavior with a DOM-free fixture, and only then wire `GameCanvas.tsx` to consume the decision metadata.
 
 ## Current next safe ledge
 
-Build the **HorrorCorridor Command Result Consumer Acceptance Map + Fixture Gate**.
+Build the **HorrorCorridor GameCanvas Command Consumer Wire Map + Fixture Gate**.
 
-Preserve existing solo, host, client, renderer, minimap, debug overlay, and PeerJS behavior while adding result-returning wrappers beside the current `GameState`-returning rule functions.
+Preserve existing solo, host, client, renderer, minimap, debug overlay, and PeerJS behavior while adding result-returning wrappers and local/host command consumers beside the current `GameState`-returning rule functions.
 
 Stop before renderer extraction, minimap extraction, PeerJS extraction, scene dressing expansion, new level content, or new visual object-kit work.
