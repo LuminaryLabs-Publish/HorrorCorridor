@@ -5,10 +5,24 @@ This root `.agent` folder stores public-safe repo breakdowns, tracker runs, kit 
 ## Latest Entry
 
 ```txt
-.agent/trackers/2026-07-08T01-31-11-04-00/project-breakdown.md
+.agent/trackers/2026-07-08T02-19-36-04-00/project-breakdown.md
 ```
 
-Focus: command reason catalog and result journal fixture gate for the oldest eligible tracked Publish repo. This pass keeps the next work on stable `CommandReason` values, `CommandResult` records, publish-decision snapshots, local/host authority consumers, runtime debug result projection, and DOM-free fixture parity before PeerJS, renderer, minimap, postprocess, or object-kit extraction.
+Focus: required root `.agent` operating docs and command authority handoff. This pass added the missing root start/audit/gaps/next-steps/validation/audit-folder files and keeps the next implementation ledge on `CommandReason`, `CommandResult`, `PublishDecision`, command journaling, runtime debug result projection, and DOM-free replay fixture parity.
+
+## Required root docs
+
+```txt
+.agent/START_HERE.md
+.agent/current-audit.md
+.agent/known-gaps.md
+.agent/next-steps.md
+.agent/validation.md
+.agent/architecture-audit/domain-service-breakdown.md
+.agent/render-audit/render-surface-audit.md
+.agent/gameplay-audit/authority-loop-audit.md
+.agent/turn-ledger/2026-07-08T02-19-36-04-00.md
+```
 
 ## Registry
 
@@ -21,6 +35,7 @@ The registry tracks current source-owned service surfaces, implemented object/te
 ## Previous Entries
 
 ```txt
+.agent/trackers/2026-07-08T01-31-11-04-00/project-breakdown.md
 .agent/trackers/2026-07-08T00-00-20-04-00/project-breakdown.md
 .agent/trackers/2026-07-07T22-41-23-04-00/project-breakdown.md
 .agent/trackers/2026-07-07T21-18-45-04-00/project-breakdown.md
@@ -73,8 +88,21 @@ preserve current solo, host, client, rendering, minimap, debug overlay, and Peer
 
 ```txt
 .agent/
+├─ START_HERE.md
+├─ current-audit.md
+├─ known-gaps.md
+├─ next-steps.md
+├─ validation.md
 ├─ README.md
 ├─ kit-registry.json
+├─ architecture-audit/
+│  └─ domain-service-breakdown.md
+├─ render-audit/
+│  └─ render-surface-audit.md
+├─ gameplay-audit/
+│  └─ authority-loop-audit.md
+├─ turn-ledger/
+│  └─ <timestamp>.md
 └─ trackers/
    └─ <timestamp>/
       └─ project-breakdown.md
@@ -87,3 +115,4 @@ preserve current solo, host, client, rendering, minimap, debug overlay, and Peer
 - Prefer evidence-backed findings from repository files.
 - Separate current implementation from recommended next work.
 - Do not store private reasoning or chat-only scratchpad content.
+- Do not start renderer extraction before command result and replay fixture contracts are stable.
