@@ -2,7 +2,7 @@
 
 **Repository:** `LuminaryLabs-Publish/HorrorCorridor`
 
-**Updated:** `2026-07-08T07:01:54-04:00`
+**Updated:** `2026-07-08T08:29:35-04:00`
 
 ## Available validation commands
 
@@ -51,6 +51,7 @@ skipped cancel
 skipped unknown action
 accepted player update
 unchanged player update for missing player
+accepted held cube sync
 unchanged held cube already synced
 ooze tick spawn
 ooze tick decay
@@ -120,11 +121,12 @@ final snapshot facts
 
 ```txt
 [done] GitHub connector read of current Publish repo list.
-[done] GitHub connector read of central LuminaryLabs-Dev/LuminaryLabs Publish ledger/status context.
+[done] GitHub connector read of central LuminaryLabs-Dev/LuminaryLabs Publish ledger/latest-summary context.
 [done] GitHub connector read of HorrorCorridor repo-local agent state.
 [done] GitHub connector read of networkRules authority seam.
 [done] GitHub connector read of interactionRules silent no-op branches.
-[done] GitHub connector read of command fixture acceptance ledger.
+[done] GitHub connector read of command fixture acceptance ledger and publish-decision routing matrix pointers.
+[done] GitHub connector read of PrehistoricRush and TheUnmappedHouse START_HERE timestamps for fallback ordering.
 [done] Documentation-only .agent audit files written to main.
 [done] Central LuminaryLabs internal change-log and HorrorCorridor ledger pointers written to main.
 ```
