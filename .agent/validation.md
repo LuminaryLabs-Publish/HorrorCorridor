@@ -2,7 +2,7 @@
 
 **Repository:** `LuminaryLabs-Publish/HorrorCorridor`
 
-**Updated:** `2026-07-08T05:00:17-04:00`
+**Updated:** `2026-07-08T06:28:31-04:00`
 
 ## Available validation commands
 
@@ -57,6 +57,7 @@ victory ordered-sequence completion
 ## Expected proof output
 
 ```txt
+fixture id
 command id
 command source
 command type
@@ -67,6 +68,8 @@ after tick
 changed flag
 publish decision
 publish reason
+events
+journal counts
 final snapshot summary
 volatile fields normalized
 replay parity passed or failed
@@ -106,7 +109,7 @@ final snapshot facts
 [done] GitHub connector read of package scripts.
 [done] GitHub connector read of networkRules authority seam.
 [done] GitHub connector read of interactionRules silent no-op branches.
-[done] GitHub connector read of runtimeDebugStore export shape.
+[done] GitHub connector read of command fixture implementation map.
 [done] Documentation-only .agent audit files written to main.
 [done] Central LuminaryLabs internal change-log and HorrorCorridor ledger pointers written to main.
 ```
@@ -132,3 +135,11 @@ final snapshot facts
 Current runtime may be functionally playable, but the next implementation pass cannot safely claim command authority correctness until the command result fixture matrix exists and passes.
 
 The next proof should be headless first. Browser and live multiplayer validation should follow only after the command result fixture proves local and host authority decisions.
+
+## Current proof blocker
+
+```txt
+HorrorCorridor-V1/scripts/horror-corridor-command-fixture.mjs
+```
+
+That script is documented as the next acceptance command but has not been implemented yet.
