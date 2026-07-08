@@ -2,7 +2,7 @@
 
 **Repository:** `LuminaryLabs-Publish/HorrorCorridor`
 
-**Updated:** `2026-07-08T11:09:38-04:00`
+**Updated:** `2026-07-08T12-29-17-04:00`
 
 ## Available validation commands
 
@@ -57,6 +57,10 @@ ooze tick spawn
 ooze tick decay
 ooze tick no-state-diff
 victory ordered-sequence completion
+local consumer skips rejected/no-op broadcast
+local consumer publishes accepted changed/victory
+host consumer skips rejected TRY_INTERACT broadcast
+host consumer publishes request-sync recovery
 ```
 
 ## Required publish-decision fixture matrix
@@ -85,8 +89,13 @@ after tick
 changed flag
 publish decision
 publish reason
+shouldBroadcast
+shouldCommitVictory
+snapshot reason
 events
 journal counts
+local consumer action
+host consumer action
 final snapshot summary
 volatile fields normalized
 replay parity passed or failed
@@ -100,6 +109,7 @@ room.updatedAtMs
 runtime frame counters
 randomized debug ids
 network cadence ages
+command id suffixes when fixture seed proves stable command type/source/reason
 ```
 
 ## Fields not allowed to normalize
@@ -108,6 +118,11 @@ network cadence ages
 command status
 command reason
 publish decision
+shouldBroadcast
+shouldCommitVictory
+snapshot reason
+local consumer action
+host consumer action
 sequence slots
 cube ownership
 cube visibility
@@ -122,12 +137,12 @@ final snapshot facts
 ```txt
 [done] GitHub connector read of current Publish repo list.
 [done] GitHub connector read of central LuminaryLabs-Dev/LuminaryLabs Publish ledger context.
-[done] GitHub connector root .agent/START_HERE.md checks for eligible non-Cavalry repos.
+[done] GitHub connector read of ZombieOrchard and HorrorCorridor direct ledger/root-agent state.
 [done] GitHub connector read of HorrorCorridor repo-local agent state.
-[done] GitHub connector read of package validation scripts.
 [done] GitHub connector read of GameCanvas runtime/publish/render loop.
 [done] GitHub connector read of networkRules authority seam.
 [done] GitHub connector read of interactionRules silent no-op branches.
+[done] GitHub connector read of runtimeDebugStore export/readback seam.
 [done] Documentation-only .agent audit files written to main.
 [done] Central LuminaryLabs internal change-log and HorrorCorridor ledger pointers written to main.
 ```
