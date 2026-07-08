@@ -5,10 +5,10 @@ This root `.agent` folder stores public-safe repo breakdowns, tracker runs, kit 
 ## Latest Entry
 
 ```txt
-.agent/trackers/2026-07-07T21-18-45-04-00/project-breakdown.md
+.agent/trackers/2026-07-07T22-41-23-04-00/project-breakdown.md
 ```
 
-Focus: host result journal and publish decision fixture lock for the oldest eligible tracked Publish repo. This pass keeps the implementation boundary on source-owned command result wrappers, stable rejection reasons, publish decision metadata, local/host result consumers, runtime debug result projection, command journals, and DOM-free replay fixtures before PeerJS, renderer, minimap, postprocess, or object-kit extraction.
+Focus: command result replay harness and host publish gate for the oldest eligible tracked Publish repo. This pass keeps the implementation boundary on stable `CommandResult` records, interaction rejection reasons, publish decision metadata, local/host result consumers, runtime debug result projection, replay journals, and DOM-free command replay fixtures before PeerJS, renderer, minimap, postprocess, or object-kit extraction.
 
 ## Registry
 
@@ -21,6 +21,7 @@ The registry tracks current source-owned service surfaces, implemented object/te
 ## Previous Entries
 
 ```txt
+.agent/trackers/2026-07-07T21-18-45-04-00/project-breakdown.md
 .agent/trackers/2026-07-07T20-00-46-04-00/project-breakdown.md
 .agent/trackers/2026-07-07T18-41-07-04-00/project-breakdown.md
 .agent/trackers/2026-07-07T17-20-57-04-00/project-breakdown.md
@@ -41,7 +42,7 @@ The registry tracks current source-owned service surfaces, implemented object/te
 ## Current next slice
 
 ```txt
-HorrorCorridor Host Result Journal + Publish Decision Fixture Lock
+HorrorCorridor Command Result Replay Harness + Host Publish Gate
 ```
 
 Build order:
