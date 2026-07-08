@@ -2,7 +2,7 @@
 
 **Repository:** `LuminaryLabs-Publish/HorrorCorridor`
 
-**Updated:** `2026-07-08T06:28:31-04:00`
+**Updated:** `2026-07-08T07:01:54-04:00`
 
 ## Available validation commands
 
@@ -40,18 +40,34 @@ rejected pickup with no nearby cube
 accepted drop while carrying
 rejected drop without carried cube
 accepted place near anomaly with carried cube
+accepted place final anomaly slot as victory
 rejected place too far from anomaly
 rejected place with no free slot
 accepted remove last anomaly cube
 rejected remove wrong slot
-publish-only request-sync
+publish-only request-sync recovery
 skipped toggle-ready
 skipped cancel
 skipped unknown action
 accepted player update
 unchanged player update for missing player
-accepted or unchanged ooze tick with reason
+unchanged held cube already synced
+ooze tick spawn
+ooze tick decay
+ooze tick no-state-diff
 victory ordered-sequence completion
+```
+
+## Required publish-decision fixture matrix
+
+```txt
+accepted changed -> publish
+accepted unchanged -> no-op
+rejected -> skip
+unchanged -> skip
+publish-only -> recovery
+skipped -> skip
+victory -> victory
 ```
 
 ## Expected proof output
@@ -104,12 +120,11 @@ final snapshot facts
 
 ```txt
 [done] GitHub connector read of current Publish repo list.
-[done] GitHub connector read of central LuminaryLabs-Dev/LuminaryLabs Publish ledger search results.
+[done] GitHub connector read of central LuminaryLabs-Dev/LuminaryLabs Publish ledger/status context.
 [done] GitHub connector read of HorrorCorridor repo-local agent state.
-[done] GitHub connector read of package scripts.
 [done] GitHub connector read of networkRules authority seam.
 [done] GitHub connector read of interactionRules silent no-op branches.
-[done] GitHub connector read of command fixture implementation map.
+[done] GitHub connector read of command fixture acceptance ledger.
 [done] Documentation-only .agent audit files written to main.
 [done] Central LuminaryLabs internal change-log and HorrorCorridor ledger pointers written to main.
 ```
