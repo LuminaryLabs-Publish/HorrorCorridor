@@ -2,7 +2,7 @@
 
 **Repository:** `LuminaryLabs-Publish/HorrorCorridor`
 
-**Updated:** `2026-07-08T11:09:38-04:00`
+**Updated:** `2026-07-08T12-29-17-04:00`
 
 ## Authority and command gaps
 
@@ -15,13 +15,14 @@
 - applyNetworkPlayerUpdate returns unchanged state for missing players without reason metadata.
 - local authority uses object identity to decide whether to publish after interaction.
 - host authority can publish after TRY_INTERACT even when the command produced no meaningful state change.
+- host authority always publishes after PLAYER_UPDATE even when the player is missing or the pose did not change.
 - no stable CommandReason catalog exists for rejected, skipped, unchanged, publish-only, or victory commands.
 - no CommandResult envelope exists for before/after state, changed flag, events, diagnostics, and source metadata.
 - no publish-decision snapshot exists to classify publish, skip, recovery, victory, or no-op behavior.
-- a source-backed publish-decision routing matrix is documented but not implemented.
-- a source-edit cutover queue is documented but not implemented.
-- a command-result wire contract is documented but not implemented.
-- a command-result source wire map is now documented but not implemented.
+- no explicit local-authority result consumer exists.
+- no explicit host-authority result consumer exists.
+- command-result source wire map is documented but not implemented.
+- consumer acceptance map is now documented but not implemented.
 ```
 
 ## Source wire gaps
@@ -35,6 +36,8 @@
 - interactionPreflight.ts does not exist.
 - interactionResultRules.ts does not exist.
 - networkResultRules.ts does not exist.
+- localAuthorityCommandConsumer.ts does not exist.
+- hostAuthorityCommandConsumer.ts does not exist.
 - scripts/horror-corridor-command-fixture.mjs does not exist.
 - package.json does not yet include a command fixture script.
 ```
@@ -47,6 +50,7 @@
 - no DOM-free replay fixture proves accepted/rejected/unchanged/publish-only/final-victory snapshot parity.
 - no fixture matrix covers request-sync recovery, ignored toggle-ready/cancel, player update, held-cube sync, ooze tick, and victory completion.
 - fixture ids, expected statuses, expected publish decisions, and non-normalizable fields are documented but not source-backed.
+- the browser overlay cannot yet explain why an interaction was rejected or why a host publish was skipped.
 ```
 
 ## Publish-decision gaps
@@ -61,6 +65,7 @@
 - unknown/default actions need explicit skipped:unknown-action metadata.
 - victory needs explicit victory publish decision metadata.
 - local and host authority should consume the same decision helper instead of duplicating publish behavior.
+- publishAuthoritativeState currently accepts only a reason, not a command-result-derived decision object.
 ```
 
 ## Domain extraction gaps
