@@ -2,7 +2,7 @@
 
 **Repository:** `LuminaryLabs-Publish/HorrorCorridor`
 
-**Audit timestamp:** `2026-07-08T09:40:52-04:00`
+**Audit timestamp:** `2026-07-08T11:09:38-04:00`
 
 ## Summary
 
@@ -10,41 +10,43 @@
 
 The current source contains real runtime services: session flow, seeded maze bootstrap, first-person input, cube interaction, ordered anomaly victory, host/client sync, ooze cadence, Three.js rendering, minimap, runtime debug frames/events, and validation scripts.
 
-This pass did not change runtime code. It refreshed repo-local `.agent` state and added a command-result wire contract that turns the existing source-edit queue into a fixture-readable implementation boundary.
+This pass did not change runtime code. It refreshed repo-local `.agent` state and added a command-result source wire map that translates the prior command-result wire contract into exact files, result wrappers, fixture rows, debug projection fields, and `GameCanvas.tsx` stop lines.
 
 ## Repo selection
 
-The full installed `LuminaryLabs-Publish` repo list was checked during this pass.
+The full accessible `LuminaryLabs-Publish` repo list was checked during this pass.
 
 ```txt
-LuminaryLabs-Publish/HorrorCorridor
-LuminaryLabs-Publish/AetherVale
-LuminaryLabs-Publish/TheOpenAbove
-LuminaryLabs-Publish/TheCavalryOfRome
-LuminaryLabs-Publish/PhantomCommand
-LuminaryLabs-Publish/PrehistoricRush
-LuminaryLabs-Publish/ZombieOrchard
-LuminaryLabs-Publish/IntoTheMeadow
-LuminaryLabs-Publish/MyCozyIsland
-LuminaryLabs-Publish/TheUnmappedHouse
+LuminaryLabs-Publish/IntoTheMeadow       tracked; root .agent observed
+LuminaryLabs-Publish/HorrorCorridor      selected fallback follow-up
+LuminaryLabs-Publish/AetherVale          tracked; root .agent observed
+LuminaryLabs-Publish/ZombieOrchard       tracked; root .agent observed
+LuminaryLabs-Publish/TheUnmappedHouse    tracked; root .agent observed
+LuminaryLabs-Publish/MyCozyIsland        tracked; root .agent observed
+LuminaryLabs-Publish/TheOpenAbove        tracked; root .agent observed
+LuminaryLabs-Publish/PhantomCommand      tracked; root .agent observed
+LuminaryLabs-Publish/TheCavalryOfRome    excluded by rule
+LuminaryLabs-Publish/PrehistoricRush     tracked; root .agent observed
 ```
 
 `TheCavalryOfRome` remains excluded by standing rule.
 
-Central ledger state showed tracked entries for the eligible Publish repos. Root `.agent/START_HERE.md` state is present on the checked eligible repos.
+Central ledger state showed tracked entries for the eligible Publish repos. Root `.agent/START_HERE.md` state was observed for checked eligible repos.
 
-Because no new untracked eligible repo was found, this run selected `HorrorCorridor` as the oldest accessible non-Cavalry fallback repo. The implementation seam is not missing documentation anymore; it is missing source-level command result proof.
+Because no new untracked eligible repo was found, this run selected `HorrorCorridor` as the oldest eligible fallback by latest observed repo-local alignment time. The implementation seam is not missing documentation anymore; it is missing source-level command result proof.
 
 ## Evidence checked
 
 ```txt
-LuminaryLabs-Publish installation repo list
+LuminaryLabs-Publish organization repo list
 LuminaryLabs-Dev/LuminaryLabs:repo-ledger/LuminaryLabs-Publish/HorrorCorridor.md
 LuminaryLabs-Publish/HorrorCorridor:.agent/START_HERE.md
 LuminaryLabs-Publish/HorrorCorridor:.agent/current-audit.md
 LuminaryLabs-Publish/HorrorCorridor:.agent/next-steps.md
 LuminaryLabs-Publish/HorrorCorridor:.agent/known-gaps.md
 LuminaryLabs-Publish/HorrorCorridor:.agent/validation.md
+LuminaryLabs-Publish/HorrorCorridor:.agent/kit-registry.json
+LuminaryLabs-Publish/HorrorCorridor:.agent/command-authority-audit/2026-07-08T09-40-52-04-00-command-result-wire-contract.md
 LuminaryLabs-Publish/HorrorCorridor:HorrorCorridor-V1/package.json
 LuminaryLabs-Publish/HorrorCorridor:HorrorCorridor-V1/src/components/game/GameCanvas.tsx
 LuminaryLabs-Publish/HorrorCorridor:HorrorCorridor-V1/src/features/game-state/domain/networkRules.ts
@@ -243,18 +245,18 @@ Runtime debug does not yet expose latest command result, rejection reason, publi
 ## Follow-up artifacts added
 
 ```txt
-.agent/architecture-audit/2026-07-08T09-40-52-04-00-dsk-domain-breakdown.md
-.agent/render-audit/2026-07-08T09-40-52-04-00-render-authority-readback.md
-.agent/gameplay-audit/2026-07-08T09-40-52-04-00-command-result-gameplay-loop.md
-.agent/command-authority-audit/2026-07-08T09-40-52-04-00-command-result-wire-contract.md
-.agent/trackers/2026-07-08T09-40-52-04-00/project-breakdown.md
-.agent/turn-ledger/2026-07-08T09-40-52-04-00.md
+.agent/architecture-audit/2026-07-08T11-09-38-04-00-dsk-domain-breakdown.md
+.agent/render-audit/2026-07-08T11-09-38-04-00-runtime-readback-command-overlay-map.md
+.agent/gameplay-audit/2026-07-08T11-09-38-04-00-command-result-gameplay-loop.md
+.agent/command-authority-audit/2026-07-08T11-09-38-04-00-command-result-source-wire-map.md
+.agent/trackers/2026-07-08T11-09-38-04-00/project-breakdown.md
+.agent/turn-ledger/2026-07-08T11-09-38-04-00.md
 ```
 
 ## Current next slice
 
 ```txt
-HorrorCorridor Command Result Wire Contract + Fixture Boundary
+HorrorCorridor Command Result Source Wire Map
 ```
 
 This should happen before PeerJS extraction, renderer extraction, minimap extraction, postprocess extraction, scene dressing, object-kit visual expansion, or new level content.
