@@ -2,7 +2,7 @@
 
 **Repository:** `LuminaryLabs-Publish/HorrorCorridor`
 
-**Last aligned:** `2026-07-08T15:49:18-04:00`
+**Last aligned:** `2026-07-08T18-19-43-04-00`
 
 ## Purpose
 
@@ -14,32 +14,32 @@ Read this folder before changing implementation code.
 
 `HorrorCorridor` is a cooperative first-person horror maze under `HorrorCorridor-V1`.
 
-The current runtime uses Next, React, Three.js, Zustand, PeerJS, and TypeScript.
+The runtime uses Next, React, Three.js, Zustand, PeerJS, and TypeScript.
 
-The player starts from a menu, enters solo/host/client mode, moves through a seeded corridor maze, manipulates colored cubes, solves an ordered anomaly sequence, avoids growing ooze pressure, and reaches a victory/completion screen.
+The player enters solo, host, or client mode, navigates a seeded corridor maze, manipulates colored cubes, solves an ordered anomaly sequence, avoids ooze pressure, and reaches victory.
 
 ## Current selection reason
 
-The accessible `LuminaryLabs-Publish` repo list was read and compared against the central `LuminaryLabs-Dev/LuminaryLabs` ledger state.
+The accessible `LuminaryLabs-Publish` repository list was read and compared against the central `LuminaryLabs-Dev/LuminaryLabs` ledger and sampled root `.agent` state.
 
 ```txt
-LuminaryLabs-Publish/IntoTheMeadow       tracked / latest sampled alignment 2026-07-08T15-28-13-04-00
-LuminaryLabs-Publish/HorrorCorridor      selected fallback follow-up
-LuminaryLabs-Publish/AetherVale          tracked / latest sampled alignment 2026-07-08T15-20-41-04-00
-LuminaryLabs-Publish/ZombieOrchard       tracked / latest sampled alignment 2026-07-08T14-18-45-04-00
-LuminaryLabs-Publish/TheUnmappedHouse    tracked / latest sampled alignment 2026-07-08T14-31-06-04-00
-LuminaryLabs-Publish/MyCozyIsland        tracked / latest sampled alignment 2026-07-08T14-58-49-04-00
-LuminaryLabs-Publish/TheOpenAbove        tracked / latest sampled alignment 2026-07-08T15-11-18-04-00
-LuminaryLabs-Publish/PhantomCommand      tracked / latest sampled alignment 2026-07-08T14-08-24-04-00
+LuminaryLabs-Publish/HorrorCorridor      selected / oldest eligible fallback / previous central latest 2026-07-08T15:39:43-04:00
+LuminaryLabs-Publish/AetherVale          tracked / root .agent present / latest central 2026-07-08T17:49:51-04:00
+LuminaryLabs-Publish/TheOpenAbove        tracked / root .agent present / latest central 2026-07-08T17:31:22-04:00
 LuminaryLabs-Publish/TheCavalryOfRome    excluded by rule
-LuminaryLabs-Publish/PrehistoricRush     tracked / latest sampled alignment 2026-07-08T14:51:11-04:00
+LuminaryLabs-Publish/PhantomCommand      tracked / root .agent present / latest central 2026-07-08T15:58:59-04:00
+LuminaryLabs-Publish/PrehistoricRush     tracked / root .agent present / latest central 2026-07-08T16:51:11-04:00
+LuminaryLabs-Publish/ZombieOrchard       tracked / root .agent present / latest central 2026-07-08T16:20:00-04:00
+LuminaryLabs-Publish/IntoTheMeadow       tracked / root .agent present / latest central 2026-07-08T17:59:43-04:00
+LuminaryLabs-Publish/MyCozyIsland        tracked / root .agent present / latest central 2026-07-08T17:09:48-04:00
+LuminaryLabs-Publish/TheUnmappedHouse    tracked / root .agent present / latest central 2026-07-08T16:19:57-04:00
 ```
 
 No non-Cavalry repo was found that was fully new, absent from central tracking, undocumented, recently added but undocumented, or missing sampled root `.agent/START_HERE.md` state.
 
 `TheCavalryOfRome` remains excluded by standing rule.
 
-This pass selected `LuminaryLabs-Publish/HorrorCorridor` because it is the oldest observed eligible central-ledger fallback and because the command fixture source files still do not exist while `GameCanvas.tsx` consumes `GameState`-returning rule functions directly.
+`HorrorCorridor` was selected as the oldest current eligible fallback because the command consumer fixture runner and legacy adapter source cut remain the highest-value unresolved seam.
 
 ## Current route
 
@@ -48,7 +48,7 @@ HorrorCorridor-V1/package.json
   -> Next app scripts and validation harness scripts
   -> GameCanvas.tsx
   -> buildGameStateFromSnapshot()
-  -> renderer/camera/postprocess/world/minimap/debug initialization
+  -> renderer / camera / post-processing / maze world / minimap / debug initialization
   -> pointer-lock input and local pose prediction
   -> networkRules.ts and interactionRules.ts
   -> publishAuthoritativeState(reason)
@@ -99,12 +99,12 @@ local input or peer message
 .agent/next-steps.md
 .agent/validation.md
 .agent/kit-registry.json
-.agent/architecture-audit/2026-07-08T15-49-18-04-00-command-consumer-fixture-implementation-map.md
-.agent/render-audit/2026-07-08T15-49-18-04-00-runtime-debug-command-readback-contract.md
-.agent/gameplay-audit/2026-07-08T15-49-18-04-00-local-host-command-consumer-loop.md
-.agent/command-authority-audit/2026-07-08T15-49-18-04-00-fixture-runner-acceptance-queue.md
-.agent/trackers/2026-07-08T15-49-18-04-00/project-breakdown.md
-.agent/turn-ledger/2026-07-08T15-49-18-04-00.md
+.agent/architecture-audit/2026-07-08T18-19-43-04-00-command-consumer-fixture-dsk-map.md
+.agent/render-audit/2026-07-08T18-19-43-04-00-runtime-debug-result-projection-map.md
+.agent/gameplay-audit/2026-07-08T18-19-43-04-00-command-result-authority-loop.md
+.agent/command-authority-audit/2026-07-08T18-19-43-04-00-legacy-adapter-source-cut.md
+.agent/trackers/2026-07-08T18-19-43-04-00/project-breakdown.md
+.agent/turn-ledger/2026-07-08T18-19-43-04-00.md
 ```
 
 ## Source files to inspect next
@@ -137,7 +137,7 @@ HorrorCorridor-V1/scripts/horror-corridor-command-fixture.mjs
 
 Do not let `GameCanvas.tsx`, PeerJS event handlers, DOM input, renderer code, object identity checks, or silent unchanged-state returns own command authority long term.
 
-Move command legality into result-returning domain kits, prove local/host consumer behavior with a DOM-free fixture, and only then wire `GameCanvas.tsx` to consume the decision metadata.
+Move command legality into result-returning domain kits, prove local/host consumer behavior with a DOM-free fixture, and only then wire `GameCanvas.tsx` to consume decision metadata.
 
 ## Current next safe ledge
 
