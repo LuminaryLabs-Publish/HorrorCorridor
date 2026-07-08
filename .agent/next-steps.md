@@ -2,7 +2,7 @@
 
 **Repository:** `LuminaryLabs-Publish/HorrorCorridor`
 
-**Updated:** `2026-07-08T05:00:17-04:00`
+**Updated:** `2026-07-08T06:28:31-04:00`
 
 ## Current next build slice
 
@@ -15,6 +15,7 @@ Start from:
 ```txt
 .agent/command-authority-audit/fixture-gate-implementation-map.md
 .agent/command-authority-audit/result-reason-matrix.md
+.agent/command-authority-audit/command-result-fixture-acceptance-ledger.md
 ```
 
 ## Build checklist
@@ -131,3 +132,20 @@ npm run review:object-kit
 Stop after command result contracts, reason catalog, publish decision helper, runtime debug projection, and DOM-free fixture matrix are implemented or documented enough to prove accepted, rejected, unchanged, publish-only, skipped, and victory command parity.
 
 Do not continue into renderer extraction, PeerJS extraction, minimap extraction, postprocess extraction, scene dressing, new level content, or new visual content in the same implementation pass.
+
+## First source pass ledge
+
+```txt
+Implement only contracts and headless fixture first:
+1. commandTypes.ts
+2. commandReasons.ts
+3. commandResults.ts
+4. publishDecisions.ts
+5. commandJournal.ts
+6. interactionPreflight.ts
+7. interactionResultRules.ts
+8. networkResultRules.ts
+9. scripts/horror-corridor-command-fixture.mjs
+```
+
+Only after `node scripts/horror-corridor-command-fixture.mjs` passes should `GameCanvas.tsx` and `runtimeDebugStore.ts` consume the result metadata.
