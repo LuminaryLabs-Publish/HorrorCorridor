@@ -2,7 +2,7 @@
 
 **Repository:** `LuminaryLabs-Publish/HorrorCorridor`
 
-**Updated:** `2026-07-08T12-29-17-04:00`
+**Updated:** `2026-07-08T13:59:50-04:00`
 
 ## Available validation commands
 
@@ -61,6 +61,9 @@ local consumer skips rejected/no-op broadcast
 local consumer publishes accepted changed/victory
 host consumer skips rejected TRY_INTERACT broadcast
 host consumer publishes request-sync recovery
+runtime debug projects latest command result
+runtime debug projects latest publish decision
+runtime debug projects journal counts
 ```
 
 ## Required publish-decision fixture matrix
@@ -96,6 +99,7 @@ events
 journal counts
 local consumer action
 host consumer action
+runtime debug projection
 final snapshot summary
 volatile fields normalized
 replay parity passed or failed
@@ -136,9 +140,9 @@ final snapshot facts
 
 ```txt
 [done] GitHub connector read of current Publish repo list.
-[done] GitHub connector read of central LuminaryLabs-Dev/LuminaryLabs Publish ledger context.
-[done] GitHub connector read of ZombieOrchard and HorrorCorridor direct ledger/root-agent state.
+[done] GitHub connector read of central LuminaryLabs-Dev/LuminaryLabs Publish ledger/recent-change context.
 [done] GitHub connector read of HorrorCorridor repo-local agent state.
+[done] GitHub connector read of package validation scripts.
 [done] GitHub connector read of GameCanvas runtime/publish/render loop.
 [done] GitHub connector read of networkRules authority seam.
 [done] GitHub connector read of interactionRules silent no-op branches.
