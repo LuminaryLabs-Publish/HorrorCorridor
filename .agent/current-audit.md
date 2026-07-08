@@ -2,7 +2,7 @@
 
 **Repository:** `LuminaryLabs-Publish/HorrorCorridor`
 
-**Audit timestamp:** `2026-07-08T02:19:36-04:00`
+**Audit timestamp:** `2026-07-08T03:50:37-04:00`
 
 ## Summary
 
@@ -10,7 +10,7 @@
 
 The source has real runtime services already: session flow, seeded maze bootstrap, first-person input, cube interaction, ordered anomaly victory, host/client sync, ooze cadence, Three.js rendering, minimap, and debug frames.
 
-The next architecture improvement should not start with visuals. It should first make every local and network command produce a stable `CommandResult`, rejection reason, publish decision, and fixture-replay record.
+This follow-up pass keeps the next architecture improvement focused on stable command results, stable reasons, publish decisions, command journaling, runtime debug result projection, and DOM-free fixture replay.
 
 ## Repo selection
 
@@ -33,19 +33,24 @@ LuminaryLabs-Publish/TheUnmappedHouse
 
 Central ledger search showed tracked entries for the eligible Publish repos, including `HorrorCorridor`, `AetherVale`, `TheOpenAbove`, `PhantomCommand`, `PrehistoricRush`, `ZombieOrchard`, `IntoTheMeadow`, `MyCozyIsland`, and `TheUnmappedHouse`.
 
-Because no new untracked eligible repo was found in this pass, this run fell back to the oldest eligible tracked repo rule and selected `HorrorCorridor`.
+Root `.agent/START_HERE.md` state was present for the eligible checked repos.
+
+Because no new untracked eligible repo was found in this pass, this run fell back to the oldest eligible tracked repo rule and selected `HorrorCorridor` for a command-authority follow-up breakdown.
 
 ## Evidence checked
 
 ```txt
 LuminaryLabs-Dev/LuminaryLabs:repo-ledger/LuminaryLabs-Publish/HorrorCorridor.md
-LuminaryLabs-Publish/HorrorCorridor:.agent/README.md
+LuminaryLabs-Publish/HorrorCorridor:.agent/START_HERE.md
+LuminaryLabs-Publish/HorrorCorridor:.agent/current-audit.md
+LuminaryLabs-Publish/HorrorCorridor:.agent/architecture-audit/domain-service-breakdown.md
+LuminaryLabs-Publish/HorrorCorridor:.agent/next-steps.md
 LuminaryLabs-Publish/HorrorCorridor:.agent/kit-registry.json
-LuminaryLabs-Publish/HorrorCorridor:.agent/trackers/2026-07-07T21-18-45-04-00/project-breakdown.md
 LuminaryLabs-Publish/HorrorCorridor:HorrorCorridor-V1/package.json
 LuminaryLabs-Publish/HorrorCorridor:HorrorCorridor-V1/src/components/game/GameCanvas.tsx
 LuminaryLabs-Publish/HorrorCorridor:HorrorCorridor-V1/src/features/game-state/domain/networkRules.ts
 LuminaryLabs-Publish/HorrorCorridor:HorrorCorridor-V1/src/features/game-state/domain/interactionRules.ts
+LuminaryLabs-Publish/HorrorCorridor:HorrorCorridor-V1/src/features/debug/store/runtimeDebugStore.ts
 ```
 
 ## Current interaction loop
@@ -95,10 +100,10 @@ app/session service
 peer sync service
 maze bootstrap service
 first-person player service
-interaction rule service
-ooze cadence service
-snapshot build/publish service
-runtime debug frame/event service
+interaction preflight service
+command result envelope service
+publish decision service
+diagnostics and replay service
 render service
 minimap service
 validation/harness service
@@ -114,6 +119,14 @@ Rejected commands are not distinguishable from no-op commands.
 Host publishing does not yet use command result metadata.
 
 Runtime debug does not yet expose latest command result, rejection reason, publish decision, journal counts, or fixture parity.
+
+## Follow-up artifact added
+
+```txt
+.agent/command-authority-audit/result-reason-matrix.md
+.agent/trackers/2026-07-08T03-50-37-04-00/project-breakdown.md
+.agent/turn-ledger/2026-07-08T03-50-37-04-00.md
+```
 
 ## Current next slice
 
