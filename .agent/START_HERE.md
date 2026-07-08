@@ -2,7 +2,7 @@
 
 **Repository:** `LuminaryLabs-Publish/HorrorCorridor`
 
-**Last aligned:** `2026-07-08T11:09:38-04:00`
+**Last aligned:** `2026-07-08T12-29-17-04:00`
 
 ## Purpose
 
@@ -20,26 +20,26 @@ The player starts from a menu, enters solo/host/client mode, moves through a see
 
 ## Current selection reason
 
-The full accessible `LuminaryLabs-Publish` repo list was compared against central tracking in `LuminaryLabs-Dev/LuminaryLabs`.
+The accessible `LuminaryLabs-Publish` repo list was read from the GitHub App installation and compared against the central `LuminaryLabs-Dev/LuminaryLabs` repo-ledger/status-summary state.
 
 ```txt
-LuminaryLabs-Publish/IntoTheMeadow       tracked; root .agent observed
 LuminaryLabs-Publish/HorrorCorridor      selected fallback follow-up
-LuminaryLabs-Publish/AetherVale          tracked; root .agent observed
-LuminaryLabs-Publish/ZombieOrchard       tracked; root .agent observed
-LuminaryLabs-Publish/TheUnmappedHouse    tracked; root .agent observed
-LuminaryLabs-Publish/MyCozyIsland        tracked; root .agent observed
-LuminaryLabs-Publish/TheOpenAbove        tracked; root .agent observed
-LuminaryLabs-Publish/PhantomCommand      tracked; root .agent observed
+LuminaryLabs-Publish/AetherVale          tracked; root .agent represented centrally
+LuminaryLabs-Publish/TheOpenAbove        tracked; root .agent represented centrally
 LuminaryLabs-Publish/TheCavalryOfRome    excluded by rule
-LuminaryLabs-Publish/PrehistoricRush     tracked; root .agent observed
+LuminaryLabs-Publish/PhantomCommand      tracked; root .agent represented centrally
+LuminaryLabs-Publish/PrehistoricRush     tracked; root .agent represented centrally
+LuminaryLabs-Publish/ZombieOrchard       tracked; root .agent observed directly this run
+LuminaryLabs-Publish/IntoTheMeadow       tracked; root .agent represented centrally
+LuminaryLabs-Publish/MyCozyIsland        tracked; root .agent represented centrally
+LuminaryLabs-Publish/TheUnmappedHouse    tracked; root .agent represented centrally
 ```
 
-No checked non-Cavalry repo was fully new, absent from central tracking, undocumented, or missing root `.agent/START_HERE.md` state.
+No non-Cavalry repo was found that was fully new, absent from central tracking, undocumented, or missing root `.agent` state.
 
 `TheCavalryOfRome` remains excluded by standing rule.
 
-This pass selected `LuminaryLabs-Publish/HorrorCorridor` as the oldest eligible fallback by latest observed repo-local alignment time. The remaining high-value seam is not missing docs; it is source-level command authority. Current runtime behavior is playable, but command legality still returns `GameState` without fixture-readable result metadata.
+This pass selected `LuminaryLabs-Publish/HorrorCorridor` as the oldest eligible fallback among the sampled current ledger states. The remaining high-value seam is not more renderer detail; it is the command-authority consumer seam between result-returning rule wrappers and `GameCanvas.tsx` local/host publishing.
 
 ## Current route
 
@@ -74,6 +74,22 @@ open app
   -> renderer, minimap, HUD, completion screen, and runtime debug consume latest snapshot
 ```
 
+## Target authority loop
+
+```txt
+local input or peer message
+  -> CommandEnvelope
+  -> interaction/network preflight
+  -> CommandResult
+  -> PublishDecision
+  -> CommandJournal
+  -> local-authority-result-consumer or host-authority-result-consumer
+  -> publishAuthoritativeState only when the decision allows it
+  -> RuntimeDebug command projection
+  -> DOM-free fixture replay
+  -> browser/live validation after fixture proof
+```
+
 ## First files to read
 
 ```txt
@@ -81,54 +97,16 @@ open app
 .agent/known-gaps.md
 .agent/next-steps.md
 .agent/validation.md
-.agent/architecture-audit/domain-service-breakdown.md
-.agent/architecture-audit/2026-07-08T09-40-52-04-00-dsk-domain-breakdown.md
-.agent/architecture-audit/2026-07-08T11-09-38-04-00-dsk-domain-breakdown.md
-.agent/render-audit/render-surface-audit.md
-.agent/render-audit/2026-07-08T09-40-52-04-00-render-authority-readback.md
-.agent/render-audit/2026-07-08T11-09-38-04-00-runtime-readback-command-overlay-map.md
-.agent/gameplay-audit/authority-loop-audit.md
-.agent/gameplay-audit/2026-07-08T09-40-52-04-00-command-result-gameplay-loop.md
-.agent/gameplay-audit/2026-07-08T11-09-38-04-00-command-result-gameplay-loop.md
-.agent/command-authority-audit/result-reason-matrix.md
-.agent/command-authority-audit/fixture-gate-implementation-map.md
-.agent/command-authority-audit/command-result-fixture-acceptance-ledger.md
-.agent/command-authority-audit/publish-decision-routing-matrix.md
-.agent/command-authority-audit/2026-07-08T08-29-35-04-00-source-edit-cutover-queue.md
-.agent/command-authority-audit/2026-07-08T09-40-52-04-00-command-result-wire-contract.md
-.agent/command-authority-audit/2026-07-08T11-09-38-04-00-command-result-source-wire-map.md
-.agent/trackers/2026-07-08T11-09-38-04-00/project-breakdown.md
-.agent/turn-ledger/2026-07-08T11-09-38-04-00.md
+.agent/architecture-audit/2026-07-08T12-29-17-04-00-dsk-domain-breakdown.md
+.agent/render-audit/2026-07-08T12-29-17-04-00-command-debug-readback-map.md
+.agent/gameplay-audit/2026-07-08T12-29-17-04-00-local-host-authority-loop.md
+.agent/command-authority-audit/2026-07-08T12-29-17-04-00-consumer-acceptance-map.md
+.agent/trackers/2026-07-08T12-29-17-04-00/project-breakdown.md
+.agent/turn-ledger/2026-07-08T12-29-17-04-00.md
 .agent/kit-registry.json
 ```
 
 ## Source files to inspect next
-
-```txt
-HorrorCorridor-V1/package.json
-HorrorCorridor-V1/src/components/game/GameCanvas.tsx
-HorrorCorridor-V1/src/features/game-state/domain/networkRules.ts
-HorrorCorridor-V1/src/features/game-state/domain/interactionRules.ts
-HorrorCorridor-V1/src/features/game-state/domain/winRules.ts
-HorrorCorridor-V1/src/features/game-state/domain/oozeRules.ts
-HorrorCorridor-V1/src/features/debug/store/runtimeDebugStore.ts
-HorrorCorridor-V1/src/features/networking/protocol/messages.ts
-HorrorCorridor-V1/src/features/networking/store/networkStore.ts
-```
-
-## Main rule
-
-Do not let `GameCanvas.tsx`, PeerJS event handlers, DOM input, renderer code, object identity checks, or silent unchanged-state returns own command authority long term.
-
-Move command legality into result-returning domain kits, then let local authority, host authority, runtime debug, renderer debug overlay, replay fixtures, and future external GameHost diagnostics consume those command results.
-
-## Current next safe ledge
-
-Build the **HorrorCorridor Command Result Source Wire Map**.
-
-Preserve the existing solo, host, client, renderer, minimap, debug overlay, and PeerJS behavior while adding result-returning wrappers beside the current `GameState`-returning rule functions.
-
-Start with the command contract and fixture files before touching `GameCanvas.tsx` publish behavior:
 
 ```txt
 HorrorCorridor-V1/src/features/game-state/domain/commandTypes.ts
@@ -140,4 +118,20 @@ HorrorCorridor-V1/src/features/game-state/domain/interactionPreflight.ts
 HorrorCorridor-V1/src/features/game-state/domain/interactionResultRules.ts
 HorrorCorridor-V1/src/features/game-state/domain/networkResultRules.ts
 HorrorCorridor-V1/scripts/horror-corridor-command-fixture.mjs
+HorrorCorridor-V1/src/features/debug/store/runtimeDebugStore.ts
+HorrorCorridor-V1/src/components/game/GameCanvas.tsx
 ```
+
+## Main rule
+
+Do not let `GameCanvas.tsx`, PeerJS event handlers, DOM input, renderer code, object identity checks, or silent unchanged-state returns own command authority long term.
+
+Move command legality into result-returning domain kits, then let local authority, host authority, runtime debug, renderer debug overlay, replay fixtures, and future external GameHost diagnostics consume those command results.
+
+## Current next safe ledge
+
+Build the **HorrorCorridor Command Result Consumer Acceptance Map + Fixture Gate**.
+
+Preserve existing solo, host, client, renderer, minimap, debug overlay, and PeerJS behavior while adding result-returning wrappers beside the current `GameState`-returning rule functions.
+
+Stop before renderer extraction, minimap extraction, PeerJS extraction, scene dressing expansion, new level content, or new visual object-kit work.
