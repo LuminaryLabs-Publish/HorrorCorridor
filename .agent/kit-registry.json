@@ -1,14 +1,14 @@
 {
-  "schemaVersion": 17,
+  "schemaVersion": 18,
   "repository": "LuminaryLabs-Publish/HorrorCorridor",
-  "generatedAt": "2026-07-08T15:39:43-04:00",
-  "status": "command-fixture-source-file-manifest-and-legacy-adapter-boundary-planned",
-  "latestTracker": ".agent/trackers/2026-07-08T15-39-43-04-00/project-breakdown.md",
-  "latestTurnLedger": ".agent/turn-ledger/2026-07-08T15-39-43-04-00.md",
-  "latestArchitectureAudit": ".agent/architecture-audit/2026-07-08T15-39-43-04-00-command-fixture-source-manifest.md",
-  "latestRenderAudit": ".agent/render-audit/2026-07-08T15-39-43-04-00-debug-command-projection-readback.md",
-  "latestGameplayAudit": ".agent/gameplay-audit/2026-07-08T15-39-43-04-00-local-host-command-fixture-boundary.md",
-  "latestCommandAuthorityAudit": ".agent/command-authority-audit/2026-07-08T15-39-43-04-00-source-file-manifest-and-adapter-boundary.md",
+  "generatedAt": "2026-07-08T18-19-43-04-00",
+  "status": "command-consumer-fixture-runner-and-legacy-adapter-source-cut-planned",
+  "latestTracker": ".agent/trackers/2026-07-08T18-19-43-04-00/project-breakdown.md",
+  "latestTurnLedger": ".agent/turn-ledger/2026-07-08T18-19-43-04-00.md",
+  "latestArchitectureAudit": ".agent/architecture-audit/2026-07-08T18-19-43-04-00-command-consumer-fixture-dsk-map.md",
+  "latestRenderAudit": ".agent/render-audit/2026-07-08T18-19-43-04-00-runtime-debug-result-projection-map.md",
+  "latestGameplayAudit": ".agent/gameplay-audit/2026-07-08T18-19-43-04-00-command-result-authority-loop.md",
+  "latestCommandAuthorityAudit": ".agent/command-authority-audit/2026-07-08T18-19-43-04-00-legacy-adapter-source-cut.md",
   "sourceRoots": [
     "HorrorCorridor-V1/src/components/game",
     "HorrorCorridor-V1/src/features",
@@ -25,21 +25,21 @@
   "selection": {
     "selectedRepo": "LuminaryLabs-Publish/HorrorCorridor",
     "excludedRepo": "LuminaryLabs-Publish/TheCavalryOfRome",
-    "reason": "No checked non-Cavalry repo was fully new, central-ledger absent, undocumented, recently added but undocumented, or missing sampled root .agent/START_HERE.md state. HorrorCorridor was selected as the oldest current eligible fallback because the command-result fixture files remain absent and the local/host command authority seam is still highest value.",
+    "reason": "No checked non-Cavalry repo was fully new, central-ledger absent, undocumented, recently added but undocumented, or missing sampled root .agent/START_HERE.md state. HorrorCorridor was selected as the oldest current eligible fallback because the command consumer fixture runner and legacy adapter source cut remain absent while the local/host command authority seam is still highest value.",
     "publishReposChecked": [
-      "LuminaryLabs-Publish/IntoTheMeadow",
       "LuminaryLabs-Publish/HorrorCorridor",
       "LuminaryLabs-Publish/AetherVale",
-      "LuminaryLabs-Publish/ZombieOrchard",
-      "LuminaryLabs-Publish/TheUnmappedHouse",
-      "LuminaryLabs-Publish/MyCozyIsland",
       "LuminaryLabs-Publish/TheOpenAbove",
-      "LuminaryLabs-Publish/PhantomCommand",
       "LuminaryLabs-Publish/TheCavalryOfRome",
-      "LuminaryLabs-Publish/PrehistoricRush"
+      "LuminaryLabs-Publish/PhantomCommand",
+      "LuminaryLabs-Publish/PrehistoricRush",
+      "LuminaryLabs-Publish/ZombieOrchard",
+      "LuminaryLabs-Publish/IntoTheMeadow",
+      "LuminaryLabs-Publish/MyCozyIsland",
+      "LuminaryLabs-Publish/TheUnmappedHouse"
     ]
   },
-  "currentNextSlice": "HorrorCorridor Command Fixture Source File Manifest + Legacy Adapter Boundary",
+  "currentNextSlice": "HorrorCorridor Command Consumer Fixture Runner + Legacy Adapter Source Cut",
   "interactionLoop": {
     "current": [
       "start-menu",
@@ -123,6 +123,8 @@
     {"id": "command-result-envelope-kit", "status": "planned-next", "kind": "envelope-kit", "provides": ["before state", "after state", "changed flag", "reason", "events", "legacy adapter"]},
     {"id": "publish-decision-snapshot-kit", "status": "planned-next", "kind": "policy-kit", "provides": ["publish", "skip", "recovery", "no-op", "victory"]},
     {"id": "command-result-journal-kit", "status": "planned-next", "kind": "diagnostic-kit", "provides": ["accepted counts", "rejected counts", "latest reason", "latest decision"]},
+    {"id": "interaction-preflight-kit", "status": "planned-next", "kind": "preflight-kit", "provides": ["not-playing", "missing-player", "carrying conflict", "distance", "slot", "cube lookup reasons"]},
+    {"id": "network-result-rules-kit", "status": "planned-next", "kind": "adapter-kit", "provides": ["player update result", "held cube sync result", "network interaction result", "legacy network adapter"]},
     {"id": "local-authority-result-consumer-kit", "status": "planned-next", "kind": "consumer-kit", "provides": ["local publish decision", "local rejection journaling", "local victory commit"]},
     {"id": "host-authority-result-consumer-kit", "status": "planned-next", "kind": "consumer-kit", "provides": ["host publish decision", "request-sync recovery", "rejected TRY_INTERACT skip"]},
     {"id": "runtime-debug-result-projection-kit", "status": "planned-next", "kind": "diagnostic-kit", "provides": ["latest result", "latest decision", "journal counts", "fixture parity"]},
