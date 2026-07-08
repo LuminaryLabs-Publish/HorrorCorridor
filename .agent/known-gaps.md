@@ -2,7 +2,7 @@
 
 **Repository:** `LuminaryLabs-Publish/HorrorCorridor`
 
-**Updated:** `2026-07-08T09:40:52-04:00`
+**Updated:** `2026-07-08T11:09:38-04:00`
 
 ## Authority and command gaps
 
@@ -21,6 +21,22 @@
 - a source-backed publish-decision routing matrix is documented but not implemented.
 - a source-edit cutover queue is documented but not implemented.
 - a command-result wire contract is documented but not implemented.
+- a command-result source wire map is now documented but not implemented.
+```
+
+## Source wire gaps
+
+```txt
+- commandTypes.ts does not exist.
+- commandReasons.ts does not exist.
+- commandResults.ts does not exist.
+- publishDecisions.ts does not exist.
+- commandJournal.ts does not exist.
+- interactionPreflight.ts does not exist.
+- interactionResultRules.ts does not exist.
+- networkResultRules.ts does not exist.
+- scripts/horror-corridor-command-fixture.mjs does not exist.
+- package.json does not yet include a command fixture script.
 ```
 
 ## Debug and replay gaps
@@ -64,6 +80,7 @@
 - minimap draw is called from the same game loop as camera/render/debug capture.
 - post-processing is initialized in runtime canvas code and not described as an external render descriptor contract.
 - object/texture kit catalog exists as direction, but visual expansion should not happen before authority replay is fixture-safe.
+- runtime render/debug readback cannot currently explain the latest command outcome or publish decision.
 ```
 
 ## Validation gaps
