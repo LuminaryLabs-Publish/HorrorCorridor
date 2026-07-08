@@ -2,12 +2,12 @@
 
 **Repository:** `LuminaryLabs-Publish/HorrorCorridor`
 
-**Updated:** `2026-07-08T15:39:43-04:00`
+**Updated:** `2026-07-08T18-19-43-04-00`
 
 ## Current next build slice
 
 ```txt
-HorrorCorridor Command Fixture Source File Manifest + Legacy Adapter Boundary
+HorrorCorridor Command Consumer Fixture Runner + Legacy Adapter Source Cut
 ```
 
 Start from:
@@ -23,6 +23,8 @@ Start from:
 .agent/command-authority-audit/2026-07-08T12-29-17-04-00-consumer-acceptance-map.md
 .agent/command-authority-audit/2026-07-08T13-59-50-04-00-gamecanvas-consumer-wire-map.md
 .agent/command-authority-audit/2026-07-08T15-39-43-04-00-source-file-manifest-and-adapter-boundary.md
+.agent/command-authority-audit/2026-07-08T15-49-18-04-00-fixture-runner-acceptance-queue.md
+.agent/command-authority-audit/2026-07-08T18-19-43-04-00-legacy-adapter-source-cut.md
 ```
 
 ## Build checklist
@@ -118,22 +120,22 @@ HorrorCorridor-V1/src/components/game/GameCanvas.tsx
    - journal rejected, skipped, unchanged, and no-op results without broadcasting.
 
 10. hostAuthorityCommandConsumer.ts
-   - consume host player-update and interaction results.
-   - publish request-sync recovery, accepted changed, and victory decisions.
-   - skip rejected TRY_INTERACT and skipped/no-op commands.
+    - consume host player-update and interaction results.
+    - publish request-sync recovery, accepted changed, and victory decisions.
+    - skip rejected TRY_INTERACT and skipped/no-op commands.
 
 11. scripts/horror-corridor-command-fixture.mjs
-   - run the acceptance matrix without DOM, canvas, PeerJS, Three.js, or browser state.
+    - run the acceptance matrix without DOM, canvas, PeerJS, Three.js, or browser state.
 
 12. package.json
-   - add a command fixture script only after the fixture exists.
+    - add a command fixture script only after the fixture exists.
 
 13. runtimeDebugStore.ts
-   - add RuntimeDebugCommandProjection and latest command debug export fields after fixture proof.
+    - add RuntimeDebugCommandProjection and latest command debug export fields after fixture proof.
 
 14. GameCanvas.tsx
-   - replace local object-identity publish gate with localAuthorityCommandConsumer.
-   - replace host message publish gate with hostAuthorityCommandConsumer.
+    - replace local object-identity publish gate with localAuthorityCommandConsumer.
+    - replace host message publish gate with hostAuthorityCommandConsumer.
 ```
 
 ## Required command reason families
