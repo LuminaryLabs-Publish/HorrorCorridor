@@ -2,12 +2,12 @@
 
 **Repository:** `LuminaryLabs-Publish/HorrorCorridor`
 
-**Updated:** `2026-07-08T06:28:31-04:00`
+**Updated:** `2026-07-08T07:01:54-04:00`
 
 ## Current next build slice
 
 ```txt
-HorrorCorridor Command Result Fixture Gate
+HorrorCorridor Command Result Fixture Gate: Publish Decision Routing Matrix Implementation
 ```
 
 Start from:
@@ -16,6 +16,7 @@ Start from:
 .agent/command-authority-audit/fixture-gate-implementation-map.md
 .agent/command-authority-audit/result-reason-matrix.md
 .agent/command-authority-audit/command-result-fixture-acceptance-ledger.md
+.agent/command-authority-audit/publish-decision-routing-matrix.md
 ```
 
 ## Build checklist
@@ -32,13 +33,17 @@ Start from:
 [ ] Classify request-sync as publish-only recovery.
 [ ] Classify toggle-ready and cancel as explicit skipped commands until lobby policy exists.
 [ ] Classify unknown/default actions as skipped:unknown-action.
+[ ] Classify accepted changed results as publish.
+[ ] Classify accepted unchanged results as no-op.
+[ ] Classify rejected TRY_INTERACT results as skip.
+[ ] Classify ordered sequence completion as explicit victory.
 [ ] Add command result journal counters.
 [ ] Add publish decision snapshot helper.
 [ ] Wire local-authority consumer to journal rejections and only publish accepted changed/victory results.
 [ ] Wire host-authority consumer to skip rejected TRY_INTERACT publishes and publish request-sync recovery.
 [ ] Extend runtime debug frame/export with latestCommandResult, latestPublishDecision, latestRejectionReason, commandJournalCounts, and latestFixtureParity.
 [ ] Add DOM-free command fixture script.
-[ ] Add fixtures for accepted pickup, rejected pickup, accepted drop, rejected drop, accepted place, rejected place, accepted remove, rejected remove, request-sync recovery, ignored toggle-ready/cancel, unknown action, player update, ooze tick, and victory completion.
+[ ] Add fixtures for accepted pickup, rejected pickup, accepted drop, rejected drop, accepted place, rejected place, accepted remove, rejected remove, request-sync recovery, skipped toggle-ready/cancel/unknown, player update, held-cube sync, ooze tick, and victory completion.
 [ ] Normalize only volatile fields in fixture comparison.
 [ ] Defer PeerJS extraction, renderer extraction, minimap extraction, postprocess extraction, scene dressing, and object-kit visual expansion.
 ```
@@ -102,18 +107,33 @@ skipped:unknown-action
 [ ] accepted drop while carrying
 [ ] rejected drop without carried cube
 [ ] accepted place near anomaly with carried cube
+[ ] accepted place final anomaly slot as victory
 [ ] rejected place too far from anomaly
 [ ] rejected place with no free slot
 [ ] accepted remove last anomaly cube
 [ ] rejected remove wrong slot
-[ ] publish-only request-sync
+[ ] publish-only request-sync recovery
 [ ] skipped toggle-ready
 [ ] skipped cancel
 [ ] skipped unknown action
 [ ] accepted player update
 [ ] unchanged player update for missing player
-[ ] accepted or unchanged ooze tick with reason
-[ ] victory ordered-sequence completion
+[ ] unchanged held-cube already synced
+[ ] ooze tick spawn
+[ ] ooze tick decay
+[ ] ooze tick no-state-diff
+```
+
+## Publish decision acceptance matrix
+
+```txt
+[ ] accepted changed -> publish
+[ ] accepted unchanged -> no-op
+[ ] rejected -> skip
+[ ] unchanged -> skip
+[ ] publish-only -> recovery
+[ ] skipped -> skip
+[ ] victory -> victory
 ```
 
 ## Acceptance checks
