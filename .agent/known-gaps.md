@@ -2,7 +2,7 @@
 
 **Repository:** `LuminaryLabs-Publish/HorrorCorridor`
 
-**Updated:** `2026-07-08T06:28:31-04:00`
+**Updated:** `2026-07-08T07:01:54-04:00`
 
 ## Authority and command gaps
 
@@ -12,11 +12,11 @@
 - invalid pickup, drop, place, and remove branches silently return unchanged state.
 - request-sync, toggle-ready, cancel, and default network actions return unchanged state without result metadata.
 - local authority uses object identity to decide whether to publish after interaction.
-- host authority publishes after TRY_INTERACT even when the command produced no meaningful state change.
+- host authority can publish after TRY_INTERACT even when the command produced no meaningful state change.
 - no stable CommandReason catalog exists for rejected, skipped, unchanged, publish-only, or victory commands.
 - no CommandResult envelope exists for before/after state, changed flag, events, diagnostics, and source metadata.
 - no publish-decision snapshot exists to classify publish, skip, recovery, victory, or no-op behavior.
-- no command fixture acceptance ledger existed before this pass; it now exists but is not implemented in source.
+- no source-backed publish-decision routing matrix exists yet; the matrix is now documented but not implemented.
 ```
 
 ## Debug and replay gaps
@@ -24,9 +24,22 @@
 ```txt
 - runtime debug frames expose cadence, snapshot, cube, anomaly, input, and scene dressing data, but not command-result data.
 - runtime debug exports do not expose latestCommandResult, latestPublishDecision, latestRejectionReason, commandJournal, or latestFixtureParity.
-- no DOM-free replay fixture proves accepted/rejected/unchanged/publish-only final snapshot parity.
+- no DOM-free replay fixture proves accepted/rejected/unchanged/publish-only/final-victory snapshot parity.
 - no fixture matrix covers request-sync recovery, ignored toggle-ready/cancel, player update, ooze tick, and victory completion.
 - fixture ids, expected statuses, expected publish decisions, and non-normalizable fields are now documented but not source-backed.
+```
+
+## Publish-decision gaps
+
+```txt
+- accepted changed commands need explicit publish decisions.
+- accepted unchanged commands need explicit no-op decisions.
+- rejected TRY_INTERACT commands need explicit skip decisions.
+- request-sync needs explicit recovery/full-sync decision metadata.
+- toggle-ready and cancel need explicit skipped policy metadata until lobby policy exists.
+- unknown/default actions need explicit skipped:unknown-action metadata.
+- victory needs explicit victory publish decision metadata.
+- local and host authority should consume the same decision helper instead of duplicating publish behavior.
 ```
 
 ## Domain extraction gaps
