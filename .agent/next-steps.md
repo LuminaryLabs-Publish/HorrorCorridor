@@ -2,7 +2,7 @@
 
 **Repository:** `LuminaryLabs-Publish/HorrorCorridor`
 
-**Updated:** `2026-07-08T02:19:36-04:00`
+**Updated:** `2026-07-08T03:50:37-04:00`
 
 ## Current next build slice
 
@@ -10,12 +10,18 @@
 HorrorCorridor Command Reason Catalog + Result Journal Fixture Gate
 ```
 
+Start from:
+
+```txt
+.agent/command-authority-audit/result-reason-matrix.md
+```
+
 ## Build checklist
 
 ```txt
 [ ] Preserve current solo, host, client, renderer, minimap, debug overlay, and PeerJS behavior.
 [ ] Add CommandEnvelope, CommandStatus, CommandReason, CommandResult, and PublishDecision contracts under game-state/domain.
-[ ] Define stable CommandReason values for every current silent no-op branch.
+[ ] Define stable CommandReason values for every current silent no-op branch in networkRules.ts and interactionRules.ts.
 [ ] Add interaction preflight helpers beside interactionRules.
 [ ] Add result-returning wrappers for pickup, drop, place, and remove.
 [ ] Keep legacy interaction exports returning result.state.
@@ -23,12 +29,13 @@ HorrorCorridor Command Reason Catalog + Result Journal Fixture Gate
 [ ] Keep legacy network exports returning result.state.
 [ ] Classify request-sync as publish-only recovery.
 [ ] Classify toggle-ready and cancel as explicit skipped commands until lobby policy exists.
+[ ] Classify unknown/default actions as skipped:unknown-action.
 [ ] Add command result journal counters.
 [ ] Add publish decision snapshot helper.
 [ ] Wire local-authority consumer to journal rejections and only publish accepted changed/victory results.
 [ ] Wire host-authority consumer to skip rejected TRY_INTERACT publishes and publish request-sync recovery.
-[ ] Extend runtime debug frame/export with latestCommandResult, latestPublishDecision, commandJournal, and latestFixtureParity.
-[ ] Add DOM-free fixtures for accepted pickup, rejected pickup, accepted drop, rejected drop, accepted place, rejected place, remove, request-sync recovery, ignored toggle-ready/cancel, player update, ooze tick, and victory completion.
+[ ] Extend runtime debug frame/export with latestCommandResult, latestPublishDecision, latestRejectionReason, commandJournal, and latestFixtureParity.
+[ ] Add DOM-free fixtures for accepted pickup, rejected pickup, accepted drop, rejected drop, accepted place, rejected place, accepted remove, rejected remove, request-sync recovery, ignored toggle-ready/cancel, unknown action, player update, ooze tick, and victory completion.
 [ ] Defer PeerJS extraction, renderer extraction, minimap extraction, postprocess extraction, and object-kit visual expansion.
 ```
 
@@ -51,7 +58,14 @@ HorrorCorridor-V1/src/components/game/GameCanvas.tsx
 ## Required command reason families
 
 ```txt
-accepted
+accepted:pickup
+accepted:drop
+accepted:place
+accepted:remove
+accepted:player-update
+accepted:ooze-tick
+victory:ordered-sequence-complete
+
 rejected:not-playing
 rejected:missing-player
 rejected:already-carrying
@@ -62,13 +76,17 @@ rejected:too-far-from-anomaly
 rejected:no-free-slot
 rejected:no-occupied-slot
 rejected:wrong-slot
+rejected:missing-cube-id
+
 unchanged:player-missing
 unchanged:held-cube-already-synced
+unchanged:no-state-diff
+
 publish-only:request-sync
+
 skipped:toggle-ready-policy-not-implemented
 skipped:cancel-policy-not-implemented
 skipped:unknown-action
-victory:ordered-sequence-complete
 ```
 
 ## Acceptance checks
@@ -83,6 +101,6 @@ npm run review:object-kit
 
 ## Stop condition
 
-Stop after command result contracts, reason catalog, publish decision helper, runtime debug projection, and DOM-free fixture matrix are documented or implemented enough to prove accepted, rejected, unchanged, publish-only, and victory command parity.
+Stop after command result contracts, reason catalog, publish decision helper, runtime debug projection, and DOM-free fixture matrix are documented or implemented enough to prove accepted, rejected, unchanged, publish-only, skipped, and victory command parity.
 
-Do not continue into renderer extraction or new visual content in the same implementation pass.
+Do not continue into renderer extraction, PeerJS extraction, minimap extraction, postprocess extraction, or new visual content in the same implementation pass.
