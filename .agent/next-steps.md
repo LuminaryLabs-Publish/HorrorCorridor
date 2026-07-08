@@ -2,12 +2,12 @@
 
 **Repository:** `LuminaryLabs-Publish/HorrorCorridor`
 
-**Updated:** `2026-07-08T13:59:50-04:00`
+**Updated:** `2026-07-08T15:39:43-04:00`
 
 ## Current next build slice
 
 ```txt
-HorrorCorridor GameCanvas Command Consumer Wire Map + Fixture Gate
+HorrorCorridor Command Fixture Source File Manifest + Legacy Adapter Boundary
 ```
 
 Start from:
@@ -22,6 +22,7 @@ Start from:
 .agent/command-authority-audit/2026-07-08T11-09-38-04-00-command-result-source-wire-map.md
 .agent/command-authority-audit/2026-07-08T12-29-17-04-00-consumer-acceptance-map.md
 .agent/command-authority-audit/2026-07-08T13-59-50-04-00-gamecanvas-consumer-wire-map.md
+.agent/command-authority-audit/2026-07-08T15-39-43-04-00-source-file-manifest-and-adapter-boundary.md
 ```
 
 ## Build checklist
@@ -82,26 +83,31 @@ HorrorCorridor-V1/src/components/game/GameCanvas.tsx
 ```txt
 1. commandTypes.ts
    - define CommandEnvelope, CommandSource, CommandStatus, CommandReason, CommandResult, PublishDecision, CommandEvent, CommandSnapshotSummary.
+   - keep these records serializable and DOM-free.
 
 2. commandReasons.ts
    - export stable reason constants and reason family helpers.
+   - do not derive user-facing copy from arbitrary thrown strings.
 
 3. commandResults.ts
    - build accepted, rejected, unchanged, publish-only, skipped, and victory result constructors.
-   - calculate changed from object identity and snapshot summary.
+   - calculate changed from object identity plus snapshot summary.
 
 4. publishDecisions.ts
    - map result.status/result.changed to publish, skip, recovery, no-op, or victory.
+   - output shouldBroadcast, shouldCommitVictory, snapshotReason, and debug label.
 
 5. commandJournal.ts
    - append result records and expose accepted/rejected/unchanged/publishOnly/skipped/victory counts.
 
 6. interactionPreflight.ts
-   - split current silent return state branches into named preflight results.
+   - split current silent return branches into named preflight results.
+   - cover not playing, missing player, carrying conflicts, distance checks, slot checks, and cube lookup.
 
 7. interactionResultRules.ts
    - wrap pickUpCube, dropCube, placeCubeAtEndAnomaly, and removeCubeFromEndAnomaly.
    - keep existing interactionRules.ts behavior stable.
+   - export legacy adapters only as result.state passthrough.
 
 8. networkResultRules.ts
    - wrap applyNetworkPlayerUpdate, syncHeldCubesToPlayers, applyNetworkInteractionRequest, request-sync, toggle-ready, cancel, and default.
