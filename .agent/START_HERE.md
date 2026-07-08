@@ -2,7 +2,7 @@
 
 **Repository:** `LuminaryLabs-Publish/HorrorCorridor`
 
-**Last aligned:** `2026-07-08T09:40:52-04:00`
+**Last aligned:** `2026-07-08T11:09:38-04:00`
 
 ## Purpose
 
@@ -23,23 +23,23 @@ The player starts from a menu, enters solo/host/client mode, moves through a see
 The full accessible `LuminaryLabs-Publish` repo list was compared against central tracking in `LuminaryLabs-Dev/LuminaryLabs`.
 
 ```txt
-LuminaryLabs-Publish/HorrorCorridor
-LuminaryLabs-Publish/AetherVale
-LuminaryLabs-Publish/TheOpenAbove
-LuminaryLabs-Publish/TheCavalryOfRome
-LuminaryLabs-Publish/PhantomCommand
-LuminaryLabs-Publish/PrehistoricRush
-LuminaryLabs-Publish/ZombieOrchard
-LuminaryLabs-Publish/IntoTheMeadow
-LuminaryLabs-Publish/MyCozyIsland
-LuminaryLabs-Publish/TheUnmappedHouse
+LuminaryLabs-Publish/IntoTheMeadow       tracked; root .agent observed
+LuminaryLabs-Publish/HorrorCorridor      selected fallback follow-up
+LuminaryLabs-Publish/AetherVale          tracked; root .agent observed
+LuminaryLabs-Publish/ZombieOrchard       tracked; root .agent observed
+LuminaryLabs-Publish/TheUnmappedHouse    tracked; root .agent observed
+LuminaryLabs-Publish/MyCozyIsland        tracked; root .agent observed
+LuminaryLabs-Publish/TheOpenAbove        tracked; root .agent observed
+LuminaryLabs-Publish/PhantomCommand      tracked; root .agent observed
+LuminaryLabs-Publish/TheCavalryOfRome    excluded by rule
+LuminaryLabs-Publish/PrehistoricRush     tracked; root .agent observed
 ```
 
-No new untracked eligible repo was found, and eligible non-Cavalry repos already had root `.agent/START_HERE.md` state.
+No checked non-Cavalry repo was fully new, absent from central tracking, undocumented, or missing root `.agent/START_HERE.md` state.
 
 `TheCavalryOfRome` remains excluded by standing rule.
 
-This pass selected `LuminaryLabs-Publish/HorrorCorridor` as the oldest eligible fallback follow-up because it is the oldest accessible non-Cavalry Publish repo and its live runtime still has the highest-value documented-but-unimplemented seam: result-returning command authority with fixture-readable publish decisions.
+This pass selected `LuminaryLabs-Publish/HorrorCorridor` as the oldest eligible fallback by latest observed repo-local alignment time. The remaining high-value seam is not missing docs; it is source-level command authority. Current runtime behavior is playable, but command legality still returns `GameState` without fixture-readable result metadata.
 
 ## Current route
 
@@ -83,18 +83,22 @@ open app
 .agent/validation.md
 .agent/architecture-audit/domain-service-breakdown.md
 .agent/architecture-audit/2026-07-08T09-40-52-04-00-dsk-domain-breakdown.md
+.agent/architecture-audit/2026-07-08T11-09-38-04-00-dsk-domain-breakdown.md
 .agent/render-audit/render-surface-audit.md
 .agent/render-audit/2026-07-08T09-40-52-04-00-render-authority-readback.md
+.agent/render-audit/2026-07-08T11-09-38-04-00-runtime-readback-command-overlay-map.md
 .agent/gameplay-audit/authority-loop-audit.md
 .agent/gameplay-audit/2026-07-08T09-40-52-04-00-command-result-gameplay-loop.md
+.agent/gameplay-audit/2026-07-08T11-09-38-04-00-command-result-gameplay-loop.md
 .agent/command-authority-audit/result-reason-matrix.md
 .agent/command-authority-audit/fixture-gate-implementation-map.md
 .agent/command-authority-audit/command-result-fixture-acceptance-ledger.md
 .agent/command-authority-audit/publish-decision-routing-matrix.md
 .agent/command-authority-audit/2026-07-08T08-29-35-04-00-source-edit-cutover-queue.md
 .agent/command-authority-audit/2026-07-08T09-40-52-04-00-command-result-wire-contract.md
-.agent/trackers/2026-07-08T09-40-52-04-00/project-breakdown.md
-.agent/turn-ledger/2026-07-08T09-40-52-04-00.md
+.agent/command-authority-audit/2026-07-08T11-09-38-04-00-command-result-source-wire-map.md
+.agent/trackers/2026-07-08T11-09-38-04-00/project-breakdown.md
+.agent/turn-ledger/2026-07-08T11-09-38-04-00.md
 .agent/kit-registry.json
 ```
 
@@ -116,11 +120,11 @@ HorrorCorridor-V1/src/features/networking/store/networkStore.ts
 
 Do not let `GameCanvas.tsx`, PeerJS event handlers, DOM input, renderer code, object identity checks, or silent unchanged-state returns own command authority long term.
 
-Move command legality into result-returning domain kits, then let local authority, host authority, runtime debug, renderer, replay fixtures, and future external GameHost diagnostics consume those command results.
+Move command legality into result-returning domain kits, then let local authority, host authority, runtime debug, renderer debug overlay, replay fixtures, and future external GameHost diagnostics consume those command results.
 
 ## Current next safe ledge
 
-Build the **HorrorCorridor Command Result Wire Contract + Fixture Boundary**.
+Build the **HorrorCorridor Command Result Source Wire Map**.
 
 Preserve the existing solo, host, client, renderer, minimap, debug overlay, and PeerJS behavior while adding result-returning wrappers beside the current `GameState`-returning rule functions.
 
