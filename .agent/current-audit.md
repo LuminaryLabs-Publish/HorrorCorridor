@@ -2,13 +2,13 @@
 
 **Repository:** `LuminaryLabs-Publish/HorrorCorridor`
 
-**Audit timestamp:** `2026-07-08T12-29-17-04:00`
+**Audit timestamp:** `2026-07-08T13:59:50-04:00`
 
 ## Summary
 
-`HorrorCorridor` is playable and structurally rich, but command authority is still too implicit for safe host/client parity claims.
+`HorrorCorridor` is playable and structurally rich, but command authority still needs an explicit consumer bridge before any renderer, PeerJS, minimap, post-process, scene dressing, or new content work.
 
-This pass did not change runtime source. It refreshed repo-local `.agent` state and added a consumer acceptance map that narrows the next implementation from broad source-wire planning into the exact local-authority, host-authority, debug-projection, and fixture-consumer seams.
+This pass did not change runtime source. It refreshed repo-local `.agent` state and added a GameCanvas command-consumer wire map that turns the next implementation into a small, fixture-first handoff.
 
 ## Repo selection
 
@@ -16,37 +16,34 @@ The accessible `LuminaryLabs-Publish` repo list was checked during this pass.
 
 ```txt
 LuminaryLabs-Publish/HorrorCorridor      selected fallback follow-up
-LuminaryLabs-Publish/AetherVale          tracked; root .agent represented centrally
-LuminaryLabs-Publish/TheOpenAbove        tracked; root .agent represented centrally
+LuminaryLabs-Publish/IntoTheMeadow       tracked; latest central commit observed this hour
+LuminaryLabs-Publish/AetherVale          tracked; latest central commit observed this hour
+LuminaryLabs-Publish/TheOpenAbove        tracked; latest central commit observed this hour
+LuminaryLabs-Publish/PhantomCommand      tracked; latest central commit observed this hour
+LuminaryLabs-Publish/PrehistoricRush     tracked; latest central commit observed this hour
+LuminaryLabs-Publish/ZombieOrchard       tracked; latest central commit observed this hour
+LuminaryLabs-Publish/MyCozyIsland        tracked; latest central commit observed this hour
+LuminaryLabs-Publish/TheUnmappedHouse    tracked; latest central commit observed this hour
 LuminaryLabs-Publish/TheCavalryOfRome    excluded by rule
-LuminaryLabs-Publish/PhantomCommand      tracked; root .agent represented centrally
-LuminaryLabs-Publish/PrehistoricRush     tracked; root .agent represented centrally
-LuminaryLabs-Publish/ZombieOrchard       tracked; root .agent observed directly this run
-LuminaryLabs-Publish/IntoTheMeadow       tracked; root .agent represented centrally
-LuminaryLabs-Publish/MyCozyIsland        tracked; root .agent represented centrally
-LuminaryLabs-Publish/TheUnmappedHouse    tracked; root .agent represented centrally
 ```
 
 `TheCavalryOfRome` remains excluded by standing rule.
 
-Central ledger state showed tracked entries for the eligible Publish repos. Root `.agent` state was represented in central summary/ledger data, and `ZombieOrchard` plus `HorrorCorridor` were read directly during the selection pass.
-
-Because no new untracked eligible repo was found, this run selected `HorrorCorridor` as an eligible fallback. The implementation seam is not missing documentation anymore; it is missing source-level command result proof and consumer wiring.
+No new untracked eligible repo was found. `HorrorCorridor` was selected as the oldest high-value command-authority fallback in the observed current cycle.
 
 ## Evidence checked
 
 ```txt
-LuminaryLabs-Publish organization repo list through installation 142700432
-LuminaryLabs-Dev/LuminaryLabs:repo-checks/reports/latest-summary.md
+LuminaryLabs-Publish repository search list
+LuminaryLabs-Dev/LuminaryLabs recent central commits
 LuminaryLabs-Dev/LuminaryLabs:repo-ledger/LuminaryLabs-Publish/HorrorCorridor.md
-LuminaryLabs-Dev/LuminaryLabs:repo-ledger/LuminaryLabs-Publish/ZombieOrchard.md
 LuminaryLabs-Publish/HorrorCorridor:.agent/START_HERE.md
 LuminaryLabs-Publish/HorrorCorridor:.agent/current-audit.md
 LuminaryLabs-Publish/HorrorCorridor:.agent/next-steps.md
 LuminaryLabs-Publish/HorrorCorridor:.agent/known-gaps.md
 LuminaryLabs-Publish/HorrorCorridor:.agent/validation.md
 LuminaryLabs-Publish/HorrorCorridor:.agent/kit-registry.json
-LuminaryLabs-Publish/HorrorCorridor:.agent/command-authority-audit/2026-07-08T11-09-38-04-00-command-result-source-wire-map.md
+LuminaryLabs-Publish/HorrorCorridor:HorrorCorridor-V1/package.json
 LuminaryLabs-Publish/HorrorCorridor:HorrorCorridor-V1/src/components/game/GameCanvas.tsx
 LuminaryLabs-Publish/HorrorCorridor:HorrorCorridor-V1/src/features/game-state/domain/networkRules.ts
 LuminaryLabs-Publish/HorrorCorridor:HorrorCorridor-V1/src/features/game-state/domain/interactionRules.ts
@@ -75,22 +72,22 @@ open app
 ## Current authority loop
 
 ```txt
-client PLAYER_UPDATE
--> host applyNetworkPlayerUpdate
--> GameState returned
--> host publishes resync snapshot
+local solo/host interact
+-> GameCanvas derives action string
+-> applyNetworkInteractionRequest returns GameState only
+-> if nextState === currentGameState, GameCanvas returns silently
+-> otherwise syncHeldCubesToPlayers
+-> publishAuthoritativeState("resync")
+-> commitVictory if gameState === "victory"
 
 client TRY_INTERACT
--> host applyNetworkInteractionRequest
--> interaction rule returns GameState only
--> rejected/invalid commands often return unchanged state without reason metadata
--> host syncs carried cubes
--> host publishes resync or recovery snapshot
+-> host applies applyNetworkInteractionRequest
+-> rejected/invalid commands can collapse to unchanged GameState
+-> host still needs decision metadata for publish/skip/recovery/victory
 
-local solo/host interact
--> local applyNetworkInteractionRequest
--> if nextState identity equals currentGameState, return silently
--> otherwise publish resync snapshot
+client PLAYER_UPDATE
+-> host applies applyNetworkPlayerUpdate
+-> missing-player and no-diff paths need explicit result metadata
 ```
 
 ## Target authority loop
@@ -103,7 +100,8 @@ input or peer message
 -> PublishDecision
 -> CommandJournal
 -> LocalAuthorityCommandConsumer or HostAuthorityCommandConsumer
--> RuntimeDebug result projection
+-> RuntimeDebugCommandProjection
+-> publishAuthoritativeState only from explicit decision
 -> DOM-free fixture replay
 -> final snapshot parity comparison
 ```
@@ -168,36 +166,12 @@ request-sync-command-result
 ready-cancel-command-result
 victory-command-result
 command-result-journal
-command-result-fixture-matrix
-command-replay-fixture
+publish-decision-snapshot
 local-authority-command-consumer
 host-authority-command-consumer
 runtime-debug-command-projection
-cube-carry-interaction
-nearest-cube-selection
-carried-cube-state
-end-anomaly-distance-check
-slot-assignment
-pickup-preflight
-drop-preflight
-place-preflight
-remove-preflight
-correction-reversal
-ooze-trail-navigation
-ooze-decay
-ooze-spawn
-ooze-spacing-guard
-ooze-max-cap
-ooze-seeded-rng
-snapshot-build
-snapshot-publish-contract
-snapshot-publish-metadata
-publish-decision-snapshot
-snapshot-publish-fixture
-runtime-debug-event-log
-runtime-debug-frame-log
-runtime-debug-result-projection
-cadence-diagnostics
+command-result-fixture-matrix
+command-replay-fixture
 render-world-snapshot-consumption
 three-renderer
 post-processing
@@ -242,25 +216,25 @@ Rejected commands are not distinguishable from no-op commands.
 
 Victory is a state mutation but still needs explicit command-result and publish-decision status.
 
-Host publishing does not yet use command result metadata.
+Host/local publishing still needs shared consumer metadata before GameCanvas should change.
 
-Runtime debug does not yet expose latest command result, rejection reason, publish decision, journal counts, or fixture parity.
+Runtime debug does not yet expose latest command result, rejection reason, publish decision, consumer action, journal counts, or fixture parity.
 
 ## Follow-up artifacts added
 
 ```txt
-.agent/architecture-audit/2026-07-08T12-29-17-04-00-dsk-domain-breakdown.md
-.agent/render-audit/2026-07-08T12-29-17-04-00-command-debug-readback-map.md
-.agent/gameplay-audit/2026-07-08T12-29-17-04-00-local-host-authority-loop.md
-.agent/command-authority-audit/2026-07-08T12-29-17-04-00-consumer-acceptance-map.md
-.agent/trackers/2026-07-08T12-29-17-04-00/project-breakdown.md
-.agent/turn-ledger/2026-07-08T12-29-17-04-00.md
+.agent/architecture-audit/2026-07-08T13-59-50-04-00-gamecanvas-command-consumer-dsk-breakdown.md
+.agent/render-audit/2026-07-08T13-59-50-04-00-runtime-debug-publish-readback.md
+.agent/gameplay-audit/2026-07-08T13-59-50-04-00-local-host-publish-gate.md
+.agent/command-authority-audit/2026-07-08T13-59-50-04-00-gamecanvas-consumer-wire-map.md
+.agent/trackers/2026-07-08T13-59-50-04-00/project-breakdown.md
+.agent/turn-ledger/2026-07-08T13-59-50-04-00.md
 ```
 
 ## Current next slice
 
 ```txt
-HorrorCorridor Command Result Consumer Acceptance Map + Fixture Gate
+HorrorCorridor GameCanvas Command Consumer Wire Map + Fixture Gate
 ```
 
 This should happen before PeerJS extraction, renderer extraction, minimap extraction, postprocess extraction, scene dressing, object-kit visual expansion, or new level content.
