@@ -2,7 +2,7 @@
 
 **Repository:** `LuminaryLabs-Publish/HorrorCorridor`
 
-**Updated:** `2026-07-08T18-19-43-04-00`
+**Updated:** `2026-07-08T20-30-19-04-00`
 
 ## Authority and command gaps
 
@@ -26,6 +26,18 @@
 - GameCanvas consumer wire map is documented but not implemented.
 - command fixture source file manifest is documented but not implemented.
 - legacy adapter source cut is documented but not implemented.
+- fixture seed-state contract is now documented but not implemented.
+```
+
+## Seed-state fixture gaps
+
+```txt
+- there is no canonical createCommandFixtureSeedState helper.
+- there is no fixture builder for near-cube pickup, carrying conflict, no nearby cube, anomaly-near, anomaly-far, full-slot, wrong-slot, missing-player, request-sync, toggle-ready, cancel, unknown-action, ooze tick, or victory rows.
+- there is no stable fixture seed id / command id normalization contract.
+- there is no before/after snapshot summary helper dedicated to fixture rows.
+- fixture rows cannot yet compare final replicated snapshot facts without browser state.
+- fixture rows cannot yet assert local-consumer and host-consumer decisions independently.
 ```
 
 ## Source wire gaps
@@ -36,6 +48,8 @@
 - commandResults.ts does not exist.
 - publishDecisions.ts does not exist.
 - commandJournal.ts does not exist.
+- commandFixtureSeeds.ts does not exist.
+- commandFixtureRows.ts does not exist.
 - interactionPreflight.ts does not exist.
 - interactionResultRules.ts does not exist.
 - networkResultRules.ts does not exist.
@@ -52,7 +66,7 @@
 - runtime debug frames expose cadence, snapshot, cube, anomaly, input, and scene dressing data, but not command-result data.
 - runtime debug exports do not expose latestCommandResult, latestPublishDecision, latestRejectionReason, latestConsumerAction, commandJournal, or latestFixtureParity.
 - no DOM-free replay fixture proves accepted/rejected/unchanged/publish-only/final-victory snapshot parity.
-- no fixture matrix covers request-sync recovery, ignored toggle-ready/cancel, player update, held-cube sync, ooze tick, and victory completion.
+- no fixture matrix covers request-sync recovery, ignored toggle-ready/cancel, player update, held-cube sync, ooze tick, and victory completion from canonical seed states.
 - fixture ids, expected statuses, expected publish decisions, and non-normalizable fields are documented but not source-backed.
 - the browser overlay cannot yet explain why an interaction was rejected or why a host publish was skipped.
 ```
