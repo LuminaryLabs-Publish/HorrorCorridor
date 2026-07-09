@@ -2,15 +2,15 @@
 
 **Repository:** `LuminaryLabs-Publish/HorrorCorridor`
 
-**Updated:** `2026-07-09T04-19-00-04-00`
+**Updated:** `2026-07-09T04-30-54-04-00`
 
 ## Selection gap handled in this pass
 
 ```txt
 - all checked non-Cavalry Publish repos were already tracked.
 - all checked non-Cavalry Publish repos had sampled root .agent state.
-- HorrorCorridor was the oldest eligible central-ledger fallback at 2026-07-09T01-09-24-04-00.
-- this run adds a fresh timestamped repo-local tracker set and updates central tracking to 2026-07-09T04-19-00-04-00.
+- HorrorCorridor was selected as the oldest sampled central-ledger fallback.
+- this run adds a fresh timestamped repo-local tracker set and updates central tracking to 2026-07-09T04-30-54-04-00.
 ```
 
 ## Authority and command gaps
