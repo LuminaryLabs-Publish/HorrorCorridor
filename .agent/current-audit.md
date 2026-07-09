@@ -2,46 +2,38 @@
 
 **Repository:** `LuminaryLabs-Publish/HorrorCorridor`
 
-**Audit timestamp:** `2026-07-09T16-00-13-04-00`
+**Audit timestamp:** `2026-07-09T18-30-30-04-00`
 
 ## Summary
 
 `HorrorCorridor` is a playable Next/React cooperative first-person maze with solo, host, and join flows, PeerJS transport, Three.js rendering, minimap rendering, runtime debug export, and validation scripts.
 
-The repo-local `.agent` state was newer than the central ledger, so this pass repairs the ledger/readback pointers while preserving the same implementation finding: command authority is still the next durable source cut.
+This pass refreshed repo-local `.agent` docs and central tracking around the next proof cut: command consumer readback, result-first fixtures, and runtime debug command projection.
 
 No runtime source changed in this pass.
 
 ## Repo selection
 
 ```txt
-LuminaryLabs-Publish/HorrorCorridor       selected / tracked / root .agent present / central latest 2026-07-09T12-30-09-04-00 before this update / repo-local latest 2026-07-09T15-56-42-04-00
-LuminaryLabs-Publish/AetherVale           tracked / root .agent present / central latest 2026-07-09T14-16-00-04-00
-LuminaryLabs-Publish/TheOpenAbove         tracked / root .agent present / central latest 2026-07-09T15-09-09-04-00
+LuminaryLabs-Publish/MyCozyIsland         tracked / root .agent present / central latest 2026-07-09T17-48-20-04-00
+LuminaryLabs-Publish/TheUnmappedHouse     tracked / root .agent present / central latest 2026-07-09T16-58-52-04-00
+LuminaryLabs-Publish/ZombieOrchard        tracked / root .agent present / central latest 2026-07-09T16-38-14-04-00
+LuminaryLabs-Publish/PhantomCommand       tracked / root .agent present / central latest 2026-07-09T16-29-23-04-00
+LuminaryLabs-Publish/HorrorCorridor       selected / oldest eligible documented fallback / central latest 2026-07-09T16-00-13-04-00
+LuminaryLabs-Publish/PrehistoricRush      tracked / root .agent present / central latest 2026-07-09T18-11-58-04-00
+LuminaryLabs-Publish/IntoTheMeadow        tracked / root .agent present / central latest 2026-07-09T18-20-18-04-00
 LuminaryLabs-Publish/TheCavalryOfRome     excluded by rule
-LuminaryLabs-Publish/PhantomCommand       tracked / root .agent present / central latest 2026-07-09T13-00-37-04-00
-LuminaryLabs-Publish/PrehistoricRush      tracked / root .agent present / central latest 2026-07-09T15-31-40-04-00
-LuminaryLabs-Publish/ZombieOrchard        tracked / root .agent present / central latest 2026-07-09T13-18-48-04-00
-LuminaryLabs-Publish/IntoTheMeadow        tracked / root .agent present / central latest 2026-07-09T15-39-08-04-00
-LuminaryLabs-Publish/MyCozyIsland         tracked / root .agent present / central latest 2026-07-09T14-39-07-04-00
-LuminaryLabs-Publish/TheUnmappedHouse     tracked / root .agent present / central latest 2026-07-09T13-38-15-04-00
+LuminaryLabs-Publish/TheOpenAbove         tracked / root .agent present / central latest 2026-07-09T17-58-53-04-00
 ```
 
-No new untracked eligible repo was found. `HorrorCorridor` was selected because repo-local `.agent` documentation had advanced beyond the central ledger, and it remained the oldest eligible central-ledger/readback repair target among checked non-Cavalry repositories.
+No new untracked eligible public repo was found. `HorrorCorridor` was selected as the oldest eligible documented fallback among checked public non-Cavalry repositories.
 
 ## Evidence checked
 
 ```txt
-LuminaryLabs-Publish repository installation list
-LuminaryLabs-Dev/LuminaryLabs repo-ledger/LuminaryLabs-Publish/HorrorCorridor.md
-LuminaryLabs-Dev/LuminaryLabs repo-ledger/LuminaryLabs-Publish/AetherVale.md
-LuminaryLabs-Dev/LuminaryLabs repo-ledger/LuminaryLabs-Publish/TheOpenAbove.md
-LuminaryLabs-Dev/LuminaryLabs repo-ledger/LuminaryLabs-Publish/PhantomCommand.md
-LuminaryLabs-Dev/LuminaryLabs repo-ledger/LuminaryLabs-Publish/PrehistoricRush.md
-LuminaryLabs-Dev/LuminaryLabs repo-ledger/LuminaryLabs-Publish/ZombieOrchard.md
-LuminaryLabs-Dev/LuminaryLabs repo-ledger/LuminaryLabs-Publish/IntoTheMeadow.md
-LuminaryLabs-Dev/LuminaryLabs repo-ledger/LuminaryLabs-Publish/MyCozyIsland.md
-LuminaryLabs-Dev/LuminaryLabs repo-ledger/LuminaryLabs-Publish/TheUnmappedHouse.md
+current public LuminaryLabs-Publish repository list
+LuminaryLabs-Dev/LuminaryLabs repo-ledger/LuminaryLabs-Publish/*.md sampled by direct file reads
+sampled root .agent/START_HERE.md state for public non-Cavalry repos
 LuminaryLabs-Publish/HorrorCorridor:.agent/START_HERE.md
 LuminaryLabs-Publish/HorrorCorridor:.agent/current-audit.md
 LuminaryLabs-Publish/HorrorCorridor:.agent/next-steps.md
@@ -52,7 +44,10 @@ HorrorCorridor-V1/package.json
 HorrorCorridor-V1/src/components/game/GameCanvas.tsx
 HorrorCorridor-V1/src/features/game-state/domain/networkRules.ts
 HorrorCorridor-V1/src/features/game-state/domain/interactionRules.ts
+HorrorCorridor-V1/src/features/game-state/domain/oozeRules.ts
+HorrorCorridor-V1/src/features/game-state/domain/winRules.ts
 HorrorCorridor-V1/src/features/debug/store/runtimeDebugStore.ts
+HorrorCorridor-V1/src/features/networking/protocol/syncSnapshot.ts
 ```
 
 ## Current interaction loop
@@ -96,23 +91,6 @@ client PLAYER_UPDATE
 -> missing-player and no-diff paths need explicit result metadata
 ```
 
-## Target authority loop
-
-```txt
-seeded fixture state
--> CommandEnvelope
--> CommandReason catalog
--> interaction/network preflight
--> CommandResult
--> PublishDecision
--> CommandJournal
--> LocalAuthorityCommandConsumer or HostAuthorityCommandConsumer
--> RuntimeDebugCommandProjection
--> publishAuthoritativeState only from explicit decision
--> final replicated snapshot summary
--> DOM-free fixture replay parity
-```
-
 ## Domains in use
 
 ```txt
@@ -148,6 +126,15 @@ local-authoritative-simulation
 legacy-game-state-interaction-rules
 legacy-game-state-network-rules
 ooze-cadence
+ooze-decay-and-spawn
+runtime-debug-frame-store
+runtime-debug-event-store
+render-world-snapshot-consumption
+three-renderer
+post-processing
+maze-world-rendering
+minimap-rendering
+scene-dressing-descriptors
 command-envelope-contract
 command-reason-catalog
 command-result-contract
@@ -159,78 +146,15 @@ host-authority-command-consumer
 runtime-debug-command-projection
 command-result-fixture-matrix
 command-replay-fixture
-render-world-snapshot-consumption
-three-renderer
-post-processing
-maze-world-rendering
-minimap-rendering
-scene-dressing-descriptors
-static-smoke-validation
-live-player-validation
-replay-parity-validation
 central-ledger-synchronization
 ```
 
-## Services in use
+## Main finding
 
-```txt
-app/session service: mode, room, readiness, pause, completion
-peer sync service: host/client transport, full sync, player update, try interact
-maze bootstrap service: seed, maze generation, cell lookup, path build, cube spawn, sequence slots
-first-person player service: keyboard input, pointer lock, look delta, movement, collision, camera sync, local carry sync
-legacy GameState interaction service: pickup, drop, place, remove, ordered completion
-legacy GameState network service: player update, held-cube sync, interaction dispatch, request-sync no-op
-command fixture seed service: planned canonical GameState seeds and expected row facts
-command result envelope service: planned command id, source, status, reason, changed flag, events, diagnostics, legacy adapters
-publish decision service: planned publish, skip, recovery, no-op, victory, snapshot reason, broadcast flag
-local authority result consumer service: planned local result journal and publish/skip behavior
-host authority result consumer service: planned host result journal, request-sync recovery, rejected TRY_INTERACT skip, and accepted/victory publish behavior
-diagnostics and replay service: runtime events, runtime frames, cadence, planned command readback, fixture parity
-render service: renderer, scene, camera, post-processing, maze world, minimap, scene dressing summary, disposal
-central ledger sync service: repo-local tracker, root .agent pointer, central repo-ledger, internal change log
-```
-
-## Kits identified
-
-```txt
-corridor-session-domain-kit
-peer-room-sync-domain-kit
-maze-snapshot-bootstrap-kit
-first-person-corridor-player-kit
-corridor-interaction-domain-kit
-ordered-anomaly-sequence-kit
-ooze-trail-domain-kit
-corridor-render-world-kit
-corridor-minimap-kit
-runtime-debug-frame-kit
-mesh-object-kit-catalog
-procedural-texture-kit-family
-command-envelope-contract-kit
-command-reason-catalog-kit
-command-result-envelope-kit
-command-decision-contract-kit
-publish-decision-snapshot-kit
-command-result-journal-kit
-command-seed-state-fixture-kit
-interaction-preflight-kit
-interaction-result-rules-kit
-network-result-rules-kit
-local-authority-result-consumer-kit
-host-authority-result-consumer-kit
-runtime-debug-command-projection-kit
-command-result-fixture-matrix-kit
-command-replay-fixture-kit
-central-ledger-sync-kit
-```
-
-## Current risk
-
-The runtime can play, render, sync, and complete, but command authority is still not fixture-safe.
-
-Rejected, skipped, publish-only, unchanged, recovery, and victory commands are not first-class result records yet.
+The runtime can play, render, sync, and complete, but command authority is still not fixture-safe. Rejected, skipped, publish-only, unchanged, recovery, ooze, and victory commands are not first-class result records yet.
 
 ## Next safe ledge
 
 ```txt
-HorrorCorridor Command Result Ledger Readback Repair + Result-First Fixture Gate
+HorrorCorridor Command Consumer Readback Ledger Refresh + Result-First Fixture Gate
 ```
