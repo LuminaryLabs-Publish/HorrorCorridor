@@ -2,7 +2,7 @@
 
 **Repository:** `LuminaryLabs-Publish/HorrorCorridor`
 
-**Updated:** `2026-07-08T22-51-43-04-00`
+**Updated:** `2026-07-09T01-00-22-04-00`
 
 ## Authority and command gaps
 
@@ -29,7 +29,8 @@
 - legacy adapter source cut is documented but not implemented.
 - fixture seed-state contract is documented but not implemented.
 - command decision fixture contract is documented but not implemented.
-- command consumer source cut is now documented but not implemented.
+- command consumer source cut is documented but not implemented.
+- result-first GameCanvas splice contract is now documented but not implemented.
 ```
 
 ## Seed-state fixture gaps
@@ -58,6 +59,7 @@
 - networkResultRules.ts does not exist.
 - localAuthorityCommandConsumer.ts does not exist.
 - hostAuthorityCommandConsumer.ts does not exist.
+- runtimeDebugCommandProjection.ts does not exist.
 - scripts/horror-corridor-command-fixture.mjs does not exist.
 - package.json does not yet include a command fixture script.
 - GameCanvas.tsx still consumes GameState-returning rules directly.
@@ -68,6 +70,7 @@
 ```txt
 - runtime debug frames expose cadence, snapshot, cube, anomaly, input, and scene dressing data, but not command-result data.
 - runtime debug exports do not expose latestCommandResult, latestPublishDecision, latestRejectionReason, latestConsumerAction, commandJournal, or latestFixtureParity.
+- no RuntimeDebugCommandProjection helper exists.
 - no DOM-free replay fixture proves accepted/rejected/unchanged/publish-only/final-victory snapshot parity.
 - no fixture matrix covers request-sync recovery, ignored toggle-ready/cancel, player update, held-cube sync, ooze tick, and victory completion from canonical seed states.
 - fixture ids, expected statuses, expected publish decisions, and non-normalizable fields are documented but not source-backed.
@@ -87,6 +90,16 @@
 - victory needs explicit victory publish decision metadata.
 - local and host authority should consume the same decision helper instead of duplicating publish behavior.
 - publishAuthoritativeState currently accepts only a reason, not a command-result-derived decision object.
+```
+
+## GameCanvas splice gaps
+
+```txt
+- GameCanvas derives action strings from distance/carry state instead of consuming a normalized CommandEnvelope.
+- GameCanvas local interaction path returns silently when nextState === currentGameState.
+- GameCanvas host TRY_INTERACT path publishes after applyNetworkInteractionRequest without knowing whether the result was accepted, rejected, skipped, unchanged, or publish-only.
+- commitVictory is tied to post-mutation gameState checks instead of an explicit consumer decision.
+- sendInteractionRequest sends only action/player information and does not preserve command id/source metadata.
 ```
 
 ## Domain extraction gaps
