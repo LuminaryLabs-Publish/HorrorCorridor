@@ -2,12 +2,12 @@
 
 **Repository:** `LuminaryLabs-Publish/HorrorCorridor`
 
-**Updated:** `2026-07-09T01-00-22-04-00`
+**Updated:** `2026-07-09T01-09-24-04-00`
 
 ## Current next build slice
 
 ```txt
-HorrorCorridor Result-First GameCanvas Command Splice + Runtime Debug Projection Fixture Gate
+HorrorCorridor Central Ledger Sync + Result-First Command Consumer Fixture Freeze
 ```
 
 Start from:
@@ -17,12 +17,12 @@ Start from:
 .agent/command-authority-audit/result-reason-matrix.md
 .agent/command-authority-audit/command-result-fixture-acceptance-ledger.md
 .agent/command-authority-audit/publish-decision-routing-matrix.md
-.agent/command-authority-audit/2026-07-09T01-00-22-04-00-result-first-gamecanvas-splice-contract.md
-.agent/interaction-audit/2026-07-09T01-00-22-04-00-interaction-preflight-reason-matrix.md
-.agent/architecture-audit/2026-07-09T01-00-22-04-00-command-result-gamecanvas-splice-dsk-map.md
-.agent/gameplay-audit/2026-07-09T01-00-22-04-00-publish-decision-consumer-loop.md
-.agent/render-audit/2026-07-09T01-00-22-04-00-runtime-debug-command-projection-readback.md
-.agent/deploy-audit/2026-07-09T01-00-22-04-00-command-fixture-package-script-gate.md
+.agent/command-authority-audit/2026-07-09T01-09-24-04-00-central-sync-consumer-freeze.md
+.agent/interaction-audit/2026-07-09T01-09-24-04-00-preflight-row-freeze.md
+.agent/architecture-audit/2026-07-09T01-09-24-04-00-central-ledger-command-fixture-freeze-dsk-map.md
+.agent/gameplay-audit/2026-07-09T01-09-24-04-00-result-first-command-consumer-freeze.md
+.agent/render-audit/2026-07-09T01-09-24-04-00-runtime-debug-command-channel-fixture-map.md
+.agent/deploy-audit/2026-07-09T01-09-24-04-00-fixture-command-central-sync.md
 ```
 
 ## Build checklist
@@ -59,6 +59,7 @@ Start from:
 [ ] Wire host-authority consumer to skip rejected TRY_INTERACT publishes and publish request-sync recovery.
 [ ] Replace GameCanvas object-identity publish checks only after fixture proof.
 [ ] Normalize only volatile fields in fixture comparison.
+[ ] Keep central LuminaryLabs repo-ledger in sync after implementation lands.
 [ ] Defer PeerJS extraction, renderer extraction, minimap extraction, postprocess extraction, scene dressing, and object-kit visual expansion.
 ```
 
@@ -104,6 +105,7 @@ HorrorCorridor-V1/src/components/game/GameCanvas.tsx
 15. runtimeDebugCommandProjection.ts
 16. runtimeDebugStore.ts additive command projection fields
 17. GameCanvas.tsx result-first consumer integration
+18. LuminaryLabs-Dev/LuminaryLabs central ledger implementation log
 ```
 
 ## Required command reason families
