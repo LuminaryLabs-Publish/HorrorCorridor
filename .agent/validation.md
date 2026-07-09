@@ -2,7 +2,7 @@
 
 **Repository:** `LuminaryLabs-Publish/HorrorCorridor`
 
-**Updated:** `2026-07-09T04-19-00-04-00`
+**Updated:** `2026-07-09T04-30-54-04-00`
 
 ## Available validation commands
 
@@ -181,7 +181,6 @@ final snapshot facts
 [done] GitHub connector read of GameCanvas runtime/publish/render loop.
 [done] GitHub connector read of networkRules authority seam.
 [done] GitHub connector read of interactionRules silent no-op branches.
-[done] GitHub connector read of runtimeDebugStore export shape.
 [done] Documentation-only .agent audit files written to main.
 [done] Central LuminaryLabs ledger and change log written to main.
 ```
