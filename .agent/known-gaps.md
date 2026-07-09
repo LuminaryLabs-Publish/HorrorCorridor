@@ -2,7 +2,7 @@
 
 **Repository:** `LuminaryLabs-Publish/HorrorCorridor`
 
-**Updated:** `2026-07-09T09-59-27-04-00`
+**Updated:** `2026-07-09T10-10-32-04-00`
 
 ## Selection gap handled in this pass
 
@@ -11,8 +11,8 @@
 - TheCavalryOfRome was excluded.
 - all checked non-Cavalry repos were tracked in the central repo ledger.
 - all checked non-Cavalry repos had sampled root .agent state.
-- HorrorCorridor was selected as the oldest eligible documented fallback.
-- this run adds a fresh timestamped repo-local tracker set and updates central tracking to 2026-07-09T09-59-27-04-00.
+- HorrorCorridor was selected as the oldest eligible documented fallback and central catch-up target.
+- this run adds a fresh timestamped repo-local tracker set and updates central tracking to 2026-07-09T10-10-32-04-00.
 ```
 
 ## Authority and command gaps
@@ -107,6 +107,7 @@
 - GameCanvas derives action strings from distance/carry state instead of consuming a normalized CommandEnvelope.
 - GameCanvas local interaction path returns silently when nextState === currentGameState.
 - GameCanvas host TRY_INTERACT path publishes after applyNetworkInteractionRequest without knowing whether the result was accepted, rejected, skipped, unchanged, or publish-only.
+- GameCanvas host PLAYER_UPDATE publishes after applyNetworkPlayerUpdate without knowing if it changed state.
 - commitVictory is tied to post-mutation gameState checks instead of an explicit consumer decision.
 - sendInteractionRequest sends only action/player information and does not preserve command id/source metadata.
 ```
