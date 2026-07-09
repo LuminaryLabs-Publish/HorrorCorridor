@@ -1,16 +1,16 @@
 {
-  "schemaVersion": 28,
+  "schemaVersion": 29,
   "repository": "LuminaryLabs-Publish/HorrorCorridor",
-  "generatedAt": "2026-07-09T07-05-52-04-00",
-  "status": "command-result-ledger-central-sync-runtime-debug-consumer-fixture-gate",
-  "latestTracker": ".agent/trackers/2026-07-09T07-05-52-04-00/project-breakdown.md",
-  "latestTurnLedger": ".agent/turn-ledger/2026-07-09T07-05-52-04-00.md",
-  "latestArchitectureAudit": ".agent/architecture-audit/2026-07-09T07-05-52-04-00-command-ledger-central-sync-dsk-map.md",
-  "latestRenderAudit": ".agent/render-audit/2026-07-09T07-05-52-04-00-debug-command-consumer-readback.md",
-  "latestGameplayAudit": ".agent/gameplay-audit/2026-07-09T07-05-52-04-00-local-host-command-ledger-loop.md",
-  "latestCommandAuthorityAudit": ".agent/command-authority-audit/2026-07-09T07-05-52-04-00-command-result-fixture-contract.md",
-  "latestInteractionAudit": ".agent/interaction-audit/2026-07-09T07-05-52-04-00-silent-noop-reason-freeze.md",
-  "latestDeployAudit": ".agent/deploy-audit/2026-07-09T07-05-52-04-00-fixture-script-validation-gate.md",
+  "generatedAt": "2026-07-09T09-59-27-04-00",
+  "status": "result-first-authority-consumer-handoff-command-fixture-gate",
+  "latestTracker": ".agent/trackers/2026-07-09T09-59-27-04-00/project-breakdown.md",
+  "latestTurnLedger": ".agent/turn-ledger/2026-07-09T09-59-27-04-00.md",
+  "latestArchitectureAudit": ".agent/architecture-audit/2026-07-09T09-59-27-04-00-result-first-authority-consumer-dsk-map.md",
+  "latestRenderAudit": ".agent/render-audit/2026-07-09T09-59-27-04-00-debug-command-projection-readback.md",
+  "latestGameplayAudit": ".agent/gameplay-audit/2026-07-09T09-59-27-04-00-command-result-replay-loop.md",
+  "latestCommandAuthorityAudit": ".agent/command-authority-audit/2026-07-09T09-59-27-04-00-consumer-handoff-fixture-contract.md",
+  "latestInteractionAudit": ".agent/interaction-audit/2026-07-09T09-59-27-04-00-preflight-reason-row-map.md",
+  "latestDeployAudit": ".agent/deploy-audit/2026-07-09T09-59-27-04-00-command-fixture-validation-gate.md",
   "sourceRoots": [
     "HorrorCorridor-V1/src/components/game",
     "HorrorCorridor-V1/src/features",
@@ -27,21 +27,21 @@
   "selection": {
     "selectedRepo": "LuminaryLabs-Publish/HorrorCorridor",
     "excludedRepo": "LuminaryLabs-Publish/TheCavalryOfRome",
-    "reason": "No checked non-Cavalry repo was fully new, central-ledger absent, undocumented, recently added but undocumented, or missing sampled root .agent/START_HERE.md state. HorrorCorridor was selected as a central-ledger catch-up target for repo-local command-result fixture docs.",
+    "reason": "No checked non-Cavalry repo was fully new, central-ledger absent, undocumented, recently added but undocumented, or missing sampled root .agent/START_HERE.md state. HorrorCorridor was selected as the oldest eligible documented fallback.",
     "publishReposChecked": [
-      "LuminaryLabs-Publish/IntoTheMeadow",
       "LuminaryLabs-Publish/HorrorCorridor",
       "LuminaryLabs-Publish/AetherVale",
-      "LuminaryLabs-Publish/ZombieOrchard",
-      "LuminaryLabs-Publish/TheUnmappedHouse",
-      "LuminaryLabs-Publish/MyCozyIsland",
       "LuminaryLabs-Publish/TheOpenAbove",
-      "LuminaryLabs-Publish/PhantomCommand",
       "LuminaryLabs-Publish/TheCavalryOfRome",
-      "LuminaryLabs-Publish/PrehistoricRush"
+      "LuminaryLabs-Publish/PhantomCommand",
+      "LuminaryLabs-Publish/PrehistoricRush",
+      "LuminaryLabs-Publish/ZombieOrchard",
+      "LuminaryLabs-Publish/IntoTheMeadow",
+      "LuminaryLabs-Publish/MyCozyIsland",
+      "LuminaryLabs-Publish/TheUnmappedHouse"
     ]
   },
-  "currentNextSlice": "HorrorCorridor Command Result Ledger Central Sync + Runtime Debug Consumer Fixture Gate",
+  "currentNextSlice": "HorrorCorridor Result-First Authority Consumer Handoff + Command Fixture Gate",
   "interactionLoop": {
     "current": [
       "start-menu",
