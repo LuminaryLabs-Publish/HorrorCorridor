@@ -2,12 +2,12 @@
 
 **Repository:** `LuminaryLabs-Publish/HorrorCorridor`
 
-**Updated:** `2026-07-08T20-38-28-04-00`
+**Updated:** `2026-07-08T22-51-43-04-00`
 
 ## Current next build slice
 
 ```txt
-HorrorCorridor Command Decision Fixture Contract + Local/Host Consumer Replay Gate
+HorrorCorridor Command Consumer Source Cut + Runtime Debug Readback Fixture Gate
 ```
 
 Start from:
@@ -17,9 +17,11 @@ Start from:
 .agent/command-authority-audit/result-reason-matrix.md
 .agent/command-authority-audit/command-result-fixture-acceptance-ledger.md
 .agent/command-authority-audit/publish-decision-routing-matrix.md
-.agent/command-authority-audit/2026-07-08T20-38-28-04-00-command-decision-fixture-contract.md
-.agent/architecture-audit/2026-07-08T20-38-28-04-00-command-decision-dsk-map.md
-.agent/gameplay-audit/2026-07-08T20-38-28-04-00-local-host-command-decision-loop.md
+.agent/command-authority-audit/2026-07-08T22-51-43-04-00-source-cut-fixture-contract.md
+.agent/architecture-audit/2026-07-08T22-51-43-04-00-command-consumer-source-cut-dsk-map.md
+.agent/gameplay-audit/2026-07-08T22-51-43-04-00-local-host-command-consumer-loop.md
+.agent/render-audit/2026-07-08T22-51-43-04-00-runtime-debug-command-readback-map.md
+.agent/deploy-audit/2026-07-08T22-51-43-04-00-command-fixture-validation-gate.md
 ```
 
 ## Build checklist
