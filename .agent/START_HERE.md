@@ -2,7 +2,7 @@
 
 **Repository:** `LuminaryLabs-Publish/HorrorCorridor`
 
-**Last aligned:** `2026-07-09T04-30-54-04-00`
+**Last aligned:** `2026-07-09T06-40-50-04-00`
 
 ## Purpose
 
@@ -18,12 +18,12 @@ No checked non-Cavalry repo was fully new, absent from the central ledger, undoc
 
 `LuminaryLabs-Publish/TheCavalryOfRome` remains excluded by standing rule.
 
-`HorrorCorridor` was selected as the oldest sampled central-ledger fallback and command authority source-cut catch-up target.
+`HorrorCorridor` was selected as the oldest eligible central-ledger fallback and command authority replay-matrix catch-up target.
 
 ## Publish repos checked
 
 ```txt
-LuminaryLabs-Publish/HorrorCorridor       selected / tracked / root .agent present / central ledger oldest sampled fallback
+LuminaryLabs-Publish/HorrorCorridor       selected / tracked / root .agent present / oldest eligible central-ledger fallback
 LuminaryLabs-Publish/AetherVale           tracked / root .agent present
 LuminaryLabs-Publish/TheOpenAbove         tracked / root .agent present
 LuminaryLabs-Publish/TheCavalryOfRome     excluded by rule
@@ -67,18 +67,17 @@ open app
 ## Target authority loop
 
 ```txt
-CommandEnvelope
+CommandFixtureSeed
+  -> CommandEnvelope
   -> CommandReasonCatalog
   -> InteractionPreflightResult or NetworkCommandPreflightResult
   -> CommandResult
   -> PublishDecision
   -> CommandJournal
   -> LocalAuthorityResultConsumer or HostAuthorityResultConsumer
-  -> optional snapshot publish
-  -> optional victory commit
   -> RuntimeDebugCommandProjection
-  -> GameCanvas consumer splice
-  -> DOM-free command replay fixture
+  -> ReplayMatrixRow
+  -> GameCanvas consumer splice after proof
 ```
 
 ## First files to read next
@@ -88,14 +87,14 @@ CommandEnvelope
 .agent/known-gaps.md
 .agent/next-steps.md
 .agent/validation.md
-.agent/architecture-audit/2026-07-09T04-30-54-04-00-command-result-consumer-readback-dsk-map.md
-.agent/render-audit/2026-07-09T04-30-54-04-00-runtime-debug-command-consumer-readback.md
-.agent/gameplay-audit/2026-07-09T04-30-54-04-00-local-host-result-replay-loop.md
-.agent/command-authority-audit/2026-07-09T04-30-54-04-00-source-contract-consumer-freeze.md
-.agent/interaction-audit/2026-07-09T04-30-54-04-00-preflight-command-reason-freeze.md
-.agent/deploy-audit/2026-07-09T04-30-54-04-00-command-fixture-package-gate.md
-.agent/trackers/2026-07-09T04-30-54-04-00/project-breakdown.md
-.agent/turn-ledger/2026-07-09T04-30-54-04-00.md
+.agent/architecture-audit/2026-07-09T06-40-50-04-00-command-authority-replay-matrix-dsk-map.md
+.agent/render-audit/2026-07-09T06-40-50-04-00-runtime-debug-command-projection-readback.md
+.agent/gameplay-audit/2026-07-09T06-40-50-04-00-local-host-authority-replay-loop.md
+.agent/command-authority-audit/2026-07-09T06-40-50-04-00-command-authority-replay-matrix-contract.md
+.agent/interaction-audit/2026-07-09T06-40-50-04-00-preflight-result-reason-coverage.md
+.agent/deploy-audit/2026-07-09T06-40-50-04-00-command-fixture-script-gate.md
+.agent/trackers/2026-07-09T06-40-50-04-00/project-breakdown.md
+.agent/turn-ledger/2026-07-09T06-40-50-04-00.md
 .agent/kit-registry.json
 ```
 
@@ -134,7 +133,7 @@ HorrorCorridor-V1/scripts/horror-corridor-command-fixture.mjs
 ## Current next safe ledge
 
 ```txt
-HorrorCorridor Command Result Consumer Readback + Seeded Replay Fixture Gate
+HorrorCorridor Command Authority Replay Matrix + Runtime Debug Projection Fixture Gate
 ```
 
 Build this before touching renderer extraction, PeerJS extraction, minimap extraction, post-processing extraction, scene dressing, new maze content, or visual object-kit expansion.
