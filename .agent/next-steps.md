@@ -2,23 +2,23 @@
 
 **Repository:** `LuminaryLabs-Publish/HorrorCorridor`
 
-**Updated:** `2026-07-09T12-20-08-04-00`
+**Updated:** `2026-07-09T12-25-39-04-00`
 
 ## Current next build slice
 
 ```txt
-HorrorCorridor Result-First Command Readback Ledger Refresh + Fixture Gate
+HorrorCorridor Command Ledger Central Catch-up + Result-First Consumer Fixture Gate
 ```
 
 Start from:
 
 ```txt
-.agent/architecture-audit/2026-07-09T12-20-08-04-00-result-first-command-readback-ledger-dsk-map.md
-.agent/render-audit/2026-07-09T12-20-08-04-00-debug-command-readback-ledger.md
-.agent/gameplay-audit/2026-07-09T12-20-08-04-00-command-result-consumer-loop.md
-.agent/command-authority-audit/2026-07-09T12-20-08-04-00-command-result-fixture-gate-refresh.md
-.agent/interaction-audit/2026-07-09T12-20-08-04-00-rejection-reason-coverage-map.md
-.agent/deploy-audit/2026-07-09T12-20-08-04-00-command-fixture-check-wire-map.md
+.agent/architecture-audit/2026-07-09T12-25-39-04-00-command-ledger-central-catchup-dsk-map.md
+.agent/render-audit/2026-07-09T12-25-39-04-00-debug-command-projection-readback.md
+.agent/gameplay-audit/2026-07-09T12-25-39-04-00-command-result-replay-loop.md
+.agent/command-authority-audit/2026-07-09T12-25-39-04-00-result-first-consumer-fixture-contract.md
+.agent/interaction-audit/2026-07-09T12-25-39-04-00-rejection-reason-preflight-map.md
+.agent/deploy-audit/2026-07-09T12-25-39-04-00-command-fixture-validation-gate.md
 ```
 
 ## Build checklist
