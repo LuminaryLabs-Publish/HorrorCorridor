@@ -2,7 +2,7 @@
 
 **Repository:** `LuminaryLabs-Publish/HorrorCorridor`
 
-**Last aligned:** `2026-07-08T22-51-43-04-00`
+**Last aligned:** `2026-07-09T01-00-22-04-00`
 
 ## Purpose
 
@@ -18,21 +18,21 @@ No checked non-Cavalry repo was fully new, absent from the central ledger, undoc
 
 `LuminaryLabs-Publish/TheCavalryOfRome` remains excluded by standing rule.
 
-`HorrorCorridor` was selected as the oldest eligible tracked fallback by central ledger timestamp. Its prior central alignment was `2026-07-08T20-38-28-04-00`, older than the other checked non-excluded Publish repos.
+`HorrorCorridor` was selected as the oldest eligible tracked fallback. Its prior central alignment was `2026-07-08T22-51-43-04-00`, older than the other checked non-excluded Publish repos after the 00:00-00:50 catch-up runs.
 
 ## Publish repos checked
 
 ```txt
-LuminaryLabs-Publish/IntoTheMeadow       tracked / root .agent present / latest central 2026-07-08T22-38-17-04-00
-LuminaryLabs-Publish/HorrorCorridor      selected / oldest eligible central alignment 2026-07-08T20-38-28-04-00
-LuminaryLabs-Publish/AetherVale          tracked / root .agent present / latest central 2026-07-08T21-31-35-04-00
-LuminaryLabs-Publish/ZombieOrchard       tracked / root .agent present / latest central 2026-07-08T21-18-39-04-00
-LuminaryLabs-Publish/TheUnmappedHouse    tracked / root .agent present / latest central 2026-07-08T21-00-12-04-00
-LuminaryLabs-Publish/MyCozyIsland        tracked / root .agent present / latest central 2026-07-08T21-58-34-04-00
-LuminaryLabs-Publish/TheOpenAbove        tracked / root .agent present / latest central 2026-07-08T22-19-38-04-00
-LuminaryLabs-Publish/PhantomCommand      tracked / root .agent present / latest central 2026-07-08T20-52-00-04-00
+LuminaryLabs-Publish/IntoTheMeadow       tracked / root .agent present / latest central 2026-07-09T00-50-00-04-00
+LuminaryLabs-Publish/HorrorCorridor      selected / oldest eligible central alignment 2026-07-08T22-51-43-04-00
+LuminaryLabs-Publish/AetherVale          tracked / root .agent present / latest central 2026-07-09T00-00-41-04-00
+LuminaryLabs-Publish/ZombieOrchard       tracked / root .agent present / latest central 2026-07-08T23-40-55-04-00
+LuminaryLabs-Publish/TheUnmappedHouse    tracked / root .agent present / latest central 2026-07-08T23-19-33-04-00
+LuminaryLabs-Publish/MyCozyIsland        tracked / root .agent present / latest central 2026-07-09T00-20-08-04-00
+LuminaryLabs-Publish/TheOpenAbove        tracked / root .agent present / latest central 2026-07-09T00-40-20-04-00
+LuminaryLabs-Publish/PhantomCommand      tracked / root .agent present / latest central 2026-07-08T22-58-02-04-00
 LuminaryLabs-Publish/TheCavalryOfRome    excluded by rule
-LuminaryLabs-Publish/PrehistoricRush     tracked / root .agent present / latest central 2026-07-08T21-50-56-04-00
+LuminaryLabs-Publish/PrehistoricRush     tracked / root .agent present / latest central 2026-07-09T00-09-22-04-00
 ```
 
 ## Current product read
@@ -50,16 +50,16 @@ open app
   -> create or join room identity
   -> complete loading/readiness gates
   -> mount GameCanvas runtime
-  -> build renderer, camera, post-processing, maze world, minimap, pose refs, input refs, and debug state
+  -> build renderer, camera, post-processing, maze world, minimap, pose refs, input refs, cadence state, and debug state
   -> enter pointer-lock first-person navigation
   -> derive action from carried cube plus distance to anomaly
-  -> local solo/host applies applyNetworkInteractionRequest
-  -> client sends TRY_INTERACT
-  -> host applies player updates and interaction requests
-  -> silent unchanged GameState can hide rejected/no-op/skipped/recovery cases
+  -> local solo/host calls applyNetworkInteractionRequest and uses object identity to decide publish/no-op
+  -> client sends TRY_INTERACT to host
+  -> host applies PLAYER_UPDATE or TRY_INTERACT with GameState-returning network rules
+  -> request-sync/toggle-ready/cancel/default paths collapse to unchanged GameState
   -> sync held cubes to players
   -> advance ooze on authoritative cadence
-  -> publish authoritative snapshot according to implicit gates
+  -> publish authoritative snapshot by implicit reason strings
   -> update Three world, minimap, HUD, completion routing, and runtime debug frames
 ```
 
@@ -67,7 +67,7 @@ open app
 
 ```txt
 CommandEnvelope
-  -> interaction/network preflight
+  -> InteractionPreflightResult or NetworkCommandPreflightResult
   -> CommandResult
   -> PublishDecision
   -> CommandJournal
@@ -75,6 +75,7 @@ CommandEnvelope
   -> optional snapshot publish
   -> optional victory commit
   -> RuntimeDebugCommandProjection
+  -> GameCanvas consumer splice
   -> DOM-free command replay fixture
 ```
 
@@ -85,13 +86,14 @@ CommandEnvelope
 .agent/known-gaps.md
 .agent/next-steps.md
 .agent/validation.md
-.agent/architecture-audit/2026-07-08T22-51-43-04-00-command-consumer-source-cut-dsk-map.md
-.agent/render-audit/2026-07-08T22-51-43-04-00-runtime-debug-command-readback-map.md
-.agent/gameplay-audit/2026-07-08T22-51-43-04-00-local-host-command-consumer-loop.md
-.agent/command-authority-audit/2026-07-08T22-51-43-04-00-source-cut-fixture-contract.md
-.agent/deploy-audit/2026-07-08T22-51-43-04-00-command-fixture-validation-gate.md
-.agent/trackers/2026-07-08T22-51-43-04-00/project-breakdown.md
-.agent/turn-ledger/2026-07-08T22-51-43-04-00.md
+.agent/architecture-audit/2026-07-09T01-00-22-04-00-command-result-gamecanvas-splice-dsk-map.md
+.agent/render-audit/2026-07-09T01-00-22-04-00-runtime-debug-command-projection-readback.md
+.agent/gameplay-audit/2026-07-09T01-00-22-04-00-publish-decision-consumer-loop.md
+.agent/command-authority-audit/2026-07-09T01-00-22-04-00-result-first-gamecanvas-splice-contract.md
+.agent/interaction-audit/2026-07-09T01-00-22-04-00-interaction-preflight-reason-matrix.md
+.agent/deploy-audit/2026-07-09T01-00-22-04-00-command-fixture-package-script-gate.md
+.agent/trackers/2026-07-09T01-00-22-04-00/project-breakdown.md
+.agent/turn-ledger/2026-07-09T01-00-22-04-00.md
 .agent/kit-registry.json
 ```
 
@@ -123,13 +125,14 @@ HorrorCorridor-V1/src/features/game-state/domain/interactionResultRules.ts
 HorrorCorridor-V1/src/features/game-state/domain/networkResultRules.ts
 HorrorCorridor-V1/src/features/game-state/domain/localAuthorityCommandConsumer.ts
 HorrorCorridor-V1/src/features/game-state/domain/hostAuthorityCommandConsumer.ts
+HorrorCorridor-V1/src/features/debug/domain/runtimeDebugCommandProjection.ts
 HorrorCorridor-V1/scripts/horror-corridor-command-fixture.mjs
 ```
 
 ## Current next safe ledge
 
 ```txt
-HorrorCorridor Command Consumer Source Cut + Runtime Debug Readback Fixture Gate
+HorrorCorridor Result-First GameCanvas Command Splice + Runtime Debug Projection Fixture Gate
 ```
 
 Build this before touching renderer extraction, PeerJS extraction, minimap extraction, post-processing extraction, scene dressing, new maze content, or visual object-kit expansion.
