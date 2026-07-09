@@ -2,40 +2,40 @@
 
 **Repository:** `LuminaryLabs-Publish/HorrorCorridor`
 
-**Audit timestamp:** `2026-07-08T20-30-19-04-00`
+**Audit timestamp:** `2026-07-08T20-38-28-04-00`
 
 ## Summary
 
-`HorrorCorridor` is playable, visually present, and already has a rich source scaffold, but command authority is still the safest next proof boundary.
+`HorrorCorridor` is playable, visually present, and source-rich, but command authority is still the safest next proof boundary.
 
-This pass did not change runtime source. It refreshed repo-local `.agent` state and narrowed the next implementation to a seed-state fixture contract that proves command envelopes, result metadata, publish decisions, local/host consumers, runtime debug projection, and final snapshot parity before `GameCanvas.tsx` is rewired.
+This pass did not change runtime source. It refreshed repo-local `.agent` state and narrowed the next implementation to a command decision fixture that proves explicit status, reason, changed flag, publish decision, local/host consumer behavior, runtime debug projection, and final snapshot parity before `GameCanvas.tsx` publish behavior is rewired.
 
 ## Repo selection
 
 The accessible `LuminaryLabs-Publish` repo list was checked during this pass.
 
 ```txt
-LuminaryLabs-Publish/HorrorCorridor      selected / oldest sampled eligible fallback / command fixture seed-state contract unresolved
-LuminaryLabs-Publish/AetherVale          tracked / root .agent present / recently refreshed
+LuminaryLabs-Publish/IntoTheMeadow       tracked / root .agent present / latest central 2026-07-08T20-21-59-04-00
+LuminaryLabs-Publish/HorrorCorridor      selected / command decision fixture unresolved / central catch-up needed
+LuminaryLabs-Publish/AetherVale          tracked / root .agent present / latest central 2026-07-08T18-58-10-04-00
+LuminaryLabs-Publish/ZombieOrchard       tracked / root .agent present / latest central 2026-07-08T19-21-15-04-00
+LuminaryLabs-Publish/TheUnmappedHouse    tracked / root .agent present / latest root alignment 2026-07-08T18-51-55-04-00
+LuminaryLabs-Publish/MyCozyIsland        tracked / root .agent present / latest central 2026-07-08T19-40-00-04-00
 LuminaryLabs-Publish/TheOpenAbove        tracked / root .agent present / recently refreshed
-LuminaryLabs-Publish/TheCavalryOfRome    excluded by rule
 LuminaryLabs-Publish/PhantomCommand      tracked / root .agent present / recently refreshed
-LuminaryLabs-Publish/PrehistoricRush     tracked / root .agent present / recently refreshed
-LuminaryLabs-Publish/ZombieOrchard       tracked / root .agent present / recently refreshed
-LuminaryLabs-Publish/IntoTheMeadow       tracked / root .agent present / recently refreshed
-LuminaryLabs-Publish/MyCozyIsland        tracked / root .agent present / recently refreshed
-LuminaryLabs-Publish/TheUnmappedHouse    tracked / root .agent present / recently refreshed
+LuminaryLabs-Publish/TheCavalryOfRome    excluded by rule
+LuminaryLabs-Publish/PrehistoricRush     tracked / root .agent present / latest central 2026-07-08T19-30-31-04-00
 ```
 
-`TheCavalryOfRome` remains excluded by standing rule.
+`TheCavalryOfRome` remains excluded.
 
-No new untracked eligible repo was found. `HorrorCorridor` was selected because it had the oldest sampled current root-agent timestamp and the command fixture source boundary is still absent.
+No new untracked eligible repo was found.
 
 ## Evidence checked
 
 ```txt
 LuminaryLabs-Publish repository installation list
-LuminaryLabs-Dev/LuminaryLabs repo-ledger search results for Publish repos
+LuminaryLabs-Dev/LuminaryLabs repo-ledger entries for Publish repos
 LuminaryLabs-Publish/HorrorCorridor:.agent/START_HERE.md
 LuminaryLabs-Publish/HorrorCorridor:.agent/current-audit.md
 LuminaryLabs-Publish/HorrorCorridor:.agent/next-steps.md
@@ -151,13 +151,15 @@ local-carry-state-sync
 host-authority
 local-authoritative-simulation
 remote-authoritative-ingress
+legacy-game-state-interaction-rules
+legacy-game-state-network-rules
 command-envelope-contract
 command-source-normalization
 command-reason-catalog
 command-result-contract
-command-result-envelope
-command-result-status-policy
-command-result-rejection-policy
+command-decision-contract
+publish-decision-snapshot
+command-result-journal
 interaction-preflight-diagnostics
 player-pose-command-result
 interaction-command-result
@@ -166,8 +168,6 @@ request-sync-command-result
 ready-cancel-command-result
 victory-command-result
 command-seed-state-fixture
-command-result-journal
-publish-decision-snapshot
 local-authority-command-consumer
 host-authority-command-consumer
 runtime-debug-command-projection
@@ -195,7 +195,7 @@ maze bootstrap service
 first-person player service
 legacy GameState interaction service
 legacy GameState network service
-command seed-state fixture service
+command decision fixture service
 command result envelope service
 publish decision service
 local authority result consumer service
@@ -210,22 +210,31 @@ object/texture kit catalog service
 ## Kits identified
 
 ```txt
+corridor-session-domain-kit
+peer-room-sync-domain-kit
+maze-snapshot-bootstrap-kit
+first-person-corridor-player-kit
+corridor-interaction-domain-kit
+ordered-anomaly-sequence-kit
+ooze-trail-domain-kit
 corridor-render-world-kit
 corridor-minimap-kit
 runtime-debug-frame-kit
-ooze-trail-domain-kit
-ordered-anomaly-sequence-kit
+mesh-object-kit-catalog
+procedural-texture-kit-family
 command-envelope-contract-kit
 command-reason-catalog-kit
 command-result-envelope-kit
-command-seed-state-fixture-kit
+command-decision-contract-kit
 publish-decision-snapshot-kit
 command-result-journal-kit
+command-seed-state-fixture-kit
 interaction-preflight-kit
+interaction-result-rules-kit
 network-result-rules-kit
 local-authority-result-consumer-kit
 host-authority-result-consumer-kit
-runtime-debug-result-projection-kit
+runtime-debug-command-projection-kit
 command-result-fixture-matrix-kit
 command-replay-fixture-kit
 ```
@@ -234,10 +243,6 @@ command-replay-fixture-kit
 
 The runtime can play, render, sync, and complete, but command authority is still not fixture-safe.
 
-Rejected commands are not distinguishable from no-op commands.
+Rejected, skipped, publish-only, unchanged, and victory commands are not yet first-class result records.
 
-`request-sync` is not represented as a publish-only recovery command.
-
-`toggle-ready`, `cancel`, and default network actions are not represented as skipped commands.
-
-The fixture must now begin from explicit seed states instead of browser-only runtime state so accepted, rejected, unchanged, skipped, recovery, and victory rows can be proven without DOM, canvas, PeerJS, or Three.js.
+The fixture must start from explicit seed states so accepted, rejected, unchanged, skipped, recovery, and victory rows can be proven without DOM, canvas, PeerJS, Three.js, or browser runtime state.
