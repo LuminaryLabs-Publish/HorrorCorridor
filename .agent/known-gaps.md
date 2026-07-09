@@ -2,7 +2,7 @@
 
 **Repository:** `LuminaryLabs-Publish/HorrorCorridor`
 
-**Updated:** `2026-07-08T20-30-19-04-00`
+**Updated:** `2026-07-08T20-38-28-04-00`
 
 ## Authority and command gaps
 
@@ -18,6 +18,7 @@
 - host authority can publish or recover without a first-class PublishDecision record.
 - no stable CommandReason catalog exists for rejected, skipped, unchanged, publish-only, or victory commands.
 - no CommandResult envelope exists for before/after state, changed flag, events, diagnostics, and source metadata.
+- no CommandDecision contract exists that joins result status to publish behavior.
 - no publish-decision snapshot exists to classify publish, skip, recovery, victory, or no-op behavior.
 - no explicit local-authority result consumer exists.
 - no explicit host-authority result consumer exists.
@@ -26,7 +27,8 @@
 - GameCanvas consumer wire map is documented but not implemented.
 - command fixture source file manifest is documented but not implemented.
 - legacy adapter source cut is documented but not implemented.
-- fixture seed-state contract is now documented but not implemented.
+- fixture seed-state contract is documented but not implemented.
+- command decision fixture contract is now documented but not implemented.
 ```
 
 ## Seed-state fixture gaps
