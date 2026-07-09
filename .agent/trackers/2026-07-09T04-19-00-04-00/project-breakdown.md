@@ -4,17 +4,37 @@
 
 **Timestamp:** `2026-07-09T04-19-00-04-00`
 
-## Selection result
+## Plan ledger
 
-The full accessible `LuminaryLabs-Publish` repo list was checked against the central `LuminaryLabs-Dev/LuminaryLabs` repo ledger and sampled root `.agent` state.
+**Goal:** Compare the current `LuminaryLabs-Publish` repo list against the central `LuminaryLabs-Dev/LuminaryLabs` ledger, select one eligible repo, update the chosen repo root `.agent` docs, identify the interaction loop/domains/services/kits, and log the result centrally.
 
-No checked non-Cavalry repo was new, absent from the central ledger, missing sampled root `.agent/START_HERE.md`, recently added but undocumented, or otherwise undocumented.
+## Checklist
 
-`LuminaryLabs-Publish/TheCavalryOfRome` remains excluded.
+```txt
+[x] Listed accessible LuminaryLabs-Publish repos.
+[x] Compared checked repos against central repo-ledger timestamps.
+[x] Excluded LuminaryLabs-Publish/TheCavalryOfRome.
+[x] Selected one repo only: LuminaryLabs-Publish/HorrorCorridor.
+[x] Read repo-local .agent state.
+[x] Read central ledger state.
+[x] Read package.json validation scripts.
+[x] Read GameCanvas runtime/publish/render loop.
+[x] Read networkRules authority seam.
+[x] Read interactionRules no-op branches.
+[x] Read runtimeDebugStore export shape.
+[x] Identified interaction loop.
+[x] Identified domains in use.
+[x] Identified services offered by kits.
+[x] Identified implemented and planned kits.
+[x] Updated required root .agent docs.
+[x] Added timestamped architecture, render, gameplay, command-authority, interaction, deploy, tracker, and turn-ledger docs.
+[x] Updated central repo ledger in LuminaryLabs-Dev/LuminaryLabs.
+[x] Added central internal change-log entry.
+[ ] Did not run local npm/browser validation.
+[ ] Did not edit runtime/source files.
+```
 
-`HorrorCorridor` was selected as the oldest eligible central-ledger fallback. Its central ledger was still at `2026-07-09T01-09-24-04-00`, older than the other checked non-excluded Publish repos.
-
-## Publish organization repositories observed
+## Publish repo comparison
 
 ```txt
 LuminaryLabs-Publish/HorrorCorridor      selected / tracked / root .agent present / latest central 2026-07-09T01-09-24-04-00
@@ -29,7 +49,13 @@ LuminaryLabs-Publish/IntoTheMeadow       tracked / root .agent present / latest 
 LuminaryLabs-Publish/TheCavalryOfRome    excluded by rule
 ```
 
-## Current interaction loop
+## Selection reason
+
+No checked non-Cavalry Publish repo was new, missing from the central ledger, undocumented, recently added but undocumented, or missing sampled root `.agent` state.
+
+`HorrorCorridor` was selected as the oldest eligible central-ledger fallback.
+
+## Interaction loop
 
 ```txt
 open app
@@ -38,9 +64,9 @@ open app
   -> create or join room identity
   -> complete loading/readiness gates
   -> mount GameCanvas runtime
-  -> build renderer, camera, post-processing, maze world, minimap, pose refs, input refs, cadence state, and debug state
+  -> initialize renderer, camera, post-processing, maze world, minimap, stores, local pose, networking, cadence, and debug state
   -> enter pointer-lock first-person navigation
-  -> derive action from carried cube plus distance to anomaly
+  -> derive interact action from distance-to-end and carried-cube state
   -> local solo/host calls applyNetworkInteractionRequest and uses object identity to decide publish/no-op
   -> client sends TRY_INTERACT to host
   -> host applies PLAYER_UPDATE or TRY_INTERACT with GameState-returning network rules
@@ -51,12 +77,6 @@ open app
   -> update Three world, minimap, HUD, completion routing, and runtime debug frames
 ```
 
-## Main finding
-
-`HorrorCorridor` does not need renderer extraction, PeerJS extraction, minimap extraction, or visual object-kit expansion next.
-
-The next useful source cut is a result-first command consumer layer that proves every local and host command through a DOM-free fixture before `GameCanvas` consumes it.
-
 ## Domains in use
 
 ```txt
@@ -64,23 +84,11 @@ application-shell
 next-client-runtime
 react-game-surface
 ui-screen-routing
-settings-overlay
-completion-routing
-pause-state
-readiness-state
 session-lifecycle
-room-identity
-join-code-routing
-peer-identity
 peer-networking
 host-transport
 client-transport
-network-message-protocol
-host-message-ingress
-client-message-egress
 replicated-snapshot-protocol
-full-sync-output
-request-sync-recovery
 seeded-maze-bootstrap
 maze-cell-lookup
 maze-pathing
@@ -101,7 +109,6 @@ local-pose-prediction
 local-carry-state-sync
 host-authority
 local-authoritative-simulation
-remote-authoritative-ingress
 legacy-game-state-interaction-rules
 legacy-game-state-network-rules
 command-envelope-contract
@@ -112,13 +119,6 @@ command-decision-contract
 publish-decision-snapshot
 command-result-journal
 interaction-preflight-diagnostics
-player-pose-command-result
-interaction-command-result
-ooze-command-result
-request-sync-command-result
-ready-cancel-command-result
-victory-command-result
-command-seed-state-fixture
 local-authority-command-consumer
 host-authority-command-consumer
 runtime-debug-command-projection
@@ -130,31 +130,28 @@ post-processing
 maze-world-rendering
 minimap-rendering
 scene-dressing-descriptors
-mesh-object-kit-catalog
-procedural-texture-kit-family
 static-smoke-validation
 live-player-validation
 replay-parity-validation
 central-ledger-synchronization
 ```
 
-## Services offered by kits
+## Services that kits offer
 
 ```txt
-app/session service: mode, room, readiness, pause, completion
-peer sync service: host/client transport, full sync, player update, try interact, request-sync recovery
-maze bootstrap service: seed, maze generation, cell lookup, path build, cube spawn, sequence slots
-first-person player service: keyboard input, pointer lock, look delta, movement, collision, camera sync, local carry sync
-legacy interaction service: pickup, drop, place, remove, ordered completion
-legacy network service: player update, held-cube sync, interaction dispatch, request-sync no-op
-command fixture seed service: canonical GameState seeds and expected row facts
-command result envelope service: command id, source, status, reason, changed flag, events, diagnostics, legacy adapters
-publish decision service: publish, skip, recovery, no-op, victory, snapshot reason, broadcast flag
-local authority result consumer service: local result journal and publish/skip behavior
-host authority result consumer service: host result journal, request-sync recovery, rejected TRY_INTERACT skip, accepted/victory publish behavior
-diagnostics and replay service: runtime events, runtime frames, cadence, command readback, fixture parity
-render service: renderer, scene, camera, post-processing, maze world, minimap, scene dressing summary, disposal
-central ledger sync service: repo-local tracker, root .agent pointer, central repo-ledger, internal change log
+app/session service: mode, room, readiness, pause, completion.
+peer sync service: host/client transport, full sync, player update, try interact.
+maze bootstrap service: seed, maze generation, cell lookup, path build, cube spawn, sequence slots.
+first-person player service: keyboard input, pointer lock, look delta, movement, collision, camera sync, local carry sync.
+legacy interaction service: pickup, drop, place, remove, ordered completion.
+legacy network service: player update, held-cube sync, interaction dispatch, request-sync no-op.
+command result envelope service: planned command id, source, status, reason, changed flag, events, diagnostics, legacy adapters.
+publish decision service: planned publish, skip, recovery, no-op, victory, snapshot reason, broadcast flag.
+local authority consumer service: planned local result journal and publish/skip behavior.
+host authority consumer service: planned host result journal, request-sync recovery, rejected TRY_INTERACT skip, accepted/victory publish behavior.
+diagnostics and replay service: runtime events, runtime frames, cadence, planned command readback, fixture parity.
+render service: renderer, scene, camera, post-processing, maze world, minimap, scene dressing summary, disposal.
+central ledger sync service: repo-local tracker, root .agent pointer, central repo-ledger, internal change log.
 ```
 
 ## Kits identified
@@ -190,6 +187,29 @@ command-replay-fixture-kit
 central-ledger-sync-kit
 ```
 
+## Main finding
+
+`HorrorCorridor` should not be visually expanded yet. The playable surface and render/debug loop exist, but command authority is still not source-owned. The next work should make rejected, skipped, unchanged, request-sync recovery, accepted, and victory paths explicit `CommandResult` records with `PublishDecision` and runtime debug readback.
+
+## Files changed
+
+```txt
+.agent/START_HERE.md
+.agent/current-audit.md
+.agent/known-gaps.md
+.agent/next-steps.md
+.agent/validation.md
+.agent/kit-registry.json
+.agent/architecture-audit/2026-07-09T04-19-00-04-00-command-consumer-freeze-dsk-map.md
+.agent/render-audit/2026-07-09T04-19-00-04-00-runtime-debug-command-readback-contract.md
+.agent/gameplay-audit/2026-07-09T04-19-00-04-00-local-host-result-loop.md
+.agent/command-authority-audit/2026-07-09T04-19-00-04-00-result-first-source-cut-contract.md
+.agent/interaction-audit/2026-07-09T04-19-00-04-00-preflight-reason-matrix.md
+.agent/deploy-audit/2026-07-09T04-19-00-04-00-command-fixture-script-gate.md
+.agent/trackers/2026-07-09T04-19-00-04-00/project-breakdown.md
+.agent/turn-ledger/2026-07-09T04-19-00-04-00.md
+```
+
 ## Next safe ledge
 
 ```txt
@@ -198,8 +218,6 @@ HorrorCorridor Result-First Command Consumer Source Cut + Runtime Debug Readback
 
 ## Validation
 
-Documentation-only pass.
+Performed: repo-list read, central ledger readback, repo-local `.agent` readback, source readback, repo-local `.agent` writes, central ledger write, central internal change-log write.
 
-No runtime source files changed.
-
-No package command was run.
+Not performed: local checkout, `npm install`, `npm run lint`, smoke/harness runs, browser route check, live host/client multiplayer check, runtime source edit.
