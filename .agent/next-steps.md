@@ -2,23 +2,23 @@
 
 **Repository:** `LuminaryLabs-Publish/HorrorCorridor`
 
-**Updated:** `2026-07-09T16-00-13-04-00`
+**Updated:** `2026-07-09T18-30-30-04-00`
 
 ## Current next build slice
 
 ```txt
-HorrorCorridor Command Result Ledger Readback Repair + Result-First Fixture Gate
+HorrorCorridor Command Consumer Readback Ledger Refresh + Result-First Fixture Gate
 ```
 
 Start from:
 
 ```txt
-.agent/architecture-audit/2026-07-09T16-00-13-04-00-command-result-ledger-readback-repair-dsk-map.md
-.agent/render-audit/2026-07-09T16-00-13-04-00-debug-command-publish-projection-gap.md
-.agent/gameplay-audit/2026-07-09T16-00-13-04-00-local-host-command-consumer-loop.md
-.agent/command-authority-audit/2026-07-09T16-00-13-04-00-result-first-fixture-reason-contract.md
-.agent/interaction-audit/2026-07-09T16-00-13-04-00-silent-noop-preflight-row-map.md
-.agent/deploy-audit/2026-07-09T16-00-13-04-00-command-fixture-package-gate.md
+.agent/architecture-audit/2026-07-09T18-30-30-04-00-command-consumer-readback-dsk-map.md
+.agent/render-audit/2026-07-09T18-30-30-04-00-debug-command-projection-readback.md
+.agent/gameplay-audit/2026-07-09T18-30-30-04-00-local-host-command-result-loop.md
+.agent/command-authority-audit/2026-07-09T18-30-30-04-00-result-first-consumer-fixture-contract.md
+.agent/interaction-audit/2026-07-09T18-30-30-04-00-silent-noop-reason-map.md
+.agent/deploy-audit/2026-07-09T18-30-30-04-00-command-fixture-package-gate.md
 ```
 
 ## Build checklist
@@ -79,98 +79,6 @@ HorrorCorridor-V1/scripts/horror-corridor-command-fixture.mjs
 HorrorCorridor-V1/package.json
 HorrorCorridor-V1/src/features/debug/store/runtimeDebugStore.ts
 HorrorCorridor-V1/src/components/game/GameCanvas.tsx
-```
-
-## Implementation order
-
-```txt
-1. commandTypes.ts
-2. commandReasons.ts
-3. commandResults.ts
-4. publishDecisions.ts
-5. commandJournal.ts
-6. commandFixtureSeeds.ts
-7. commandFixtureRows.ts
-8. interactionPreflight.ts
-9. interactionResultRules.ts
-10. networkResultRules.ts
-11. localAuthorityCommandConsumer.ts
-12. hostAuthorityCommandConsumer.ts
-13. scripts/horror-corridor-command-fixture.mjs
-14. package.json command fixture script
-15. runtimeDebugCommandProjection.ts
-16. runtimeDebugStore.ts additive command projection fields
-17. GameCanvas.tsx result-first consumer integration
-18. LuminaryLabs-Dev/LuminaryLabs central ledger implementation log
-```
-
-## Required command reason families
-
-```txt
-accepted:pickup
-accepted:drop
-accepted:place
-accepted:remove
-accepted:player-update
-accepted:held-cube-sync
-accepted:ooze-tick
-victory:ordered-sequence-complete
-
-rejected:not-playing
-rejected:missing-player
-rejected:already-carrying
-rejected:no-nearby-cube
-rejected:no-carried-cube
-rejected:missing-anomaly-cell
-rejected:too-far-from-anomaly
-rejected:no-free-slot
-rejected:no-occupied-slot
-rejected:wrong-slot
-rejected:missing-cube-id
-
-unchanged:player-missing
-unchanged:held-cube-already-synced
-unchanged:no-state-diff
-
-publish-only:request-sync
-
-skipped:toggle-ready-policy-not-implemented
-skipped:cancel-policy-not-implemented
-skipped:unknown-action
-```
-
-## Fixture acceptance matrix
-
-```txt
-[ ] accepted pickup near loose cube
-[ ] rejected pickup while already carrying
-[ ] rejected pickup with no nearby cube
-[ ] accepted drop while carrying
-[ ] rejected drop without carried cube
-[ ] accepted place near anomaly with carried cube
-[ ] accepted place final anomaly slot as victory
-[ ] rejected place too far from anomaly
-[ ] rejected place with no free slot
-[ ] accepted remove last anomaly cube
-[ ] rejected remove wrong slot
-[ ] publish-only request-sync recovery
-[ ] skipped toggle-ready
-[ ] skipped cancel
-[ ] skipped unknown action
-[ ] accepted player update
-[ ] unchanged player update for missing player
-[ ] accepted held cube sync
-[ ] unchanged held-cube already synced
-[ ] ooze tick spawn
-[ ] ooze tick decay
-[ ] ooze tick no-state-diff
-[ ] victory ordered-sequence completion
-[ ] local consumer skips rejected/no-op broadcast
-[ ] local consumer publishes accepted changed/victory
-[ ] host consumer skips rejected TRY_INTERACT broadcast
-[ ] host consumer publishes request-sync recovery
-[ ] runtime debug command decision projection is serializable
-[ ] GameCanvas consumer splice preserves legacy snapshot shape
 ```
 
 ## Acceptance checks
