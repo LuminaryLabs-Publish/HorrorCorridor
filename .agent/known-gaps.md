@@ -2,14 +2,15 @@
 
 **Repository:** `LuminaryLabs-Publish/HorrorCorridor`
 
-**Updated:** `2026-07-09T01-09-24-04-00`
+**Updated:** `2026-07-09T04-19-00-04-00`
 
-## Central tracking gap closed in this pass
+## Selection gap handled in this pass
 
 ```txt
-- repo-local .agent state had advanced to 2026-07-09T01-00-22-04-00.
-- central LuminaryLabs-Dev/LuminaryLabs ledger still pointed at 2026-07-08T22-51-43-04-00 before this pass.
-- this run adds a fresh timestamped repo-local tracker set and updates central tracking to the current ledge.
+- all checked non-Cavalry Publish repos were already tracked.
+- all checked non-Cavalry Publish repos had sampled root .agent state.
+- HorrorCorridor was the oldest eligible central-ledger fallback at 2026-07-09T01-09-24-04-00.
+- this run adds a fresh timestamped repo-local tracker set and updates central tracking to 2026-07-09T04-19-00-04-00.
 ```
 
 ## Authority and command gaps
