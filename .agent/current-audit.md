@@ -2,7 +2,7 @@
 
 **Repository:** `LuminaryLabs-Publish/HorrorCorridor`
 
-**Audit timestamp:** `2026-07-09T09-59-27-04-00`
+**Audit timestamp:** `2026-07-09T10-10-32-04-00`
 
 ## Summary
 
@@ -15,16 +15,16 @@ This pass did not change runtime source. It refreshed root `.agent` state, added
 ## Repo selection
 
 ```txt
-LuminaryLabs-Publish/HorrorCorridor       selected / tracked / root .agent present / oldest eligible fallback
-LuminaryLabs-Publish/AetherVale           tracked / root .agent present
-LuminaryLabs-Publish/TheOpenAbove         tracked / root .agent present
+LuminaryLabs-Publish/IntoTheMeadow        tracked / root .agent present / central latest 2026-07-09T09-50-00-04-00
+LuminaryLabs-Publish/HorrorCorridor       selected / tracked / root .agent present / oldest eligible fallback / central catch-up target
+LuminaryLabs-Publish/AetherVale           tracked / root .agent present / central latest 2026-07-09T08-50-00-04-00
+LuminaryLabs-Publish/ZombieOrchard        tracked / root .agent present / central latest 2026-07-09T07-41-29-04-00
+LuminaryLabs-Publish/TheUnmappedHouse     tracked / root .agent present / central latest 2026-07-09T08-02-33-04-00
+LuminaryLabs-Publish/MyCozyIsland         tracked / root .agent present / central latest 2026-07-09T08-29-38-04-00
+LuminaryLabs-Publish/TheOpenAbove         tracked / root .agent present / central latest 2026-07-09T09-36-24-04-00
+LuminaryLabs-Publish/PhantomCommand       tracked / root .agent present / central latest 2026-07-09T07-19-41-04-00
 LuminaryLabs-Publish/TheCavalryOfRome     excluded by rule
-LuminaryLabs-Publish/PhantomCommand       tracked / root .agent present
-LuminaryLabs-Publish/PrehistoricRush      tracked / root .agent present
-LuminaryLabs-Publish/ZombieOrchard        tracked / root .agent present
-LuminaryLabs-Publish/IntoTheMeadow        tracked / root .agent present
-LuminaryLabs-Publish/MyCozyIsland         tracked / root .agent present
-LuminaryLabs-Publish/TheUnmappedHouse     tracked / root .agent present
+LuminaryLabs-Publish/PrehistoricRush      tracked / root .agent present / central latest 2026-07-09T09-10-50-04-00
 ```
 
 No new untracked eligible repo was found.
@@ -45,6 +45,7 @@ LuminaryLabs-Publish/HorrorCorridor:HorrorCorridor-V1/package.json
 LuminaryLabs-Publish/HorrorCorridor:HorrorCorridor-V1/src/components/game/GameCanvas.tsx
 LuminaryLabs-Publish/HorrorCorridor:HorrorCorridor-V1/src/features/game-state/domain/networkRules.ts
 LuminaryLabs-Publish/HorrorCorridor:HorrorCorridor-V1/src/features/game-state/domain/interactionRules.ts
+LuminaryLabs-Publish/HorrorCorridor:HorrorCorridor-V1/src/features/debug/store/runtimeDebugStore.ts
 ```
 
 ## Current interaction loop
