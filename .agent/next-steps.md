@@ -2,27 +2,23 @@
 
 **Repository:** `LuminaryLabs-Publish/HorrorCorridor`
 
-**Updated:** `2026-07-09T06-40-50-04-00`
+**Updated:** `2026-07-09T06-51-11-04-00`
 
 ## Current next build slice
 
 ```txt
-HorrorCorridor Command Authority Replay Matrix + Runtime Debug Projection Fixture Gate
+HorrorCorridor Command Result Ledger Consumer + Runtime Debug Projection Fixture Gate
 ```
 
 Start from:
 
 ```txt
-.agent/command-authority-audit/fixture-gate-implementation-map.md
-.agent/command-authority-audit/result-reason-matrix.md
-.agent/command-authority-audit/command-result-fixture-acceptance-ledger.md
-.agent/command-authority-audit/publish-decision-routing-matrix.md
-.agent/architecture-audit/2026-07-09T06-40-50-04-00-command-authority-replay-matrix-dsk-map.md
-.agent/render-audit/2026-07-09T06-40-50-04-00-runtime-debug-command-projection-readback.md
-.agent/gameplay-audit/2026-07-09T06-40-50-04-00-local-host-authority-replay-loop.md
-.agent/command-authority-audit/2026-07-09T06-40-50-04-00-command-authority-replay-matrix-contract.md
-.agent/interaction-audit/2026-07-09T06-40-50-04-00-preflight-result-reason-coverage.md
-.agent/deploy-audit/2026-07-09T06-40-50-04-00-command-fixture-script-gate.md
+.agent/architecture-audit/2026-07-09T06-51-11-04-00-command-result-ledger-consumer-dsk-map.md
+.agent/render-audit/2026-07-09T06-51-11-04-00-debug-projection-readback-ledger-freeze.md
+.agent/gameplay-audit/2026-07-09T06-51-11-04-00-local-host-command-result-loop.md
+.agent/command-authority-audit/2026-07-09T06-51-11-04-00-central-ledger-result-fixture-contract.md
+.agent/interaction-audit/2026-07-09T06-51-11-04-00-silent-noop-reason-matrix.md
+.agent/deploy-audit/2026-07-09T06-51-11-04-00-fixture-script-validation-gate.md
 ```
 
 ## Build checklist
