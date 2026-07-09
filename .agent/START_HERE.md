@@ -2,7 +2,7 @@
 
 **Repository:** `LuminaryLabs-Publish/HorrorCorridor`
 
-**Last aligned:** `2026-07-09T06-40-50-04-00`
+**Last aligned:** `2026-07-09T06-51-11-04-00`
 
 ## Purpose
 
@@ -18,21 +18,21 @@ No checked non-Cavalry repo was fully new, absent from the central ledger, undoc
 
 `LuminaryLabs-Publish/TheCavalryOfRome` remains excluded by standing rule.
 
-`HorrorCorridor` was selected as the oldest eligible central-ledger fallback and command authority replay-matrix catch-up target.
+`HorrorCorridor` was selected as the oldest eligible fallback and command-result ledger consumer catch-up target.
 
 ## Publish repos checked
 
 ```txt
-LuminaryLabs-Publish/HorrorCorridor       selected / tracked / root .agent present / oldest eligible central-ledger fallback
-LuminaryLabs-Publish/AetherVale           tracked / root .agent present
-LuminaryLabs-Publish/TheOpenAbove         tracked / root .agent present
+LuminaryLabs-Publish/HorrorCorridor       selected / tracked / root .agent present / oldest central-ledger fallback before this pass
+LuminaryLabs-Publish/AetherVale           tracked / root .agent present / central latest 2026-07-09T06-01-30-04-00
+LuminaryLabs-Publish/TheOpenAbove         tracked / root .agent present / central latest 2026-07-09T06-20-00-04-00
 LuminaryLabs-Publish/TheCavalryOfRome     excluded by rule
-LuminaryLabs-Publish/PhantomCommand       tracked / root .agent present
-LuminaryLabs-Publish/PrehistoricRush      tracked / root .agent present
-LuminaryLabs-Publish/ZombieOrchard        tracked / root .agent present
-LuminaryLabs-Publish/IntoTheMeadow        tracked / root .agent present
-LuminaryLabs-Publish/MyCozyIsland         tracked / root .agent present
-LuminaryLabs-Publish/TheUnmappedHouse     tracked / root .agent present
+LuminaryLabs-Publish/PhantomCommand       tracked / root .agent present / central latest 2026-07-09T04-50-00-04-00
+LuminaryLabs-Publish/PrehistoricRush      tracked / root .agent present / central latest 2026-07-09T06-10-35-04-00
+LuminaryLabs-Publish/ZombieOrchard        tracked / root .agent present / central latest 2026-07-09T05-11-22-04-00
+LuminaryLabs-Publish/IntoTheMeadow        tracked / root .agent present / central latest 2026-07-09T06-28-53-04-00
+LuminaryLabs-Publish/MyCozyIsland         tracked / root .agent present / central latest 2026-07-09T05-38-20-04-00
+LuminaryLabs-Publish/TheUnmappedHouse     tracked / root .agent present / central latest 2026-07-09T05-20-42-04-00
 ```
 
 ## Current product read
@@ -87,14 +87,14 @@ CommandFixtureSeed
 .agent/known-gaps.md
 .agent/next-steps.md
 .agent/validation.md
-.agent/architecture-audit/2026-07-09T06-40-50-04-00-command-authority-replay-matrix-dsk-map.md
-.agent/render-audit/2026-07-09T06-40-50-04-00-runtime-debug-command-projection-readback.md
-.agent/gameplay-audit/2026-07-09T06-40-50-04-00-local-host-authority-replay-loop.md
-.agent/command-authority-audit/2026-07-09T06-40-50-04-00-command-authority-replay-matrix-contract.md
-.agent/interaction-audit/2026-07-09T06-40-50-04-00-preflight-result-reason-coverage.md
-.agent/deploy-audit/2026-07-09T06-40-50-04-00-command-fixture-script-gate.md
-.agent/trackers/2026-07-09T06-40-50-04-00/project-breakdown.md
-.agent/turn-ledger/2026-07-09T06-40-50-04-00.md
+.agent/architecture-audit/2026-07-09T06-51-11-04-00-command-result-ledger-consumer-dsk-map.md
+.agent/render-audit/2026-07-09T06-51-11-04-00-debug-projection-readback-ledger-freeze.md
+.agent/gameplay-audit/2026-07-09T06-51-11-04-00-local-host-command-result-loop.md
+.agent/command-authority-audit/2026-07-09T06-51-11-04-00-central-ledger-result-fixture-contract.md
+.agent/interaction-audit/2026-07-09T06-51-11-04-00-silent-noop-reason-matrix.md
+.agent/deploy-audit/2026-07-09T06-51-11-04-00-fixture-script-validation-gate.md
+.agent/trackers/2026-07-09T06-51-11-04-00/project-breakdown.md
+.agent/turn-ledger/2026-07-09T06-51-11-04-00.md
 .agent/kit-registry.json
 ```
 
@@ -133,7 +133,7 @@ HorrorCorridor-V1/scripts/horror-corridor-command-fixture.mjs
 ## Current next safe ledge
 
 ```txt
-HorrorCorridor Command Authority Replay Matrix + Runtime Debug Projection Fixture Gate
+HorrorCorridor Command Result Ledger Consumer + Runtime Debug Projection Fixture Gate
 ```
 
 Build this before touching renderer extraction, PeerJS extraction, minimap extraction, post-processing extraction, scene dressing, new maze content, or visual object-kit expansion.
