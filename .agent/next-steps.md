@@ -2,12 +2,12 @@
 
 **Repository:** `LuminaryLabs-Publish/HorrorCorridor`
 
-**Updated:** `2026-07-09T04-19-00-04-00`
+**Updated:** `2026-07-09T04-30-54-04-00`
 
 ## Current next build slice
 
 ```txt
-HorrorCorridor Result-First Command Consumer Source Cut + Runtime Debug Readback Fixture Gate
+HorrorCorridor Command Result Consumer Readback + Seeded Replay Fixture Gate
 ```
 
 Start from:
@@ -17,12 +17,12 @@ Start from:
 .agent/command-authority-audit/result-reason-matrix.md
 .agent/command-authority-audit/command-result-fixture-acceptance-ledger.md
 .agent/command-authority-audit/publish-decision-routing-matrix.md
-.agent/architecture-audit/2026-07-09T04-19-00-04-00-command-consumer-freeze-dsk-map.md
-.agent/render-audit/2026-07-09T04-19-00-04-00-runtime-debug-command-readback-contract.md
-.agent/gameplay-audit/2026-07-09T04-19-00-04-00-local-host-result-loop.md
-.agent/command-authority-audit/2026-07-09T04-19-00-04-00-result-first-source-cut-contract.md
-.agent/interaction-audit/2026-07-09T04-19-00-04-00-preflight-reason-matrix.md
-.agent/deploy-audit/2026-07-09T04-19-00-04-00-command-fixture-script-gate.md
+.agent/architecture-audit/2026-07-09T04-30-54-04-00-command-result-consumer-readback-dsk-map.md
+.agent/render-audit/2026-07-09T04-30-54-04-00-runtime-debug-command-consumer-readback.md
+.agent/gameplay-audit/2026-07-09T04-30-54-04-00-local-host-result-replay-loop.md
+.agent/command-authority-audit/2026-07-09T04-30-54-04-00-source-contract-consumer-freeze.md
+.agent/interaction-audit/2026-07-09T04-30-54-04-00-preflight-command-reason-freeze.md
+.agent/deploy-audit/2026-07-09T04-30-54-04-00-command-fixture-package-gate.md
 ```
 
 ## Build checklist
