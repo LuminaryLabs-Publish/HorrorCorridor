@@ -2,7 +2,15 @@
 
 **Repository:** `LuminaryLabs-Publish/HorrorCorridor`
 
-**Updated:** `2026-07-09T01-00-22-04-00`
+**Updated:** `2026-07-09T01-09-24-04-00`
+
+## Central tracking gap closed in this pass
+
+```txt
+- repo-local .agent state had advanced to 2026-07-09T01-00-22-04-00.
+- central LuminaryLabs-Dev/LuminaryLabs ledger still pointed at 2026-07-08T22-51-43-04-00 before this pass.
+- this run adds a fresh timestamped repo-local tracker set and updates central tracking to the current ledge.
+```
 
 ## Authority and command gaps
 
@@ -30,7 +38,7 @@
 - fixture seed-state contract is documented but not implemented.
 - command decision fixture contract is documented but not implemented.
 - command consumer source cut is documented but not implemented.
-- result-first GameCanvas splice contract is now documented but not implemented.
+- result-first GameCanvas splice contract is documented but not implemented.
 ```
 
 ## Seed-state fixture gaps
