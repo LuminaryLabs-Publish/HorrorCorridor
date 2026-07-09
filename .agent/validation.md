@@ -2,7 +2,7 @@
 
 **Repository:** `LuminaryLabs-Publish/HorrorCorridor`
 
-**Updated:** `2026-07-08T22-51-43-04-00`
+**Updated:** `2026-07-09T01-00-22-04-00`
 
 ## Available validation commands
 
@@ -64,6 +64,7 @@ host consumer publishes request-sync recovery
 runtime debug projects latest command result
 runtime debug projects latest publish decision
 runtime debug projects journal counts
+GameCanvas consumer splice preserves legacy snapshot shape
 final snapshot summary parity
 ```
 
@@ -132,6 +133,7 @@ journal counts
 local consumer action
 host consumer action
 runtime debug projection
+GameCanvas splice eligibility
 final snapshot summary
 volatile fields normalized
 replay parity passed or failed
@@ -179,6 +181,7 @@ final snapshot facts
 [done] GitHub connector read of GameCanvas runtime/publish/render loop.
 [done] GitHub connector read of networkRules authority seam.
 [done] GitHub connector read of interactionRules silent no-op branches.
+[done] GitHub connector read of runtimeDebugStore export shape.
 [done] Documentation-only .agent audit files written to main.
 [done] Central LuminaryLabs ledger and change log written to main.
 ```
@@ -194,4 +197,5 @@ final snapshot facts
 [not-run] npm run validate:live-player:dev
 [not-run] browser route check
 [not-run] live host/client multiplayer check
+[not-run] runtime source edit
 ```
