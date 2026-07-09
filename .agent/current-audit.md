@@ -2,33 +2,33 @@
 
 **Repository:** `LuminaryLabs-Publish/HorrorCorridor`
 
-**Audit timestamp:** `2026-07-09T01-09-24-04-00`
+**Audit timestamp:** `2026-07-09T04-19-00-04-00`
 
 ## Summary
 
 `HorrorCorridor` is playable, visually present, network-capable, and already has useful runtime debug frames.
 
-The immediate documentation gap was central tracking: repo-local `.agent` state had already advanced to `2026-07-09T01-00-22-04-00`, but the central `LuminaryLabs-Dev/LuminaryLabs` ledger still pointed at `2026-07-08T22-51-43-04-00`.
+The selection gap in this run was rotation age: every checked non-Cavalry Publish repo was already tracked and had root `.agent` state, so `HorrorCorridor` was selected as the oldest eligible central-ledger fallback.
 
 The implementation gap is unchanged: `interactionRules.ts` and `networkRules.ts` return `GameState` only, `GameCanvas.tsx` still uses object identity and action strings as publish gates, and `runtimeDebugStore.ts` has no command-result projection fields.
 
-This pass did not change runtime source. It refreshed root `.agent` state, added a timestamped central-sync tracker set, and kept the next implementation narrowed to a result-first command consumer fixture gate.
+This pass did not change runtime source. It refreshed root `.agent` state, added a timestamped command-consumer source-cut tracker set, and kept the next implementation narrowed to a result-first command consumer fixture gate.
 
 ## Repo selection
 
 The accessible `LuminaryLabs-Publish` repo list was checked during this pass.
 
 ```txt
-LuminaryLabs-Publish/IntoTheMeadow       tracked / root .agent present / latest central 2026-07-09T00-50-00-04-00
-LuminaryLabs-Publish/HorrorCorridor      selected / central ledger catch-up needed from 2026-07-08T22-51-43-04-00 and repo-local 2026-07-09T01-00-22-04-00
-LuminaryLabs-Publish/AetherVale          tracked / root .agent present / latest central 2026-07-09T00-00-41-04-00
-LuminaryLabs-Publish/ZombieOrchard       tracked / root .agent present / latest central 2026-07-08T23-40-55-04-00
-LuminaryLabs-Publish/TheUnmappedHouse    tracked / root .agent present / latest central 2026-07-08T23-19-33-04-00
-LuminaryLabs-Publish/MyCozyIsland        tracked / root .agent present / latest central 2026-07-09T00-20-08-04-00
-LuminaryLabs-Publish/TheOpenAbove        tracked / root .agent present / latest central 2026-07-09T00-40-20-04-00
-LuminaryLabs-Publish/PhantomCommand      tracked / root .agent present / latest central 2026-07-08T22-58-02-04-00
+LuminaryLabs-Publish/HorrorCorridor      selected / tracked / root .agent present / latest central 2026-07-09T01-09-24-04-00
+LuminaryLabs-Publish/PhantomCommand      tracked / root .agent present / latest central 2026-07-09T01-28-10-04-00
+LuminaryLabs-Publish/ZombieOrchard       tracked / root .agent present / latest central 2026-07-09T02-05-52-04-00
+LuminaryLabs-Publish/TheUnmappedHouse    tracked / root .agent present / latest central 2026-07-09T02-11-07-04-00
+LuminaryLabs-Publish/MyCozyIsland        tracked / root .agent present / latest central 2026-07-09T02-31-41-04-00
+LuminaryLabs-Publish/AetherVale          tracked / root .agent present / latest central 2026-07-09T02-50-39-04-00
+LuminaryLabs-Publish/PrehistoricRush     tracked / root .agent present / latest central 2026-07-09T03-10-05-04-00
+LuminaryLabs-Publish/TheOpenAbove        tracked / root .agent present / latest central 2026-07-09T03-29-29-04-00
+LuminaryLabs-Publish/IntoTheMeadow       tracked / root .agent present / latest central 2026-07-09T03-50-12-04-00
 LuminaryLabs-Publish/TheCavalryOfRome    excluded by rule
-LuminaryLabs-Publish/PrehistoricRush     tracked / root .agent present / latest central 2026-07-09T00-09-22-04-00
 ```
 
 `TheCavalryOfRome` remains excluded.
@@ -38,7 +38,7 @@ No new untracked eligible repo was found.
 ## Evidence checked
 
 ```txt
-LuminaryLabs-Publish repository installation/search list
+LuminaryLabs-Publish repository installation list
 LuminaryLabs-Dev/LuminaryLabs repo-ledger entries for Publish repos
 LuminaryLabs-Publish/HorrorCorridor:.agent/START_HERE.md
 LuminaryLabs-Publish/HorrorCorridor:.agent/current-audit.md
@@ -86,7 +86,7 @@ local solo/host interact
 client TRY_INTERACT
 -> host applies applyNetworkInteractionRequest
 -> rejected/invalid commands can collapse to unchanged GameState
--> host still calls publishAuthoritativeState(event action === request-sync ? recovery : resync)
+-> host publishes resync/recovery based on event action, not a result record
 -> host needs decision metadata for publish, skip, recovery, and victory
 
 client PLAYER_UPDATE
