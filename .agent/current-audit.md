@@ -2,29 +2,31 @@
 
 **Repository:** `LuminaryLabs-Publish/HorrorCorridor`
 
-**Audit timestamp:** `2026-07-08T22-51-43-04-00`
+**Audit timestamp:** `2026-07-09T01-00-22-04-00`
 
 ## Summary
 
-`HorrorCorridor` is playable, visually present, and already has useful runtime debug frames, but command authority still needs a source-backed consumer cut before renderer or PeerJS extraction.
+`HorrorCorridor` is playable, visually present, network-capable, and already has useful runtime debug frames.
 
-This pass did not change runtime source. It refreshed root `.agent` state and narrowed the next implementation to a command consumer source cut that proves `CommandResult`, `PublishDecision`, local/host consumer behavior, runtime debug command readback, and final snapshot parity through a DOM-free fixture.
+The unresolved seam is still command authority consumption: `interactionRules.ts` and `networkRules.ts` return `GameState` only, `GameCanvas.tsx` still uses object identity and action strings as publish gates, and `runtimeDebugStore.ts` has no command-result projection fields.
+
+This pass did not change runtime source. It refreshed root `.agent` state and narrowed the next implementation to a result-first `GameCanvas` splice: prove `CommandResult`, `PublishDecision`, local/host consumers, runtime debug projection, and fixture replay before touching renderer, PeerJS, minimap, or visual expansion.
 
 ## Repo selection
 
 The accessible `LuminaryLabs-Publish` repo list was checked during this pass.
 
 ```txt
-LuminaryLabs-Publish/IntoTheMeadow       tracked / root .agent present / latest central 2026-07-08T22-38-17-04-00
-LuminaryLabs-Publish/HorrorCorridor      selected / oldest eligible central alignment 2026-07-08T20-38-28-04-00
-LuminaryLabs-Publish/AetherVale          tracked / root .agent present / latest central 2026-07-08T21-31-35-04-00
-LuminaryLabs-Publish/ZombieOrchard       tracked / root .agent present / latest central 2026-07-08T21-18-39-04-00
-LuminaryLabs-Publish/TheUnmappedHouse    tracked / root .agent present / latest central 2026-07-08T21-00-12-04-00
-LuminaryLabs-Publish/MyCozyIsland        tracked / root .agent present / latest central 2026-07-08T21-58-34-04-00
-LuminaryLabs-Publish/TheOpenAbove        tracked / root .agent present / latest central 2026-07-08T22-19-38-04-00
-LuminaryLabs-Publish/PhantomCommand      tracked / root .agent present / latest central 2026-07-08T20-52-00-04-00
+LuminaryLabs-Publish/IntoTheMeadow       tracked / root .agent present / latest central 2026-07-09T00-50-00-04-00
+LuminaryLabs-Publish/HorrorCorridor      selected / oldest eligible central alignment 2026-07-08T22-51-43-04-00
+LuminaryLabs-Publish/AetherVale          tracked / root .agent present / latest central 2026-07-09T00-00-41-04-00
+LuminaryLabs-Publish/ZombieOrchard       tracked / root .agent present / latest central 2026-07-08T23-40-55-04-00
+LuminaryLabs-Publish/TheUnmappedHouse    tracked / root .agent present / latest central 2026-07-08T23-19-33-04-00
+LuminaryLabs-Publish/MyCozyIsland        tracked / root .agent present / latest central 2026-07-09T00-20-08-04-00
+LuminaryLabs-Publish/TheOpenAbove        tracked / root .agent present / latest central 2026-07-09T00-40-20-04-00
+LuminaryLabs-Publish/PhantomCommand      tracked / root .agent present / latest central 2026-07-08T22-58-02-04-00
 LuminaryLabs-Publish/TheCavalryOfRome    excluded by rule
-LuminaryLabs-Publish/PrehistoricRush     tracked / root .agent present / latest central 2026-07-08T21-50-56-04-00
+LuminaryLabs-Publish/PrehistoricRush     tracked / root .agent present / latest central 2026-07-09T00-09-22-04-00
 ```
 
 `TheCavalryOfRome` remains excluded.
@@ -46,6 +48,7 @@ LuminaryLabs-Publish/HorrorCorridor:HorrorCorridor-V1/package.json
 LuminaryLabs-Publish/HorrorCorridor:HorrorCorridor-V1/src/components/game/GameCanvas.tsx
 LuminaryLabs-Publish/HorrorCorridor:HorrorCorridor-V1/src/features/game-state/domain/networkRules.ts
 LuminaryLabs-Publish/HorrorCorridor:HorrorCorridor-V1/src/features/game-state/domain/interactionRules.ts
+LuminaryLabs-Publish/HorrorCorridor:HorrorCorridor-V1/src/features/debug/store/runtimeDebugStore.ts
 ```
 
 ## Current interaction loop
@@ -57,7 +60,7 @@ open app
 -> create or join room identity
 -> complete loading/readiness gates
 -> mount GameCanvas runtime
--> initialize renderer, camera, post-processing, maze world, minimap, stores, local pose, networking, and debug state
+-> initialize renderer, camera, post-processing, maze world, minimap, stores, local pose, networking, cadence, and debug state
 -> enter pointer-lock first-person navigation
 -> derive interact action from distance-to-end and carried-cube state
 -> pickup, drop, place, or remove cube
@@ -199,7 +202,7 @@ command fixture seed service: planned canonical GameState seeds and expected row
 command result envelope service: planned command id, source, status, reason, changed flag, events, diagnostics, legacy adapters
 publish decision service: planned publish, skip, recovery, no-op, victory, snapshot reason, broadcast flag
 local authority result consumer service: planned local result journal and publish/skip behavior
-host authority result consumer service: planned host result journal, request-sync recovery, and rejected TRY_INTERACT skip behavior
+host authority result consumer service: planned host result journal, request-sync recovery, rejected TRY_INTERACT skip, and accepted/victory publish behavior
 diagnostics and replay service: runtime events, runtime frames, cadence, planned command readback, fixture parity
 render service: renderer, scene, camera, post-processing, maze world, minimap, scene dressing summary, disposal
 ```
@@ -240,6 +243,6 @@ command-replay-fixture-kit
 
 The runtime can play, render, sync, and complete, but command authority is still not fixture-safe.
 
-Rejected, skipped, publish-only, unchanged, and victory commands are not yet first-class result records.
+Rejected, skipped, publish-only, unchanged, recovery, and victory commands are not yet first-class result records.
 
 The fixture must start from explicit seed states so accepted, rejected, unchanged, skipped, recovery, and victory rows can be proven without DOM, canvas, PeerJS, Three.js, or browser runtime state.
