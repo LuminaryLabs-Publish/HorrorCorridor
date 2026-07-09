@@ -2,50 +2,57 @@
 
 **Repository:** `LuminaryLabs-Publish/HorrorCorridor`
 
-**Audit timestamp:** `2026-07-09T15-56-42-04-00`
+**Audit timestamp:** `2026-07-09T16-00-13-04-00`
 
 ## Summary
 
 `HorrorCorridor` is a playable Next/React cooperative first-person maze with solo, host, and join flows, PeerJS transport, Three.js rendering, minimap rendering, runtime debug export, and validation scripts.
 
-The current blocker remains command authority. `interactionRules.ts` and `networkRules.ts` return `GameState` only, invalid command paths silently return unchanged state, and `GameCanvas.tsx` still uses object identity plus implicit reason strings as the local/host publish gate.
+The repo-local `.agent` state was newer than the central ledger, so this pass repairs the ledger/readback pointers while preserving the same implementation finding: command authority is still the next durable source cut.
 
-This pass did not change runtime source. It refreshed root `.agent` state, added timestamped readback/fixture docs, and refreshed central tracking to this breakdown.
+No runtime source changed in this pass.
 
 ## Repo selection
 
 ```txt
-LuminaryLabs-Publish/IntoTheMeadow        tracked / root .agent present / central latest 2026-07-09T15-39-08-04-00
-LuminaryLabs-Publish/HorrorCorridor       selected / tracked / root .agent present / central latest 2026-07-09T12-30-09-04-00 before this update
-LuminaryLabs-Publish/AetherVale           tracked / root .agent present / central latest 2026-07-09T14-16-00-04-00 sampled from prior central ledger context
-LuminaryLabs-Publish/ZombieOrchard        tracked / root .agent present / central latest 2026-07-09T13-18-48-04-00 sampled from prior central ledger context
-LuminaryLabs-Publish/TheUnmappedHouse     tracked / root .agent present / central latest 2026-07-09T13-38-15-04-00 sampled from prior central ledger context
-LuminaryLabs-Publish/MyCozyIsland         tracked / root .agent present / central latest 2026-07-09T14-39-07-04-00 sampled from prior central ledger context
-LuminaryLabs-Publish/TheOpenAbove         tracked / root .agent present / central latest 2026-07-09T15-09-09-04-00 sampled from prior central ledger context
-LuminaryLabs-Publish/PhantomCommand       tracked / root .agent present / central latest 2026-07-09T13-00-37-04-00 sampled from prior central ledger context
+LuminaryLabs-Publish/HorrorCorridor       selected / tracked / root .agent present / central latest 2026-07-09T12-30-09-04-00 before this update / repo-local latest 2026-07-09T15-56-42-04-00
+LuminaryLabs-Publish/AetherVale           tracked / root .agent present / central latest 2026-07-09T14-16-00-04-00
+LuminaryLabs-Publish/TheOpenAbove         tracked / root .agent present / central latest 2026-07-09T15-09-09-04-00
 LuminaryLabs-Publish/TheCavalryOfRome     excluded by rule
-LuminaryLabs-Publish/PrehistoricRush      tracked / root .agent present / central latest 2026-07-09T15-20-00-04-00
+LuminaryLabs-Publish/PhantomCommand       tracked / root .agent present / central latest 2026-07-09T13-00-37-04-00
+LuminaryLabs-Publish/PrehistoricRush      tracked / root .agent present / central latest 2026-07-09T15-31-40-04-00
+LuminaryLabs-Publish/ZombieOrchard        tracked / root .agent present / central latest 2026-07-09T13-18-48-04-00
+LuminaryLabs-Publish/IntoTheMeadow        tracked / root .agent present / central latest 2026-07-09T15-39-08-04-00
+LuminaryLabs-Publish/MyCozyIsland         tracked / root .agent present / central latest 2026-07-09T14-39-07-04-00
+LuminaryLabs-Publish/TheUnmappedHouse     tracked / root .agent present / central latest 2026-07-09T13-38-15-04-00
 ```
 
-No new untracked eligible repo was found. `HorrorCorridor` was the oldest eligible central-ledger fallback among checked non-Cavalry repositories.
+No new untracked eligible repo was found. `HorrorCorridor` was selected because repo-local `.agent` documentation had advanced beyond the central ledger, and it remained the oldest eligible central-ledger/readback repair target among checked non-Cavalry repositories.
 
 ## Evidence checked
 
 ```txt
 LuminaryLabs-Publish repository installation list
-LuminaryLabs-Dev/LuminaryLabs repo-ledger/LuminaryLabs-Publish/IntoTheMeadow.md
-LuminaryLabs-Dev/LuminaryLabs repo-ledger/LuminaryLabs-Publish/PrehistoricRush.md
 LuminaryLabs-Dev/LuminaryLabs repo-ledger/LuminaryLabs-Publish/HorrorCorridor.md
+LuminaryLabs-Dev/LuminaryLabs repo-ledger/LuminaryLabs-Publish/AetherVale.md
+LuminaryLabs-Dev/LuminaryLabs repo-ledger/LuminaryLabs-Publish/TheOpenAbove.md
+LuminaryLabs-Dev/LuminaryLabs repo-ledger/LuminaryLabs-Publish/PhantomCommand.md
+LuminaryLabs-Dev/LuminaryLabs repo-ledger/LuminaryLabs-Publish/PrehistoricRush.md
+LuminaryLabs-Dev/LuminaryLabs repo-ledger/LuminaryLabs-Publish/ZombieOrchard.md
+LuminaryLabs-Dev/LuminaryLabs repo-ledger/LuminaryLabs-Publish/IntoTheMeadow.md
+LuminaryLabs-Dev/LuminaryLabs repo-ledger/LuminaryLabs-Publish/MyCozyIsland.md
+LuminaryLabs-Dev/LuminaryLabs repo-ledger/LuminaryLabs-Publish/TheUnmappedHouse.md
 LuminaryLabs-Publish/HorrorCorridor:.agent/START_HERE.md
 LuminaryLabs-Publish/HorrorCorridor:.agent/current-audit.md
 LuminaryLabs-Publish/HorrorCorridor:.agent/next-steps.md
 LuminaryLabs-Publish/HorrorCorridor:.agent/known-gaps.md
 LuminaryLabs-Publish/HorrorCorridor:.agent/validation.md
 LuminaryLabs-Publish/HorrorCorridor:.agent/kit-registry.json
-LuminaryLabs-Publish/HorrorCorridor:HorrorCorridor-V1/package.json
-LuminaryLabs-Publish/HorrorCorridor:HorrorCorridor-V1/src/components/game/GameCanvas.tsx
-LuminaryLabs-Publish/HorrorCorridor:HorrorCorridor-V1/src/features/game-state/domain/networkRules.ts
-LuminaryLabs-Publish/HorrorCorridor:HorrorCorridor-V1/src/features/game-state/domain/interactionRules.ts
+HorrorCorridor-V1/package.json
+HorrorCorridor-V1/src/components/game/GameCanvas.tsx
+HorrorCorridor-V1/src/features/game-state/domain/networkRules.ts
+HorrorCorridor-V1/src/features/game-state/domain/interactionRules.ts
+HorrorCorridor-V1/src/features/debug/store/runtimeDebugStore.ts
 ```
 
 ## Current interaction loop
@@ -225,5 +232,5 @@ Rejected, skipped, publish-only, unchanged, recovery, and victory commands are n
 ## Next safe ledge
 
 ```txt
-HorrorCorridor Command Result Journal Readback Refresh + Result-First Fixture Gate
+HorrorCorridor Command Result Ledger Readback Repair + Result-First Fixture Gate
 ```
