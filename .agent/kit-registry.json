@@ -1,14 +1,14 @@
 {
-  "schemaVersion": 18,
+  "schemaVersion": 19,
   "repository": "LuminaryLabs-Publish/HorrorCorridor",
-  "generatedAt": "2026-07-08T18-19-43-04-00",
-  "status": "command-consumer-fixture-runner-and-legacy-adapter-source-cut-planned",
-  "latestTracker": ".agent/trackers/2026-07-08T18-19-43-04-00/project-breakdown.md",
-  "latestTurnLedger": ".agent/turn-ledger/2026-07-08T18-19-43-04-00.md",
-  "latestArchitectureAudit": ".agent/architecture-audit/2026-07-08T18-19-43-04-00-command-consumer-fixture-dsk-map.md",
-  "latestRenderAudit": ".agent/render-audit/2026-07-08T18-19-43-04-00-runtime-debug-result-projection-map.md",
-  "latestGameplayAudit": ".agent/gameplay-audit/2026-07-08T18-19-43-04-00-command-result-authority-loop.md",
-  "latestCommandAuthorityAudit": ".agent/command-authority-audit/2026-07-08T18-19-43-04-00-legacy-adapter-source-cut.md",
+  "generatedAt": "2026-07-08T20-30-19-04-00",
+  "status": "command-fixture-seed-state-contract-and-consumer-replay-gate-planned",
+  "latestTracker": ".agent/trackers/2026-07-08T20-30-19-04-00/project-breakdown.md",
+  "latestTurnLedger": ".agent/turn-ledger/2026-07-08T20-30-19-04-00.md",
+  "latestArchitectureAudit": ".agent/architecture-audit/2026-07-08T20-30-19-04-00-command-fixture-seed-state-dsk-map.md",
+  "latestRenderAudit": ".agent/render-audit/2026-07-08T20-30-19-04-00-debug-command-readback-contract.md",
+  "latestGameplayAudit": ".agent/gameplay-audit/2026-07-08T20-30-19-04-00-local-host-replay-loop.md",
+  "latestCommandAuthorityAudit": ".agent/command-authority-audit/2026-07-08T20-30-19-04-00-seed-state-consumer-fixture-contract.md",
   "sourceRoots": [
     "HorrorCorridor-V1/src/components/game",
     "HorrorCorridor-V1/src/features",
@@ -19,13 +19,12 @@
     "HorrorCorridor-V1/package.json",
     "HorrorCorridor-V1/src/components/game/GameCanvas.tsx",
     "HorrorCorridor-V1/src/features/game-state/domain/networkRules.ts",
-    "HorrorCorridor-V1/src/features/game-state/domain/interactionRules.ts",
-    "HorrorCorridor-V1/src/features/debug/store/runtimeDebugStore.ts"
+    "HorrorCorridor-V1/src/features/game-state/domain/interactionRules.ts"
   ],
   "selection": {
     "selectedRepo": "LuminaryLabs-Publish/HorrorCorridor",
     "excludedRepo": "LuminaryLabs-Publish/TheCavalryOfRome",
-    "reason": "No checked non-Cavalry repo was fully new, central-ledger absent, undocumented, recently added but undocumented, or missing sampled root .agent/START_HERE.md state. HorrorCorridor was selected as the oldest current eligible fallback because the command consumer fixture runner and legacy adapter source cut remain absent while the local/host command authority seam is still highest value.",
+    "reason": "No checked non-Cavalry repo was fully new, central-ledger absent, undocumented, recently added but undocumented, or missing sampled root .agent/START_HERE.md state. HorrorCorridor was selected as the oldest sampled eligible fallback and because the command fixture seed-state and consumer replay gate remains absent while the local/host command authority seam is still highest value.",
     "publishReposChecked": [
       "LuminaryLabs-Publish/HorrorCorridor",
       "LuminaryLabs-Publish/AetherVale",
@@ -39,7 +38,7 @@
       "LuminaryLabs-Publish/TheUnmappedHouse"
     ]
   },
-  "currentNextSlice": "HorrorCorridor Command Consumer Fixture Runner + Legacy Adapter Source Cut",
+  "currentNextSlice": "HorrorCorridor Command Fixture Seed State Contract + Consumer Replay Gate",
   "interactionLoop": {
     "current": [
       "start-menu",
@@ -60,6 +59,7 @@
       "render-minimap-hud-debug"
     ],
     "target": [
+      "canonical seeded GameState rows establish fixture before/after facts",
       "local input and peer messages normalize into CommandEnvelope records",
       "command-reason-catalog-kit classifies every silent no-op branch",
       "command-result-envelope-kit wraps pose, interaction, ooze, request-sync, toggle-ready, cancel, and victory outcomes",
@@ -88,6 +88,7 @@
     "command-envelope-contract",
     "command-reason-catalog",
     "command-result-envelope",
+    "command-seed-state-fixture",
     "publish-decision-snapshot",
     "command-result-journal",
     "local-authority-command-consumer",
@@ -104,6 +105,7 @@
     "maze-bootstrap-service": ["seed hash", "maze generation", "cell lookup", "path build", "cube spawn", "sequence slots", "initial snapshot"],
     "first-person-player-service": ["keyboard input", "pointer lock", "look delta", "movement", "collision", "camera sync", "local carry sync"],
     "interaction-preflight-service": ["playing-state validation", "player lookup", "carried-cube lookup", "nearest-cube lookup", "anomaly distance", "slot resolution", "stable rejection reason"],
+    "command-fixture-seed-service": ["canonical GameState seeds", "fixture row inputs", "expected snapshot facts", "stable fixture ids", "volatile normalization"],
     "command-result-envelope-service": ["command id", "command source", "status", "reason", "changed flag", "events", "diagnostics", "legacy GameState return adapter"],
     "publish-decision-service": ["publish", "skip", "recovery", "no-op", "victory", "snapshot reason", "broadcast flag", "completion flag"],
     "local-authority-result-consumer-service": ["consume local interaction result", "journal rejection", "skip local rejected/no-op publish", "publish accepted changed/victory"],
@@ -121,6 +123,7 @@
     {"id": "command-envelope-contract-kit", "status": "planned-next", "kind": "contract-kit", "provides": ["command id", "source", "player id", "action", "payload"]},
     {"id": "command-reason-catalog-kit", "status": "planned-next", "kind": "catalog-kit", "provides": ["stable rejection reasons", "stable skipped reasons", "stable publish-only reasons"]},
     {"id": "command-result-envelope-kit", "status": "planned-next", "kind": "envelope-kit", "provides": ["before state", "after state", "changed flag", "reason", "events", "legacy adapter"]},
+    {"id": "command-seed-state-fixture-kit", "status": "planned-next", "kind": "fixture-kit", "provides": ["seeded GameState builders", "expected row facts", "stable fixture ids"]},
     {"id": "publish-decision-snapshot-kit", "status": "planned-next", "kind": "policy-kit", "provides": ["publish", "skip", "recovery", "no-op", "victory"]},
     {"id": "command-result-journal-kit", "status": "planned-next", "kind": "diagnostic-kit", "provides": ["accepted counts", "rejected counts", "latest reason", "latest decision"]},
     {"id": "interaction-preflight-kit", "status": "planned-next", "kind": "preflight-kit", "provides": ["not-playing", "missing-player", "carrying conflict", "distance", "slot", "cube lookup reasons"]},
