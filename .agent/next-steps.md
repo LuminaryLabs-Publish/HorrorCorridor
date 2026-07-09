@@ -2,23 +2,23 @@
 
 **Repository:** `LuminaryLabs-Publish/HorrorCorridor`
 
-**Updated:** `2026-07-09T10-10-32-04-00`
+**Updated:** `2026-07-09T12-20-08-04-00`
 
 ## Current next build slice
 
 ```txt
-HorrorCorridor Result-First Authority Consumer Handoff + Command Fixture Gate
+HorrorCorridor Result-First Command Readback Ledger Refresh + Fixture Gate
 ```
 
 Start from:
 
 ```txt
-.agent/architecture-audit/2026-07-09T10-10-32-04-00-result-first-authority-central-catchup-dsk-map.md
-.agent/render-audit/2026-07-09T10-10-32-04-00-debug-command-readback-consumer-map.md
-.agent/gameplay-audit/2026-07-09T10-10-32-04-00-command-result-replay-handoff-loop.md
-.agent/command-authority-audit/2026-07-09T10-10-32-04-00-consumer-handoff-fixture-gate.md
-.agent/interaction-audit/2026-07-09T10-10-32-04-00-silent-noop-preflight-reason-map.md
-.agent/deploy-audit/2026-07-09T10-10-32-04-00-command-fixture-check-wire-map.md
+.agent/architecture-audit/2026-07-09T12-20-08-04-00-result-first-command-readback-ledger-dsk-map.md
+.agent/render-audit/2026-07-09T12-20-08-04-00-debug-command-readback-ledger.md
+.agent/gameplay-audit/2026-07-09T12-20-08-04-00-command-result-consumer-loop.md
+.agent/command-authority-audit/2026-07-09T12-20-08-04-00-command-result-fixture-gate-refresh.md
+.agent/interaction-audit/2026-07-09T12-20-08-04-00-rejection-reason-coverage-map.md
+.agent/deploy-audit/2026-07-09T12-20-08-04-00-command-fixture-check-wire-map.md
 ```
 
 ## Build checklist
