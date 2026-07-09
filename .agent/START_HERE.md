@@ -2,7 +2,7 @@
 
 **Repository:** `LuminaryLabs-Publish/HorrorCorridor`
 
-**Last aligned:** `2026-07-09T09-59-27-04-00`
+**Last aligned:** `2026-07-09T10-10-32-04-00`
 
 ## Purpose
 
@@ -18,21 +18,21 @@ No checked non-Cavalry repo was fully new, absent from the central ledger, undoc
 
 `LuminaryLabs-Publish/TheCavalryOfRome` remains excluded by standing rule.
 
-`HorrorCorridor` was selected as the oldest eligible documented fallback. Before this pass, central tracking showed `HorrorCorridor` at `2026-07-09T07-05-52-04-00`, while newer eligible repos had later ledger timestamps.
+`HorrorCorridor` was selected as the oldest eligible documented fallback and central catch-up target. Repo-local `.agent` state had advanced to `2026-07-09T09-59-27-04-00`, while central tracking still pointed at `2026-07-09T07-05-52-04-00` at read time.
 
 ## Publish repos checked
 
 ```txt
-LuminaryLabs-Publish/HorrorCorridor       selected / tracked / root .agent present / oldest eligible fallback
-LuminaryLabs-Publish/AetherVale           tracked / root .agent present
-LuminaryLabs-Publish/TheOpenAbove         tracked / root .agent present
+LuminaryLabs-Publish/IntoTheMeadow        tracked / root .agent present / central latest 2026-07-09T09-50-00-04-00
+LuminaryLabs-Publish/HorrorCorridor       selected / tracked / root .agent present / oldest eligible fallback / central catch-up target
+LuminaryLabs-Publish/AetherVale           tracked / root .agent present / central latest 2026-07-09T08-50-00-04-00
+LuminaryLabs-Publish/ZombieOrchard        tracked / root .agent present / central latest 2026-07-09T07-41-29-04-00
+LuminaryLabs-Publish/TheUnmappedHouse     tracked / root .agent present / central latest 2026-07-09T08-02-33-04-00
+LuminaryLabs-Publish/MyCozyIsland         tracked / root .agent present / central latest 2026-07-09T08-29-38-04-00
+LuminaryLabs-Publish/TheOpenAbove         tracked / root .agent present / central latest 2026-07-09T09-36-24-04-00
+LuminaryLabs-Publish/PhantomCommand       tracked / root .agent present / central latest 2026-07-09T07-19-41-04-00
 LuminaryLabs-Publish/TheCavalryOfRome     excluded by rule
-LuminaryLabs-Publish/PhantomCommand       tracked / root .agent present
-LuminaryLabs-Publish/PrehistoricRush      tracked / root .agent present
-LuminaryLabs-Publish/ZombieOrchard        tracked / root .agent present
-LuminaryLabs-Publish/IntoTheMeadow        tracked / root .agent present
-LuminaryLabs-Publish/MyCozyIsland         tracked / root .agent present
-LuminaryLabs-Publish/TheUnmappedHouse     tracked / root .agent present
+LuminaryLabs-Publish/PrehistoricRush      tracked / root .agent present / central latest 2026-07-09T09-10-50-04-00
 ```
 
 ## Current product read
@@ -53,7 +53,7 @@ open app
   -> build renderer, camera, post-processing, maze world, minimap, pose refs, input refs, cadence state, and debug state
   -> pointer-lock first-person navigation
   -> keyboard/mouse input updates local pose and view angles
-  -> interact key derives pickup/drop/place/remove from carried cube plus distance to anomaly
+  -> interact key derives pickup/drop/place/remove from carried-cube state and distance to anomaly
   -> local solo/host applies applyNetworkInteractionRequest directly
   -> unchanged state returns silently on local path
   -> client sends TRY_INTERACT to host
@@ -88,14 +88,14 @@ CommandFixtureSeed
 .agent/known-gaps.md
 .agent/next-steps.md
 .agent/validation.md
-.agent/architecture-audit/2026-07-09T09-59-27-04-00-result-first-authority-consumer-dsk-map.md
-.agent/render-audit/2026-07-09T09-59-27-04-00-debug-command-projection-readback.md
-.agent/gameplay-audit/2026-07-09T09-59-27-04-00-command-result-replay-loop.md
-.agent/command-authority-audit/2026-07-09T09-59-27-04-00-consumer-handoff-fixture-contract.md
-.agent/interaction-audit/2026-07-09T09-59-27-04-00-preflight-reason-row-map.md
-.agent/deploy-audit/2026-07-09T09-59-27-04-00-command-fixture-validation-gate.md
-.agent/trackers/2026-07-09T09-59-27-04-00/project-breakdown.md
-.agent/turn-ledger/2026-07-09T09-59-27-04-00.md
+.agent/architecture-audit/2026-07-09T10-10-32-04-00-result-first-authority-central-catchup-dsk-map.md
+.agent/render-audit/2026-07-09T10-10-32-04-00-debug-command-readback-consumer-map.md
+.agent/gameplay-audit/2026-07-09T10-10-32-04-00-command-result-replay-handoff-loop.md
+.agent/command-authority-audit/2026-07-09T10-10-32-04-00-consumer-handoff-fixture-gate.md
+.agent/interaction-audit/2026-07-09T10-10-32-04-00-silent-noop-preflight-reason-map.md
+.agent/deploy-audit/2026-07-09T10-10-32-04-00-command-fixture-check-wire-map.md
+.agent/trackers/2026-07-09T10-10-32-04-00/project-breakdown.md
+.agent/turn-ledger/2026-07-09T10-10-32-04-00.md
 .agent/kit-registry.json
 ```
 
