@@ -2,7 +2,7 @@
 
 **Repository:** `LuminaryLabs-Publish/HorrorCorridor`
 
-**Last aligned:** `2026-07-09T01-00-22-04-00`
+**Last aligned:** `2026-07-09T01-09-24-04-00`
 
 ## Purpose
 
@@ -18,13 +18,13 @@ No checked non-Cavalry repo was fully new, absent from the central ledger, undoc
 
 `LuminaryLabs-Publish/TheCavalryOfRome` remains excluded by standing rule.
 
-`HorrorCorridor` was selected as the oldest eligible tracked fallback. Its prior central alignment was `2026-07-08T22-51-43-04-00`, older than the other checked non-excluded Publish repos after the 00:00-00:50 catch-up runs.
+`HorrorCorridor` was selected because its repo-local `.agent` state had advanced past central tracking: this repo already showed a `2026-07-09T01-00-22-04-00` local alignment while the central `LuminaryLabs-Dev/LuminaryLabs` ledger still pointed to `2026-07-08T22-51-43-04-00`.
 
 ## Publish repos checked
 
 ```txt
 LuminaryLabs-Publish/IntoTheMeadow       tracked / root .agent present / latest central 2026-07-09T00-50-00-04-00
-LuminaryLabs-Publish/HorrorCorridor      selected / oldest eligible central alignment 2026-07-08T22-51-43-04-00
+LuminaryLabs-Publish/HorrorCorridor      selected / central ledger catch-up needed from 2026-07-08T22-51-43-04-00 and repo-local 2026-07-09T01-00-22-04-00
 LuminaryLabs-Publish/AetherVale          tracked / root .agent present / latest central 2026-07-09T00-00-41-04-00
 LuminaryLabs-Publish/ZombieOrchard       tracked / root .agent present / latest central 2026-07-08T23-40-55-04-00
 LuminaryLabs-Publish/TheUnmappedHouse    tracked / root .agent present / latest central 2026-07-08T23-19-33-04-00
@@ -86,14 +86,14 @@ CommandEnvelope
 .agent/known-gaps.md
 .agent/next-steps.md
 .agent/validation.md
-.agent/architecture-audit/2026-07-09T01-00-22-04-00-command-result-gamecanvas-splice-dsk-map.md
-.agent/render-audit/2026-07-09T01-00-22-04-00-runtime-debug-command-projection-readback.md
-.agent/gameplay-audit/2026-07-09T01-00-22-04-00-publish-decision-consumer-loop.md
-.agent/command-authority-audit/2026-07-09T01-00-22-04-00-result-first-gamecanvas-splice-contract.md
-.agent/interaction-audit/2026-07-09T01-00-22-04-00-interaction-preflight-reason-matrix.md
-.agent/deploy-audit/2026-07-09T01-00-22-04-00-command-fixture-package-script-gate.md
-.agent/trackers/2026-07-09T01-00-22-04-00/project-breakdown.md
-.agent/turn-ledger/2026-07-09T01-00-22-04-00.md
+.agent/architecture-audit/2026-07-09T01-09-24-04-00-central-ledger-command-fixture-freeze-dsk-map.md
+.agent/render-audit/2026-07-09T01-09-24-04-00-runtime-debug-command-channel-fixture-map.md
+.agent/gameplay-audit/2026-07-09T01-09-24-04-00-result-first-command-consumer-freeze.md
+.agent/command-authority-audit/2026-07-09T01-09-24-04-00-central-sync-consumer-freeze.md
+.agent/interaction-audit/2026-07-09T01-09-24-04-00-preflight-row-freeze.md
+.agent/deploy-audit/2026-07-09T01-09-24-04-00-fixture-command-central-sync.md
+.agent/trackers/2026-07-09T01-09-24-04-00/project-breakdown.md
+.agent/turn-ledger/2026-07-09T01-09-24-04-00.md
 .agent/kit-registry.json
 ```
 
@@ -132,7 +132,7 @@ HorrorCorridor-V1/scripts/horror-corridor-command-fixture.mjs
 ## Current next safe ledge
 
 ```txt
-HorrorCorridor Result-First GameCanvas Command Splice + Runtime Debug Projection Fixture Gate
+HorrorCorridor Central Ledger Sync + Result-First Command Consumer Fixture Freeze
 ```
 
 Build this before touching renderer extraction, PeerJS extraction, minimap extraction, post-processing extraction, scene dressing, new maze content, or visual object-kit expansion.
