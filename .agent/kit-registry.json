@@ -1,14 +1,15 @@
 {
-  "schemaVersion": 20,
+  "schemaVersion": 21,
   "repository": "LuminaryLabs-Publish/HorrorCorridor",
-  "generatedAt": "2026-07-08T20-38-28-04-00",
-  "status": "command-decision-fixture-contract-and-local-host-consumer-replay-gate-planned",
-  "latestTracker": ".agent/trackers/2026-07-08T20-38-28-04-00/project-breakdown.md",
-  "latestTurnLedger": ".agent/turn-ledger/2026-07-08T20-38-28-04-00.md",
-  "latestArchitectureAudit": ".agent/architecture-audit/2026-07-08T20-38-28-04-00-command-decision-dsk-map.md",
-  "latestRenderAudit": ".agent/render-audit/2026-07-08T20-38-28-04-00-runtime-debug-command-decision-readback.md",
-  "latestGameplayAudit": ".agent/gameplay-audit/2026-07-08T20-38-28-04-00-local-host-command-decision-loop.md",
-  "latestCommandAuthorityAudit": ".agent/command-authority-audit/2026-07-08T20-38-28-04-00-command-decision-fixture-contract.md",
+  "generatedAt": "2026-07-08T22-51-43-04-00",
+  "status": "command-consumer-source-cut-runtime-debug-readback-fixture-gate-planned",
+  "latestTracker": ".agent/trackers/2026-07-08T22-51-43-04-00/project-breakdown.md",
+  "latestTurnLedger": ".agent/turn-ledger/2026-07-08T22-51-43-04-00.md",
+  "latestArchitectureAudit": ".agent/architecture-audit/2026-07-08T22-51-43-04-00-command-consumer-source-cut-dsk-map.md",
+  "latestRenderAudit": ".agent/render-audit/2026-07-08T22-51-43-04-00-runtime-debug-command-readback-map.md",
+  "latestGameplayAudit": ".agent/gameplay-audit/2026-07-08T22-51-43-04-00-local-host-command-consumer-loop.md",
+  "latestCommandAuthorityAudit": ".agent/command-authority-audit/2026-07-08T22-51-43-04-00-source-cut-fixture-contract.md",
+  "latestDeployAudit": ".agent/deploy-audit/2026-07-08T22-51-43-04-00-command-fixture-validation-gate.md",
   "sourceRoots": [
     "HorrorCorridor-V1/src/components/game",
     "HorrorCorridor-V1/src/features",
@@ -24,7 +25,7 @@
   "selection": {
     "selectedRepo": "LuminaryLabs-Publish/HorrorCorridor",
     "excludedRepo": "LuminaryLabs-Publish/TheCavalryOfRome",
-    "reason": "No checked non-Cavalry repo was fully new, central-ledger absent, undocumented, recently added but undocumented, or missing sampled root .agent/START_HERE.md state. HorrorCorridor was selected because the command decision fixture contract remains unresolved and central tracking needed to catch up with repo-local command authority state.",
+    "reason": "No checked non-Cavalry repo was fully new, central-ledger absent, undocumented, recently added but undocumented, or missing sampled root .agent/START_HERE.md state. HorrorCorridor was selected as the oldest eligible tracked fallback by central ledger timestamp.",
     "publishReposChecked": [
       "LuminaryLabs-Publish/IntoTheMeadow",
       "LuminaryLabs-Publish/HorrorCorridor",
@@ -38,7 +39,7 @@
       "LuminaryLabs-Publish/PrehistoricRush"
     ]
   },
-  "currentNextSlice": "HorrorCorridor Command Decision Fixture Contract + Local/Host Consumer Replay Gate",
+  "currentNextSlice": "HorrorCorridor Command Consumer Source Cut + Runtime Debug Readback Fixture Gate",
   "interactionLoop": {
     "current": [
       "start-menu",
