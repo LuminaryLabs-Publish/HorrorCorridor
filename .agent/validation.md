@@ -2,7 +2,7 @@
 
 **Repository:** `LuminaryLabs-Publish/HorrorCorridor`
 
-**Updated:** `2026-07-08T18-19-43-04-00`
+**Updated:** `2026-07-08T20-30-19-04-00`
 
 ## Available validation commands
 
@@ -64,6 +64,36 @@ host consumer publishes request-sync recovery
 runtime debug projects latest command result
 runtime debug projects latest publish decision
 runtime debug projects journal counts
+```
+
+## Required seed-state fixture fields
+
+```txt
+fixture id
+seed id
+seed description
+command source
+command type
+player id
+input action
+before state summary
+expected status
+expected reason
+expected changed flag
+expected publish decision
+expected shouldBroadcast
+expected shouldCommitVictory
+expected snapshot reason
+expected events
+expected cube facts
+expected slot facts
+expected local consumer action
+expected host consumer action
+expected debug projection
+final state summary
+non-normalized assertions
+volatile fields normalized
+parity passed or failed
 ```
 
 ## Required publish-decision fixture matrix
@@ -141,12 +171,12 @@ final snapshot facts
 ```txt
 [done] GitHub connector read of current Publish repo list.
 [done] GitHub connector read of central LuminaryLabs-Dev/LuminaryLabs Publish ledger context.
+[done] GitHub connector read of sampled repo-local .agent/START_HERE timestamps.
 [done] GitHub connector read of HorrorCorridor repo-local agent state.
 [done] GitHub connector read of package validation scripts.
 [done] GitHub connector read of GameCanvas runtime/publish/render loop.
 [done] GitHub connector read of networkRules authority seam.
 [done] GitHub connector read of interactionRules silent no-op branches.
-[done] GitHub connector read of runtimeDebugStore export surface.
 [done] Documentation-only .agent audit files written to main.
 [done] Central LuminaryLabs internal change-log and HorrorCorridor ledger pointers written to main.
 ```
@@ -169,7 +199,7 @@ final snapshot facts
 
 ## Current validation risk
 
-Current runtime may be functionally playable, but the next implementation pass cannot safely claim command authority correctness until the command result fixture matrix exists and passes.
+Current runtime may be functionally playable, but the next implementation pass cannot safely claim command authority correctness until the command result fixture matrix exists and passes from canonical seed states.
 
 The next proof should be headless first. Browser and live multiplayer validation should follow only after the command result fixture proves local and host authority decisions.
 
