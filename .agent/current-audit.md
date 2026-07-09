@@ -2,24 +2,22 @@
 
 **Repository:** `LuminaryLabs-Publish/HorrorCorridor`
 
-**Audit timestamp:** `2026-07-09T06-40-50-04-00`
+**Audit timestamp:** `2026-07-09T06-51-11-04-00`
 
 ## Summary
 
 `HorrorCorridor` is playable, visually present, network-capable, and already has useful runtime debug frames.
 
-The selection gap in this run was rotation age: every checked non-Cavalry Publish repo was already tracked and had sampled root `.agent` state, so `HorrorCorridor` was selected as the oldest eligible central-ledger fallback.
+The selection gap in this run was ledger freshness: every checked non-Cavalry Publish repo was already tracked and had sampled root `.agent` state, while `HorrorCorridor` remained the oldest eligible fallback with the command-result proof seam still unresolved.
 
 The implementation gap is unchanged: `interactionRules.ts` and `networkRules.ts` return `GameState` only, `GameCanvas.tsx` still uses object identity and implicit action strings as publish gates, and runtime debug readback has no command-result projection fields.
 
-This pass did not change runtime source. It refreshed root `.agent` state, added timestamped command-authority replay-matrix docs, and kept the next implementation narrowed to a DOM-free replay fixture plus runtime debug projection gate.
+This pass did not change runtime source. It refreshed root `.agent` state, added timestamped command-result ledger consumer docs, and kept the next implementation narrowed to a DOM-free replay fixture plus runtime debug projection gate.
 
 ## Repo selection
 
-The accessible `LuminaryLabs-Publish` repo list was checked during this pass.
-
 ```txt
-LuminaryLabs-Publish/HorrorCorridor       selected / tracked / root .agent present / oldest eligible central-ledger fallback
+LuminaryLabs-Publish/HorrorCorridor       selected / tracked / root .agent present / oldest central-ledger fallback before this pass
 LuminaryLabs-Publish/AetherVale           tracked / root .agent present
 LuminaryLabs-Publish/TheOpenAbove         tracked / root .agent present
 LuminaryLabs-Publish/TheCavalryOfRome     excluded by rule
@@ -79,8 +77,8 @@ local solo/host interact
 -> applyNetworkInteractionRequest returns GameState only
 -> if nextState === currentGameState, GameCanvas returns silently
 -> otherwise syncHeldCubesToPlayers
--> publishAuthoritativeState("resync")
--> commitVictory if gameState === "victory"
+-> publishAuthoritativeState('resync')
+-> commitVictory if gameState === 'victory'
 
 client TRY_INTERACT
 -> host applies applyNetworkInteractionRequest
