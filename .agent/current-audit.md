@@ -2,15 +2,17 @@
 
 **Repository:** `LuminaryLabs-Publish/HorrorCorridor`
 
-**Audit timestamp:** `2026-07-09T01-00-22-04-00`
+**Audit timestamp:** `2026-07-09T01-09-24-04-00`
 
 ## Summary
 
 `HorrorCorridor` is playable, visually present, network-capable, and already has useful runtime debug frames.
 
-The unresolved seam is still command authority consumption: `interactionRules.ts` and `networkRules.ts` return `GameState` only, `GameCanvas.tsx` still uses object identity and action strings as publish gates, and `runtimeDebugStore.ts` has no command-result projection fields.
+The immediate documentation gap was central tracking: repo-local `.agent` state had already advanced to `2026-07-09T01-00-22-04-00`, but the central `LuminaryLabs-Dev/LuminaryLabs` ledger still pointed at `2026-07-08T22-51-43-04-00`.
 
-This pass did not change runtime source. It refreshed root `.agent` state and narrowed the next implementation to a result-first `GameCanvas` splice: prove `CommandResult`, `PublishDecision`, local/host consumers, runtime debug projection, and fixture replay before touching renderer, PeerJS, minimap, or visual expansion.
+The implementation gap is unchanged: `interactionRules.ts` and `networkRules.ts` return `GameState` only, `GameCanvas.tsx` still uses object identity and action strings as publish gates, and `runtimeDebugStore.ts` has no command-result projection fields.
+
+This pass did not change runtime source. It refreshed root `.agent` state, added a timestamped central-sync tracker set, and kept the next implementation narrowed to a result-first command consumer fixture gate.
 
 ## Repo selection
 
@@ -18,7 +20,7 @@ The accessible `LuminaryLabs-Publish` repo list was checked during this pass.
 
 ```txt
 LuminaryLabs-Publish/IntoTheMeadow       tracked / root .agent present / latest central 2026-07-09T00-50-00-04-00
-LuminaryLabs-Publish/HorrorCorridor      selected / oldest eligible central alignment 2026-07-08T22-51-43-04-00
+LuminaryLabs-Publish/HorrorCorridor      selected / central ledger catch-up needed from 2026-07-08T22-51-43-04-00 and repo-local 2026-07-09T01-00-22-04-00
 LuminaryLabs-Publish/AetherVale          tracked / root .agent present / latest central 2026-07-09T00-00-41-04-00
 LuminaryLabs-Publish/ZombieOrchard       tracked / root .agent present / latest central 2026-07-08T23-40-55-04-00
 LuminaryLabs-Publish/TheUnmappedHouse    tracked / root .agent present / latest central 2026-07-08T23-19-33-04-00
@@ -187,6 +189,7 @@ procedural-texture-kit-family
 static-smoke-validation
 live-player-validation
 replay-parity-validation
+central-ledger-synchronization
 ```
 
 ## Current source-backed services
@@ -205,6 +208,7 @@ local authority result consumer service: planned local result journal and publis
 host authority result consumer service: planned host result journal, request-sync recovery, rejected TRY_INTERACT skip, and accepted/victory publish behavior
 diagnostics and replay service: runtime events, runtime frames, cadence, planned command readback, fixture parity
 render service: renderer, scene, camera, post-processing, maze world, minimap, scene dressing summary, disposal
+central ledger sync service: repo-local tracker, root .agent pointer, central repo-ledger, internal change log
 ```
 
 ## Kits identified
@@ -237,6 +241,7 @@ host-authority-result-consumer-kit
 runtime-debug-command-projection-kit
 command-result-fixture-matrix-kit
 command-replay-fixture-kit
+central-ledger-sync-kit
 ```
 
 ## Current risk
