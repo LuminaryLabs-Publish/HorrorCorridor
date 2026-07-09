@@ -2,7 +2,7 @@
 
 **Repository:** `LuminaryLabs-Publish/HorrorCorridor`
 
-**Updated:** `2026-07-08T20-38-28-04-00`
+**Updated:** `2026-07-08T22-51-43-04-00`
 
 ## Authority and command gaps
 
@@ -28,7 +28,8 @@
 - command fixture source file manifest is documented but not implemented.
 - legacy adapter source cut is documented but not implemented.
 - fixture seed-state contract is documented but not implemented.
-- command decision fixture contract is now documented but not implemented.
+- command decision fixture contract is documented but not implemented.
+- command consumer source cut is now documented but not implemented.
 ```
 
 ## Seed-state fixture gaps
