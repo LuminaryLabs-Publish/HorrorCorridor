@@ -2,23 +2,23 @@
 
 **Repository:** `LuminaryLabs-Publish/HorrorCorridor`
 
-**Updated:** `2026-07-09T07-05-52-04-00`
+**Updated:** `2026-07-09T09-59-27-04-00`
 
 ## Current next build slice
 
 ```txt
-HorrorCorridor Command Result Ledger Central Sync + Runtime Debug Consumer Fixture Gate
+HorrorCorridor Result-First Authority Consumer Handoff + Command Fixture Gate
 ```
 
 Start from:
 
 ```txt
-.agent/architecture-audit/2026-07-09T07-05-52-04-00-command-ledger-central-sync-dsk-map.md
-.agent/render-audit/2026-07-09T07-05-52-04-00-debug-command-consumer-readback.md
-.agent/gameplay-audit/2026-07-09T07-05-52-04-00-local-host-command-ledger-loop.md
-.agent/command-authority-audit/2026-07-09T07-05-52-04-00-command-result-fixture-contract.md
-.agent/interaction-audit/2026-07-09T07-05-52-04-00-silent-noop-reason-freeze.md
-.agent/deploy-audit/2026-07-09T07-05-52-04-00-fixture-script-validation-gate.md
+.agent/architecture-audit/2026-07-09T09-59-27-04-00-result-first-authority-consumer-dsk-map.md
+.agent/render-audit/2026-07-09T09-59-27-04-00-debug-command-projection-readback.md
+.agent/gameplay-audit/2026-07-09T09-59-27-04-00-command-result-replay-loop.md
+.agent/command-authority-audit/2026-07-09T09-59-27-04-00-consumer-handoff-fixture-contract.md
+.agent/interaction-audit/2026-07-09T09-59-27-04-00-preflight-reason-row-map.md
+.agent/deploy-audit/2026-07-09T09-59-27-04-00-command-fixture-validation-gate.md
 ```
 
 ## Build checklist
