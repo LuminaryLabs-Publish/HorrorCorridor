@@ -2,7 +2,7 @@
 
 **Repository:** `LuminaryLabs-Publish/HorrorCorridor`
 
-**Updated:** `2026-07-08T20-30-19-04-00`
+**Updated:** `2026-07-08T20-38-28-04-00`
 
 ## Available validation commands
 
@@ -31,7 +31,7 @@ npm run validate:live-player:dev
 6. npm run review:object-kit
 ```
 
-## Required command fixture matrix
+## Required command decision fixture matrix
 
 ```txt
 accepted pickup near loose cube
@@ -64,14 +64,16 @@ host consumer publishes request-sync recovery
 runtime debug projects latest command result
 runtime debug projects latest publish decision
 runtime debug projects journal counts
+final snapshot summary parity
 ```
 
-## Required seed-state fixture fields
+## Required fixture fields
 
 ```txt
 fixture id
 seed id
 seed description
+command id
 command source
 command type
 player id
@@ -96,7 +98,7 @@ volatile fields normalized
 parity passed or failed
 ```
 
-## Required publish-decision fixture matrix
+## Required publish-decision matrix
 
 ```txt
 accepted changed -> publish
@@ -178,35 +180,17 @@ final snapshot facts
 [done] GitHub connector read of networkRules authority seam.
 [done] GitHub connector read of interactionRules silent no-op branches.
 [done] Documentation-only .agent audit files written to main.
-[done] Central LuminaryLabs internal change-log and HorrorCorridor ledger pointers written to main.
 ```
 
-## Validation not performed in this documentation pass
+## Validation not performed
 
 ```txt
-[not-run] local checkout
 [not-run] npm install
 [not-run] npm run lint
 [not-run] npm run smoke:protokits
 [not-run] npm run harness:horror-corridor
-[not-run] node scripts/horror-corridor-command-fixture.mjs
+[not-run] node scripts/horror-corridor-command-fixture.mjs, because the fixture does not exist yet
 [not-run] npm run validate:live-player:dev
 [not-run] browser route check
 [not-run] live host/client multiplayer check
-[not-run] GitHub Actions rerun
-[not-run] runtime implementation edit
 ```
-
-## Current validation risk
-
-Current runtime may be functionally playable, but the next implementation pass cannot safely claim command authority correctness until the command result fixture matrix exists and passes from canonical seed states.
-
-The next proof should be headless first. Browser and live multiplayer validation should follow only after the command result fixture proves local and host authority decisions.
-
-## Current proof blocker
-
-```txt
-HorrorCorridor-V1/scripts/horror-corridor-command-fixture.mjs
-```
-
-That script is documented as the next acceptance command but has not been implemented yet.
