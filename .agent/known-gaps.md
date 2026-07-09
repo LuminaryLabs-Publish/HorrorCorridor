@@ -2,17 +2,17 @@
 
 **Repository:** `LuminaryLabs-Publish/HorrorCorridor`
 
-**Updated:** `2026-07-09T15-56-42-04-00`
+**Updated:** `2026-07-09T16-00-13-04-00`
 
 ## Selection gap handled in this pass
 
 ```txt
 - the accessible LuminaryLabs-Publish repo list was checked.
 - TheCavalryOfRome was excluded.
-- sampled root .agent/START_HERE.md files were present for checked non-Cavalry repos.
+- sampled root .agent/START_HERE.md state was present for the selected repo.
 - checked non-Cavalry repos were tracked in the central repo ledger.
-- HorrorCorridor was selected as the oldest eligible central-ledger fallback after newer IntoTheMeadow and PrehistoricRush ledger timestamps were observed.
-- this run adds a fresh timestamped repo-local tracker set and updates central tracking to 2026-07-09T15-56-42-04-00.
+- HorrorCorridor was selected because central tracking still pointed at 2026-07-09T12-30-09-04-00 while repo-local state had advanced to 2026-07-09T15-56-42-04-00.
+- this run adds a fresh timestamped repo-local tracker set and updates central tracking to 2026-07-09T16-00-13-04-00.
 ```
 
 ## Authority and command gaps
