@@ -2,17 +2,17 @@
 
 **Repository:** `LuminaryLabs-Publish/HorrorCorridor`
 
-**Updated:** `2026-07-09T12-25-39-04-00`
+**Updated:** `2026-07-09T12-30-09-04-00`
 
 ## Selection gap handled in this pass
 
 ```txt
 - the accessible LuminaryLabs-Publish repo list was checked.
 - TheCavalryOfRome was excluded.
-- sampled root .agent/START_HERE.md state was present for checked non-Cavalry repos.
+- sampled root .agent/START_HERE.md files were present for every checked non-Cavalry repo.
 - all checked non-Cavalry repos were tracked in the central repo ledger.
-- HorrorCorridor was selected as the oldest eligible central-ledger catch-up target.
-- this run adds a fresh timestamped repo-local tracker set and updates central tracking to 2026-07-09T12-25-39-04-00.
+- HorrorCorridor was selected as the oldest eligible central-ledger repair target.
+- this run adds a fresh timestamped repo-local tracker set and updates central tracking to 2026-07-09T12-30-09-04-00.
 ```
 
 ## Authority and command gaps
