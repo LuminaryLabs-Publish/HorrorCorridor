@@ -2,29 +2,29 @@
 
 **Repository:** `LuminaryLabs-Publish/HorrorCorridor`
 
-**Audit timestamp:** `2026-07-09T07-05-52-04-00`
+**Audit timestamp:** `2026-07-09T09-59-27-04-00`
 
 ## Summary
 
 `HorrorCorridor` is a playable Next/React cooperative first-person maze with solo, host, and join routes, PeerJS transport, Three.js rendering, a minimap, and runtime debug export.
 
-The current blocker is still command authority. `interactionRules.ts` and `networkRules.ts` return `GameState` only, invalid command paths silently return unchanged state, and `GameCanvas.tsx` uses object identity plus action strings as the local/host publish gate.
+The current blocker remains command authority. `interactionRules.ts` and `networkRules.ts` return `GameState` only, invalid command paths silently return unchanged state, and `GameCanvas.tsx` uses object identity plus action strings as the local/host publish gate.
 
-This pass did not change runtime source. It refreshed root `.agent` state, added timestamped command-ledger docs, and synced the central ledger to the repo-local command-result fixture gate.
+This pass did not change runtime source. It refreshed root `.agent` state, added timestamped result-first authority docs, and synced the central ledger to the new handoff.
 
 ## Repo selection
 
 ```txt
-LuminaryLabs-Publish/IntoTheMeadow        tracked / root .agent present
-LuminaryLabs-Publish/HorrorCorridor       selected / tracked / root .agent present / central ledger catch-up target
+LuminaryLabs-Publish/HorrorCorridor       selected / tracked / root .agent present / oldest eligible fallback
 LuminaryLabs-Publish/AetherVale           tracked / root .agent present
-LuminaryLabs-Publish/ZombieOrchard        tracked / root .agent present
-LuminaryLabs-Publish/TheUnmappedHouse     tracked / root .agent present
-LuminaryLabs-Publish/MyCozyIsland         tracked / root .agent present
 LuminaryLabs-Publish/TheOpenAbove         tracked / root .agent present
-LuminaryLabs-Publish/PhantomCommand       tracked / root .agent present
 LuminaryLabs-Publish/TheCavalryOfRome     excluded by rule
+LuminaryLabs-Publish/PhantomCommand       tracked / root .agent present
 LuminaryLabs-Publish/PrehistoricRush      tracked / root .agent present
+LuminaryLabs-Publish/ZombieOrchard        tracked / root .agent present
+LuminaryLabs-Publish/IntoTheMeadow        tracked / root .agent present
+LuminaryLabs-Publish/MyCozyIsland         tracked / root .agent present
+LuminaryLabs-Publish/TheUnmappedHouse     tracked / root .agent present
 ```
 
 No new untracked eligible repo was found.
@@ -33,7 +33,8 @@ No new untracked eligible repo was found.
 
 ```txt
 LuminaryLabs-Publish repository installation list
-LuminaryLabs-Dev/LuminaryLabs repo-ledger entry for HorrorCorridor
+LuminaryLabs-Dev/LuminaryLabs repo-ledger entries/search for Publish repos
+LuminaryLabs-Dev/LuminaryLabs repo-ledger/LuminaryLabs-Publish/HorrorCorridor.md
 LuminaryLabs-Publish/HorrorCorridor:.agent/START_HERE.md
 LuminaryLabs-Publish/HorrorCorridor:.agent/current-audit.md
 LuminaryLabs-Publish/HorrorCorridor:.agent/next-steps.md
@@ -52,7 +53,7 @@ LuminaryLabs-Publish/HorrorCorridor:HorrorCorridor-V1/src/features/game-state/do
 open app
 -> start menu
 -> choose solo, host, or join
--> create or join room identity
+-> create room, join room, or solo identity
 -> complete loading/readiness gates
 -> mount GameCanvas runtime
 -> initialize renderer, camera, post-processing, maze world, minimap, stores, local pose, networking, cadence, and debug state
@@ -138,6 +139,7 @@ host-authority
 local-authoritative-simulation
 legacy-game-state-interaction-rules
 legacy-game-state-network-rules
+ooze-cadence
 command-envelope-contract
 command-reason-catalog
 command-result-contract
@@ -218,3 +220,9 @@ central-ledger-sync-kit
 The runtime can play, render, sync, and complete, but command authority is still not fixture-safe.
 
 Rejected, skipped, publish-only, unchanged, recovery, and victory commands are not yet first-class result records.
+
+## Next safe ledge
+
+```txt
+HorrorCorridor Result-First Authority Consumer Handoff + Command Fixture Gate
+```
