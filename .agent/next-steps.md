@@ -2,12 +2,12 @@
 
 **Repository:** `LuminaryLabs-Publish/HorrorCorridor`
 
-**Updated:** `2026-07-08T20-30-19-04-00`
+**Updated:** `2026-07-08T20-38-28-04-00`
 
 ## Current next build slice
 
 ```txt
-HorrorCorridor Command Fixture Seed State Contract + Consumer Replay Gate
+HorrorCorridor Command Decision Fixture Contract + Local/Host Consumer Replay Gate
 ```
 
 Start from:
@@ -17,27 +17,22 @@ Start from:
 .agent/command-authority-audit/result-reason-matrix.md
 .agent/command-authority-audit/command-result-fixture-acceptance-ledger.md
 .agent/command-authority-audit/publish-decision-routing-matrix.md
-.agent/command-authority-audit/2026-07-08T08-29-35-04-00-source-edit-cutover-queue.md
-.agent/command-authority-audit/2026-07-08T09-40-52-04-00-command-result-wire-contract.md
-.agent/command-authority-audit/2026-07-08T11-09-38-04-00-command-result-source-wire-map.md
-.agent/command-authority-audit/2026-07-08T12-29-17-04-00-consumer-acceptance-map.md
-.agent/command-authority-audit/2026-07-08T13-59-50-04-00-gamecanvas-consumer-wire-map.md
-.agent/command-authority-audit/2026-07-08T15-39-43-04-00-source-file-manifest-and-adapter-boundary.md
-.agent/command-authority-audit/2026-07-08T15-49-18-04-00-fixture-runner-acceptance-queue.md
-.agent/command-authority-audit/2026-07-08T18-19-43-04-00-legacy-adapter-source-cut.md
-.agent/command-authority-audit/2026-07-08T20-30-19-04-00-seed-state-consumer-fixture-contract.md
+.agent/command-authority-audit/2026-07-08T20-38-28-04-00-command-decision-fixture-contract.md
+.agent/architecture-audit/2026-07-08T20-38-28-04-00-command-decision-dsk-map.md
+.agent/gameplay-audit/2026-07-08T20-38-28-04-00-local-host-command-decision-loop.md
 ```
 
 ## Build checklist
 
 ```txt
 [ ] Preserve current solo, host, client, renderer, minimap, debug overlay, and PeerJS behavior.
-[ ] Add CommandEnvelope, CommandStatus, CommandReason, CommandResult, CommandSnapshotSummary, CommandEvent, and PublishDecision contracts under game-state/domain.
-[ ] Define stable CommandReason values for every current silent no-op branch in networkRules.ts and interactionRules.ts.
+[ ] Add serializable command contracts under game-state/domain.
+[ ] Define CommandEnvelope, CommandSource, CommandStatus, CommandReason, CommandResult, PublishDecision, CommandEvent, and CommandSnapshotSummary.
+[ ] Define stable CommandReason values for every silent no-op branch in interactionRules.ts and networkRules.ts.
 [ ] Add command result constructors and snapshot summary helpers.
 [ ] Add publish decision helper before GameCanvas consumes result metadata.
 [ ] Add command journal helpers and summary counters.
-[ ] Add command fixture seed-state helpers before the fixture runner.
+[ ] Add canonical command fixture seed-state helpers before the fixture runner.
 [ ] Add fixture row builders for accepted, rejected, unchanged, skipped, publish-only, ooze, and victory paths.
 [ ] Add interaction preflight helpers beside interactionRules.
 [ ] Add result-returning wrappers for pickup, drop, place, and remove.
@@ -54,7 +49,6 @@ Start from:
 [ ] Add localAuthorityCommandConsumer that journals local results, skips rejected/no-op broadcasts, and publishes accepted changed/victory results.
 [ ] Add hostAuthorityCommandConsumer that classifies PLAYER_UPDATE, TRY_INTERACT, request-sync, skipped, rejected, recovery, and victory paths.
 [ ] Add DOM-free command fixture script before changing GameCanvas publish logic.
-[ ] Add fixture rows for accepted, rejected, unchanged, publish-only, skipped, ooze, and victory result classes.
 [ ] Add package script for the command fixture after the script exists.
 [ ] Add RuntimeDebugCommandProjection type and projection helper after the headless fixture passes.
 [ ] Wire local-authority consumer to journal rejections and only publish accepted changed/victory results.
@@ -89,65 +83,21 @@ HorrorCorridor-V1/src/components/game/GameCanvas.tsx
 
 ```txt
 1. commandTypes.ts
-   - define CommandEnvelope, CommandSource, CommandStatus, CommandReason, CommandResult, PublishDecision, CommandEvent, CommandSnapshotSummary.
-   - keep these records serializable and DOM-free.
-
 2. commandReasons.ts
-   - export stable reason constants and reason family helpers.
-   - do not derive user-facing copy from arbitrary thrown strings.
-
 3. commandResults.ts
-   - build accepted, rejected, unchanged, publish-only, skipped, and victory result constructors.
-   - calculate changed from object identity plus snapshot summary.
-
 4. publishDecisions.ts
-   - map result.status/result.changed to publish, skip, recovery, no-op, or victory.
-   - output shouldBroadcast, shouldCommitVictory, snapshotReason, and debug label.
-
 5. commandJournal.ts
-   - append result records and expose accepted/rejected/unchanged/publishOnly/skipped/victory counts.
-
 6. commandFixtureSeeds.ts
-   - create canonical seeded GameState rows for every command class.
-   - avoid DOM, canvas, PeerJS, Three.js, and browser globals.
-
 7. commandFixtureRows.ts
-   - define fixture id, source, command, seed state, expected result, expected decision, and non-normalizable checks.
-
 8. interactionPreflight.ts
-   - split current silent return branches into named preflight results.
-   - cover not playing, missing player, carrying conflicts, distance checks, slot checks, and cube lookup.
-
 9. interactionResultRules.ts
-   - wrap pickUpCube, dropCube, placeCubeAtEndAnomaly, and removeCubeFromEndAnomaly.
-   - keep existing interactionRules.ts behavior stable.
-   - export legacy adapters only as result.state passthrough.
-
 10. networkResultRules.ts
-    - wrap applyNetworkPlayerUpdate, syncHeldCubesToPlayers, applyNetworkInteractionRequest, request-sync, toggle-ready, cancel, and default.
-    - keep existing networkRules.ts behavior stable.
-
 11. localAuthorityCommandConsumer.ts
-    - consume local interaction results and publish only accepted changed or victory decisions.
-    - journal rejected, skipped, unchanged, and no-op results without broadcasting.
-
 12. hostAuthorityCommandConsumer.ts
-    - consume host player-update and interaction results.
-    - publish request-sync recovery, accepted changed, and victory decisions.
-    - skip rejected TRY_INTERACT and skipped/no-op commands.
-
 13. scripts/horror-corridor-command-fixture.mjs
-    - run the acceptance matrix without DOM, canvas, PeerJS, Three.js, or browser state.
-
-14. package.json
-    - add a command fixture script only after the fixture exists.
-
-15. runtimeDebugStore.ts
-    - add RuntimeDebugCommandProjection and latest command debug export fields after fixture proof.
-
-16. GameCanvas.tsx
-    - replace local object-identity publish gate with localAuthorityCommandConsumer.
-    - replace host message publish gate with hostAuthorityCommandConsumer.
+14. package.json command fixture script
+15. runtimeDebugStore.ts command projection fields
+16. GameCanvas.tsx consumer integration
 ```
 
 ## Required command reason families
@@ -215,18 +165,7 @@ skipped:unknown-action
 [ ] local consumer publishes accepted changed/victory
 [ ] host consumer skips rejected TRY_INTERACT broadcast
 [ ] host consumer publishes request-sync recovery
-```
-
-## Publish decision acceptance matrix
-
-```txt
-[ ] accepted changed -> publish
-[ ] accepted unchanged -> no-op
-[ ] rejected -> skip
-[ ] unchanged -> skip or no-op by helper type
-[ ] publish-only -> recovery
-[ ] skipped -> skip
-[ ] victory -> victory
+[ ] runtime debug command decision projection is serializable
 ```
 
 ## Acceptance checks
