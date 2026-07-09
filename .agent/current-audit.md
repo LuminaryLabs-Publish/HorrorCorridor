@@ -2,7 +2,7 @@
 
 **Repository:** `LuminaryLabs-Publish/HorrorCorridor`
 
-**Audit timestamp:** `2026-07-09T12-25-39-04-00`
+**Audit timestamp:** `2026-07-09T12-30-09-04-00`
 
 ## Summary
 
@@ -10,13 +10,13 @@
 
 The current blocker remains command authority. `interactionRules.ts` and `networkRules.ts` return `GameState` only, invalid command paths silently return unchanged state, and `GameCanvas.tsx` still uses object identity plus implicit reason strings as the local/host publish gate.
 
-This pass did not change runtime source. It refreshed root `.agent` state, added timestamped readback/fixture docs, and synced central tracking to this breakdown.
+This pass did not change runtime source. It refreshed root `.agent` state, added timestamped readback/fixture docs, and repaired central tracking to this breakdown.
 
 ## Repo selection
 
 ```txt
 LuminaryLabs-Publish/IntoTheMeadow        tracked / root .agent present / central latest 2026-07-09T12-08-46-04-00
-LuminaryLabs-Publish/HorrorCorridor       selected / tracked / root .agent present / central latest 2026-07-09T10-10-32-04-00 / repo-local latest 2026-07-09T12-20-08-04-00
+LuminaryLabs-Publish/HorrorCorridor       selected / tracked / root .agent present / central latest 2026-07-09T10-10-32-04-00 / repo-local latest 2026-07-09T12-25-39-04-00
 LuminaryLabs-Publish/AetherVale           tracked / root .agent present / central latest 2026-07-09T11-30-50-04-00
 LuminaryLabs-Publish/ZombieOrchard        tracked / root .agent present / central latest 2026-07-09T10-40-00-04-00
 LuminaryLabs-Publish/TheUnmappedHouse     tracked / root .agent present / central latest 2026-07-09T11-00-39-04-00
@@ -27,7 +27,7 @@ LuminaryLabs-Publish/TheCavalryOfRome     excluded by rule
 LuminaryLabs-Publish/PrehistoricRush      tracked / root .agent present / central latest 2026-07-09T12-00-36-04-00
 ```
 
-No new untracked eligible repo was found. `HorrorCorridor` was the oldest eligible central-ledger catch-up target.
+No new untracked eligible repo was found. `HorrorCorridor` was the oldest eligible central-ledger repair target.
 
 ## Evidence checked
 
@@ -45,7 +45,6 @@ LuminaryLabs-Publish/HorrorCorridor:HorrorCorridor-V1/package.json
 LuminaryLabs-Publish/HorrorCorridor:HorrorCorridor-V1/src/components/game/GameCanvas.tsx
 LuminaryLabs-Publish/HorrorCorridor:HorrorCorridor-V1/src/features/game-state/domain/networkRules.ts
 LuminaryLabs-Publish/HorrorCorridor:HorrorCorridor-V1/src/features/game-state/domain/interactionRules.ts
-LuminaryLabs-Publish/HorrorCorridor:HorrorCorridor-V1/src/features/debug/store/runtimeDebugStore.ts
 ```
 
 ## Current interaction loop
@@ -225,5 +224,5 @@ Rejected, skipped, publish-only, unchanged, recovery, and victory commands are n
 ## Next safe ledge
 
 ```txt
-HorrorCorridor Command Ledger Central Catch-up + Result-First Consumer Fixture Gate
+HorrorCorridor Command Result Central Ledger Repair + Result-First Source Fixture Gate
 ```
