@@ -2,7 +2,7 @@
 
 **Repository:** `LuminaryLabs-Publish/HorrorCorridor`
 
-**Last aligned:** `2026-07-09T15-56-42-04-00`
+**Last aligned:** `2026-07-09T16-00-13-04-00`
 
 ## Purpose
 
@@ -18,21 +18,21 @@ No checked non-Cavalry repo was fully new, absent from central tracking, missing
 
 `LuminaryLabs-Publish/TheCavalryOfRome` remains excluded by standing rule.
 
-`HorrorCorridor` was selected as the oldest eligible central-ledger fallback after `IntoTheMeadow` was observed at `2026-07-09T15-39-08-04-00`, `PrehistoricRush` was observed at `2026-07-09T15-20-00-04-00`, and `HorrorCorridor` still pointed at `2026-07-09T12-30-09-04-00`.
+`HorrorCorridor` was selected as the central-ledger readback repair target because the repo-local `.agent` state had advanced to `2026-07-09T15-56-42-04-00` while the central `LuminaryLabs-Dev/LuminaryLabs` ledger still listed `2026-07-09T12-30-09-04-00` before this run.
 
 ## Publish repos checked
 
 ```txt
-LuminaryLabs-Publish/IntoTheMeadow        tracked / root .agent present / central latest 2026-07-09T15-39-08-04-00
-LuminaryLabs-Publish/HorrorCorridor       selected / tracked / root .agent present / central latest 2026-07-09T12-30-09-04-00 before this update
-LuminaryLabs-Publish/AetherVale           tracked / root .agent present / central latest 2026-07-09T14-16-00-04-00 sampled from prior central ledger context
-LuminaryLabs-Publish/ZombieOrchard        tracked / root .agent present / central latest 2026-07-09T13-18-48-04-00 sampled from prior central ledger context
-LuminaryLabs-Publish/TheUnmappedHouse     tracked / root .agent present / central latest 2026-07-09T13-38-15-04-00 sampled from prior central ledger context
-LuminaryLabs-Publish/MyCozyIsland         tracked / root .agent present / central latest 2026-07-09T14-39-07-04-00 sampled from prior central ledger context
-LuminaryLabs-Publish/TheOpenAbove         tracked / root .agent present / central latest 2026-07-09T15-09-09-04-00 sampled from prior central ledger context
-LuminaryLabs-Publish/PhantomCommand       tracked / root .agent present / central latest 2026-07-09T13-00-37-04-00 sampled from prior central ledger context
+LuminaryLabs-Publish/HorrorCorridor       selected / tracked / root .agent present / central latest 2026-07-09T12-30-09-04-00 before this update / repo-local latest 2026-07-09T15-56-42-04-00
+LuminaryLabs-Publish/AetherVale           tracked / root .agent present / central latest 2026-07-09T14-16-00-04-00
+LuminaryLabs-Publish/TheOpenAbove         tracked / root .agent present / central latest 2026-07-09T15-09-09-04-00
 LuminaryLabs-Publish/TheCavalryOfRome     excluded by rule
-LuminaryLabs-Publish/PrehistoricRush      tracked / root .agent present / central latest 2026-07-09T15-20-00-04-00
+LuminaryLabs-Publish/PhantomCommand       tracked / root .agent present / central latest 2026-07-09T13-00-37-04-00
+LuminaryLabs-Publish/PrehistoricRush      tracked / root .agent present / central latest 2026-07-09T15-31-40-04-00
+LuminaryLabs-Publish/ZombieOrchard        tracked / root .agent present / central latest 2026-07-09T13-18-48-04-00
+LuminaryLabs-Publish/IntoTheMeadow        tracked / root .agent present / central latest 2026-07-09T15-39-08-04-00
+LuminaryLabs-Publish/MyCozyIsland         tracked / root .agent present / central latest 2026-07-09T14-39-07-04-00
+LuminaryLabs-Publish/TheUnmappedHouse     tracked / root .agent present / central latest 2026-07-09T13-38-15-04-00
 ```
 
 ## Current product read
@@ -88,14 +88,14 @@ CommandFixtureSeed
 .agent/known-gaps.md
 .agent/next-steps.md
 .agent/validation.md
-.agent/architecture-audit/2026-07-09T15-56-42-04-00-command-result-journal-readback-dsk-map.md
-.agent/render-audit/2026-07-09T15-56-42-04-00-debug-command-readback-consumer-map.md
-.agent/gameplay-audit/2026-07-09T15-56-42-04-00-local-host-command-result-loop.md
-.agent/command-authority-audit/2026-07-09T15-56-42-04-00-result-first-journal-fixture-contract.md
-.agent/interaction-audit/2026-07-09T15-56-42-04-00-preflight-reason-consumer-map.md
-.agent/deploy-audit/2026-07-09T15-56-42-04-00-command-fixture-check-wire-map.md
-.agent/trackers/2026-07-09T15-56-42-04-00/project-breakdown.md
-.agent/turn-ledger/2026-07-09T15-56-42-04-00.md
+.agent/architecture-audit/2026-07-09T16-00-13-04-00-command-result-ledger-readback-repair-dsk-map.md
+.agent/render-audit/2026-07-09T16-00-13-04-00-debug-command-publish-projection-gap.md
+.agent/gameplay-audit/2026-07-09T16-00-13-04-00-local-host-command-consumer-loop.md
+.agent/command-authority-audit/2026-07-09T16-00-13-04-00-result-first-fixture-reason-contract.md
+.agent/interaction-audit/2026-07-09T16-00-13-04-00-silent-noop-preflight-row-map.md
+.agent/deploy-audit/2026-07-09T16-00-13-04-00-command-fixture-package-gate.md
+.agent/trackers/2026-07-09T16-00-13-04-00/project-breakdown.md
+.agent/turn-ledger/2026-07-09T16-00-13-04-00.md
 .agent/kit-registry.json
 ```
 
@@ -134,7 +134,7 @@ HorrorCorridor-V1/scripts/horror-corridor-command-fixture.mjs
 ## Current next safe ledge
 
 ```txt
-HorrorCorridor Command Result Journal Readback Refresh + Result-First Fixture Gate
+HorrorCorridor Command Result Ledger Readback Repair + Result-First Fixture Gate
 ```
 
 Build this before touching renderer extraction, PeerJS extraction, minimap extraction, post-processing extraction, scene dressing, new maze content, or visual object-kit expansion.
