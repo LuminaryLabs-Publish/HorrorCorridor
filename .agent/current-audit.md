@@ -2,40 +2,40 @@
 
 **Repository:** `LuminaryLabs-Publish/HorrorCorridor`
 
-**Audit timestamp:** `2026-07-08T18-19-43-04-00`
+**Audit timestamp:** `2026-07-08T20-30-19-04-00`
 
 ## Summary
 
-`HorrorCorridor` is playable and structurally rich, but command authority remains the next safest proof boundary.
+`HorrorCorridor` is playable, visually present, and already has a rich source scaffold, but command authority is still the safest next proof boundary.
 
-This pass did not change runtime source. It refreshed repo-local `.agent` state and narrowed the next implementation to a command consumer fixture runner, result-returning legacy adapters, local/host command consumers, publish-decision metadata, and runtime debug command readback.
+This pass did not change runtime source. It refreshed repo-local `.agent` state and narrowed the next implementation to a seed-state fixture contract that proves command envelopes, result metadata, publish decisions, local/host consumers, runtime debug projection, and final snapshot parity before `GameCanvas.tsx` is rewired.
 
 ## Repo selection
 
 The accessible `LuminaryLabs-Publish` repo list was checked during this pass.
 
 ```txt
-LuminaryLabs-Publish/HorrorCorridor      selected / oldest eligible fallback / previous central latest 2026-07-08T15:39:43-04:00
-LuminaryLabs-Publish/AetherVale          tracked / root .agent present / latest central 2026-07-08T17:49:51-04:00
-LuminaryLabs-Publish/TheOpenAbove        tracked / root .agent present / latest central 2026-07-08T17:31:22-04:00
+LuminaryLabs-Publish/HorrorCorridor      selected / oldest sampled eligible fallback / command fixture seed-state contract unresolved
+LuminaryLabs-Publish/AetherVale          tracked / root .agent present / recently refreshed
+LuminaryLabs-Publish/TheOpenAbove        tracked / root .agent present / recently refreshed
 LuminaryLabs-Publish/TheCavalryOfRome    excluded by rule
-LuminaryLabs-Publish/PhantomCommand      tracked / root .agent present / latest central 2026-07-08T15:58:59-04:00
-LuminaryLabs-Publish/PrehistoricRush     tracked / root .agent present / latest central 2026-07-08T16:51:11-04:00
-LuminaryLabs-Publish/ZombieOrchard       tracked / root .agent present / latest central 2026-07-08T16:20:00-04:00
-LuminaryLabs-Publish/IntoTheMeadow       tracked / root .agent present / latest central 2026-07-08T17:59:43-04:00
-LuminaryLabs-Publish/MyCozyIsland        tracked / root .agent present / latest central 2026-07-08T17:09:48-04:00
-LuminaryLabs-Publish/TheUnmappedHouse    tracked / root .agent present / latest central 2026-07-08T16:19:57-04:00
+LuminaryLabs-Publish/PhantomCommand      tracked / root .agent present / recently refreshed
+LuminaryLabs-Publish/PrehistoricRush     tracked / root .agent present / recently refreshed
+LuminaryLabs-Publish/ZombieOrchard       tracked / root .agent present / recently refreshed
+LuminaryLabs-Publish/IntoTheMeadow       tracked / root .agent present / recently refreshed
+LuminaryLabs-Publish/MyCozyIsland        tracked / root .agent present / recently refreshed
+LuminaryLabs-Publish/TheUnmappedHouse    tracked / root .agent present / recently refreshed
 ```
 
 `TheCavalryOfRome` remains excluded by standing rule.
 
-No new untracked eligible repo was found. `HorrorCorridor` was selected as the oldest observed eligible central-ledger fallback because the command-consumer fixture files are still absent and the command authority seam is still highest value.
+No new untracked eligible repo was found. `HorrorCorridor` was selected because it had the oldest sampled current root-agent timestamp and the command fixture source boundary is still absent.
 
 ## Evidence checked
 
 ```txt
 LuminaryLabs-Publish repository installation list
-LuminaryLabs-Dev/LuminaryLabs repo ledger entries for checked Publish repos
+LuminaryLabs-Dev/LuminaryLabs repo-ledger search results for Publish repos
 LuminaryLabs-Publish/HorrorCorridor:.agent/START_HERE.md
 LuminaryLabs-Publish/HorrorCorridor:.agent/current-audit.md
 LuminaryLabs-Publish/HorrorCorridor:.agent/next-steps.md
@@ -46,7 +46,6 @@ LuminaryLabs-Publish/HorrorCorridor:HorrorCorridor-V1/package.json
 LuminaryLabs-Publish/HorrorCorridor:HorrorCorridor-V1/src/components/game/GameCanvas.tsx
 LuminaryLabs-Publish/HorrorCorridor:HorrorCorridor-V1/src/features/game-state/domain/networkRules.ts
 LuminaryLabs-Publish/HorrorCorridor:HorrorCorridor-V1/src/features/game-state/domain/interactionRules.ts
-LuminaryLabs-Publish/HorrorCorridor:HorrorCorridor-V1/src/features/debug/store/runtimeDebugStore.ts
 ```
 
 ## Current interaction loop
@@ -93,7 +92,7 @@ client PLAYER_UPDATE
 ## Target authority loop
 
 ```txt
-input or peer message
+seeded fixture state
 -> CommandEnvelope
 -> CommandReason catalog
 -> interaction/network preflight
@@ -103,8 +102,8 @@ input or peer message
 -> LocalAuthorityCommandConsumer or HostAuthorityCommandConsumer
 -> RuntimeDebugCommandProjection
 -> publishAuthoritativeState only from explicit decision
--> DOM-free fixture replay
--> final snapshot parity comparison
+-> final replicated snapshot summary
+-> DOM-free fixture replay parity
 ```
 
 ## All domains in use
@@ -166,6 +165,7 @@ ooze-command-result
 request-sync-command-result
 ready-cancel-command-result
 victory-command-result
+command-seed-state-fixture
 command-result-journal
 publish-decision-snapshot
 local-authority-command-consumer
@@ -195,6 +195,7 @@ maze bootstrap service
 first-person player service
 legacy GameState interaction service
 legacy GameState network service
+command seed-state fixture service
 command result envelope service
 publish decision service
 local authority result consumer service
@@ -217,6 +218,7 @@ ordered-anomaly-sequence-kit
 command-envelope-contract-kit
 command-reason-catalog-kit
 command-result-envelope-kit
+command-seed-state-fixture-kit
 publish-decision-snapshot-kit
 command-result-journal-kit
 interaction-preflight-kit
@@ -238,25 +240,4 @@ Rejected commands are not distinguishable from no-op commands.
 
 `toggle-ready`, `cancel`, and default network actions are not represented as skipped commands.
 
-Victory is a state mutation but still needs explicit command-result and publish-decision status.
-
-Host/local publishing still needs shared consumer metadata before GameCanvas should change.
-
-Runtime debug does not yet expose latest command result, rejection reason, publish decision, consumer action, journal counts, or fixture parity.
-
-## Follow-up artifacts added
-
-```txt
-.agent/architecture-audit/2026-07-08T18-19-43-04-00-command-consumer-fixture-dsk-map.md
-.agent/render-audit/2026-07-08T18-19-43-04-00-runtime-debug-result-projection-map.md
-.agent/gameplay-audit/2026-07-08T18-19-43-04-00-command-result-authority-loop.md
-.agent/command-authority-audit/2026-07-08T18-19-43-04-00-legacy-adapter-source-cut.md
-.agent/trackers/2026-07-08T18-19-43-04-00/project-breakdown.md
-.agent/turn-ledger/2026-07-08T18-19-43-04-00.md
-```
-
-## Current next slice
-
-```txt
-HorrorCorridor Command Consumer Fixture Runner + Legacy Adapter Source Cut
-```
+The fixture must now begin from explicit seed states instead of browser-only runtime state so accepted, rejected, unchanged, skipped, recovery, and victory rows can be proven without DOM, canvas, PeerJS, or Three.js.
