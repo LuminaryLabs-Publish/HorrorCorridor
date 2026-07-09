@@ -2,12 +2,12 @@
 
 **Repository:** `LuminaryLabs-Publish/HorrorCorridor`
 
-**Updated:** `2026-07-08T22-51-43-04-00`
+**Updated:** `2026-07-09T01-00-22-04-00`
 
 ## Current next build slice
 
 ```txt
-HorrorCorridor Command Consumer Source Cut + Runtime Debug Readback Fixture Gate
+HorrorCorridor Result-First GameCanvas Command Splice + Runtime Debug Projection Fixture Gate
 ```
 
 Start from:
@@ -17,11 +17,12 @@ Start from:
 .agent/command-authority-audit/result-reason-matrix.md
 .agent/command-authority-audit/command-result-fixture-acceptance-ledger.md
 .agent/command-authority-audit/publish-decision-routing-matrix.md
-.agent/command-authority-audit/2026-07-08T22-51-43-04-00-source-cut-fixture-contract.md
-.agent/architecture-audit/2026-07-08T22-51-43-04-00-command-consumer-source-cut-dsk-map.md
-.agent/gameplay-audit/2026-07-08T22-51-43-04-00-local-host-command-consumer-loop.md
-.agent/render-audit/2026-07-08T22-51-43-04-00-runtime-debug-command-readback-map.md
-.agent/deploy-audit/2026-07-08T22-51-43-04-00-command-fixture-validation-gate.md
+.agent/command-authority-audit/2026-07-09T01-00-22-04-00-result-first-gamecanvas-splice-contract.md
+.agent/interaction-audit/2026-07-09T01-00-22-04-00-interaction-preflight-reason-matrix.md
+.agent/architecture-audit/2026-07-09T01-00-22-04-00-command-result-gamecanvas-splice-dsk-map.md
+.agent/gameplay-audit/2026-07-09T01-00-22-04-00-publish-decision-consumer-loop.md
+.agent/render-audit/2026-07-09T01-00-22-04-00-runtime-debug-command-projection-readback.md
+.agent/deploy-audit/2026-07-09T01-00-22-04-00-command-fixture-package-script-gate.md
 ```
 
 ## Build checklist
@@ -31,7 +32,7 @@ Start from:
 [ ] Add serializable command contracts under game-state/domain.
 [ ] Define CommandEnvelope, CommandSource, CommandStatus, CommandReason, CommandResult, PublishDecision, CommandEvent, and CommandSnapshotSummary.
 [ ] Define stable CommandReason values for every silent no-op branch in interactionRules.ts and networkRules.ts.
-[ ] Add command result constructors and snapshot summary helpers.
+[ ] Add command result constructors and before/after snapshot summary helpers.
 [ ] Add publish decision helper before GameCanvas consumes result metadata.
 [ ] Add command journal helpers and summary counters.
 [ ] Add canonical command fixture seed-state helpers before the fixture runner.
@@ -53,6 +54,7 @@ Start from:
 [ ] Add DOM-free command fixture script before changing GameCanvas publish logic.
 [ ] Add package script for the command fixture after the script exists.
 [ ] Add RuntimeDebugCommandProjection type and projection helper after the headless fixture passes.
+[ ] Wire runtimeDebugStore to expose command projection fields additively.
 [ ] Wire local-authority consumer to journal rejections and only publish accepted changed/victory results.
 [ ] Wire host-authority consumer to skip rejected TRY_INTERACT publishes and publish request-sync recovery.
 [ ] Replace GameCanvas object-identity publish checks only after fixture proof.
@@ -75,6 +77,7 @@ HorrorCorridor-V1/src/features/game-state/domain/interactionResultRules.ts
 HorrorCorridor-V1/src/features/game-state/domain/networkResultRules.ts
 HorrorCorridor-V1/src/features/game-state/domain/localAuthorityCommandConsumer.ts
 HorrorCorridor-V1/src/features/game-state/domain/hostAuthorityCommandConsumer.ts
+HorrorCorridor-V1/src/features/debug/domain/runtimeDebugCommandProjection.ts
 HorrorCorridor-V1/scripts/horror-corridor-command-fixture.mjs
 HorrorCorridor-V1/package.json
 HorrorCorridor-V1/src/features/debug/store/runtimeDebugStore.ts
@@ -98,8 +101,9 @@ HorrorCorridor-V1/src/components/game/GameCanvas.tsx
 12. hostAuthorityCommandConsumer.ts
 13. scripts/horror-corridor-command-fixture.mjs
 14. package.json command fixture script
-15. runtimeDebugStore.ts command projection fields
-16. GameCanvas.tsx consumer integration
+15. runtimeDebugCommandProjection.ts
+16. runtimeDebugStore.ts additive command projection fields
+17. GameCanvas.tsx result-first consumer integration
 ```
 
 ## Required command reason families
@@ -168,6 +172,7 @@ skipped:unknown-action
 [ ] host consumer skips rejected TRY_INTERACT broadcast
 [ ] host consumer publishes request-sync recovery
 [ ] runtime debug command decision projection is serializable
+[ ] GameCanvas consumer splice preserves legacy snapshot shape
 ```
 
 ## Acceptance checks
