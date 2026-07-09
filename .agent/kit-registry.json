@@ -1,16 +1,16 @@
 {
-  "schemaVersion": 33,
+  "schemaVersion": 34,
   "repository": "LuminaryLabs-Publish/HorrorCorridor",
-  "generatedAt": "2026-07-09T12-30-09-04-00",
-  "status": "command-result-central-ledger-repair-result-first-source-fixture-gate",
-  "latestTracker": ".agent/trackers/2026-07-09T12-30-09-04-00/project-breakdown.md",
-  "latestTurnLedger": ".agent/turn-ledger/2026-07-09T12-30-09-04-00.md",
-  "latestArchitectureAudit": ".agent/architecture-audit/2026-07-09T12-30-09-04-00-command-result-central-ledger-repair-dsk-map.md",
-  "latestRenderAudit": ".agent/render-audit/2026-07-09T12-30-09-04-00-debug-command-publish-readback-map.md",
-  "latestGameplayAudit": ".agent/gameplay-audit/2026-07-09T12-30-09-04-00-local-host-result-loop.md",
-  "latestCommandAuthorityAudit": ".agent/command-authority-audit/2026-07-09T12-30-09-04-00-result-first-source-fixture-contract.md",
-  "latestInteractionAudit": ".agent/interaction-audit/2026-07-09T12-30-09-04-00-silent-noop-reason-coverage.md",
-  "latestDeployAudit": ".agent/deploy-audit/2026-07-09T12-30-09-04-00-command-fixture-check-gate.md",
+  "generatedAt": "2026-07-09T15-56-42-04-00",
+  "status": "command-result-journal-readback-refresh-result-first-fixture-gate",
+  "latestTracker": ".agent/trackers/2026-07-09T15-56-42-04-00/project-breakdown.md",
+  "latestTurnLedger": ".agent/turn-ledger/2026-07-09T15-56-42-04-00.md",
+  "latestArchitectureAudit": ".agent/architecture-audit/2026-07-09T15-56-42-04-00-command-result-journal-readback-dsk-map.md",
+  "latestRenderAudit": ".agent/render-audit/2026-07-09T15-56-42-04-00-debug-command-readback-consumer-map.md",
+  "latestGameplayAudit": ".agent/gameplay-audit/2026-07-09T15-56-42-04-00-local-host-command-result-loop.md",
+  "latestCommandAuthorityAudit": ".agent/command-authority-audit/2026-07-09T15-56-42-04-00-result-first-journal-fixture-contract.md",
+  "latestInteractionAudit": ".agent/interaction-audit/2026-07-09T15-56-42-04-00-preflight-reason-consumer-map.md",
+  "latestDeployAudit": ".agent/deploy-audit/2026-07-09T15-56-42-04-00-command-fixture-check-wire-map.md",
   "sourceRoots": [
     "HorrorCorridor-V1/src/components/game",
     "HorrorCorridor-V1/src/features",
@@ -27,7 +27,7 @@
   "selection": {
     "selectedRepo": "LuminaryLabs-Publish/HorrorCorridor",
     "excludedRepo": "LuminaryLabs-Publish/TheCavalryOfRome",
-    "reason": "No checked non-Cavalry repo was new, central-ledger absent, undocumented, recently added but undocumented, or missing sampled root .agent/START_HERE.md state. HorrorCorridor was selected as the oldest eligible central-ledger repair target.",
+    "reason": "No checked non-Cavalry repo was new, central-ledger absent, undocumented, recently added but undocumented, or missing sampled root .agent/START_HERE.md state. HorrorCorridor was selected as the oldest eligible central-ledger fallback after IntoTheMeadow and PrehistoricRush were observed with newer central ledger timestamps.",
     "publishReposChecked": [
       "LuminaryLabs-Publish/IntoTheMeadow",
       "LuminaryLabs-Publish/HorrorCorridor",
@@ -41,7 +41,7 @@
       "LuminaryLabs-Publish/PrehistoricRush"
     ]
   },
-  "currentNextSlice": "HorrorCorridor Command Result Central Ledger Repair + Result-First Source Fixture Gate",
+  "currentNextSlice": "HorrorCorridor Command Result Journal Readback Refresh + Result-First Fixture Gate",
   "interactionLoop": {
     "current": [
       "start-menu",
