@@ -2,29 +2,29 @@
 
 **Repository:** `LuminaryLabs-Publish/HorrorCorridor`
 
-**Audit timestamp:** `2026-07-08T20-38-28-04-00`
+**Audit timestamp:** `2026-07-08T22-51-43-04-00`
 
 ## Summary
 
-`HorrorCorridor` is playable, visually present, and source-rich, but command authority is still the safest next proof boundary.
+`HorrorCorridor` is playable, visually present, and already has useful runtime debug frames, but command authority still needs a source-backed consumer cut before renderer or PeerJS extraction.
 
-This pass did not change runtime source. It refreshed repo-local `.agent` state and narrowed the next implementation to a command decision fixture that proves explicit status, reason, changed flag, publish decision, local/host consumer behavior, runtime debug projection, and final snapshot parity before `GameCanvas.tsx` publish behavior is rewired.
+This pass did not change runtime source. It refreshed root `.agent` state and narrowed the next implementation to a command consumer source cut that proves `CommandResult`, `PublishDecision`, local/host consumer behavior, runtime debug command readback, and final snapshot parity through a DOM-free fixture.
 
 ## Repo selection
 
 The accessible `LuminaryLabs-Publish` repo list was checked during this pass.
 
 ```txt
-LuminaryLabs-Publish/IntoTheMeadow       tracked / root .agent present / latest central 2026-07-08T20-21-59-04-00
-LuminaryLabs-Publish/HorrorCorridor      selected / command decision fixture unresolved / central catch-up needed
-LuminaryLabs-Publish/AetherVale          tracked / root .agent present / latest central 2026-07-08T18-58-10-04-00
-LuminaryLabs-Publish/ZombieOrchard       tracked / root .agent present / latest central 2026-07-08T19-21-15-04-00
-LuminaryLabs-Publish/TheUnmappedHouse    tracked / root .agent present / latest root alignment 2026-07-08T18-51-55-04-00
-LuminaryLabs-Publish/MyCozyIsland        tracked / root .agent present / latest central 2026-07-08T19-40-00-04-00
-LuminaryLabs-Publish/TheOpenAbove        tracked / root .agent present / recently refreshed
-LuminaryLabs-Publish/PhantomCommand      tracked / root .agent present / recently refreshed
+LuminaryLabs-Publish/IntoTheMeadow       tracked / root .agent present / latest central 2026-07-08T22-38-17-04-00
+LuminaryLabs-Publish/HorrorCorridor      selected / oldest eligible central alignment 2026-07-08T20-38-28-04-00
+LuminaryLabs-Publish/AetherVale          tracked / root .agent present / latest central 2026-07-08T21-31-35-04-00
+LuminaryLabs-Publish/ZombieOrchard       tracked / root .agent present / latest central 2026-07-08T21-18-39-04-00
+LuminaryLabs-Publish/TheUnmappedHouse    tracked / root .agent present / latest central 2026-07-08T21-00-12-04-00
+LuminaryLabs-Publish/MyCozyIsland        tracked / root .agent present / latest central 2026-07-08T21-58-34-04-00
+LuminaryLabs-Publish/TheOpenAbove        tracked / root .agent present / latest central 2026-07-08T22-19-38-04-00
+LuminaryLabs-Publish/PhantomCommand      tracked / root .agent present / latest central 2026-07-08T20-52-00-04-00
 LuminaryLabs-Publish/TheCavalryOfRome    excluded by rule
-LuminaryLabs-Publish/PrehistoricRush     tracked / root .agent present / latest central 2026-07-08T19-30-31-04-00
+LuminaryLabs-Publish/PrehistoricRush     tracked / root .agent present / latest central 2026-07-08T21-50-56-04-00
 ```
 
 `TheCavalryOfRome` remains excluded.
@@ -34,7 +34,7 @@ No new untracked eligible repo was found.
 ## Evidence checked
 
 ```txt
-LuminaryLabs-Publish repository installation list
+LuminaryLabs-Publish repository installation/search list
 LuminaryLabs-Dev/LuminaryLabs repo-ledger entries for Publish repos
 LuminaryLabs-Publish/HorrorCorridor:.agent/START_HERE.md
 LuminaryLabs-Publish/HorrorCorridor:.agent/current-audit.md
@@ -189,22 +189,19 @@ replay-parity-validation
 ## Current source-backed services
 
 ```txt
-app/session service
-peer sync service
-maze bootstrap service
-first-person player service
-legacy GameState interaction service
-legacy GameState network service
-command decision fixture service
-command result envelope service
-publish decision service
-local authority result consumer service
-host authority result consumer service
-diagnostics and replay service
-render service
-minimap service
-validation/harness service
-object/texture kit catalog service
+app/session service: mode, room, readiness, pause, completion
+peer sync service: host/client transport, full sync, player update, try interact
+maze bootstrap service: seed, maze generation, cell lookup, path build, cube spawn, sequence slots
+first-person player service: keyboard input, pointer lock, look delta, movement, collision, camera sync, local carry sync
+legacy GameState interaction service: pickup, drop, place, remove, ordered completion
+legacy GameState network service: player update, held-cube sync, interaction dispatch, request-sync no-op
+command fixture seed service: planned canonical GameState seeds and expected row facts
+command result envelope service: planned command id, source, status, reason, changed flag, events, diagnostics, legacy adapters
+publish decision service: planned publish, skip, recovery, no-op, victory, snapshot reason, broadcast flag
+local authority result consumer service: planned local result journal and publish/skip behavior
+host authority result consumer service: planned host result journal, request-sync recovery, and rejected TRY_INTERACT skip behavior
+diagnostics and replay service: runtime events, runtime frames, cadence, planned command readback, fixture parity
+render service: renderer, scene, camera, post-processing, maze world, minimap, scene dressing summary, disposal
 ```
 
 ## Kits identified
