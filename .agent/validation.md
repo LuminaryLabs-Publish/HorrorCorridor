@@ -2,7 +2,7 @@
 
 **Repository:** `LuminaryLabs-Publish/HorrorCorridor`
 
-**Updated:** `2026-07-09T16-00-13-04-00`
+**Updated:** `2026-07-09T18-30-30-04-00`
 
 ## Available validation commands
 
@@ -69,118 +69,18 @@ final snapshot summary parity
 central ledger is updated after implementation lands
 ```
 
-## Required fixture fields
-
-```txt
-fixture id
-seed id
-seed description
-command id
-command source
-command type
-player id
-input action
-before state summary
-expected status
-expected reason
-expected changed flag
-expected publish decision
-expected shouldBroadcast
-expected shouldCommitVictory
-expected snapshot reason
-expected events
-expected cube facts
-expected slot facts
-expected local consumer action
-expected host consumer action
-expected debug projection
-final state summary
-non-normalized assertions
-volatile fields normalized
-parity passed or failed
-```
-
-## Required publish-decision matrix
-
-```txt
-accepted changed -> publish
-accepted unchanged -> no-op
-rejected -> skip
-unchanged -> skip or no-op by helper type
-publish-only -> recovery
-skipped -> skip
-victory -> victory
-```
-
-## Expected proof output
-
-```txt
-fixture id
-command id
-command source
-command type
-status
-reason
-before tick
-after tick
-changed flag
-publish decision
-publish reason
-shouldBroadcast
-shouldCommitVictory
-snapshot reason
-events
-journal counts
-local consumer action
-host consumer action
-runtime debug projection
-GameCanvas splice eligibility
-final snapshot summary
-volatile fields normalized
-replay parity passed or failed
-```
-
-## Volatile fields allowed to normalize
-
-```txt
-timestampMs
-room.updatedAtMs
-runtime frame counters
-randomized debug ids
-network cadence ages
-command id suffixes when fixture seed proves stable command type/source/reason
-```
-
-## Fields not allowed to normalize
-
-```txt
-command status
-command reason
-publish decision
-shouldBroadcast
-snapshot reason
-local consumer action
-host consumer action
-sequence slots
-cube ownership
-cube visibility
-held cube state
-player pose
-victory state
-final snapshot facts
-```
-
 ## Validation performed in this documentation pass
 
 ```txt
-[done] GitHub connector read of current Publish repo list.
-[done] GitHub connector read of central LuminaryLabs-Dev/LuminaryLabs Publish ledger context.
-[done] GitHub connector read of HorrorCorridor repo-local agent state.
-[done] GitHub connector read of package validation scripts.
-[done] GitHub connector read of GameCanvas runtime/publish/render loop.
-[done] GitHub connector read of networkRules authority seam.
-[done] GitHub connector read of interactionRules silent no-op branches.
-[done] GitHub connector read of runtimeDebugStore current debug export shape.
+[done] Current public Publish repo list read.
+[done] Central LuminaryLabs-Dev/LuminaryLabs Publish ledger context read.
+[done] HorrorCorridor repo-local agent state read.
+[done] package validation scripts read.
+[done] GameCanvas runtime/publish/render loop sampled.
+[done] networkRules authority seam read.
+[done] interactionRules silent no-op branches read.
+[done] oozeRules and winRules read.
+[done] runtimeDebugStore current debug export shape read.
 [done] Documentation-only .agent audit files written to main.
 [done] Central LuminaryLabs ledger and change log written to main.
 ```
