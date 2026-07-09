@@ -2,33 +2,33 @@
 
 **Repository:** `LuminaryLabs-Publish/HorrorCorridor`
 
-**Audit timestamp:** `2026-07-09T04-19-00-04-00`
+**Audit timestamp:** `2026-07-09T04-30-54-04-00`
 
 ## Summary
 
 `HorrorCorridor` is playable, visually present, network-capable, and already has useful runtime debug frames.
 
-The selection gap in this run was rotation age: every checked non-Cavalry Publish repo was already tracked and had root `.agent` state, so `HorrorCorridor` was selected as the oldest eligible central-ledger fallback.
+The selection gap in this run was rotation age: every checked non-Cavalry Publish repo was already tracked and had sampled root `.agent` state, so `HorrorCorridor` was selected as the oldest sampled central-ledger fallback.
 
-The implementation gap is unchanged: `interactionRules.ts` and `networkRules.ts` return `GameState` only, `GameCanvas.tsx` still uses object identity and action strings as publish gates, and `runtimeDebugStore.ts` has no command-result projection fields.
+The implementation gap is unchanged: `interactionRules.ts` and `networkRules.ts` return `GameState` only, `GameCanvas.tsx` still uses object identity and implicit action strings as publish gates, and runtime debug readback has no command-result projection fields.
 
-This pass did not change runtime source. It refreshed root `.agent` state, added a timestamped command-consumer source-cut tracker set, and kept the next implementation narrowed to a result-first command consumer fixture gate.
+This pass did not change runtime source. It refreshed root `.agent` state, added timestamped command-result consumer readback docs, and kept the next implementation narrowed to a seeded replay fixture gate.
 
 ## Repo selection
 
 The accessible `LuminaryLabs-Publish` repo list was checked during this pass.
 
 ```txt
-LuminaryLabs-Publish/HorrorCorridor      selected / tracked / root .agent present / latest central 2026-07-09T01-09-24-04-00
-LuminaryLabs-Publish/PhantomCommand      tracked / root .agent present / latest central 2026-07-09T01-28-10-04-00
-LuminaryLabs-Publish/ZombieOrchard       tracked / root .agent present / latest central 2026-07-09T02-05-52-04-00
-LuminaryLabs-Publish/TheUnmappedHouse    tracked / root .agent present / latest central 2026-07-09T02-11-07-04-00
-LuminaryLabs-Publish/MyCozyIsland        tracked / root .agent present / latest central 2026-07-09T02-31-41-04-00
-LuminaryLabs-Publish/AetherVale          tracked / root .agent present / latest central 2026-07-09T02-50-39-04-00
-LuminaryLabs-Publish/PrehistoricRush     tracked / root .agent present / latest central 2026-07-09T03-10-05-04-00
-LuminaryLabs-Publish/TheOpenAbove        tracked / root .agent present / latest central 2026-07-09T03-29-29-04-00
-LuminaryLabs-Publish/IntoTheMeadow       tracked / root .agent present / latest central 2026-07-09T03-50-12-04-00
-LuminaryLabs-Publish/TheCavalryOfRome    excluded by rule
+LuminaryLabs-Publish/HorrorCorridor       selected / tracked / root .agent present / oldest sampled central-ledger fallback
+LuminaryLabs-Publish/AetherVale           tracked / root .agent present
+LuminaryLabs-Publish/TheOpenAbove         tracked / root .agent present
+LuminaryLabs-Publish/TheCavalryOfRome     excluded by rule
+LuminaryLabs-Publish/PhantomCommand       tracked / root .agent present
+LuminaryLabs-Publish/PrehistoricRush      tracked / root .agent present
+LuminaryLabs-Publish/ZombieOrchard        tracked / root .agent present
+LuminaryLabs-Publish/IntoTheMeadow        tracked / root .agent present
+LuminaryLabs-Publish/MyCozyIsland         tracked / root .agent present
+LuminaryLabs-Publish/TheUnmappedHouse     tracked / root .agent present
 ```
 
 `TheCavalryOfRome` remains excluded.
@@ -50,7 +50,6 @@ LuminaryLabs-Publish/HorrorCorridor:HorrorCorridor-V1/package.json
 LuminaryLabs-Publish/HorrorCorridor:HorrorCorridor-V1/src/components/game/GameCanvas.tsx
 LuminaryLabs-Publish/HorrorCorridor:HorrorCorridor-V1/src/features/game-state/domain/networkRules.ts
 LuminaryLabs-Publish/HorrorCorridor:HorrorCorridor-V1/src/features/game-state/domain/interactionRules.ts
-LuminaryLabs-Publish/HorrorCorridor:HorrorCorridor-V1/src/features/debug/store/runtimeDebugStore.ts
 ```
 
 ## Current interaction loop
