@@ -2,7 +2,7 @@
 
 **Repository:** `LuminaryLabs-Publish/HorrorCorridor`
 
-**Updated:** `2026-07-09T01-00-22-04-00`
+**Updated:** `2026-07-09T01-09-24-04-00`
 
 ## Available validation commands
 
@@ -66,6 +66,7 @@ runtime debug projects latest publish decision
 runtime debug projects journal counts
 GameCanvas consumer splice preserves legacy snapshot shape
 final snapshot summary parity
+central ledger is updated after implementation lands
 ```
 
 ## Required fixture fields
