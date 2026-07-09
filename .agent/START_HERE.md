@@ -2,7 +2,7 @@
 
 **Repository:** `LuminaryLabs-Publish/HorrorCorridor`
 
-**Last aligned:** `2026-07-08T20-30-19-04-00`
+**Last aligned:** `2026-07-08T20-38-28-04-00`
 
 ## Purpose
 
@@ -18,28 +18,28 @@ No checked non-Cavalry repo was fully new, absent from the central ledger, undoc
 
 `LuminaryLabs-Publish/TheCavalryOfRome` remains excluded by standing rule.
 
-`HorrorCorridor` was selected as the oldest sampled eligible fallback because its root `.agent` timestamp was older than the other checked non-excluded repos and its command fixture source boundary remains unresolved.
+`HorrorCorridor` was selected because its command decision fixture contract remains unresolved and central tracking needed to catch up with repo-local command authority state.
 
 ## Publish repos checked
 
 ```txt
-LuminaryLabs-Publish/HorrorCorridor      selected / tracked / root .agent present / oldest sampled alignment / command fixture seed-state seam unresolved
-LuminaryLabs-Publish/AetherVale          tracked / root .agent present / recently refreshed
+LuminaryLabs-Publish/IntoTheMeadow       tracked / root .agent present / latest central 2026-07-08T20-21-59-04-00
+LuminaryLabs-Publish/HorrorCorridor      selected / command decision fixture unresolved / central catch-up needed
+LuminaryLabs-Publish/AetherVale          tracked / root .agent present / latest central 2026-07-08T18-58-10-04-00
+LuminaryLabs-Publish/ZombieOrchard       tracked / root .agent present / latest central 2026-07-08T19-21-15-04-00
+LuminaryLabs-Publish/TheUnmappedHouse    tracked / root .agent present / latest root alignment 2026-07-08T18-51-55-04-00
+LuminaryLabs-Publish/MyCozyIsland        tracked / root .agent present / latest central 2026-07-08T19-40-00-04-00
 LuminaryLabs-Publish/TheOpenAbove        tracked / root .agent present / recently refreshed
-LuminaryLabs-Publish/TheCavalryOfRome    excluded by rule
 LuminaryLabs-Publish/PhantomCommand      tracked / root .agent present / recently refreshed
-LuminaryLabs-Publish/PrehistoricRush     tracked / root .agent present / recently refreshed
-LuminaryLabs-Publish/ZombieOrchard       tracked / root .agent present / recently refreshed
-LuminaryLabs-Publish/IntoTheMeadow       tracked / root .agent present / recently refreshed
-LuminaryLabs-Publish/MyCozyIsland        tracked / root .agent present / recently refreshed
-LuminaryLabs-Publish/TheUnmappedHouse    tracked / root .agent present / recently refreshed
+LuminaryLabs-Publish/TheCavalryOfRome    excluded by rule
+LuminaryLabs-Publish/PrehistoricRush     tracked / root .agent present / latest central 2026-07-08T19-30-31-04-00
 ```
 
 ## Current product read
 
 `HorrorCorridor` is a cooperative first-person horror maze under `HorrorCorridor-V1`.
 
-The active runtime is a Next/React client surface that mounts `GameCanvas`, creates a Three.js maze world, uses pointer-lock movement, routes cube interactions through GameState-returning rules, publishes authoritative snapshots for solo/host modes, accepts peer messages in host mode, and exposes runtime debug frames/events.
+The active runtime is a Next/React client surface that mounts `GameCanvas`, creates a Three.js maze world, uses pointer-lock movement, routes cube interactions through `GameState`-returning rules, publishes authoritative snapshots for solo/host modes, accepts peer messages in host mode, and exposes runtime debug frames/events.
 
 ## Current interaction loop
 
@@ -52,24 +52,31 @@ open app
   -> mount GameCanvas runtime
   -> build renderer, camera, post-processing, maze world, minimap, pose refs, input refs, and debug state
   -> enter pointer-lock first-person navigation
-  -> derive action from carried cube + distance to anomaly
-  -> route local interaction through applyNetworkInteractionRequest
-  -> route peer TRY_INTERACT through host applyNetworkInteractionRequest
-  -> route peer PLAYER_UPDATE through host applyNetworkPlayerUpdate
-  -> silently collapse invalid/no-op paths to unchanged GameState
+  -> derive action from carried cube plus distance to anomaly
+  -> local solo/host applies applyNetworkInteractionRequest
+  -> client sends TRY_INTERACT
+  -> host applies player updates and interaction requests
+  -> silent unchanged GameState can hide rejected/no-op/skipped/recovery cases
   -> sync held cubes to players
   -> advance ooze on authoritative cadence
-  -> build and publish replicated snapshot when current gates say so
-  -> update Three.js world, minimap, HUD, completion state, and runtime debug frames
+  -> publish authoritative snapshot according to implicit gates
+  -> update Three world, minimap, HUD, completion routing, and runtime debug frames
 ```
 
-## Next safe implementation ledge
+## Target authority loop
 
 ```txt
-HorrorCorridor Command Fixture Seed State Contract + Consumer Replay Gate
+CommandEnvelope
+  -> interaction/network preflight
+  -> CommandResult
+  -> PublishDecision
+  -> CommandJournal
+  -> LocalAuthorityResultConsumer or HostAuthorityResultConsumer
+  -> optional snapshot publish
+  -> optional victory commit
+  -> RuntimeDebugCommandProjection
+  -> DOM-free command replay fixture
 ```
-
-Build this before touching renderer extraction, PeerJS extraction, minimap extraction, post-processing extraction, scene dressing, new maze content, or visual object-kit expansion.
 
 ## First files to read next
 
@@ -78,12 +85,12 @@ Build this before touching renderer extraction, PeerJS extraction, minimap extra
 .agent/known-gaps.md
 .agent/next-steps.md
 .agent/validation.md
-.agent/architecture-audit/2026-07-08T20-30-19-04-00-command-fixture-seed-state-dsk-map.md
-.agent/render-audit/2026-07-08T20-30-19-04-00-debug-command-readback-contract.md
-.agent/gameplay-audit/2026-07-08T20-30-19-04-00-local-host-replay-loop.md
-.agent/command-authority-audit/2026-07-08T20-30-19-04-00-seed-state-consumer-fixture-contract.md
-.agent/trackers/2026-07-08T20-30-19-04-00/project-breakdown.md
-.agent/turn-ledger/2026-07-08T20-30-19-04-00.md
+.agent/architecture-audit/2026-07-08T20-38-28-04-00-command-decision-dsk-map.md
+.agent/render-audit/2026-07-08T20-38-28-04-00-runtime-debug-command-decision-readback.md
+.agent/gameplay-audit/2026-07-08T20-38-28-04-00-local-host-command-decision-loop.md
+.agent/command-authority-audit/2026-07-08T20-38-28-04-00-command-decision-fixture-contract.md
+.agent/trackers/2026-07-08T20-38-28-04-00/project-breakdown.md
+.agent/turn-ledger/2026-07-08T20-38-28-04-00.md
 .agent/kit-registry.json
 ```
 
@@ -99,3 +106,29 @@ HorrorCorridor-V1/src/features/game-state/domain/winRules.ts
 HorrorCorridor-V1/src/features/debug/store/runtimeDebugStore.ts
 HorrorCorridor-V1/src/features/networking/protocol/syncSnapshot.ts
 ```
+
+## Source files to add next
+
+```txt
+HorrorCorridor-V1/src/features/game-state/domain/commandTypes.ts
+HorrorCorridor-V1/src/features/game-state/domain/commandReasons.ts
+HorrorCorridor-V1/src/features/game-state/domain/commandResults.ts
+HorrorCorridor-V1/src/features/game-state/domain/publishDecisions.ts
+HorrorCorridor-V1/src/features/game-state/domain/commandJournal.ts
+HorrorCorridor-V1/src/features/game-state/domain/commandFixtureSeeds.ts
+HorrorCorridor-V1/src/features/game-state/domain/commandFixtureRows.ts
+HorrorCorridor-V1/src/features/game-state/domain/interactionPreflight.ts
+HorrorCorridor-V1/src/features/game-state/domain/interactionResultRules.ts
+HorrorCorridor-V1/src/features/game-state/domain/networkResultRules.ts
+HorrorCorridor-V1/src/features/game-state/domain/localAuthorityCommandConsumer.ts
+HorrorCorridor-V1/src/features/game-state/domain/hostAuthorityCommandConsumer.ts
+HorrorCorridor-V1/scripts/horror-corridor-command-fixture.mjs
+```
+
+## Current next safe ledge
+
+```txt
+HorrorCorridor Command Decision Fixture Contract + Local/Host Consumer Replay Gate
+```
+
+Build this before touching renderer extraction, PeerJS extraction, minimap extraction, post-processing extraction, scene dressing, new maze content, or visual object-kit expansion.
