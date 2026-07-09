@@ -2,69 +2,183 @@
 
 **Repository:** `LuminaryLabs-Publish/HorrorCorridor`
 
-**Updated:** `2026-07-09T06-59-46-04-00`
+**Updated:** `2026-07-09T07-05-52-04-00`
 
 ## Current next build slice
 
 ```txt
-HorrorCorridor Result Envelope Source Splice + Runtime Debug Projection Fixture Gate
+HorrorCorridor Command Result Ledger Central Sync + Runtime Debug Consumer Fixture Gate
 ```
 
 Start from:
 
 ```txt
-.agent/architecture-audit/2026-07-09T06-59-46-04-00-result-envelope-gamecanvas-dsk-map.md
-.agent/render-audit/2026-07-09T06-59-46-04-00-runtime-debug-result-projection-readback.md
-.agent/gameplay-audit/2026-07-09T06-59-46-04-00-local-host-result-decision-loop.md
-.agent/command-authority-audit/2026-07-09T06-59-46-04-00-result-envelope-source-splice-contract.md
-.agent/interaction-audit/2026-07-09T06-59-46-04-00-rejection-reason-branch-matrix.md
-.agent/deploy-audit/2026-07-09T06-59-46-04-00-command-fixture-validation-gate.md
+.agent/architecture-audit/2026-07-09T07-05-52-04-00-command-ledger-central-sync-dsk-map.md
+.agent/render-audit/2026-07-09T07-05-52-04-00-debug-command-consumer-readback.md
+.agent/gameplay-audit/2026-07-09T07-05-52-04-00-local-host-command-ledger-loop.md
+.agent/command-authority-audit/2026-07-09T07-05-52-04-00-command-result-fixture-contract.md
+.agent/interaction-audit/2026-07-09T07-05-52-04-00-silent-noop-reason-freeze.md
+.agent/deploy-audit/2026-07-09T07-05-52-04-00-fixture-script-validation-gate.md
+```
+
+## Build checklist
+
+```txt
+[ ] Preserve current solo, host, client, renderer, minimap, debug overlay, and PeerJS behavior.
+[ ] Add serializable command contracts under game-state/domain.
+[ ] Define CommandEnvelope, CommandSource, CommandStatus, CommandReason, CommandResult, PublishDecision, CommandEvent, and CommandSnapshotSummary.
+[ ] Define stable CommandReason values for every silent no-op branch in interactionRules.ts and networkRules.ts.
+[ ] Add command result constructors and before/after snapshot summary helpers.
+[ ] Add publish decision helper before GameCanvas consumes result metadata.
+[ ] Add command journal helpers and summary counters.
+[ ] Add canonical command fixture seed-state helpers before the fixture runner.
+[ ] Add fixture row builders for accepted, rejected, unchanged, skipped, publish-only, ooze, and victory paths.
+[ ] Add interaction preflight helpers beside interactionRules.
+[ ] Add result-returning wrappers for pickup, drop, place, and remove.
+[ ] Keep legacy interaction exports returning result.state.
+[ ] Add result-returning wrappers for player update, held-cube sync, and network interaction request.
+[ ] Keep legacy network exports returning result.state.
+[ ] Classify request-sync as publish-only recovery.
+[ ] Classify toggle-ready and cancel as explicit skipped commands until lobby policy exists.
+[ ] Classify unknown/default actions as skipped:unknown-action.
+[ ] Classify accepted changed results as publish.
+[ ] Classify accepted unchanged results as no-op.
+[ ] Classify rejected TRY_INTERACT results as skip.
+[ ] Classify ordered sequence completion as explicit victory.
+[ ] Add localAuthorityCommandConsumer that journals local results, skips rejected/no-op broadcasts, and publishes accepted changed/victory results.
+[ ] Add hostAuthorityCommandConsumer that classifies PLAYER_UPDATE, TRY_INTERACT, request-sync, skipped, rejected, recovery, and victory paths.
+[ ] Add DOM-free command fixture script before changing GameCanvas publish logic.
+[ ] Add package script for the command fixture after the script exists.
+[ ] Add RuntimeDebugCommandProjection type and projection helper after the headless fixture passes.
+[ ] Wire runtimeDebugStore to expose command projection fields additively.
+[ ] Wire local-authority consumer to journal rejections and only publish accepted changed/victory results.
+[ ] Wire host-authority consumer to skip rejected TRY_INTERACT publishes and publish request-sync recovery.
+[ ] Replace GameCanvas object-identity publish checks only after fixture proof.
+[ ] Normalize only volatile fields in fixture comparison.
+[ ] Keep central LuminaryLabs repo-ledger in sync after implementation lands.
+[ ] Defer PeerJS extraction, renderer extraction, minimap extraction, postprocess extraction, scene dressing, and object-kit visual expansion.
+```
+
+## Suggested file targets
+
+```txt
+HorrorCorridor-V1/src/features/game-state/domain/commandTypes.ts
+HorrorCorridor-V1/src/features/game-state/domain/commandReasons.ts
+HorrorCorridor-V1/src/features/game-state/domain/commandResults.ts
+HorrorCorridor-V1/src/features/game-state/domain/publishDecisions.ts
+HorrorCorridor-V1/src/features/game-state/domain/commandJournal.ts
+HorrorCorridor-V1/src/features/game-state/domain/commandFixtureSeeds.ts
+HorrorCorridor-V1/src/features/game-state/domain/commandFixtureRows.ts
+HorrorCorridor-V1/src/features/game-state/domain/interactionPreflight.ts
+HorrorCorridor-V1/src/features/game-state/domain/interactionResultRules.ts
+HorrorCorridor-V1/src/features/game-state/domain/networkResultRules.ts
+HorrorCorridor-V1/src/features/game-state/domain/localAuthorityCommandConsumer.ts
+HorrorCorridor-V1/src/features/game-state/domain/hostAuthorityCommandConsumer.ts
+HorrorCorridor-V1/src/features/debug/domain/runtimeDebugCommandProjection.ts
+HorrorCorridor-V1/scripts/horror-corridor-command-fixture.mjs
+HorrorCorridor-V1/package.json
+HorrorCorridor-V1/src/features/debug/store/runtimeDebugStore.ts
+HorrorCorridor-V1/src/components/game/GameCanvas.tsx
 ```
 
 ## Implementation order
 
 ```txt
-1. Add pure command source modules under HorrorCorridor-V1/src/features/game-state/domain/command-authority/.
-2. Add CommandEnvelope, CommandResult, CommandReason, PublishDecision, and CommandJournalEntry types.
-3. Wrap pickup/drop/place/remove/request-sync/toggle-ready/cancel branches without changing legacy GameState outputs.
-4. Add fixture seed states and deterministic command rows.
-5. Prove accepted changed, rejected unchanged, request-sync recovery, host/player update, and victory rows.
-6. Add runtime debug projection fields for latestCommandResult, latestPublishDecision, and commandJournalCounts.
-7. Splice GameCanvas to consume result + publish decision facts instead of object identity.
-8. Keep existing UI, route, rendering, minimap, and PeerJS behavior unchanged until the fixture passes.
+1. commandTypes.ts
+2. commandReasons.ts
+3. commandResults.ts
+4. publishDecisions.ts
+5. commandJournal.ts
+6. commandFixtureSeeds.ts
+7. commandFixtureRows.ts
+8. interactionPreflight.ts
+9. interactionResultRules.ts
+10. networkResultRules.ts
+11. localAuthorityCommandConsumer.ts
+12. hostAuthorityCommandConsumer.ts
+13. scripts/horror-corridor-command-fixture.mjs
+14. package.json command fixture script
+15. runtimeDebugCommandProjection.ts
+16. runtimeDebugStore.ts additive command projection fields
+17. GameCanvas.tsx result-first consumer integration
+18. LuminaryLabs-Dev/LuminaryLabs central ledger implementation log
 ```
 
-## Source files to add next
+## Required command reason families
 
 ```txt
-HorrorCorridor-V1/src/features/game-state/domain/command-authority/commandTypes.ts
-HorrorCorridor-V1/src/features/game-state/domain/command-authority/reasonCatalog.ts
-HorrorCorridor-V1/src/features/game-state/domain/command-authority/interactionCommandResults.ts
-HorrorCorridor-V1/src/features/game-state/domain/command-authority/networkCommandResults.ts
-HorrorCorridor-V1/src/features/game-state/domain/command-authority/publishDecisions.ts
-HorrorCorridor-V1/src/features/game-state/domain/command-authority/commandJournal.ts
-HorrorCorridor-V1/src/features/game-state/domain/command-authority/fixtureSeeds.ts
-HorrorCorridor-V1/src/features/game-state/domain/command-authority/fixtureRows.ts
-HorrorCorridor-V1/scripts/horror-corridor-command-result-fixture.mjs
+accepted:pickup
+accepted:drop
+accepted:place
+accepted:remove
+accepted:player-update
+accepted:held-cube-sync
+accepted:ooze-tick
+victory:ordered-sequence-complete
+
+rejected:not-playing
+rejected:missing-player
+rejected:already-carrying
+rejected:no-nearby-cube
+rejected:no-carried-cube
+rejected:missing-anomaly-cell
+rejected:too-far-from-anomaly
+rejected:no-free-slot
+rejected:no-occupied-slot
+rejected:wrong-slot
+rejected:missing-cube-id
+
+unchanged:player-missing
+unchanged:held-cube-already-synced
+unchanged:no-state-diff
+
+publish-only:request-sync
+
+skipped:toggle-ready-policy-not-implemented
+skipped:cancel-policy-not-implemented
+skipped:unknown-action
 ```
 
-## Source files to splice after fixture proof
+## Fixture acceptance matrix
 
 ```txt
-HorrorCorridor-V1/src/features/game-state/domain/networkRules.ts
-HorrorCorridor-V1/src/features/game-state/domain/interactionRules.ts
-HorrorCorridor-V1/src/features/debug/store/runtimeDebugStore.ts
-HorrorCorridor-V1/src/components/game/GameCanvas.tsx
-HorrorCorridor-V1/package.json
+[ ] accepted pickup near loose cube
+[ ] rejected pickup while already carrying
+[ ] rejected pickup with no nearby cube
+[ ] accepted drop while carrying
+[ ] rejected drop without carried cube
+[ ] accepted place near anomaly with carried cube
+[ ] accepted place final anomaly slot as victory
+[ ] rejected place too far from anomaly
+[ ] rejected place with no free slot
+[ ] accepted remove last anomaly cube
+[ ] rejected remove wrong slot
+[ ] publish-only request-sync recovery
+[ ] skipped toggle-ready
+[ ] skipped cancel
+[ ] skipped unknown action
+[ ] accepted player update
+[ ] unchanged player update for missing player
+[ ] accepted held cube sync
+[ ] unchanged held-cube already synced
+[ ] ooze tick spawn
+[ ] ooze tick decay
+[ ] ooze tick no-state-diff
+[ ] victory ordered-sequence completion
+[ ] local consumer skips rejected/no-op broadcast
+[ ] local consumer publishes accepted changed/victory
+[ ] host consumer skips rejected TRY_INTERACT broadcast
+[ ] host consumer publishes request-sync recovery
+[ ] runtime debug command decision projection is serializable
+[ ] GameCanvas consumer splice preserves legacy snapshot shape
 ```
 
-## Do not start next
+## Acceptance checks
 
 ```txt
-- no new visual expansion
-- no renderer extraction
-- no minimap extraction
-- no PeerJS extraction
-- no new multiplayer feature
-- no branch or PR
+[ ] node scripts/horror-corridor-command-fixture.mjs
+[ ] npm run lint
+[ ] npm run smoke:protokits
+[ ] npm run harness:horror-corridor
+[ ] npm run validate:live-player:dev
 ```
