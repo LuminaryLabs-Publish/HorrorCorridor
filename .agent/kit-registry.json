@@ -1,16 +1,16 @@
 {
-  "schemaVersion": 36,
+  "schemaVersion": 37,
   "repository": "LuminaryLabs-Publish/HorrorCorridor",
-  "generatedAt": "2026-07-09T18-30-30-04-00",
-  "status": "command-consumer-readback-ledger-refresh-result-first-fixture-gate",
-  "latestTracker": ".agent/trackers/2026-07-09T18-30-30-04-00/project-breakdown.md",
-  "latestTurnLedger": ".agent/turn-ledger/2026-07-09T18-30-30-04-00.md",
-  "latestArchitectureAudit": ".agent/architecture-audit/2026-07-09T18-30-30-04-00-command-consumer-readback-dsk-map.md",
-  "latestRenderAudit": ".agent/render-audit/2026-07-09T18-30-30-04-00-debug-command-projection-readback.md",
-  "latestGameplayAudit": ".agent/gameplay-audit/2026-07-09T18-30-30-04-00-local-host-command-result-loop.md",
-  "latestCommandAuthorityAudit": ".agent/command-authority-audit/2026-07-09T18-30-30-04-00-result-first-consumer-fixture-contract.md",
-  "latestInteractionAudit": ".agent/interaction-audit/2026-07-09T18-30-30-04-00-silent-noop-reason-map.md",
-  "latestDeployAudit": ".agent/deploy-audit/2026-07-09T18-30-30-04-00-command-fixture-package-gate.md",
+  "generatedAt": "2026-07-09T22-50-53-04-00",
+  "status": "command-result-debug-readback-result-first-fixture-gate",
+  "latestTracker": ".agent/trackers/2026-07-09T22-50-53-04-00/project-breakdown.md",
+  "latestTurnLedger": ".agent/turn-ledger/2026-07-09T22-50-53-04-00.md",
+  "latestArchitectureAudit": ".agent/architecture-audit/2026-07-09T22-50-53-04-00-command-result-debug-readback-dsk-map.md",
+  "latestRenderAudit": ".agent/render-audit/2026-07-09T22-50-53-04-00-runtime-debug-command-projection-gap.md",
+  "latestGameplayAudit": ".agent/gameplay-audit/2026-07-09T22-50-53-04-00-local-host-command-result-loop.md",
+  "latestCommandAuthorityAudit": ".agent/command-authority-audit/2026-07-09T22-50-53-04-00-result-first-debug-fixture-contract.md",
+  "latestInteractionAudit": ".agent/interaction-audit/2026-07-09T22-50-53-04-00-silent-noop-reason-readback-map.md",
+  "latestDeployAudit": ".agent/deploy-audit/2026-07-09T22-50-53-04-00-command-fixture-check-gate.md",
   "sourceRoots": [
     "HorrorCorridor-V1/src/components/game",
     "HorrorCorridor-V1/src/features",
@@ -22,15 +22,13 @@
     "HorrorCorridor-V1/src/components/game/GameCanvas.tsx",
     "HorrorCorridor-V1/src/features/game-state/domain/networkRules.ts",
     "HorrorCorridor-V1/src/features/game-state/domain/interactionRules.ts",
-    "HorrorCorridor-V1/src/features/game-state/domain/oozeRules.ts",
-    "HorrorCorridor-V1/src/features/game-state/domain/winRules.ts",
     "HorrorCorridor-V1/src/features/debug/store/runtimeDebugStore.ts",
     "HorrorCorridor-V1/src/features/networking/protocol/syncSnapshot.ts"
   ],
   "selection": {
     "selectedRepo": "LuminaryLabs-Publish/HorrorCorridor",
     "excludedRepo": "LuminaryLabs-Publish/TheCavalryOfRome",
-    "reason": "No checked public non-Cavalry repo was new, central-ledger absent, undocumented, recently added but undocumented, or missing sampled root .agent/START_HERE.md state. HorrorCorridor was selected as the oldest eligible documented fallback because central tracking was at 2026-07-09T16-00-13-04-00.",
+    "reason": "No checked public non-Cavalry repo was new, central-ledger absent, undocumented, recently added but undocumented, or missing sampled root .agent state. HorrorCorridor was selected as the oldest eligible documented fallback because central tracking was at 2026-07-09T18-30-30-04-00.",
     "publishReposChecked": [
       "LuminaryLabs-Publish/MyCozyIsland",
       "LuminaryLabs-Publish/TheUnmappedHouse",
@@ -43,7 +41,7 @@
       "LuminaryLabs-Publish/TheOpenAbove"
     ]
   },
-  "currentNextSlice": "HorrorCorridor Command Consumer Readback Ledger Refresh + Result-First Fixture Gate",
+  "currentNextSlice": "HorrorCorridor Command Result Debug Readback + Result-First Fixture Gate",
   "interactionLoop": {
     "current": [
       "start-menu",
@@ -64,7 +62,7 @@
       "render-minimap-hud-debug"
     ],
     "target": [
-      "canonical seeded GameState rows establish fixture before/after facts",
+      "canonical seeded GameState rows establish fixture before and after facts",
       "local input and peer messages normalize into CommandEnvelope records",
       "command-reason-catalog-kit classifies every silent no-op branch",
       "command-result-envelope-kit wraps interaction, network, ooze, request-sync, toggle-ready, cancel, and victory outcomes",
@@ -112,13 +110,11 @@
     "first-person-player-service": ["keyboard input", "pointer lock", "look delta", "movement", "collision", "camera sync", "local carry sync"],
     "legacy-interaction-service": ["pickup", "drop", "place", "remove", "ordered completion", "GameState-only return"],
     "legacy-network-service": ["player update", "held cube sync", "interaction dispatch", "request-sync no-op", "toggle-ready no-op", "cancel no-op", "GameState-only return"],
-    "ooze-service": ["decay", "spawn", "spacing guard", "max ooze", "GameState-only return"],
-    "command-result-envelope-service": ["command id", "command source", "status", "reason", "changed flag", "events", "diagnostics", "legacy GameState return adapter"],
-    "publish-decision-service": ["publish", "skip", "recovery", "no-op", "victory", "snapshot reason", "broadcast flag", "completion flag"],
-    "local-authority-result-consumer-service": ["consume local interaction result", "journal rejection", "skip local rejected/no-op publish", "publish accepted changed/victory"],
-    "host-authority-result-consumer-service": ["consume host player update result", "consume host interaction result", "skip rejected TRY_INTERACT broadcast", "publish request-sync recovery", "publish accepted changed/victory"],
-    "diagnostics-service": ["runtime events", "runtime frames", "cadence", "latest command result", "latest publish decision", "journal counts", "fixture parity"],
+    "runtime-debug-service": ["event capture", "frame capture", "cadence readback", "snapshot readback", "debug window export"],
     "render-service": ["renderer", "scene", "camera", "post-processing", "maze world", "minimap", "scene dressing summary", "disposal"],
+    "command-result-envelope-service": ["command id", "source", "status", "reason", "changed flag", "events", "diagnostics", "legacy adapter"],
+    "publish-decision-service": ["publish", "skip", "recovery", "no-op", "victory", "snapshot reason", "broadcast flag", "completion flag"],
+    "debug-command-projection-service": ["latest command result", "latest publish decision", "latest rejection reason", "journal counts", "fixture parity"],
     "central-ledger-sync-service": ["root .agent docs", "timestamped tracker", "repo ledger", "internal change log"]
   },
   "kits": [
