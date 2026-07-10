@@ -2,7 +2,7 @@
 
 **Repository:** `LuminaryLabs-Publish/HorrorCorridor`
 
-**Updated:** `2026-07-10T10-58-54-04-00`
+**Updated:** `2026-07-10T12-29-26-04-00`
 
 ## Selection gap handled in this pass
 
@@ -44,6 +44,7 @@
 - runtime debug exports do not expose latestCommandResult, latestPublishDecision, latestRejectionReason, latestConsumerAction, commandJournal, or latestFixtureParity.
 - no RuntimeDebugCommandProjection helper exists.
 - no DOM-free replay fixture proves accepted/rejected/unchanged/publish-only/skipped/ooze/victory snapshot parity.
+- no fixture row proves GameCanvas publish/skip logic before replacing object-identity checks.
 - the browser overlay cannot yet explain why an interaction was rejected or why a host publish was skipped.
 ```
 
