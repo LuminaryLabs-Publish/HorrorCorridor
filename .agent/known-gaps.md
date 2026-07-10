@@ -2,17 +2,16 @@
 
 **Repository:** `LuminaryLabs-Publish/HorrorCorridor`
 
-**Updated:** `2026-07-10T06-48-54-04-00`
+**Updated:** `2026-07-10T08-11-35-04-00`
 
 ## Selection gap handled in this pass
 
 ```txt
 - current public LuminaryLabs-Publish repo list was checked.
 - TheCavalryOfRome was excluded.
-- sampled root .agent state was present for checked public non-Cavalry repos.
 - checked public non-Cavalry repos were tracked in the central repo ledger.
-- HorrorCorridor was selected as the oldest eligible documented fallback because its prior central ledger timestamp was 2026-07-10T05-11-51-04-00.
-- central tracking is refreshed to 2026-07-10T06-48-54-04-00 by this pass.
+- HorrorCorridor was selected as the oldest eligible documented fallback.
+- central tracking is refreshed to 2026-07-10T08-11-35-04-00 by this pass.
 ```
 
 ## Authority and command gaps
@@ -30,12 +29,21 @@
 - ordered sequence victory and victory rollback have no result metadata.
 - local authority uses object identity to decide whether to publish after interaction.
 - host authority publishes TRY_INTERACT outcomes without knowing whether the command was accepted, rejected, skipped, no-op, or recovery-only.
-- host authority can publish or recover without a first-class PublishDecision record.
 - no stable CommandReason catalog exists for rejected, skipped, unchanged, publish-only, ooze, or victory commands.
 - no CommandResult envelope exists for before/after state, changed flag, events, diagnostics, and source metadata.
 - no CommandJournal exists to retain ordered command facts.
 - no explicit local-authority result consumer exists.
 - no explicit host-authority result consumer exists.
+```
+
+## Debug and projection gaps
+
+```txt
+- runtime debug frames expose cadence, snapshot, cube, anomaly, input, and scene dressing data, but not command-result data.
+- runtime debug exports do not expose latestCommandResult, latestPublishDecision, latestRejectionReason, latestConsumerAction, commandJournal, or latestFixtureParity.
+- no RuntimeDebugCommandProjection helper exists.
+- no DOM-free replay fixture proves accepted/rejected/unchanged/publish-only/skipped/ooze/victory snapshot parity.
+- the browser overlay cannot yet explain why an interaction was rejected or why a host publish was skipped.
 ```
 
 ## Source wire gaps
@@ -59,16 +67,6 @@
 - scripts/horror-corridor-command-fixture.mjs does not exist.
 - package.json does not yet include a command fixture script.
 - GameCanvas.tsx still consumes GameState-returning rules directly.
-```
-
-## Debug and replay gaps
-
-```txt
-- runtime debug frames expose cadence, snapshot, cube, anomaly, input, and scene dressing data, but not command-result data.
-- runtime debug exports do not expose latestCommandResult, latestPublishDecision, latestRejectionReason, latestConsumerAction, commandJournal, or latestFixtureParity.
-- no RuntimeDebugCommandProjection helper exists.
-- no DOM-free replay fixture proves accepted/rejected/unchanged/publish-only/skipped/ooze/victory snapshot parity.
-- the browser overlay cannot yet explain why an interaction was rejected or why a host publish was skipped.
 ```
 
 ## Non-goals for the next pass
