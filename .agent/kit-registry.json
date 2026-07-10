@@ -1,8 +1,8 @@
 {
-  "schemaVersion": 45,
-  "generatedAt": "2026-07-10T10-58-54-04-00",
+  "schemaVersion": 46,
+  "generatedAt": "2026-07-10T12-29-26-04-00",
   "repository": "LuminaryLabs-Publish/HorrorCorridor",
-  "status": "command-decision-debug-readback-ledger-fixture-gate-planned",
+  "status": "command-result-readback-fixture-runtime-debug-projection-gate-planned",
   "selectedBecause": "oldest eligible documented fallback after public LuminaryLabs-Publish repo list and central ledger comparison; TheCavalryOfRome excluded",
   "sourceRoots": [
     "HorrorCorridor-V1/src/components/game",
@@ -10,7 +10,7 @@
     "HorrorCorridor-V1/src/protokits",
     "HorrorCorridor-V1/scripts"
   ],
-  "currentNextSlice": "HorrorCorridor Command Decision Debug Readback Ledger Refresh + Fixture Gate",
+  "currentNextSlice": "HorrorCorridor Command Result Readback Fixture Refresh + Runtime Debug Projection Gate",
   "interactionLoop": [
     "start-menu",
     "solo-host-or-join",
