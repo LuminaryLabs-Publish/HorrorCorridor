@@ -2,12 +2,12 @@
 
 **Repository:** `LuminaryLabs-Publish/HorrorCorridor`
 
-**Updated:** `2026-07-10T09-40-13-04-00`
+**Updated:** `2026-07-10T10-58-54-04-00`
 
 ## Current safe ledge
 
 ```txt
-HorrorCorridor Command Result Debug Projection Ledger Refresh + Fixture Gate
+HorrorCorridor Command Decision Debug Readback Ledger Refresh + Fixture Gate
 ```
 
 Start with these files:
@@ -18,19 +18,19 @@ Start with these files:
 .agent/known-gaps.md
 .agent/validation.md
 .agent/kit-registry.json
-.agent/trackers/2026-07-10T09-40-13-04-00/project-breakdown.md
-.agent/turn-ledger/2026-07-10T09-40-13-04-00.md
-.agent/architecture-audit/2026-07-10T09-40-13-04-00-command-result-debug-projection-ledger-dsk-map.md
-.agent/render-audit/2026-07-10T09-40-13-04-00-runtime-debug-command-result-projection-gap.md
-.agent/gameplay-audit/2026-07-10T09-40-13-04-00-local-host-command-result-loop.md
-.agent/command-authority-audit/2026-07-10T09-40-13-04-00-result-publish-decision-contract.md
-.agent/interaction-audit/2026-07-10T09-40-13-04-00-noop-rejection-reason-map.md
-.agent/deploy-audit/2026-07-10T09-40-13-04-00-command-result-fixture-gate.md
+.agent/trackers/2026-07-10T10-58-54-04-00/project-breakdown.md
+.agent/turn-ledger/2026-07-10T10-58-54-04-00.md
+.agent/architecture-audit/2026-07-10T10-58-54-04-00-command-decision-debug-readback-dsk-map.md
+.agent/render-audit/2026-07-10T10-58-54-04-00-runtime-debug-command-decision-gap.md
+.agent/gameplay-audit/2026-07-10T10-58-54-04-00-local-host-command-decision-loop.md
+.agent/command-authority-audit/2026-07-10T10-58-54-04-00-command-result-publish-decision-contract.md
+.agent/interaction-audit/2026-07-10T10-58-54-04-00-noop-rejection-command-reason-map.md
+.agent/deploy-audit/2026-07-10T10-58-54-04-00-command-decision-fixture-gate.md
 ```
 
 ## One sentence read
 
-`HorrorCorridor` is a playable cooperative first-person maze, but the next safe cut is command-result proof: make accepted, rejected, skipped, no-op, recovery, ooze, victory, and publish-only outcomes first-class rows before renderer, PeerJS, minimap, route, or content work.
+`HorrorCorridor` is a playable cooperative first-person maze, but the next safe cut is command-decision proof: make accepted, rejected, skipped, no-op, recovery, ooze, victory, and publish-only outcomes first-class rows before renderer, PeerJS, minimap, route, or content work.
 
 ## Current interaction loop
 
@@ -56,7 +56,7 @@ open app
 
 Do not start next with renderer extraction, PeerJS extraction, minimap extraction, post-processing extraction, scene dressing, route rewrites, new maze content, or visual object-kit expansion.
 
-The blocker is command-result/debug projection. `interactionRules.ts`, `networkRules.ts`, `oozeRules.ts`, and `winRules.ts` still return `GameState` only. Rejected, skipped, no-op, recovery, ooze, victory, and publish-only paths collapse into unchanged state or implicit reason strings. `runtimeDebugStore.ts` captures frames/events but not command outcomes, publish decisions, rejection reasons, journal counters, or fixture parity.
+The blocker is command-decision/debug readback. `interactionRules.ts` and `networkRules.ts` return `GameState` only, `GameCanvas.tsx` infers publish/skip from state identity or implicit reason strings, and `runtimeDebugStore.ts` exports frames/events but not command result, publish decision, rejection reason, or fixture parity rows.
 
 ## First implementation targets
 
