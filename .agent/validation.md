@@ -2,7 +2,7 @@
 
 **Repository:** `LuminaryLabs-Publish/HorrorCorridor`
 
-**Updated:** `2026-07-10T09-40-13-04-00`
+**Updated:** `2026-07-10T10-58-54-04-00`
 
 ## Available validation commands
 
@@ -77,9 +77,9 @@ central ledger is updated after implementation lands
 [done] Current public Publish repo list read.
 [done] Central LuminaryLabs-Dev/LuminaryLabs Publish ledger context read.
 [done] HorrorCorridor repo-local agent state read.
+[done] GameCanvas command/publish seam sampled.
 [done] interactionRules GameState-only command seam sampled.
 [done] networkRules GameState-only command seam sampled.
-[done] oozeRules GameState-only command seam sampled.
 [done] runtimeDebugStore current debug export shape sampled.
 [done] Documentation-only .agent audit files written to main.
 [done] Central LuminaryLabs ledger and change log written to main after repo-local pass.
@@ -108,4 +108,5 @@ pull request created: no
 browser smoke: not run
 command fixture: not run because proof files do not exist yet
 pushed to main: yes
+central ledger updated: yes
 ```
