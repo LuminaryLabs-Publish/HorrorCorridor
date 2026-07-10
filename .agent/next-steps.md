@@ -2,23 +2,23 @@
 
 **Repository:** `LuminaryLabs-Publish/HorrorCorridor`
 
-**Updated:** `2026-07-10T05-11-51-04-00`
+**Updated:** `2026-07-10T06-48-54-04-00`
 
 ## Current next build slice
 
 ```txt
-HorrorCorridor Command Result Publish Readback Refresh + Result-First Fixture Gate
+HorrorCorridor Command Result Journal Catch-up + Runtime Debug Fixture Gate
 ```
 
 Start from:
 
 ```txt
-.agent/architecture-audit/2026-07-10T05-11-51-04-00-command-result-publish-readback-dsk-map.md
-.agent/render-audit/2026-07-10T05-11-51-04-00-runtime-debug-command-readback-gap.md
-.agent/gameplay-audit/2026-07-10T05-11-51-04-00-local-host-command-result-loop.md
-.agent/command-authority-audit/2026-07-10T05-11-51-04-00-command-result-publish-decision-contract.md
-.agent/interaction-audit/2026-07-10T05-11-51-04-00-silent-noop-publish-reason-map.md
-.agent/deploy-audit/2026-07-10T05-11-51-04-00-command-fixture-validation-gate.md
+.agent/architecture-audit/2026-07-10T06-48-54-04-00-command-result-journal-catchup-dsk-map.md
+.agent/render-audit/2026-07-10T06-48-54-04-00-runtime-debug-command-journal-gap.md
+.agent/gameplay-audit/2026-07-10T06-48-54-04-00-local-host-command-result-loop.md
+.agent/command-authority-audit/2026-07-10T06-48-54-04-00-result-journal-publish-decision-contract.md
+.agent/interaction-audit/2026-07-10T06-48-54-04-00-silent-noop-command-reason-map.md
+.agent/deploy-audit/2026-07-10T06-48-54-04-00-command-fixture-validation-gate.md
 ```
 
 ## Build checklist
@@ -86,7 +86,7 @@ HorrorCorridor-V1/src/components/game/GameCanvas.tsx
 ## Acceptance checks
 
 ```txt
-[ ] node scripts/horror-corridor-command-fixture.mjs
+[ ] npm run fixture:commands
 [ ] npm run lint
 [ ] npm run smoke:protokits
 [ ] npm run harness:horror-corridor
@@ -95,4 +95,4 @@ HorrorCorridor-V1/src/components/game/GameCanvas.tsx
 
 ## Stop condition
 
-Stop when deterministic rows prove command status, command reason, publish decision, runtime debug projection, and legacy snapshot compatibility for local, host, ooze, and victory paths.
+Stop when deterministic rows prove command status, command reason, publish decision, runtime debug projection, journal counts, and legacy snapshot compatibility for local, host, ooze, and victory paths.
