@@ -2,7 +2,7 @@
 
 **Repository:** `LuminaryLabs-Publish/HorrorCorridor`
 
-**Updated:** `2026-07-09T18-30-30-04-00`
+**Updated:** `2026-07-09T22-50-53-04-00`
 
 ## Available validation commands
 
@@ -79,8 +79,8 @@ central ledger is updated after implementation lands
 [done] GameCanvas runtime/publish/render loop sampled.
 [done] networkRules authority seam read.
 [done] interactionRules silent no-op branches read.
-[done] oozeRules and winRules read.
 [done] runtimeDebugStore current debug export shape read.
+[done] syncSnapshot snapshot/message shape read.
 [done] Documentation-only .agent audit files written to main.
 [done] Central LuminaryLabs ledger and change log written to main.
 ```
