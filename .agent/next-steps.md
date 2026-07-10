@@ -2,23 +2,23 @@
 
 **Repository:** `LuminaryLabs-Publish/HorrorCorridor`
 
-**Updated:** `2026-07-10T09-40-13-04-00`
+**Updated:** `2026-07-10T10-58-54-04-00`
 
 ## Current next build slice
 
 ```txt
-HorrorCorridor Command Result Debug Projection Ledger Refresh + Fixture Gate
+HorrorCorridor Command Decision Debug Readback Ledger Refresh + Fixture Gate
 ```
 
 Start from:
 
 ```txt
-.agent/architecture-audit/2026-07-10T09-40-13-04-00-command-result-debug-projection-ledger-dsk-map.md
-.agent/render-audit/2026-07-10T09-40-13-04-00-runtime-debug-command-result-projection-gap.md
-.agent/gameplay-audit/2026-07-10T09-40-13-04-00-local-host-command-result-loop.md
-.agent/command-authority-audit/2026-07-10T09-40-13-04-00-result-publish-decision-contract.md
-.agent/interaction-audit/2026-07-10T09-40-13-04-00-noop-rejection-reason-map.md
-.agent/deploy-audit/2026-07-10T09-40-13-04-00-command-result-fixture-gate.md
+.agent/architecture-audit/2026-07-10T10-58-54-04-00-command-decision-debug-readback-dsk-map.md
+.agent/render-audit/2026-07-10T10-58-54-04-00-runtime-debug-command-decision-gap.md
+.agent/gameplay-audit/2026-07-10T10-58-54-04-00-local-host-command-decision-loop.md
+.agent/command-authority-audit/2026-07-10T10-58-54-04-00-command-result-publish-decision-contract.md
+.agent/interaction-audit/2026-07-10T10-58-54-04-00-noop-rejection-command-reason-map.md
+.agent/deploy-audit/2026-07-10T10-58-54-04-00-command-decision-fixture-gate.md
 ```
 
 ## Build checklist
