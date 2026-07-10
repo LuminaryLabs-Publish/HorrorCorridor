@@ -36,7 +36,7 @@ npm run fixture:snapshot-acceptance
 [done] GameCanvas authoritative publication and snapshot reference path
 [done] package scripts
 [done] repo-local documentation update on main
-[pending] central ledger and internal change-log synchronization
+[done] central ledger and internal change-log synchronization
 ```
 
 ## Required implementation validation
@@ -85,7 +85,7 @@ branch created: no
 pull request created: no
 existing tests run: no
 snapshot acceptance fixture: unavailable
-repo-local documentation pushed to main: in progress
-central ledger updated: pending
-central internal change-log added: pending
+repo-local documentation pushed to main: yes
+central ledger updated: yes
+central internal change-log added: yes
 ```
