@@ -2,15 +2,36 @@
 
 **Repository:** `LuminaryLabs-Publish/HorrorCorridor`
 
-**Updated:** `2026-07-10T12-29-26-04-00`
+**Updated:** `2026-07-10T13-58-16-04-00`
 
 ## Current safe ledge
 
 ```txt
-HorrorCorridor Command Result Readback Fixture Refresh + Runtime Debug Projection Gate
+HorrorCorridor Command Outcome Source Ledger + Runtime Debug Fixture Gate
 ```
 
-Start with these files:
+## Selection result
+
+The full accessible `LuminaryLabs-Publish` repository list was compared against the tracked ledger in `LuminaryLabs-Dev/LuminaryLabs` and repo-local root `.agent` state.
+
+All nine eligible non-Cavalry repositories are tracked and have root audit state. `LuminaryLabs-Publish/TheCavalryOfRome` remains excluded by rule.
+
+`HorrorCorridor` was selected as the oldest eligible documented fallback.
+
+```txt
+HorrorCorridor       selected / prior central latest 2026-07-10T12-29-26-04-00
+PhantomCommand       tracked / central latest 2026-07-10T12-40-45-04-00
+ZombieOrchard        tracked / central latest 2026-07-10T12-49-54-04-00
+TheUnmappedHouse     tracked / central latest 2026-07-10T13-01-11-04-00
+MyCozyIsland         tracked / central latest 2026-07-10T13-08-51-04-00
+TheOpenAbove         tracked / central latest 2026-07-10T13-21-23-04-00
+PrehistoricRush      tracked / central latest 2026-07-10T13-30-15-04-00
+AetherVale           tracked / central latest 2026-07-10T13-41-21-04-00
+IntoTheMeadow        tracked / central latest 2026-07-10T13-50-05-04-00
+TheCavalryOfRome     excluded by rule
+```
+
+## Read first
 
 ```txt
 .agent/current-audit.md
@@ -18,45 +39,37 @@ Start with these files:
 .agent/known-gaps.md
 .agent/validation.md
 .agent/kit-registry.json
-.agent/trackers/2026-07-10T12-29-26-04-00/project-breakdown.md
-.agent/turn-ledger/2026-07-10T12-29-26-04-00.md
-.agent/architecture-audit/2026-07-10T12-29-26-04-00-command-result-readback-fixture-dsk-map.md
-.agent/render-audit/2026-07-10T12-29-26-04-00-runtime-debug-command-result-gap.md
-.agent/gameplay-audit/2026-07-10T12-29-26-04-00-local-host-command-result-loop.md
-.agent/command-authority-audit/2026-07-10T12-29-26-04-00-command-result-publish-decision-contract.md
-.agent/interaction-audit/2026-07-10T12-29-26-04-00-noop-rejection-command-reason-map.md
-.agent/deploy-audit/2026-07-10T12-29-26-04-00-command-result-fixture-gate.md
+.agent/trackers/2026-07-10T13-58-16-04-00/project-breakdown.md
+.agent/turn-ledger/2026-07-10T13-58-16-04-00.md
+.agent/architecture-audit/2026-07-10T13-58-16-04-00-command-outcome-source-ledger-dsk-map.md
+.agent/render-audit/2026-07-10T13-58-16-04-00-runtime-debug-outcome-projection-gap.md
+.agent/gameplay-audit/2026-07-10T13-58-16-04-00-local-host-outcome-consumer-loop.md
+.agent/command-authority-audit/2026-07-10T13-58-16-04-00-command-outcome-publish-contract.md
+.agent/interaction-audit/2026-07-10T13-58-16-04-00-interaction-reason-attribution-map.md
+.agent/deploy-audit/2026-07-10T13-58-16-04-00-command-outcome-fixture-gate.md
 ```
-
-## One sentence read
-
-`HorrorCorridor` is a playable cooperative first-person maze, but the next safe cut is command-result readback proof: make accepted, rejected, skipped, no-op, recovery, ooze, victory, and publish-only outcomes first-class rows before renderer, PeerJS, minimap, route, or content work.
 
 ## Current interaction loop
 
 ```txt
-open app
-  -> start menu
-  -> choose solo, host, or join
-  -> create room, join room, or solo identity
-  -> lobby/loading/readiness gates complete
-  -> GameCanvas mounts
-  -> renderer, camera, post-processing, maze world, minimap, input refs, pose refs, transport listener, and runtime debug initialize
-  -> pointer-lock first-person navigation updates pose and view angles
+start menu
+  -> solo, host, or join
+  -> room identity, lobby, loading, readiness
+  -> GameCanvas runtime initialization
+  -> pointer-lock movement and mouse look
   -> interact key derives pickup, drop, place, or remove
-  -> local solo/host applies interaction/network rules directly
-  -> client sends TRY_INTERACT to host
-  -> host applies PLAYER_UPDATE or TRY_INTERACT through GameState-returning rules
-  -> request-sync, toggle-ready, cancel, unknown action, ooze, and victory rules return GameState only
-  -> publish/skip is inferred from changed state or implicit reason strings
-  -> renderer, minimap, HUD, completion route, and runtime debug consume latest snapshot
+  -> local solo/host applies GameState-returning rules directly
+  -> client sends PLAYER_UPDATE or TRY_INTERACT
+  -> host applies network, interaction, ooze, and victory rules
+  -> publish or skip is inferred from object identity and reason strings
+  -> authoritative snapshot feeds renderer, minimap, HUD, completion route, and runtime debug
 ```
 
 ## Main finding
 
-Do not start next with renderer extraction, PeerJS extraction, minimap extraction, post-processing extraction, scene dressing, route rewrites, new maze content, or visual object-kit expansion.
+The live game is already playable. The next safe work is not renderer, PeerJS, minimap, post-processing, route, maze-content, or scene-dressing expansion.
 
-The blocker is command-result readback and fixture proof. `interactionRules.ts`, `networkRules.ts`, `oozeRules.ts`, and `winRules.ts` return `GameState` only. `GameCanvas.tsx` infers publish/skip from state identity or implicit reason strings, and `runtimeDebugStore.ts` exports frames/events but not command result, publish decision, rejection reason, command journal, or fixture parity rows.
+The missing boundary is a source-owned command outcome ledger. `interactionRules.ts`, `networkRules.ts`, `oozeRules.ts`, and `winRules.ts` still return `GameState` only. Accepted, rejected, skipped, unchanged, recovery, ooze, victory, and publish-only decisions are therefore not first-class records, and `runtimeDebugStore.ts` cannot explain why state changed or why publication was skipped.
 
 ## First implementation targets
 
@@ -76,12 +89,6 @@ HorrorCorridor-V1/src/features/debug/domain/runtimeDebugCommandProjection.ts
 HorrorCorridor-V1/scripts/horror-corridor-command-fixture.mjs
 ```
 
-## Validation target
+## Validation posture
 
-```txt
-npm run fixture:commands
-npm run lint
-npm run smoke:protokits
-npm run harness:horror-corridor
-npm run validate:live-player:dev
-```
+Documentation only. Runtime source, branches, pull requests, dependencies, routes, and deployment configuration were not changed. Existing checks and the planned command fixture were not run.
