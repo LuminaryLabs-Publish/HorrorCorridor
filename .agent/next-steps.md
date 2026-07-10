@@ -2,23 +2,23 @@
 
 **Repository:** `LuminaryLabs-Publish/HorrorCorridor`
 
-**Updated:** `2026-07-10T08-11-35-04-00`
+**Updated:** `2026-07-10T09-40-13-04-00`
 
 ## Current next build slice
 
 ```txt
-HorrorCorridor Command Debug Projection Ledger Refresh + Result Fixture Gate
+HorrorCorridor Command Result Debug Projection Ledger Refresh + Fixture Gate
 ```
 
 Start from:
 
 ```txt
-.agent/architecture-audit/2026-07-10T08-11-35-04-00-command-debug-projection-dsk-map.md
-.agent/render-audit/2026-07-10T08-11-35-04-00-runtime-debug-command-projection-gap.md
-.agent/gameplay-audit/2026-07-10T08-11-35-04-00-local-host-command-debug-loop.md
-.agent/command-authority-audit/2026-07-10T08-11-35-04-00-result-publish-decision-contract.md
-.agent/interaction-audit/2026-07-10T08-11-35-04-00-noop-rejection-reason-map.md
-.agent/deploy-audit/2026-07-10T08-11-35-04-00-command-debug-fixture-gate.md
+.agent/architecture-audit/2026-07-10T09-40-13-04-00-command-result-debug-projection-ledger-dsk-map.md
+.agent/render-audit/2026-07-10T09-40-13-04-00-runtime-debug-command-result-projection-gap.md
+.agent/gameplay-audit/2026-07-10T09-40-13-04-00-local-host-command-result-loop.md
+.agent/command-authority-audit/2026-07-10T09-40-13-04-00-result-publish-decision-contract.md
+.agent/interaction-audit/2026-07-10T09-40-13-04-00-noop-rejection-reason-map.md
+.agent/deploy-audit/2026-07-10T09-40-13-04-00-command-result-fixture-gate.md
 ```
 
 ## Build checklist
@@ -32,7 +32,7 @@ Start from:
 [ ] Add publish decision helper before GameCanvas consumes result metadata.
 [ ] Add command journal helpers and summary counters.
 [ ] Add canonical command fixture seed-state helpers before the fixture runner.
-[ ] Add fixture row builders for accepted, rejected, unchanged, skipped, publish-only, ooze, and victory paths.
+[ ] Add fixture row builders for accepted, rejected, unchanged, skipped, publish-only, ooze, recovery, and victory paths.
 [ ] Add interaction preflight helpers beside interactionRules.
 [ ] Add result-returning wrappers for pickup, drop, place, and remove.
 [ ] Keep legacy interaction exports returning result.state.
@@ -95,4 +95,4 @@ HorrorCorridor-V1/src/components/game/GameCanvas.tsx
 
 ## Stop condition
 
-Stop when deterministic rows prove command status, command reason, publish decision, runtime debug projection, journal counts, and legacy snapshot compatibility for local, host, ooze, and victory paths.
+Stop when deterministic rows prove command status, command reason, publish decision, runtime debug projection, journal counts, and legacy snapshot compatibility for local, host, ooze, recovery, and victory paths.
