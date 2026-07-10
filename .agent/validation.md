@@ -2,7 +2,7 @@
 
 **Repository:** `LuminaryLabs-Publish/HorrorCorridor`
 
-**Updated:** `2026-07-10T08-11-35-04-00`
+**Updated:** `2026-07-10T09-40-13-04-00`
 
 ## Available validation commands
 
@@ -64,6 +64,7 @@ host consumer skips rejected TRY_INTERACT broadcast
 host consumer publishes request-sync recovery
 runtime debug projects latest command result
 runtime debug projects latest publish decision
+runtime debug projects latest command reason
 runtime debug projects command journal counts
 GameCanvas consumer splice preserves legacy snapshot shape
 final snapshot summary parity
@@ -76,15 +77,12 @@ central ledger is updated after implementation lands
 [done] Current public Publish repo list read.
 [done] Central LuminaryLabs-Dev/LuminaryLabs Publish ledger context read.
 [done] HorrorCorridor repo-local agent state read.
-[done] package validation scripts read.
-[done] GameCanvas runtime/publish/render loop sampled.
-[done] networkRules authority seam read.
-[done] interactionRules silent no-op branches read.
-[done] oozeRules GameState-only branch read.
-[done] winRules GameState-only branch read.
-[done] runtimeDebugStore current debug export shape read.
+[done] interactionRules GameState-only command seam sampled.
+[done] networkRules GameState-only command seam sampled.
+[done] oozeRules GameState-only command seam sampled.
+[done] runtimeDebugStore current debug export shape sampled.
 [done] Documentation-only .agent audit files written to main.
-[done] Central LuminaryLabs ledger and change log written to main.
+[done] Central LuminaryLabs ledger and change log written to main after repo-local pass.
 ```
 
 ## Validation not performed
@@ -99,4 +97,15 @@ central ledger is updated after implementation lands
 [not-run] browser route check
 [not-run] live host/client multiplayer check
 [not-run] runtime source edit
+```
+
+## This pass status
+
+```txt
+runtime source changed: no
+branch created: no
+pull request created: no
+browser smoke: not run
+command fixture: not run because proof files do not exist yet
+pushed to main: yes
 ```
