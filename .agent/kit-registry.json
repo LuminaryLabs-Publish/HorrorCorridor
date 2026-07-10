@@ -1,74 +1,60 @@
 {
-  "schemaVersion": 48,
-  "generatedAt": "2026-07-10T15-31-03-04-00",
+  "schemaVersion": 49,
+  "generatedAt": "2026-07-10T17-00-54-04-00",
   "repository": "LuminaryLabs-Publish/HorrorCorridor",
-  "status": "authority-command-correlation-publish-parity-fixture-gate-planned",
+  "status": "request-identity-authoritative-ack-fixture-gate-planned",
   "selectedBecause": "oldest eligible documented fallback after full accessible LuminaryLabs-Publish inventory, central ledger, and root .agent comparison; TheCavalryOfRome excluded",
   "sourceRoots": [
     "HorrorCorridor-V1/src/components/game",
-    "HorrorCorridor-V1/src/features",
-    "HorrorCorridor-V1/src/protokits",
+    "HorrorCorridor-V1/src/features/game-state",
+    "HorrorCorridor-V1/src/features/networking",
+    "HorrorCorridor-V1/src/features/debug",
     "HorrorCorridor-V1/scripts"
   ],
-  "currentNextSlice": "HorrorCorridor Authority Command Correlation Ledger + Publish Parity Fixture Gate",
+  "currentNextSlice": "HorrorCorridor Request Identity Propagation + Authoritative Acknowledgement Fixture Gate",
   "interactionLoop": [
-    "start-menu",
+    "menu-and-session-selection",
     "solo-host-or-join",
-    "room-identity-readiness-and-seeded-bootstrap",
-    "game-canvas-runtime-init",
-    "pointer-lock-first-person-navigation",
-    "derive-pickup-drop-place-remove",
-    "local-identity-based-skip-or-publish",
-    "client-try-interact-to-host",
-    "host-unconditional-post-command-publish",
-    "periodic-player-ooze-cadence-publish",
-    "authoritative-snapshot-render-minimap-hud-debug"
+    "room-readiness-and-seeded-bootstrap",
+    "gamecanvas-runtime-initialization",
+    "pointer-lock-navigation",
+    "derive-interaction",
+    "local-authority-or-client-try-interact",
+    "host-rule-consumption",
+    "authoritative-ack-and-optional-sync",
+    "render-minimap-hud-completion-debug"
   ],
   "domains": [
-    "application-shell",
-    "session-lifecycle",
-    "peer-networking",
-    "network-message-protocol",
-    "replicated-snapshot-protocol",
-    "seeded-maze-bootstrap",
-    "cube-and-anomaly-bootstrap",
-    "ordered-sequence-authority",
-    "first-person-input-and-movement",
-    "maze-collision-and-camera",
-    "local-authority",
-    "host-authority",
-    "legacy-interaction-rules",
-    "legacy-network-rules",
-    "legacy-ooze-rules",
-    "legacy-win-rules",
-    "authoritative-publication-cadence",
-    "runtime-debug-frame-and-event-store",
-    "three-render-world",
-    "post-processing",
-    "minimap",
-    "scene-dressing",
-    "command-result-contract-next",
-    "publish-decision-contract-next",
-    "command-correlation-contract-next",
-    "authority-parity-fixture-next",
-    "central-ledger-synchronization"
+    "application shell and session lifecycle",
+    "PeerJS host/client transport",
+    "protocol envelopes and message routing",
+    "request identity fields",
+    "replicated snapshot construction",
+    "seeded maze, cube, and anomaly bootstrap",
+    "first-person input, movement, collision, camera, and prediction",
+    "interaction, network, ooze, and victory rules",
+    "local and host authority consumers",
+    "authoritative publication cadence",
+    "Three.js world, post-processing, minimap, and scene dressing",
+    "runtime debug frame and event storage",
+    "planned request generation, pending ledger, acknowledgement, deduplication, and fixture domains"
   ],
   "implementedKits": [
     {
       "name": "corridor-session-domain-kit",
-      "services": ["mode selection", "room identity", "readiness state", "session entry"]
+      "services": ["mode selection", "room identity", "readiness", "session entry"]
     },
     {
       "name": "peer-room-sync-domain-kit",
-      "services": ["host/client transport", "full sync", "player updates", "interaction requests", "room lifecycle messages"]
+      "services": ["host/client transport", "protocol routing", "full sync", "player updates", "interaction requests", "lobby events"]
     },
     {
       "name": "maze-snapshot-bootstrap-kit",
-      "services": ["deterministic maze snapshot", "cell lookup", "cube spawns", "anomaly slots"]
+      "services": ["deterministic maze", "cell lookup", "cube spawns", "anomaly sequence and slots"]
     },
     {
       "name": "first-person-corridor-player-kit",
-      "services": ["pointer lock", "input", "movement integration", "collision", "camera pose", "local prediction"]
+      "services": ["pointer lock", "input", "movement", "collision", "camera", "prediction"]
     },
     {
       "name": "corridor-interaction-domain-kit",
@@ -76,15 +62,15 @@
     },
     {
       "name": "ordered-anomaly-sequence-kit",
-      "services": ["sequence slots", "ordered color validation", "completion", "victory", "rollback"]
+      "services": ["ordered validation", "completion", "victory", "rollback"]
     },
     {
       "name": "ooze-trail-domain-kit",
-      "services": ["cadence", "spawn", "decay", "spacing guard", "capacity guard", "trail transitions"]
+      "services": ["cadence", "decay", "spawn", "spacing guard", "capacity guard"]
     },
     {
       "name": "corridor-authoritative-publication-kit",
-      "services": ["snapshot tick", "full sync", "transport broadcast", "cadence counters", "publication reasons"]
+      "services": ["snapshot tick", "full sync", "broadcast", "cadence counters", "publication reasons"]
     },
     {
       "name": "corridor-render-world-kit",
@@ -96,71 +82,54 @@
     },
     {
       "name": "runtime-debug-frame-kit",
-      "services": ["bounded frame capture", "bounded event capture", "window export", "overlay preferences"]
+      "services": ["bounded frames", "bounded events", "browser export", "overlay preferences"]
     }
-  ],
-  "legacyAdapters": [
-    "legacy-interaction-rules-adapter",
-    "legacy-network-rules-adapter",
-    "legacy-ooze-rules-adapter",
-    "legacy-win-rules-adapter"
   ],
   "plannedKits": [
     {
-      "name": "command-envelope-contract-kit",
-      "services": ["command identity", "correlation identity", "source", "authority mode", "kind", "target", "input metadata"]
+      "name": "request-identity-kit",
+      "services": ["local and network request ids", "source identity", "creation timestamps"]
     },
     {
-      "name": "command-reason-catalog-kit",
-      "services": ["accepted", "rejected", "skipped", "no-op", "recovery", "ooze", "victory", "cadence reasons"]
+      "name": "pending-command-ledger-kit",
+      "services": ["register", "acknowledge", "expire", "deduplicate", "pending counters"]
     },
     {
-      "name": "command-result-envelope-kit",
-      "services": ["status", "reason", "semantic changed flag", "events", "before/after summaries", "legacy state"]
-    },
-    {
-      "name": "publish-decision-contract-kit",
-      "services": ["publish command result", "publish recovery", "publish victory", "publish cadence", "skip rejected", "skip no-op"]
-    },
-    {
-      "name": "command-correlation-record-kit",
-      "services": ["request-to-command join", "result join", "consumer join", "publication join", "published snapshot tick"]
+      "name": "command-ack-protocol-kit",
+      "services": ["accepted", "rejected", "skipped", "no-op", "recovery", "duplicate", "timeout acknowledgements"]
     },
     {
       "name": "authority-command-consumer-kit",
-      "services": ["shared local/host consumption", "journal append", "publish classification", "transport-neutral decisions"]
+      "services": ["shared local/host consumption", "typed result", "publish decision", "ack decision"]
     },
     {
-      "name": "command-result-journal-kit",
-      "services": ["ordered facts", "bounded retention", "source/status/reason/decision counters", "correlation completeness"]
+      "name": "request-deduplication-kit",
+      "services": ["idempotency", "duplicate detection", "duplicate acknowledgement"]
     },
     {
-      "name": "runtime-debug-command-projection-kit",
-      "services": ["latest correlation", "latest result", "latest decision", "published tick", "journal counters", "fixture parity"]
+      "name": "runtime-debug-request-projection-kit",
+      "services": ["request/result/decision/ack join", "latency", "pending and timeout counters", "snapshot tick"]
     },
     {
-      "name": "authority-parity-fixture-kit",
-      "services": ["local/host identical-command rows", "intentional divergence rows", "cadence rows", "DOM-free replay"]
+      "name": "request-ack-fixture-kit",
+      "services": ["local/host/client rows", "publish/no-publish rows", "duplicate rows", "timeout rows", "DOM-free replay"]
     },
     {
-      "name": "legacy-snapshot-parity-kit",
-      "services": ["GameState parity", "replicated snapshot parity", "volatile field normalization"]
-    },
-    {
-      "name": "central-ledger-sync-kit",
-      "services": ["central repo ledger update", "internal change-log update"]
+      "name": "legacy-protocol-compatibility-kit",
+      "services": ["version-1 compatibility", "additive rollout", "snapshot parity"]
     }
   ],
-  "currentBlocker": "The same command is consumed with different implicit publication behavior in local and host authority paths, and runtime debug cannot correlate command, result, decision, and published snapshot tick. Cadence publication is also conflated with semantic command mutation.",
+  "currentBlocker": "Protocol requestId capability exists but GameCanvas does not generate, propagate, echo, or acknowledge request identity. A deliberate no-publish authority decision would leave a client request without an authoritative response.",
   "validation": {
     "runtimeSourceChanged": false,
     "branchCreated": false,
     "pullRequestCreated": false,
+    "npmRunBuild": "not-run",
     "npmRunLint": "not-run",
     "npmRunSmokeProtokits": "not-run",
     "npmRunHarnessHorrorCorridor": "not-run",
     "npmRunValidateLivePlayerDev": "not-run",
     "browserSmoke": "not-run",
-    "authorityParityFixture": "not-run; proof files do not exist yet"
+    "requestAckFixture": "not-run; script does not exist"
   }
 }

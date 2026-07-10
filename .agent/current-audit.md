@@ -2,95 +2,67 @@
 
 **Repository:** `LuminaryLabs-Publish/HorrorCorridor`
 
-**Updated:** `2026-07-10T15-31-03-04-00`
+**Updated:** `2026-07-10T17-00-54-04-00`
 
 ## Status
 
 ```txt
-status: authority-command-correlation-publish-parity-fixture-gate-planned
+status: request-identity-authoritative-ack-fixture-gate-planned
 runtime source changed: no
 branch: main
 root .agent state: refreshed
-central ledger sync: complete
+central ledger sync: pending until repo commit is recorded
 ```
 
 ## Selection
 
-`HorrorCorridor` was selected after the full accessible `LuminaryLabs-Publish` list was compared with central tracking and root `.agent` state. No eligible repository was new, ledger-missing, root-audit-missing, or otherwise undocumented. `TheCavalryOfRome` was excluded. `HorrorCorridor` had the oldest eligible central review timestamp.
+No eligible repository was new, ledger-missing, root-audit-missing, or otherwise undocumented. `HorrorCorridor` was selected as the oldest eligible documented fallback.
+
+```txt
+HorrorCorridor       selected / prior central activity 2026-07-10T15-36-42-04-00
+PhantomCommand       tracked  / 2026-07-10T15-48-27-04-00
+ZombieOrchard        tracked  / 2026-07-10T15-55-49-04-00
+TheUnmappedHouse     tracked  / 2026-07-10T16-07-30-04-00
+MyCozyIsland         tracked  / 2026-07-10T16-17-08-04-00
+TheOpenAbove         tracked  / 2026-07-10T16-28-54-04-00
+PrehistoricRush      tracked  / 2026-07-10T16-37-25-04-00
+AetherVale           tracked  / 2026-07-10T16-48-42-04-00
+IntoTheMeadow        tracked  / 2026-07-10T16-58-28-04-00
+TheCavalryOfRome     excluded by rule
+```
 
 ## Interaction loop
 
 ```txt
-open application
-  -> choose solo, host, or join
-  -> establish room identity and readiness
-  -> create seeded maze, cubes, anomaly sequence, and players
-  -> mount GameCanvas
-  -> initialize renderer, post-processing, minimap, input, transport, cadence, and debug
-  -> pointer-lock movement updates local pose and camera
-  -> interact input derives pickup/drop/place/remove
-  -> local authority applies applyNetworkInteractionRequest and skips when nextState === currentGameState
+menu and session selection
+  -> solo, host, or join
+  -> room identity, readiness, and deterministic maze bootstrap
+  -> GameCanvas initializes rendering, input, transport, cadence, and diagnostics
+  -> pointer-lock movement updates local pose
+  -> interact derives pickup, drop, place, or remove
+  -> local authority applies a rule directly
   -> client sends TRY_INTERACT to host
-  -> host applies the same rule, syncs held cubes, then publishes regardless of semantic change
-  -> periodic authority cadence applies player update, ooze advancement, and resync publication
-  -> authoritative snapshot drives world render, minimap, HUD, completion route, and debug frames
+  -> host applies the rule and publishes a SYNC snapshot
+  -> client consumes the snapshot
+  -> world, minimap, HUD, completion, and runtime debug update
 ```
 
 ## Domains in use
 
 ```txt
-application-shell
-next-client-runtime
-react-game-surface
-session-lifecycle
-peer-networking
-host-transport
-client-transport
-network-message-protocol
-replicated-snapshot-protocol
-seeded-maze-bootstrap
-maze-cell-lookup
-cube-spawn-bootstrap
-anomaly-sequence-bootstrap
-sequence-slot-authority
-ordered-sequence-validation
-victory-completion
-first-person-input
-pointer-lock-control
-keyboard-input
-mouse-look-input
-player-view-angles
-player-movement-integration
-maze-collision-resolution
-camera-bob
-local-pose-prediction
-local-carry-state-sync
-host-authority
-local-authoritative-simulation
-legacy-game-state-interaction-rules
-legacy-game-state-network-rules
-legacy-game-state-ooze-rules
-legacy-game-state-win-rules
-ooze-cadence
-ooze-decay-and-spawn
-authoritative-publication-cadence
-runtime-debug-frame-store
-runtime-debug-event-store
-render-world-snapshot-consumption
-three-renderer
-post-processing
-maze-world-rendering
-minimap-rendering
-scene-dressing-descriptors
-command-envelope-contract-next
-command-result-envelope-next
-publish-decision-contract-next
-command-correlation-contract-next
-authority-parity-consumer-next
-command-result-journal-next
-runtime-debug-command-projection-next
-authority-parity-fixture-next
-central-ledger-synchronization
+application shell and session lifecycle
+PeerJS host/client transport
+protocol envelopes and message routing
+request identity fields
+replicated snapshot construction
+seeded maze, cube, and anomaly bootstrap
+first-person input, movement, collision, camera, and prediction
+interaction, network, ooze, and victory rules
+local and host authority consumers
+authoritative publication cadence
+Three.js world, post-processing, minimap, and scene dressing
+runtime debug frame and event storage
+planned request generation, pending ledger, acknowledgement, deduplication, and fixture domains
 ```
 
 ## Kits and offered services
@@ -98,78 +70,89 @@ central-ledger-synchronization
 ```txt
 corridor-session-domain-kit
   mode selection, room identity, readiness, session entry
-
 peer-room-sync-domain-kit
-  host/client transport, full synchronization, player updates, interaction requests
-
+  host/client transport, START_GAME, PLAYER_UPDATE, TRY_INTERACT, SYNC, lobby events
 maze-snapshot-bootstrap-kit
-  deterministic maze, cell lookup, cube spawns, anomaly slots
-
+  deterministic maze, cell lookup, cube spawns, anomaly sequence and slots
 first-person-corridor-player-kit
-  pointer lock, input, movement, collision, camera pose, local prediction
-
+  pointer lock, keyboard and mouse input, movement, collision, camera, prediction
 corridor-interaction-domain-kit
   pickup, drop, place, remove, carried-cube synchronization
-
 ordered-anomaly-sequence-kit
-  slot authority, ordered color validation, completion, victory and rollback
-
+  ordered slot validation, completion, victory, rollback
 ooze-trail-domain-kit
-  cadence, decay, spawn, spacing guard, capacity guard, trail transitions
-
+  cadence, decay, spawn, spacing guard, capacity guard
 corridor-authoritative-publication-kit
-  snapshot tick advancement, full-sync publication, transport broadcast, cadence counters
-
+  snapshot tick, full-sync creation, transport broadcast, cadence counters
 corridor-render-world-kit
-  Three.js maze, cube, player, anomaly, ooze, and dressing projection
-
+  Three.js world, maze, cubes, players, anomaly, ooze, scene dressing
 corridor-minimap-kit
   minimap geometry, player markers, object markers
-
 runtime-debug-frame-kit
-  bounded frame capture, event capture, window export, overlay state
-
-legacy rule adapters
-  GameState-returning interaction, network, ooze, and win compatibility
+  bounded frame capture, bounded event capture, browser export, overlay preferences
 ```
 
 ## Required next-cut kits
 
 ```txt
-command-envelope-contract-kit
-command-reason-catalog-kit
-command-result-envelope-kit
-publish-decision-contract-kit
-command-correlation-record-kit
+request-identity-kit
+  stable request ids for local and network commands
+pending-command-ledger-kit
+  register, acknowledge, expire, deduplicate, and summarize pending requests
+command-ack-protocol-kit
+  accepted, rejected, skipped, no-op, recovery, and duplicate acknowledgements independent of snapshot publication
 authority-command-consumer-kit
-command-result-journal-kit
-runtime-debug-command-projection-kit
-authority-parity-fixture-kit
-legacy-snapshot-parity-kit
+  one local/host command path with explicit result and publish decision
+request-deduplication-kit
+  prevent duplicate mutation when a request is retried
+runtime-debug-request-projection-kit
+  request, result, decision, ack, snapshot tick, latency, and pending counters
+request-ack-fixture-kit
+  deterministic local, host, client, duplicate, timeout, publish, and no-publish rows
+legacy-protocol-compatibility-kit
+  preserve existing version-1 message and snapshot consumers during additive rollout
 ```
 
 ## Source findings
 
-### Local and host interaction publication are not equivalent
+```txt
+ProtocolEnvelope already defines optional requestId for every message.
+createInteractionRequestMessage accepts requestId.
+createFullSyncMessage accepts requestId.
+sendInteractionRequest does not create or pass requestId.
+sendPlayerUpdate uses input.sequence but does not pass requestId.
+the host logs PLAYER_UPDATE requestId but does not retain it in the result or publication path.
+the host interaction log omits requestId.
+publishAuthoritativeState does not accept or forward requestId.
+local authority commands have no equivalent stable request identity.
+runtime debug event ids are random display ids, not command correlation ids.
+a rejected or no-op client command will need an acknowledgement even when publication is skipped.
+```
 
-`applyInteraction()` computes `nextState` and returns without publication when `nextState === currentGameState`. The host `TRY_INTERACT` path always calls `publishAuthoritativeState()` after applying the same domain rule, including unchanged-state results.
+### Existing protocol capability
 
-### Periodic publication is not the same thing as command acceptance
+`ProtocolEnvelope` has an optional `requestId`. Both interaction request and full-sync builders accept it. The runtime can therefore propagate identity through existing envelopes before deciding whether a dedicated acknowledgement message is required.
 
-The authority loop publishes on `NETWORK_TICK_RATE` after player update and `advanceOozeTrail()`. `spawnOozeTrail()` returns a new state object even when spacing or capacity guards add no trail entry. Object identity therefore cannot represent semantic mutation across all paths.
+### Missing runtime propagation
 
-### Debug rows are not causally joined
+`sendInteractionRequest()` does not supply `requestId`, and `publishAuthoritativeState()` cannot echo one. The host therefore cannot tie a published snapshot tick back to the client request that caused it.
 
-`runtimeDebugStore` retains frames and free-form events, but has no shared command correlation identifier, source command, domain result, publish decision, published snapshot tick, or authority-mode parity row.
+### No-publish acknowledgement problem
+
+The planned publish-parity fix will skip rejected or unchanged host commands. A client still needs an authoritative answer. Snapshot publication cannot be the only acknowledgement channel because a deliberate no-publish decision would otherwise leave the request unresolved.
+
+### Duplicate and retry ambiguity
+
+There is no pending request ledger, duplicate request guard, acknowledgement status, expiry policy, or latency row. Retried client messages cannot be distinguished from new commands.
 
 ## Main finding
 
-The blocker is command-to-publication correlation. A source-owned result contract is still required, but the fixture gate must specifically prove that local and host consumers make deliberate, explainable publication decisions for the same command. Cadence-driven publication must be classified separately from command-driven publication rather than treated as an accepted command result.
+The blocker is request identity propagation and authoritative acknowledgement. Command results and publish decisions must be joined to a stable request identity, and acknowledgements must remain available when the authority deliberately does not publish a new snapshot.
 
 ## Next safe ledge
 
 ```txt
-HorrorCorridor Authority Command Correlation Ledger + Publish Parity Fixture Gate
+HorrorCorridor Request Identity Propagation + Authoritative Acknowledgement Fixture Gate
 ```
 
 ## Validation status
@@ -183,7 +166,5 @@ npm run smoke:protokits: not run
 npm run harness:horror-corridor: not run
 npm run validate:live-player:dev: not run
 browser smoke: not run
-authority parity fixture: not run because proof files do not exist yet
-pushed to main: documentation only
-central ledger updated: yes
+request acknowledgement fixture: unavailable
 ```

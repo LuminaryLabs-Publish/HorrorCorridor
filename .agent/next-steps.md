@@ -2,106 +2,94 @@
 
 **Repository:** `LuminaryLabs-Publish/HorrorCorridor`
 
-**Updated:** `2026-07-10T15-31-03-04-00`
+**Updated:** `2026-07-10T17-00-54-04-00`
 
 ## Goal
 
-Introduce an authority-neutral command correlation ledger that preserves current solo, host, client, cadence, and snapshot behavior while making every domain result and every publish, skip, recovery, victory, or cadence decision explicit and replayable.
+Create a stable request and acknowledgement path so every local or network command can be traced from intent through authority result, publish decision, acknowledgement, and optional snapshot tick without changing current gameplay behavior.
 
 ## Current next build slice
 
 ```txt
-HorrorCorridor Authority Command Correlation Ledger + Publish Parity Fixture Gate
+HorrorCorridor Request Identity Propagation + Authoritative Acknowledgement Fixture Gate
 ```
 
 ## Plan ledger
 
 ```txt
-[ ] Preserve current solo, host, client, PeerJS, renderer, minimap, HUD, completion, and runtime-debug behavior.
-[ ] Define stable CommandId, CorrelationId, CommandSource, AuthorityMode, CommandKind, CommandStatus, and CommandReason values.
-[ ] Define CommandResult with before/after summaries, semantic changed flag, events, and legacy GameState.
-[ ] Define PublishDecision independently from CommandResult.
-[ ] Support publish-command-result, publish-recovery, publish-victory, publish-cadence, skip-rejected, skip-noop, and skip-client-only decisions.
-[ ] Define CommandCorrelationRecord linking requestId, commandId, result, consumer, publication reason, and published snapshot tick.
-[ ] Add result-returning interaction wrappers while retaining current GameState exports.
-[ ] Add result-returning network wrappers while retaining current GameState exports.
-[ ] Add result-returning ooze wrappers that distinguish no spawned/decayed entries from semantic mutation.
-[ ] Add result-returning ordered-sequence wrappers for completion and rollback.
-[ ] Create one authority-command consumer shared by local and host paths.
-[ ] Keep transport cadence publication as a separate source category rather than manufacturing a command acceptance result.
-[ ] Record every consumed command in an ordered bounded journal.
-[ ] Add counters by source, authority mode, status, reason, publish decision, and correlation completeness.
-[ ] Add canonical fixture seeds before modifying GameCanvas.
-[ ] Prove local and host parity for accepted pickup, rejected pickup, accepted place, rejected place, victory, and remove.
-[ ] Prove deliberate divergence for request-sync recovery and cadence publication.
-[ ] Prove no-op ooze rows without relying on object identity.
-[ ] Prove published snapshot tick and publication reason are attached to the originating correlation record.
+[ ] Preserve current solo, host, client, rendering, minimap, HUD, completion, and cadence behavior.
+[ ] Define RequestId, RequestSource, RequestStatus, AckStatus, and AckReason values.
+[ ] Generate a stable request id for every local interaction.
+[ ] Generate and pass requestId in every TRY_INTERACT message.
+[ ] Decide whether PLAYER_UPDATE uses requestId, input.sequence, or a separate cadence correlation id.
+[ ] Add a bounded pending-command ledger for client requests.
+[ ] Carry inbound requestId into the authority command envelope.
+[ ] Return an explicit command result for accepted, rejected, skipped, no-op, recovery, and duplicate requests.
+[ ] Keep PublishDecision independent from acknowledgement.
+[ ] Echo requestId on SYNC when a snapshot publication acknowledges the request.
+[ ] Add a command-result acknowledgement path for deliberate no-publish decisions.
+[ ] Define duplicate request behavior and prove idempotency.
+[ ] Define acknowledgement timeout and expiry policy.
+[ ] Record acknowledged tick only when a snapshot was published.
+[ ] Record no-publish acknowledgement without manufacturing a snapshot tick.
+[ ] Add request latency and pending-count diagnostics.
+[ ] Add runtime-debug request/result/decision/ack projection.
+[ ] Preserve version-1 message compatibility during additive rollout.
+[ ] Add deterministic fixture seeds before changing GameCanvas consumers.
+[ ] Prove accepted local and host interaction acknowledgement parity.
+[ ] Prove rejected and no-op host commands acknowledge without forced snapshot publication.
+[ ] Prove request-sync recovery acknowledgement.
+[ ] Prove cadence publication has no command request id.
+[ ] Prove duplicate request replay does not duplicate mutation.
 [ ] Prove legacy final GameState and replicated snapshot parity.
-[ ] Add runtime-debug projection only after domain fixtures pass.
-[ ] Expose latest correlation, result, reason, publish decision, published tick, consumer, journal counters, and fixture parity additively.
-[ ] Replace GameCanvas local/host publication inference only after fixture proof.
-[ ] Keep all changes on main and synchronize the central ledger after implementation.
+[ ] Add package script fixture:request-ack.
+[ ] Run existing validation only after the fixture passes.
 ```
 
 ## Suggested source order
 
 ```txt
-1. commandTypes.ts
-2. commandReasons.ts
-3. commandResults.ts
-4. publishDecisions.ts
-5. commandCorrelation.ts
-6. commandJournal.ts
-7. commandFixtureSeeds.ts
-8. interactionResultRules.ts
-9. networkResultRules.ts
-10. oozeResultRules.ts
-11. winResultRules.ts
-12. authorityCommandConsumer.ts
-13. authorityParityFixtureRows.ts
-14. horror-corridor-authority-parity-fixture.mjs
-15. package.json fixture:authority-parity
-16. runtimeDebugCommandProjection.ts
-17. runtimeDebugStore.ts additive projection
-18. GameCanvas.tsx consumer splice
+1. requestIdentity.ts
+2. commandAcknowledgement.ts
+3. pendingCommandLedger.ts
+4. commandTypes.ts and commandResults.ts
+5. publishDecisions.ts
+6. authorityCommandConsumer.ts
+7. requestDeduplication.ts
+8. requestAckFixtureSeeds.ts
+9. requestAckFixtureRows.ts
+10. horror-corridor-request-ack-fixture.mjs
+11. package.json fixture:request-ack
+12. runtimeDebugRequestProjection.ts
+13. runtimeDebugStore.ts additive projection
+14. GameCanvas.tsx request generation, pending registration, authority consumption, and ack handling
 ```
 
 ## Required fixture rows
 
 ```txt
-local accepted pickup -> publish command result
-host accepted pickup -> publish command result
-local rejected pickup while carrying -> skip rejected
-host rejected pickup while carrying -> skip rejected after consumer migration
-local no nearby cube -> skip rejected
-host no nearby cube -> skip rejected after consumer migration
-accepted drop parity
-accepted place parity
-final place victory parity
-rejected place too far parity
-accepted remove parity
-wrong-slot remove parity
-missing-player update result
-already-synchronized held cube no-op result
-request-sync recovery publish with no fake mutation
-cancel/toggle-ready explicit skip
-unknown action explicit skip
-ooze spawn result
-ooze decay result
-ooze decay-not-due no-op
-ooze spacing/cap no-op
-cadence publish with no command result
-published correlation includes snapshot tick
-runtime-debug correlation projection
+local accepted pickup -> request/result/publish/ack/tick joined
+host accepted pickup -> request/result/publish/ack/tick joined
+client accepted pickup -> outbound request and inbound ack share requestId
+rejected pickup -> explicit rejected ack with no forced snapshot
+no nearby cube -> explicit rejected ack with no forced snapshot
+accepted drop/place/remove parity
+final place -> victory result and acknowledgement
+request-sync -> recovery ack and optional recovery snapshot
+cancel and toggle-ready -> explicit skipped ack
+unknown action -> explicit unsupported ack
+duplicate request -> one mutation and duplicate ack
+expired request -> pending ledger timeout row
+cadence SYNC -> no command requestId
+runtime debug -> request, result, decision, ack, tick, and latency visible
 legacy GameState parity
 replicated snapshot parity
-journal order and bounded retention
 ```
 
 ## Acceptance checks
 
 ```txt
-[ ] npm run fixture:authority-parity
+[ ] npm run fixture:request-ack
 [ ] npm run lint
 [ ] npm run smoke:protokits
 [ ] npm run harness:horror-corridor
@@ -109,6 +97,7 @@ journal order and bounded retention
 [ ] npm run review:object-kit
 [ ] browser solo smoke
 [ ] browser host/client smoke
+[ ] runtime debug export inspection
 ```
 
 ## Explicit non-goals
@@ -122,7 +111,6 @@ new routes
 new maze content
 scene-dressing expansion
 visual object-kit expansion
-wholesale GameCanvas rewrite
-changing network tick frequency
-changing gameplay balance
+network tick retuning
+gameplay balance changes
 ```
