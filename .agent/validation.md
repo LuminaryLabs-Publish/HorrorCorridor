@@ -39,6 +39,7 @@ The package script cannot exist meaningfully until the command contracts, canoni
 [done] oozeRules.ts cadence, decay, spawn, spacing, and capacity paths
 [done] current command-outcome, gameplay, interaction, render, and deploy audit state
 [done] latest repository commits verified as documentation-only after the prior audit
+[done] central repo ledger and internal change-log synchronized
 ```
 
 ## Required implementation validation matrix
@@ -94,5 +95,6 @@ routes changed: no
 deployment changed: no
 command fixture: unavailable
 repo-local documentation pushed to main: yes
-central ledger sync: pending until repo-local audit set completes
+central ledger updated: yes
+central internal change-log added: yes
 ```
