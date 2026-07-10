@@ -2,7 +2,7 @@
 
 **Repository:** `LuminaryLabs-Publish/HorrorCorridor`
 
-**Updated:** `2026-07-10T13-58-16-04-00`
+**Updated:** `2026-07-10T15-31-03-04-00`
 
 ## Available commands
 
@@ -23,23 +23,25 @@ npm run validate:live-player:dev
 ## Missing required command
 
 ```txt
-npm run fixture:commands
+npm run fixture:authority-parity
 ```
 
-The package script cannot exist meaningfully until the command contracts, canonical seeds, fixture rows, and DOM-free runner exist.
+The command cannot be added meaningfully until the command contracts, correlation record, canonical seeds, authority consumer, fixture rows, and DOM-free runner exist.
 
 ## Documentation evidence sampled
 
 ```txt
 [done] full accessible LuminaryLabs-Publish repository inventory
 [done] central HorrorCorridor ledger and repo-local .agent state
-[done] HorrorCorridor-V1/package.json scripts
+[done] latest HorrorCorridor commits verified as documentation-only
 [done] interactionRules.ts unchanged-state branches
-[done] networkRules.ts GameState-only result seam
-[done] oozeRules.ts cadence, decay, spawn, spacing, and capacity paths
-[done] current command-outcome, gameplay, interaction, render, and deploy audit state
-[done] latest repository commits verified as documentation-only after the prior audit
-[done] central repo ledger and internal change-log synchronized
+[done] networkRules.ts action dispatch and missing-player path
+[done] oozeRules.ts decay cadence, spacing, capacity, and always-new spawn result
+[done] winRules.ts completion, rollback, slot refresh, and unchanged paths
+[done] GameCanvas local identity-based skip path
+[done] GameCanvas host TRY_INTERACT unconditional publish path
+[done] GameCanvas periodic authority cadence publication path
+[done] runtimeDebugStore bounded frames/events and window export
 ```
 
 ## Required implementation validation matrix
@@ -51,16 +53,20 @@ ooze spawn/decay/not-due/spacing/cap rows
 victory completion/rollback rows
 local consumer publish/skip rows
 host consumer publish/skip/recovery rows
-journal order and counters
-runtime-debug projection rows
+local-host parity for identical commands
+cadence publication classified separately from command publication
+command correlation includes requestId/commandId/result/decision/published tick
+journal order, bounded retention, and counters
+runtime-debug correlation projection
 legacy GameState final snapshot parity
-volatile field normalization only
+replicated snapshot parity
+volatile timestamp/id normalization only
 ```
 
 ## Validation order for the next source pass
 
 ```txt
-1. npm run fixture:commands
+1. npm run fixture:authority-parity
 2. npm run lint
 3. npm run smoke:protokits
 4. npm run harness:horror-corridor
@@ -68,6 +74,7 @@ volatile field normalization only
 6. npm run review:object-kit
 7. browser solo smoke
 8. browser host/client smoke
+9. runtime-debug export inspection
 ```
 
 ## Not run in this documentation pass
@@ -78,7 +85,7 @@ npm run lint
 npm run smoke:protokits
 npm run harness:horror-corridor
 npm run validate:live-player:dev
-npm run fixture:commands
+npm run fixture:authority-parity
 browser route smoke
 live host/client multiplayer smoke
 runtime source validation
@@ -93,8 +100,8 @@ pull request created: no
 dependencies changed: no
 routes changed: no
 deployment changed: no
-command fixture: unavailable
+authority parity fixture: unavailable
 repo-local documentation pushed to main: yes
-central ledger updated: yes
-central internal change-log added: yes
+central ledger update: pending
+central internal change-log: pending
 ```
