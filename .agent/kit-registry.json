@@ -1,16 +1,16 @@
 {
-  "schemaVersion": 41,
+  "schemaVersion": 42,
   "repository": "LuminaryLabs-Publish/HorrorCorridor",
-  "generatedAt": "2026-07-10T05-11-51-04-00",
-  "status": "command-result-publish-readback-result-first-fixture-gate",
-  "latestTracker": ".agent/trackers/2026-07-10T05-11-51-04-00/project-breakdown.md",
-  "latestTurnLedger": ".agent/turn-ledger/2026-07-10T05-11-51-04-00.md",
-  "latestArchitectureAudit": ".agent/architecture-audit/2026-07-10T05-11-51-04-00-command-result-publish-readback-dsk-map.md",
-  "latestRenderAudit": ".agent/render-audit/2026-07-10T05-11-51-04-00-runtime-debug-command-readback-gap.md",
-  "latestGameplayAudit": ".agent/gameplay-audit/2026-07-10T05-11-51-04-00-local-host-command-result-loop.md",
-  "latestCommandAuthorityAudit": ".agent/command-authority-audit/2026-07-10T05-11-51-04-00-command-result-publish-decision-contract.md",
-  "latestInteractionAudit": ".agent/interaction-audit/2026-07-10T05-11-51-04-00-silent-noop-publish-reason-map.md",
-  "latestDeployAudit": ".agent/deploy-audit/2026-07-10T05-11-51-04-00-command-fixture-validation-gate.md",
+  "generatedAt": "2026-07-10T06-48-54-04-00",
+  "status": "command-result-journal-runtime-debug-fixture-gate-planned",
+  "latestTracker": ".agent/trackers/2026-07-10T06-48-54-04-00/project-breakdown.md",
+  "latestTurnLedger": ".agent/turn-ledger/2026-07-10T06-48-54-04-00.md",
+  "latestArchitectureAudit": ".agent/architecture-audit/2026-07-10T06-48-54-04-00-command-result-journal-catchup-dsk-map.md",
+  "latestRenderAudit": ".agent/render-audit/2026-07-10T06-48-54-04-00-runtime-debug-command-journal-gap.md",
+  "latestGameplayAudit": ".agent/gameplay-audit/2026-07-10T06-48-54-04-00-local-host-command-result-loop.md",
+  "latestCommandAuthorityAudit": ".agent/command-authority-audit/2026-07-10T06-48-54-04-00-result-journal-publish-decision-contract.md",
+  "latestInteractionAudit": ".agent/interaction-audit/2026-07-10T06-48-54-04-00-silent-noop-command-reason-map.md",
+  "latestDeployAudit": ".agent/deploy-audit/2026-07-10T06-48-54-04-00-command-fixture-validation-gate.md",
   "sourceRoots": [
     "HorrorCorridor-V1/src/components/game",
     "HorrorCorridor-V1/src/features",
@@ -24,7 +24,6 @@
     "HorrorCorridor-V1/src/features/game-state/domain/interactionRules.ts",
     "HorrorCorridor-V1/src/features/game-state/domain/oozeRules.ts",
     "HorrorCorridor-V1/src/features/game-state/domain/winRules.ts",
-    "HorrorCorridor-V1/src/features/game-state/domain/gameTypes.ts",
     "HorrorCorridor-V1/src/features/debug/store/runtimeDebugStore.ts",
     "HorrorCorridor-V1/src/features/networking/protocol/messageTypes.ts",
     "HorrorCorridor-V1/src/features/networking/protocol/syncSnapshot.ts"
@@ -32,20 +31,20 @@
   "selection": {
     "selectedRepo": "LuminaryLabs-Publish/HorrorCorridor",
     "excludedRepo": "LuminaryLabs-Publish/TheCavalryOfRome",
-    "reason": "No checked public non-Cavalry repo was new, central-ledger absent, undocumented, recently added but undocumented, or missing sampled root .agent state. HorrorCorridor was selected as the oldest eligible documented fallback because central tracking was at 2026-07-10T03-49-48-04-00.",
+    "reason": "No checked public non-Cavalry repo was new, central-ledger absent, undocumented, recently added but undocumented, or missing sampled root .agent state. HorrorCorridor was selected as the oldest eligible documented fallback because central tracking was at 2026-07-10T05-11-51-04-00.",
     "publishReposChecked": [
-      "LuminaryLabs-Publish/PrehistoricRush",
       "LuminaryLabs-Publish/TheOpenAbove",
       "LuminaryLabs-Publish/MyCozyIsland",
       "LuminaryLabs-Publish/TheUnmappedHouse",
       "LuminaryLabs-Publish/ZombieOrchard",
-      "LuminaryLabs-Publish/IntoTheMeadow",
       "LuminaryLabs-Publish/PhantomCommand",
       "LuminaryLabs-Publish/HorrorCorridor",
+      "LuminaryLabs-Publish/IntoTheMeadow",
+      "LuminaryLabs-Publish/PrehistoricRush",
       "LuminaryLabs-Publish/TheCavalryOfRome"
     ]
   },
-  "currentNextSlice": "HorrorCorridor Command Result Publish Readback Refresh + Result-First Fixture Gate",
+  "currentNextSlice": "HorrorCorridor Command Result Journal Catch-up + Runtime Debug Fixture Gate",
   "interactionLoop": {
     "current": [
       "start-menu",
@@ -71,10 +70,11 @@
       "command-reason-catalog-kit classifies every silent no-op branch",
       "command-result-envelope-kit wraps interaction, network, ooze, request-sync, toggle-ready, cancel, and victory outcomes",
       "publish-decision-snapshot-kit derives publish, skip, recovery, victory, or no-op behavior",
+      "command-result-journal-kit retains ordered command facts",
       "local-authority-result-consumer-kit journals local rejected commands without publishing",
       "host-authority-result-consumer-kit skips rejected TRY_INTERACT publishes and publishes recovery requests",
       "runtime-debug-command-projection-kit exposes latest result, publish decision, and journal counters",
-      "command-result-fixture-matrix-kit proves deterministic accepted, rejected, unchanged, skipped, victory, ooze, and publish-only parity",
+      "command-fixture-matrix-kit proves deterministic accepted, rejected, unchanged, skipped, victory, ooze, and publish-only parity",
       "GameCanvas consumes decisions only after fixture proof"
     ]
   },
@@ -101,7 +101,7 @@
     "local-authority-command-consumer",
     "host-authority-command-consumer",
     "runtime-debug-command-projection",
-    "command-result-fixture-matrix",
+    "command-fixture-matrix",
     "three-renderer",
     "minimap-rendering",
     "replay-parity-validation",
@@ -122,9 +122,9 @@
     { "id": "command-reason-catalog-kit", "status": "planned-next", "kind": "catalog-kit", "provides": ["stable rejection reasons", "stable skipped reasons", "stable publish-only reasons"] },
     { "id": "command-result-envelope-kit", "status": "planned-next", "kind": "envelope-kit", "provides": ["before state", "after state", "changed flag", "reason", "events", "legacy adapter"] },
     { "id": "publish-decision-snapshot-kit", "status": "planned-next", "kind": "policy-kit", "provides": ["publish", "skip", "recovery", "no-op", "victory"] },
-    { "id": "command-result-journal-kit", "status": "planned-next", "kind": "diagnostic-kit", "provides": ["accepted counts", "rejected counts", "latest reason", "latest decision"] },
+    { "id": "command-result-journal-kit", "status": "planned-next", "kind": "diagnostic-kit", "provides": ["accepted counts", "rejected counts", "skipped counts", "latest reason", "latest decision"] },
     { "id": "runtime-debug-command-projection-kit", "status": "planned-next", "kind": "diagnostic-kit", "provides": ["latest result", "latest decision", "journal counts", "fixture parity"] },
-    { "id": "command-result-fixture-matrix-kit", "status": "planned-next", "kind": "fixture-kit", "provides": ["accepted rows", "rejected rows", "unchanged rows", "publish-only rows", "skipped rows", "victory rows", "ooze rows"] },
+    { "id": "command-fixture-matrix-kit", "status": "planned-next", "kind": "fixture-kit", "provides": ["accepted rows", "rejected rows", "unchanged rows", "publish-only rows", "skipped rows", "victory rows", "ooze rows"] },
     { "id": "command-replay-fixture-kit", "status": "planned-next", "kind": "fixture-kit", "provides": ["DOM-free replay", "snapshot parity", "proof output"] },
     { "id": "central-ledger-sync-kit", "status": "documentation-source", "kind": "ledger-kit", "provides": ["repo-local tracker", "root .agent pointer", "central repo ledger", "internal change log"] }
   ],
@@ -132,6 +132,6 @@
     "runtimeSourceChanged": false,
     "localValidationRun": false,
     "browserValidationRun": false,
-    "nextFixtureCommand": "node scripts/horror-corridor-command-fixture.mjs"
+    "nextFixtureCommand": "npm run fixture:commands"
   }
 }
