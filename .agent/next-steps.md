@@ -2,23 +2,23 @@
 
 **Repository:** `LuminaryLabs-Publish/HorrorCorridor`
 
-**Updated:** `2026-07-10T00-18-38-04-00`
+**Updated:** `2026-07-10T01-49-13-04-00`
 
 ## Current next build slice
 
 ```txt
-HorrorCorridor Command Result Debug Readback Catch-up + Result-First Fixture Gate
+HorrorCorridor Command Result Host Debug Readback + Fixture Gate
 ```
 
 Start from:
 
 ```txt
-.agent/architecture-audit/2026-07-10T00-18-38-04-00-command-result-debug-readback-catchup-dsk-map.md
-.agent/render-audit/2026-07-10T00-18-38-04-00-runtime-debug-command-projection-catchup.md
-.agent/gameplay-audit/2026-07-10T00-18-38-04-00-local-host-result-authority-loop.md
-.agent/command-authority-audit/2026-07-10T00-18-38-04-00-result-first-fixture-contract.md
-.agent/interaction-audit/2026-07-10T00-18-38-04-00-silent-noop-reason-fixture-map.md
-.agent/deploy-audit/2026-07-10T00-18-38-04-00-command-fixture-check-gate.md
+.agent/architecture-audit/2026-07-10T01-49-13-04-00-command-result-host-debug-readback-dsk-map.md
+.agent/render-audit/2026-07-10T01-49-13-04-00-debug-projection-command-ledger-gap.md
+.agent/gameplay-audit/2026-07-10T01-49-13-04-00-local-host-command-result-loop.md
+.agent/command-authority-audit/2026-07-10T01-49-13-04-00-command-result-fixture-contract.md
+.agent/interaction-audit/2026-07-10T01-49-13-04-00-silent-noop-publish-decision-map.md
+.agent/deploy-audit/2026-07-10T01-49-13-04-00-command-fixture-validation-gate.md
 ```
 
 ## Build checklist
@@ -92,3 +92,7 @@ HorrorCorridor-V1/src/components/game/GameCanvas.tsx
 [ ] npm run harness:horror-corridor
 [ ] npm run validate:live-player:dev
 ```
+
+## Stop condition
+
+Stop when deterministic rows prove command status, command reason, publish decision, runtime debug projection, and legacy snapshot compatibility for local, host, ooze, and victory paths.
