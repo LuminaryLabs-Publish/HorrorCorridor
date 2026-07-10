@@ -2,16 +2,16 @@
 
 **Repository:** `LuminaryLabs-Publish/HorrorCorridor`
 
-**Updated:** `2026-07-10T13-58-16-04-00`
+**Updated:** `2026-07-10T15-31-03-04-00`
 
 ## Status
 
 ```txt
-status: command-outcome-source-ledger-runtime-debug-fixture-gate-planned
+status: authority-command-correlation-publish-parity-fixture-gate-planned
 runtime source changed: no
 branch: main
 root .agent state: refreshed
-central ledger sync: complete
+central ledger sync: pending until repo-local docs complete
 ```
 
 ## Selection
@@ -26,15 +26,14 @@ open application
   -> establish room identity and readiness
   -> create seeded maze, cubes, anomaly sequence, and players
   -> mount GameCanvas
-  -> initialize Three.js renderer, post-processing, minimap, input, transport, cadence, and debug state
+  -> initialize renderer, post-processing, minimap, input, transport, cadence, and debug
   -> pointer-lock movement updates local pose and camera
-  -> interact input derives pickup/drop/place/remove request
-  -> solo or host runs applyNetworkInteractionRequest locally
+  -> interact input derives pickup/drop/place/remove
+  -> local authority applies applyNetworkInteractionRequest and skips when nextState === currentGameState
   -> client sends TRY_INTERACT to host
-  -> host runs PLAYER_UPDATE, TRY_INTERACT, recovery, ooze, and victory rules
-  -> rules return GameState only
-  -> consumer infers changed/no-change and publish/skip
-  -> authoritative snapshot is rendered and exported to runtime debug
+  -> host applies the same rule, syncs held cubes, then publishes regardless of semantic change
+  -> periodic authority cadence applies player update, ooze advancement, and resync publication
+  -> authoritative snapshot drives world render, minimap, HUD, completion route, and debug frames
 ```
 
 ## Domains in use
@@ -74,6 +73,7 @@ legacy-game-state-ooze-rules
 legacy-game-state-win-rules
 ooze-cadence
 ooze-decay-and-spawn
+authoritative-publication-cadence
 runtime-debug-frame-store
 runtime-debug-event-store
 render-world-snapshot-consumption
@@ -83,13 +83,13 @@ maze-world-rendering
 minimap-rendering
 scene-dressing-descriptors
 command-envelope-contract-next
-command-reason-catalog-next
 command-result-envelope-next
-publish-decision-snapshot-next
+publish-decision-contract-next
+command-correlation-contract-next
+authority-parity-consumer-next
 command-result-journal-next
 runtime-debug-command-projection-next
-command-fixture-matrix-next
-command-replay-fixture-next
+authority-parity-fixture-next
 central-ledger-synchronization
 ```
 
@@ -112,19 +112,22 @@ corridor-interaction-domain-kit
   pickup, drop, place, remove, carried-cube synchronization
 
 ordered-anomaly-sequence-kit
-  slot authority, ordered color validation, completion, victory
+  slot authority, ordered color validation, completion, victory and rollback
 
 ooze-trail-domain-kit
-  cadence, decay, spawn, spacing guard, trail transitions
+  cadence, decay, spawn, spacing guard, capacity guard, trail transitions
+
+corridor-authoritative-publication-kit
+  snapshot tick advancement, full-sync publication, transport broadcast, cadence counters
 
 corridor-render-world-kit
-  Three.js maze, cube, player, anomaly, and dressing projection
+  Three.js maze, cube, player, anomaly, ooze, and dressing projection
 
 corridor-minimap-kit
   minimap geometry, player markers, object markers
 
 runtime-debug-frame-kit
-  frame capture, event capture, exportable runtime diagnostics
+  bounded frame capture, event capture, window export, overlay state
 
 legacy rule adapters
   GameState-returning interaction, network, ooze, and win compatibility
@@ -136,27 +139,37 @@ legacy rule adapters
 command-envelope-contract-kit
 command-reason-catalog-kit
 command-result-envelope-kit
-publish-decision-snapshot-kit
+publish-decision-contract-kit
+command-correlation-record-kit
+authority-command-consumer-kit
 command-result-journal-kit
-local-authority-command-consumer-kit
-host-authority-command-consumer-kit
 runtime-debug-command-projection-kit
-command-fixture-matrix-kit
-command-replay-fixture-kit
+authority-parity-fixture-kit
+legacy-snapshot-parity-kit
 ```
 
 ## Source findings
 
-`interactionRules.ts` uses repeated unchanged-state returns for invalid readiness, player, carried-cube, distance, slot, and cube conditions. `networkRules.ts` returns unchanged state for missing players and for request-sync, toggle-ready, cancel, and default actions. `oozeRules.ts` has decay-not-due and spawn-spacing/cap paths without outcome records. These are valid behaviors, but the reason and publication decision are currently lost.
+### Local and host interaction publication are not equivalent
+
+`applyInteraction()` computes `nextState` and returns without publication when `nextState === currentGameState`. The host `TRY_INTERACT` path always calls `publishAuthoritativeState()` after applying the same domain rule, including unchanged-state results.
+
+### Periodic publication is not the same thing as command acceptance
+
+The authority loop publishes on `NETWORK_TICK_RATE` after player update and `advanceOozeTrail()`. `spawnOozeTrail()` returns a new state object even when spacing or capacity guards add no trail entry. Object identity therefore cannot represent semantic mutation across all paths.
+
+### Debug rows are not causally joined
+
+`runtimeDebugStore` retains frames and free-form events, but has no shared command correlation identifier, source command, domain result, publish decision, published snapshot tick, or authority-mode parity row.
 
 ## Main finding
 
-The blocker is not visual fidelity or transport extraction. It is command outcome attribution. The domain needs serializable command, reason, result, publish-decision, and journal rows that preserve existing `GameState` behavior while making every accepted, rejected, skipped, no-op, recovery, ooze, victory, and publish-only path observable.
+The blocker is command-to-publication correlation. A source-owned result contract is still required, but the fixture gate must specifically prove that local and host consumers make deliberate, explainable publication decisions for the same command. Cadence-driven publication must be classified separately from command-driven publication rather than treated as an accepted command result.
 
 ## Next safe ledge
 
 ```txt
-HorrorCorridor Command Outcome Source Ledger + Runtime Debug Fixture Gate
+HorrorCorridor Authority Command Correlation Ledger + Publish Parity Fixture Gate
 ```
 
 ## Validation status
@@ -170,7 +183,7 @@ npm run smoke:protokits: not run
 npm run harness:horror-corridor: not run
 npm run validate:live-player:dev: not run
 browser smoke: not run
-command fixture: not run because proof files do not exist yet
+authority parity fixture: not run because proof files do not exist yet
 pushed to main: documentation only
-central ledger updated: yes
+central ledger updated: pending
 ```
