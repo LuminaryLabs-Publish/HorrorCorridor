@@ -1,16 +1,16 @@
 {
-  "schemaVersion": 39,
+  "schemaVersion": 40,
   "repository": "LuminaryLabs-Publish/HorrorCorridor",
-  "generatedAt": "2026-07-10T01-49-13-04-00",
-  "status": "command-result-host-debug-readback-fixture-gate",
-  "latestTracker": ".agent/trackers/2026-07-10T01-49-13-04-00/project-breakdown.md",
-  "latestTurnLedger": ".agent/turn-ledger/2026-07-10T01-49-13-04-00.md",
-  "latestArchitectureAudit": ".agent/architecture-audit/2026-07-10T01-49-13-04-00-command-result-host-debug-readback-dsk-map.md",
-  "latestRenderAudit": ".agent/render-audit/2026-07-10T01-49-13-04-00-debug-projection-command-ledger-gap.md",
-  "latestGameplayAudit": ".agent/gameplay-audit/2026-07-10T01-49-13-04-00-local-host-command-result-loop.md",
-  "latestCommandAuthorityAudit": ".agent/command-authority-audit/2026-07-10T01-49-13-04-00-command-result-fixture-contract.md",
-  "latestInteractionAudit": ".agent/interaction-audit/2026-07-10T01-49-13-04-00-silent-noop-publish-decision-map.md",
-  "latestDeployAudit": ".agent/deploy-audit/2026-07-10T01-49-13-04-00-command-fixture-validation-gate.md",
+  "generatedAt": "2026-07-10T03-49-48-04-00",
+  "status": "command-result-publish-decision-ledger-fixture-gate",
+  "latestTracker": ".agent/trackers/2026-07-10T03-49-48-04-00/project-breakdown.md",
+  "latestTurnLedger": ".agent/turn-ledger/2026-07-10T03-49-48-04-00.md",
+  "latestArchitectureAudit": ".agent/architecture-audit/2026-07-10T03-49-48-04-00-command-result-publish-decision-dsk-map.md",
+  "latestRenderAudit": ".agent/render-audit/2026-07-10T03-49-48-04-00-runtime-debug-command-ledger-readback.md",
+  "latestGameplayAudit": ".agent/gameplay-audit/2026-07-10T03-49-48-04-00-local-host-command-result-loop.md",
+  "latestCommandAuthorityAudit": ".agent/command-authority-audit/2026-07-10T03-49-48-04-00-command-result-publish-decision-contract.md",
+  "latestInteractionAudit": ".agent/interaction-audit/2026-07-10T03-49-48-04-00-silent-noop-reason-ledger.md",
+  "latestDeployAudit": ".agent/deploy-audit/2026-07-10T03-49-48-04-00-command-fixture-validation-gate.md",
   "sourceRoots": [
     "HorrorCorridor-V1/src/components/game",
     "HorrorCorridor-V1/src/features",
@@ -24,13 +24,15 @@
     "HorrorCorridor-V1/src/features/game-state/domain/interactionRules.ts",
     "HorrorCorridor-V1/src/features/game-state/domain/oozeRules.ts",
     "HorrorCorridor-V1/src/features/game-state/domain/winRules.ts",
+    "HorrorCorridor-V1/src/features/game-state/domain/gameTypes.ts",
     "HorrorCorridor-V1/src/features/debug/store/runtimeDebugStore.ts",
+    "HorrorCorridor-V1/src/features/networking/protocol/messageTypes.ts",
     "HorrorCorridor-V1/src/features/networking/protocol/syncSnapshot.ts"
   ],
   "selection": {
     "selectedRepo": "LuminaryLabs-Publish/HorrorCorridor",
     "excludedRepo": "LuminaryLabs-Publish/TheCavalryOfRome",
-    "reason": "No checked public non-Cavalry repo was new, central-ledger absent, undocumented, recently added but undocumented, or missing sampled root .agent state. HorrorCorridor was selected as the oldest eligible documented fallback because central tracking was at 2026-07-10T00-18-38-04-00 after IntoTheMeadow advanced to 2026-07-10T01-38-16-04-00.",
+    "reason": "No checked public non-Cavalry repo was new, central-ledger absent, undocumented, recently added but undocumented, or missing sampled root .agent state. HorrorCorridor was selected as the oldest eligible documented fallback because central tracking was at 2026-07-10T01-49-13-04-00.",
     "publishReposChecked": [
       "LuminaryLabs-Publish/PrehistoricRush",
       "LuminaryLabs-Publish/TheOpenAbove",
@@ -43,7 +45,7 @@
       "LuminaryLabs-Publish/TheCavalryOfRome"
     ]
   },
-  "currentNextSlice": "HorrorCorridor Command Result Host Debug Readback + Fixture Gate",
+  "currentNextSlice": "HorrorCorridor Command Result Publish Decision Ledger Refresh + Fixture Gate",
   "interactionLoop": {
     "current": [
       "start-menu",
@@ -110,7 +112,7 @@
     "peer-sync-service": ["host transport", "client transport", "full sync", "player update", "try interact", "request sync recovery"],
     "maze-bootstrap-service": ["seed hash", "maze generation", "cell lookup", "path build", "cube spawn", "sequence slots", "initial snapshot"],
     "first-person-player-service": ["keyboard input", "pointer lock", "look delta", "movement", "collision", "camera sync", "local carry sync"],
-    "legacy-interaction-service": ["pickup", "drop", "place", "remove", "ordered completion", "GameState-only return"],
+    "legacy-interaction-service": ["pickup", "drop", "place", "remove", "GameState-only return"],
     "legacy-network-service": ["player update", "held cube sync", "interaction dispatch", "request-sync no-op", "toggle-ready no-op", "cancel no-op", "GameState-only return"],
     "legacy-ooze-service": ["decay", "spawn", "spacing guard", "no-state-diff", "GameState-only return"],
     "legacy-win-service": ["slot evaluation", "victory", "victory rollback", "GameState-only return"],
@@ -119,7 +121,7 @@
     "command-result-envelope-service": ["command id", "source", "status", "reason", "changed flag", "events", "diagnostics", "legacy adapter"],
     "publish-decision-service": ["publish", "skip", "recovery", "no-op", "victory", "snapshot reason", "broadcast flag", "completion flag"],
     "debug-command-projection-service": ["latest command result", "latest publish decision", "latest rejection reason", "journal counts", "fixture parity"],
-    "central-ledger-sync-service": ["root .agent docs", "timestamped tracker", "repo ledger", "internal change log"]
+    "central-ledger-sync-service": ["repo-local tracker", "root .agent pointer", "central repo ledger", "internal change log"]
   },
   "kits": [
     { "id": "corridor-session-domain-kit", "status": "implemented-source", "kind": "domain-kit", "provides": ["mode selection", "room identity", "readiness"] },
