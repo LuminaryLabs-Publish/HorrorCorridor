@@ -2,9 +2,9 @@
 
 **Repository:** `LuminaryLabs-Publish/HorrorCorridor`
 
-**Updated:** `2026-07-10T12-29-26-04-00`
+**Updated:** `2026-07-10T13-58-16-04-00`
 
-## Available validation commands
+## Available commands
 
 From `HorrorCorridor-V1/package.json`:
 
@@ -20,7 +20,43 @@ npm run validate:live-player
 npm run validate:live-player:dev
 ```
 
-## Validation target for the next implementation pass
+## Missing required command
+
+```txt
+npm run fixture:commands
+```
+
+The package script cannot exist meaningfully until the command contracts, canonical seeds, fixture rows, and DOM-free runner exist.
+
+## Documentation evidence sampled
+
+```txt
+[done] full accessible LuminaryLabs-Publish repository inventory
+[done] central HorrorCorridor ledger and repo-local .agent state
+[done] HorrorCorridor-V1/package.json scripts
+[done] interactionRules.ts unchanged-state branches
+[done] networkRules.ts GameState-only result seam
+[done] oozeRules.ts cadence, decay, spawn, spacing, and capacity paths
+[done] current command-outcome, gameplay, interaction, render, and deploy audit state
+[done] latest repository commits verified as documentation-only after the prior audit
+```
+
+## Required implementation validation matrix
+
+```txt
+interaction accepted/rejected/unchanged rows
+network accepted/skipped/recovery/unknown rows
+ooze spawn/decay/not-due/spacing/cap rows
+victory completion/rollback rows
+local consumer publish/skip rows
+host consumer publish/skip/recovery rows
+journal order and counters
+runtime-debug projection rows
+legacy GameState final snapshot parity
+volatile field normalization only
+```
+
+## Validation order for the next source pass
 
 ```txt
 1. npm run fixture:commands
@@ -29,90 +65,34 @@ npm run validate:live-player:dev
 4. npm run harness:horror-corridor
 5. npm run validate:live-player:dev
 6. npm run review:object-kit
+7. browser solo smoke
+8. browser host/client smoke
 ```
 
-## Required command result fixture matrix
+## Not run in this documentation pass
 
 ```txt
-accepted pickup near loose cube
-rejected pickup while already carrying
-rejected pickup with no nearby cube
-accepted drop while carrying
-rejected drop without carried cube
-accepted place near anomaly with carried cube
-accepted place final anomaly slot as victory
-rejected place too far from anomaly
-rejected place with no free slot
-accepted remove last anomaly cube
-rejected remove wrong slot
-publish-only request-sync recovery
-skipped toggle-ready
-skipped cancel
-skipped unknown action
-accepted player update
-unchanged player update for missing player
-accepted held cube sync
-unchanged held cube already synced
-ooze tick spawn
-ooze tick decay
-ooze tick no-state-diff
-victory ordered-sequence completion
-victory rollback if slots become invalid
-local consumer skips rejected/no-op broadcast
-local consumer publishes accepted changed/victory
-host consumer skips rejected TRY_INTERACT broadcast
-host consumer publishes request-sync recovery
-runtime debug projects latest command result
-runtime debug projects latest publish decision
-runtime debug projects latest command reason
-runtime debug projects command journal counts
-GameCanvas consumer splice preserves legacy snapshot shape
-final snapshot summary parity
-central ledger is updated after implementation lands
+npm install
+npm run lint
+npm run smoke:protokits
+npm run harness:horror-corridor
+npm run validate:live-player:dev
+npm run fixture:commands
+browser route smoke
+live host/client multiplayer smoke
+runtime source validation
 ```
 
-## Validation performed in this documentation pass
-
-```txt
-[done] Current public Publish repo list read.
-[done] Central LuminaryLabs-Dev/LuminaryLabs Publish ledger context read.
-[done] HorrorCorridor repo-local agent state read.
-[done] GameCanvas command/publish seam sampled.
-[done] interactionRules GameState-only command seam sampled.
-[done] networkRules GameState-only command seam sampled.
-[done] oozeRules GameState-only cadence seam sampled.
-[done] winRules GameState-only victory seam sampled.
-[done] runtimeDebugStore current debug export shape sampled.
-[done] Documentation-only .agent audit files written to main.
-[done] Central LuminaryLabs ledger and change log written to main after repo-local pass.
-```
-
-## Validation not performed
-
-```txt
-[not-run] npm install
-[not-run] npm run lint
-[not-run] npm run smoke:protokits
-[not-run] npm run harness:horror-corridor
-[not-run] npm run fixture:commands, because the fixture does not exist yet
-[not-run] npm run validate:live-player:dev
-[not-run] browser route check
-[not-run] live host/client multiplayer check
-[not-run] runtime source edit
-```
-
-## This pass status
+## Pass status
 
 ```txt
 runtime source changed: no
 branch created: no
 pull request created: no
-npm run lint: not run
-npm run smoke:protokits: not run
-npm run harness:horror-corridor: not run
-npm run validate:live-player:dev: not run
-browser smoke: not run
-command fixture: not run because proof files do not exist yet
-pushed to main: yes
-central ledger updated: yes
+dependencies changed: no
+routes changed: no
+deployment changed: no
+command fixture: unavailable
+repo-local documentation pushed to main: yes
+central ledger sync: pending until repo-local audit set completes
 ```
