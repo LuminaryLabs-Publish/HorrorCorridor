@@ -2,12 +2,12 @@
 
 **Repository:** `LuminaryLabs-Publish/HorrorCorridor`
 
-**Updated:** `2026-07-10T10-58-54-04-00`
+**Updated:** `2026-07-10T12-29-26-04-00`
 
 ## Status
 
 ```txt
-status: command-decision-debug-readback-ledger-fixture-gate-planned
+status: command-result-readback-fixture-runtime-debug-projection-gate-planned
 runtime source changed: no
 branch: main
 root .agent state: refreshed
@@ -120,7 +120,7 @@ command-reason-catalog-kit next: stable reasons for rejected/skipped/no-op/publi
 command-result-envelope-kit next: typed command results.
 publish-decision-snapshot-kit next: publish/skip/recovery/victory decisions.
 command-result-journal-kit next: ordered facts and counters.
-runtime-debug-command-projection-kit next: debug readback of command decisions.
+runtime-debug-command-projection-kit next: debug readback of command results.
 command-fixture-matrix-kit next: deterministic command proof rows.
 command-replay-fixture-kit next: DOM-free replay/parity proof.
 ```
@@ -129,12 +129,12 @@ command-replay-fixture-kit next: DOM-free replay/parity proof.
 
 `HorrorCorridor` should not start next with renderer extraction, PeerJS extraction, minimap extraction, post-processing extraction, scene dressing, route rewrites, new maze content, or visual object-kit expansion.
 
-The blocker is command-decision/debug readback. The live route is playable, but command outcomes are not first-class records. Rejected/no-op/skipped/recovery/victory/ooze paths collapse into unchanged state or implicit reason strings, and runtime debug cannot explain what command ran, why it was accepted or rejected, or why a publish was skipped.
+The blocker is command-result readback and fixture proof. The live route is playable, but command outcomes are not first-class records. Rejected/no-op/skipped/recovery/victory/ooze paths collapse into unchanged state or implicit reason strings, and runtime debug cannot explain what command ran, why it was accepted or rejected, or why a publish was skipped.
 
 ## Next safe ledge
 
 ```txt
-HorrorCorridor Command Decision Debug Readback Ledger Refresh + Fixture Gate
+HorrorCorridor Command Result Readback Fixture Refresh + Runtime Debug Projection Gate
 ```
 
 ## Validation status
