@@ -11,7 +11,8 @@ status: authoritative-snapshot-acceptance-monotonic-replay-fixture-gate-planned
 runtime source changed: no
 branch: main
 root .agent state: refreshed
-central ledger sync: pending until repo-local audit commit is recorded
+central ledger sync: complete
+central change log: internal-change-log/2026-07-10T18-31-21-04-00-horror-corridor-authoritative-snapshot-acceptance.md
 ```
 
 ## Selection
@@ -110,7 +111,7 @@ branch created: no
 pull request created: no
 existing checks run: no
 snapshot acceptance fixture: unavailable
-repo-local docs pushed to main: in progress
-central ledger updated: pending
-central change log added: pending
+repo-local docs pushed to main: yes
+central ledger updated: yes
+central change log added: yes
 ```
