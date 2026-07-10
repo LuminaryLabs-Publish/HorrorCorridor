@@ -2,44 +2,39 @@
 
 **Repository:** `LuminaryLabs-Publish/HorrorCorridor`
 
-**Updated:** `2026-07-10T12-29-26-04-00`
+**Updated:** `2026-07-10T13-58-16-04-00`
 
 ## Status
 
 ```txt
-status: command-result-readback-fixture-runtime-debug-projection-gate-planned
+status: command-outcome-source-ledger-runtime-debug-fixture-gate-planned
 runtime source changed: no
 branch: main
 root .agent state: refreshed
 central ledger sync: required after repo-local docs
 ```
 
-## Selected pass
+## Selection
 
-`HorrorCorridor` was selected as the oldest eligible documented fallback after the current public `LuminaryLabs-Publish` repository list was compared with central ledger state and `TheCavalryOfRome` was excluded.
+`HorrorCorridor` was selected after the full accessible `LuminaryLabs-Publish` list was compared with central tracking and root `.agent` state. No eligible repository was new, ledger-missing, root-audit-missing, or otherwise undocumented. `TheCavalryOfRome` was excluded. `HorrorCorridor` had the oldest eligible central review timestamp.
 
-## Current interaction loop
+## Interaction loop
 
 ```txt
-open app
-  -> start menu
+open application
   -> choose solo, host, or join
-  -> create room, join room, or solo identity
-  -> complete lobby/loading/readiness gates
-  -> mount GameCanvas runtime
-  -> initialize renderer, camera, post-processing, maze world, minimap, input refs, pose refs, cadence state, transport listener, and debug state
-  -> pointer-lock first-person navigation
-  -> key/mouse input updates local pose and view angles
-  -> interact key derives pickup/drop/place/remove from carried cube and anomaly distance
-  -> local solo/host applies applyNetworkInteractionRequest directly
-  -> unchanged nextState returns silently without result metadata
+  -> establish room identity and readiness
+  -> create seeded maze, cubes, anomaly sequence, and players
+  -> mount GameCanvas
+  -> initialize Three.js renderer, post-processing, minimap, input, transport, cadence, and debug state
+  -> pointer-lock movement updates local pose and camera
+  -> interact input derives pickup/drop/place/remove request
+  -> solo or host runs applyNetworkInteractionRequest locally
   -> client sends TRY_INTERACT to host
-  -> host applies PLAYER_UPDATE or TRY_INTERACT through GameState-returning rules
-  -> request-sync/toggle-ready/cancel/default return unchanged or recovery-only state
-  -> ooze cadence advances through GameState-returning rules
-  -> ordered sequence completion validates victory through GameState-returning rules
-  -> publishAuthoritativeState emits implicit reason strings
-  -> renderer, minimap, HUD, completion route, and runtime debug consume latest snapshot
+  -> host runs PLAYER_UPDATE, TRY_INTERACT, recovery, ooze, and victory rules
+  -> rules return GameState only
+  -> consumer infers changed/no-change and publish/skip
+  -> authoritative snapshot is rendered and exported to runtime debug
 ```
 
 ## Domains in use
@@ -98,43 +93,70 @@ command-replay-fixture-next
 central-ledger-synchronization
 ```
 
-## Kits and services
+## Kits and offered services
 
 ```txt
-corridor-session-domain-kit: mode selection, room identity, readiness.
-peer-room-sync-domain-kit: host/client transport, full sync, player update, try interact.
-maze-snapshot-bootstrap-kit: maze snapshot, cell lookup, cube spawns, anomaly slots.
-first-person-corridor-player-kit: input, look, movement, collision, camera pose.
-corridor-interaction-domain-kit: pickup, drop, place, remove.
-ordered-anomaly-sequence-kit: ordered anomaly sequence and victory state.
-ooze-trail-domain-kit: ooze cadence, decay, spawn, spacing guard.
-corridor-render-world-kit: Three.js maze/cube/player/anomaly world rendering.
-corridor-minimap-kit: minimap projection and markers.
-runtime-debug-frame-kit: frame/event capture and export.
-legacy-interaction-rules-adapter: GameState-returning interaction rules.
-legacy-network-rules-adapter: GameState-returning network rules.
-legacy-ooze-rules-adapter: GameState-returning ooze rules.
-legacy-win-rules-adapter: GameState-returning win rules.
-command-envelope-contract-kit next: normalized commands.
-command-reason-catalog-kit next: stable reasons for rejected/skipped/no-op/publish-only paths.
-command-result-envelope-kit next: typed command results.
-publish-decision-snapshot-kit next: publish/skip/recovery/victory decisions.
-command-result-journal-kit next: ordered facts and counters.
-runtime-debug-command-projection-kit next: debug readback of command results.
-command-fixture-matrix-kit next: deterministic command proof rows.
-command-replay-fixture-kit next: DOM-free replay/parity proof.
+corridor-session-domain-kit
+  mode selection, room identity, readiness, session entry
+
+peer-room-sync-domain-kit
+  host/client transport, full synchronization, player updates, interaction requests
+
+maze-snapshot-bootstrap-kit
+  deterministic maze, cell lookup, cube spawns, anomaly slots
+
+first-person-corridor-player-kit
+  pointer lock, input, movement, collision, camera pose, local prediction
+
+corridor-interaction-domain-kit
+  pickup, drop, place, remove, carried-cube synchronization
+
+ordered-anomaly-sequence-kit
+  slot authority, ordered color validation, completion, victory
+
+ooze-trail-domain-kit
+  cadence, decay, spawn, spacing guard, trail transitions
+
+corridor-render-world-kit
+  Three.js maze, cube, player, anomaly, and dressing projection
+
+corridor-minimap-kit
+  minimap geometry, player markers, object markers
+
+runtime-debug-frame-kit
+  frame capture, event capture, exportable runtime diagnostics
+
+legacy rule adapters
+  GameState-returning interaction, network, ooze, and win compatibility
 ```
+
+## Required next-cut kits
+
+```txt
+command-envelope-contract-kit
+command-reason-catalog-kit
+command-result-envelope-kit
+publish-decision-snapshot-kit
+command-result-journal-kit
+local-authority-command-consumer-kit
+host-authority-command-consumer-kit
+runtime-debug-command-projection-kit
+command-fixture-matrix-kit
+command-replay-fixture-kit
+```
+
+## Source findings
+
+`interactionRules.ts` uses repeated unchanged-state returns for invalid readiness, player, carried-cube, distance, slot, and cube conditions. `networkRules.ts` returns unchanged state for missing players and for request-sync, toggle-ready, cancel, and default actions. `oozeRules.ts` has decay-not-due and spawn-spacing/cap paths without outcome records. These are valid behaviors, but the reason and publication decision are currently lost.
 
 ## Main finding
 
-`HorrorCorridor` should not start next with renderer extraction, PeerJS extraction, minimap extraction, post-processing extraction, scene dressing, route rewrites, new maze content, or visual object-kit expansion.
-
-The blocker is command-result readback and fixture proof. The live route is playable, but command outcomes are not first-class records. Rejected/no-op/skipped/recovery/victory/ooze paths collapse into unchanged state or implicit reason strings, and runtime debug cannot explain what command ran, why it was accepted or rejected, or why a publish was skipped.
+The blocker is not visual fidelity or transport extraction. It is command outcome attribution. The domain needs serializable command, reason, result, publish-decision, and journal rows that preserve existing `GameState` behavior while making every accepted, rejected, skipped, no-op, recovery, ooze, victory, and publish-only path observable.
 
 ## Next safe ledge
 
 ```txt
-HorrorCorridor Command Result Readback Fixture Refresh + Runtime Debug Projection Gate
+HorrorCorridor Command Outcome Source Ledger + Runtime Debug Fixture Gate
 ```
 
 ## Validation status
@@ -149,5 +171,5 @@ npm run harness:horror-corridor: not run
 npm run validate:live-player:dev: not run
 browser smoke: not run
 command fixture: not run because proof files do not exist yet
-pushed to main: yes, documentation only
+pushed to main: documentation only
 ```
