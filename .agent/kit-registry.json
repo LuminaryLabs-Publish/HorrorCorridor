@@ -1,16 +1,16 @@
 {
-  "schemaVersion": 40,
+  "schemaVersion": 41,
   "repository": "LuminaryLabs-Publish/HorrorCorridor",
-  "generatedAt": "2026-07-10T03-49-48-04-00",
-  "status": "command-result-publish-decision-ledger-fixture-gate",
-  "latestTracker": ".agent/trackers/2026-07-10T03-49-48-04-00/project-breakdown.md",
-  "latestTurnLedger": ".agent/turn-ledger/2026-07-10T03-49-48-04-00.md",
-  "latestArchitectureAudit": ".agent/architecture-audit/2026-07-10T03-49-48-04-00-command-result-publish-decision-dsk-map.md",
-  "latestRenderAudit": ".agent/render-audit/2026-07-10T03-49-48-04-00-runtime-debug-command-ledger-readback.md",
-  "latestGameplayAudit": ".agent/gameplay-audit/2026-07-10T03-49-48-04-00-local-host-command-result-loop.md",
-  "latestCommandAuthorityAudit": ".agent/command-authority-audit/2026-07-10T03-49-48-04-00-command-result-publish-decision-contract.md",
-  "latestInteractionAudit": ".agent/interaction-audit/2026-07-10T03-49-48-04-00-silent-noop-reason-ledger.md",
-  "latestDeployAudit": ".agent/deploy-audit/2026-07-10T03-49-48-04-00-command-fixture-validation-gate.md",
+  "generatedAt": "2026-07-10T05-11-51-04-00",
+  "status": "command-result-publish-readback-result-first-fixture-gate",
+  "latestTracker": ".agent/trackers/2026-07-10T05-11-51-04-00/project-breakdown.md",
+  "latestTurnLedger": ".agent/turn-ledger/2026-07-10T05-11-51-04-00.md",
+  "latestArchitectureAudit": ".agent/architecture-audit/2026-07-10T05-11-51-04-00-command-result-publish-readback-dsk-map.md",
+  "latestRenderAudit": ".agent/render-audit/2026-07-10T05-11-51-04-00-runtime-debug-command-readback-gap.md",
+  "latestGameplayAudit": ".agent/gameplay-audit/2026-07-10T05-11-51-04-00-local-host-command-result-loop.md",
+  "latestCommandAuthorityAudit": ".agent/command-authority-audit/2026-07-10T05-11-51-04-00-command-result-publish-decision-contract.md",
+  "latestInteractionAudit": ".agent/interaction-audit/2026-07-10T05-11-51-04-00-silent-noop-publish-reason-map.md",
+  "latestDeployAudit": ".agent/deploy-audit/2026-07-10T05-11-51-04-00-command-fixture-validation-gate.md",
   "sourceRoots": [
     "HorrorCorridor-V1/src/components/game",
     "HorrorCorridor-V1/src/features",
@@ -32,7 +32,7 @@
   "selection": {
     "selectedRepo": "LuminaryLabs-Publish/HorrorCorridor",
     "excludedRepo": "LuminaryLabs-Publish/TheCavalryOfRome",
-    "reason": "No checked public non-Cavalry repo was new, central-ledger absent, undocumented, recently added but undocumented, or missing sampled root .agent state. HorrorCorridor was selected as the oldest eligible documented fallback because central tracking was at 2026-07-10T01-49-13-04-00.",
+    "reason": "No checked public non-Cavalry repo was new, central-ledger absent, undocumented, recently added but undocumented, or missing sampled root .agent state. HorrorCorridor was selected as the oldest eligible documented fallback because central tracking was at 2026-07-10T03-49-48-04-00.",
     "publishReposChecked": [
       "LuminaryLabs-Publish/PrehistoricRush",
       "LuminaryLabs-Publish/TheOpenAbove",
@@ -45,7 +45,7 @@
       "LuminaryLabs-Publish/TheCavalryOfRome"
     ]
   },
-  "currentNextSlice": "HorrorCorridor Command Result Publish Decision Ledger Refresh + Fixture Gate",
+  "currentNextSlice": "HorrorCorridor Command Result Publish Readback Refresh + Result-First Fixture Gate",
   "interactionLoop": {
     "current": [
       "start-menu",
@@ -107,22 +107,6 @@
     "replay-parity-validation",
     "central-ledger-synchronization"
   ],
-  "services": {
-    "app-session-service": ["room identity", "join code", "player identity", "mode selection", "readiness", "pause/resume", "completion routing"],
-    "peer-sync-service": ["host transport", "client transport", "full sync", "player update", "try interact", "request sync recovery"],
-    "maze-bootstrap-service": ["seed hash", "maze generation", "cell lookup", "path build", "cube spawn", "sequence slots", "initial snapshot"],
-    "first-person-player-service": ["keyboard input", "pointer lock", "look delta", "movement", "collision", "camera sync", "local carry sync"],
-    "legacy-interaction-service": ["pickup", "drop", "place", "remove", "GameState-only return"],
-    "legacy-network-service": ["player update", "held cube sync", "interaction dispatch", "request-sync no-op", "toggle-ready no-op", "cancel no-op", "GameState-only return"],
-    "legacy-ooze-service": ["decay", "spawn", "spacing guard", "no-state-diff", "GameState-only return"],
-    "legacy-win-service": ["slot evaluation", "victory", "victory rollback", "GameState-only return"],
-    "runtime-debug-service": ["event capture", "frame capture", "cadence readback", "snapshot readback", "debug window export"],
-    "render-service": ["renderer", "scene", "camera", "post-processing", "maze world", "minimap", "scene dressing summary", "disposal"],
-    "command-result-envelope-service": ["command id", "source", "status", "reason", "changed flag", "events", "diagnostics", "legacy adapter"],
-    "publish-decision-service": ["publish", "skip", "recovery", "no-op", "victory", "snapshot reason", "broadcast flag", "completion flag"],
-    "debug-command-projection-service": ["latest command result", "latest publish decision", "latest rejection reason", "journal counts", "fixture parity"],
-    "central-ledger-sync-service": ["repo-local tracker", "root .agent pointer", "central repo ledger", "internal change log"]
-  },
   "kits": [
     { "id": "corridor-session-domain-kit", "status": "implemented-source", "kind": "domain-kit", "provides": ["mode selection", "room identity", "readiness"] },
     { "id": "peer-room-sync-domain-kit", "status": "implemented-source", "kind": "network-kit", "provides": ["host/client transport", "full sync", "player update", "try interact"] },
@@ -139,14 +123,6 @@
     { "id": "command-result-envelope-kit", "status": "planned-next", "kind": "envelope-kit", "provides": ["before state", "after state", "changed flag", "reason", "events", "legacy adapter"] },
     { "id": "publish-decision-snapshot-kit", "status": "planned-next", "kind": "policy-kit", "provides": ["publish", "skip", "recovery", "no-op", "victory"] },
     { "id": "command-result-journal-kit", "status": "planned-next", "kind": "diagnostic-kit", "provides": ["accepted counts", "rejected counts", "latest reason", "latest decision"] },
-    { "id": "interaction-preflight-kit", "status": "planned-next", "kind": "preflight-kit", "provides": ["not-playing", "missing-player", "carrying conflict", "distance", "slot", "cube lookup reasons"] },
-    { "id": "network-command-preflight-kit", "status": "planned-next", "kind": "preflight-kit", "provides": ["missing player", "request-sync", "lobby policy", "unknown action reasons"] },
-    { "id": "ooze-result-rules-kit", "status": "planned-next", "kind": "adapter-kit", "provides": ["ooze spawn result", "ooze decay result", "ooze no-state-diff result"] },
-    { "id": "win-result-rules-kit", "status": "planned-next", "kind": "adapter-kit", "provides": ["victory result", "victory rollback result", "sequence evaluation result"] },
-    { "id": "interaction-result-rules-kit", "status": "planned-next", "kind": "adapter-kit", "provides": ["pickup result", "drop result", "place result", "remove result", "legacy interaction adapter"] },
-    { "id": "network-result-rules-kit", "status": "planned-next", "kind": "adapter-kit", "provides": ["player update result", "held cube sync result", "network interaction result", "legacy network adapter"] },
-    { "id": "local-authority-result-consumer-kit", "status": "planned-next", "kind": "consumer-kit", "provides": ["local publish decision", "local rejection journaling", "local victory commit"] },
-    { "id": "host-authority-result-consumer-kit", "status": "planned-next", "kind": "consumer-kit", "provides": ["host publish decision", "request-sync recovery", "rejected TRY_INTERACT skip"] },
     { "id": "runtime-debug-command-projection-kit", "status": "planned-next", "kind": "diagnostic-kit", "provides": ["latest result", "latest decision", "journal counts", "fixture parity"] },
     { "id": "command-result-fixture-matrix-kit", "status": "planned-next", "kind": "fixture-kit", "provides": ["accepted rows", "rejected rows", "unchanged rows", "publish-only rows", "skipped rows", "victory rows", "ooze rows"] },
     { "id": "command-replay-fixture-kit", "status": "planned-next", "kind": "fixture-kit", "provides": ["DOM-free replay", "snapshot parity", "proof output"] },
