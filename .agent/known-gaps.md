@@ -2,84 +2,90 @@
 
 **Repository:** `LuminaryLabs-Publish/HorrorCorridor`
 
-**Updated:** `2026-07-10T12-29-26-04-00`
+**Updated:** `2026-07-10T13-58-16-04-00`
 
-## Selection gap handled in this pass
+## Selection state
 
 ```txt
-- current public LuminaryLabs-Publish repo list was checked.
-- TheCavalryOfRome was excluded.
-- checked public non-Cavalry repos were tracked in the central repo ledger.
-- HorrorCorridor was selected as the oldest eligible documented fallback.
-- central tracking is refreshed by this pass.
+- full accessible LuminaryLabs-Publish list compared with central ledger
+- all nine eligible non-Cavalry repos tracked
+- root .agent state present for every eligible repo
+- TheCavalryOfRome excluded
+- HorrorCorridor selected as oldest eligible documented fallback
 ```
 
 ## Command authority gaps
 
 ```txt
-- interactionRules returns GameState only.
-- networkRules returns GameState only.
-- oozeRules returns GameState only.
-- winRules returns GameState only.
-- invalid pickup, drop, place, and remove branches silently return unchanged state.
-- request-sync, toggle-ready, cancel, and default network actions return unchanged state or implicit recovery behavior without result metadata.
-- syncHeldCubesToPlayers has accepted and unchanged paths but no result metadata.
-- applyNetworkPlayerUpdate returns unchanged state for missing players without reason metadata.
-- ooze spawn/decay/no-state-diff paths have no result metadata.
-- ordered sequence victory and victory rollback have no result metadata.
-- local authority uses object identity to decide whether to publish after interaction.
-- host authority publishes TRY_INTERACT outcomes without knowing whether the command was accepted, rejected, skipped, no-op, victory, recovery-only, ooze, or publish-only.
-- no stable CommandReason catalog exists.
-- no CommandResult envelope exists for before/after state, changed flag, events, diagnostics, and source metadata.
-- no PublishDecision snapshot exists.
-- no CommandJournal exists to retain ordered command facts.
-- no explicit local-authority result consumer exists.
-- no explicit host-authority result consumer exists.
+- interactionRules.ts returns GameState only.
+- networkRules.ts returns GameState only.
+- oozeRules.ts returns GameState only.
+- winRules.ts returns GameState only.
+- invalid pickup, drop, place, and remove paths silently return the original state.
+- missing-player updates silently return the original state.
+- request-sync, toggle-ready, cancel, and unknown/default actions lack explicit outcome records.
+- held-cube synchronization does not report accepted-changed versus accepted-unchanged.
+- ooze decay-not-due, spacing-guard, capacity-guard, spawn, and decay paths lack outcome metadata.
+- ordered-sequence completion and rollback lack explicit victory result rows.
+- local authority uses state identity as a publication proxy.
+- host authority lacks a typed publish/skip/recovery/victory decision.
+- no stable command source, status, reason, event, or snapshot-summary contracts exist.
+- no ordered command journal exists.
 ```
 
-## Debug and projection gaps
+## Consumer and debug gaps
 
 ```txt
-- runtime debug frames expose cadence, snapshot, cube, anomaly, input, and scene dressing data, but not command-result data.
-- runtime debug exports do not expose latestCommandResult, latestPublishDecision, latestRejectionReason, latestConsumerAction, commandJournal, or latestFixtureParity.
-- no RuntimeDebugCommandProjection helper exists.
-- no DOM-free replay fixture proves accepted/rejected/unchanged/publish-only/skipped/ooze/victory snapshot parity.
-- no fixture row proves GameCanvas publish/skip logic before replacing object-identity checks.
-- the browser overlay cannot yet explain why an interaction was rejected or why a host publish was skipped.
+- GameCanvas consumes legacy GameState-returning rules directly.
+- publishAuthoritativeState reason strings are not a durable domain contract.
+- runtimeDebugStore has frames and events but no command outcome projection.
+- runtime debug cannot expose latest command, status, reason, changed flag, publication decision, or consumer action.
+- runtime debug has no command journal counters.
+- runtime debug has no fixture parity row.
+- browser diagnostics cannot explain rejected interaction or skipped publication decisions.
 ```
 
-## Source wire gaps
+## Missing source files
 
 ```txt
-- commandTypes.ts does not exist.
-- commandReasons.ts does not exist.
-- commandResults.ts does not exist.
-- publishDecisions.ts does not exist.
-- commandJournal.ts does not exist.
-- commandFixtureSeeds.ts does not exist.
-- commandFixtureRows.ts does not exist.
-- interactionPreflight.ts does not exist.
-- interactionResultRules.ts does not exist.
-- networkResultRules.ts does not exist.
-- oozeResultRules.ts does not exist.
-- winResultRules.ts does not exist.
-- localAuthorityCommandConsumer.ts does not exist.
-- hostAuthorityCommandConsumer.ts does not exist.
-- runtimeDebugCommandProjection.ts does not exist.
-- scripts/horror-corridor-command-fixture.mjs does not exist.
-- package.json does not yet include a command fixture script.
-- GameCanvas.tsx still consumes GameState-returning rules directly.
+HorrorCorridor-V1/src/features/game-state/domain/commandTypes.ts
+HorrorCorridor-V1/src/features/game-state/domain/commandReasons.ts
+HorrorCorridor-V1/src/features/game-state/domain/commandResults.ts
+HorrorCorridor-V1/src/features/game-state/domain/publishDecisions.ts
+HorrorCorridor-V1/src/features/game-state/domain/commandJournal.ts
+HorrorCorridor-V1/src/features/game-state/domain/commandFixtureSeeds.ts
+HorrorCorridor-V1/src/features/game-state/domain/commandFixtureRows.ts
+HorrorCorridor-V1/src/features/game-state/domain/interactionPreflight.ts
+HorrorCorridor-V1/src/features/game-state/domain/interactionResultRules.ts
+HorrorCorridor-V1/src/features/game-state/domain/networkResultRules.ts
+HorrorCorridor-V1/src/features/game-state/domain/oozeResultRules.ts
+HorrorCorridor-V1/src/features/game-state/domain/winResultRules.ts
+HorrorCorridor-V1/src/features/game-state/domain/localAuthorityCommandConsumer.ts
+HorrorCorridor-V1/src/features/game-state/domain/hostAuthorityCommandConsumer.ts
+HorrorCorridor-V1/src/features/debug/domain/runtimeDebugCommandProjection.ts
+HorrorCorridor-V1/scripts/horror-corridor-command-fixture.mjs
 ```
 
-## Non-goals for the next pass
+## Validation gaps
 
 ```txt
-- do not start with new visual object kits
-- do not extract PeerJS first
-- do not extract renderer first
-- do not extract minimap first
-- do not rewrite GameCanvas wholesale
-- do not change routes or deployment first
-- do not remove existing solo, host, client, minimap, debug, or PeerJS behavior
-- do not edit GameCanvas behavior before the domain fixture exists and passes
+- package.json has no fixture:commands script.
+- no DOM-free deterministic command fixture exists.
+- no fixture proves accepted, rejected, skipped, unchanged, recovery, ooze, victory, and publish-only rows.
+- no fixture proves legacy GameState snapshot compatibility.
+- no fixture proves GameCanvas publication decisions before consumer rewiring.
+```
+
+## Deferred work
+
+```txt
+- PeerJS extraction
+- renderer extraction
+- minimap extraction
+- post-processing extraction
+- route restructuring
+- new maze content
+- scene-dressing expansion
+- visual object-kit expansion
+- wholesale GameCanvas rewrite
 ```
