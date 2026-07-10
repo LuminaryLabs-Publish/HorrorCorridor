@@ -11,7 +11,7 @@ status: command-outcome-source-ledger-runtime-debug-fixture-gate-planned
 runtime source changed: no
 branch: main
 root .agent state: refreshed
-central ledger sync: required after repo-local docs
+central ledger sync: complete
 ```
 
 ## Selection
@@ -172,4 +172,5 @@ npm run validate:live-player:dev: not run
 browser smoke: not run
 command fixture: not run because proof files do not exist yet
 pushed to main: documentation only
+central ledger updated: yes
 ```
