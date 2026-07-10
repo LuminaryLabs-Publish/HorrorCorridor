@@ -2,23 +2,23 @@
 
 **Repository:** `LuminaryLabs-Publish/HorrorCorridor`
 
-**Updated:** `2026-07-09T18-30-30-04-00`
+**Updated:** `2026-07-09T22-50-53-04-00`
 
 ## Current next build slice
 
 ```txt
-HorrorCorridor Command Consumer Readback Ledger Refresh + Result-First Fixture Gate
+HorrorCorridor Command Result Debug Readback + Result-First Fixture Gate
 ```
 
 Start from:
 
 ```txt
-.agent/architecture-audit/2026-07-09T18-30-30-04-00-command-consumer-readback-dsk-map.md
-.agent/render-audit/2026-07-09T18-30-30-04-00-debug-command-projection-readback.md
-.agent/gameplay-audit/2026-07-09T18-30-30-04-00-local-host-command-result-loop.md
-.agent/command-authority-audit/2026-07-09T18-30-30-04-00-result-first-consumer-fixture-contract.md
-.agent/interaction-audit/2026-07-09T18-30-30-04-00-silent-noop-reason-map.md
-.agent/deploy-audit/2026-07-09T18-30-30-04-00-command-fixture-package-gate.md
+.agent/architecture-audit/2026-07-09T22-50-53-04-00-command-result-debug-readback-dsk-map.md
+.agent/render-audit/2026-07-09T22-50-53-04-00-runtime-debug-command-projection-gap.md
+.agent/gameplay-audit/2026-07-09T22-50-53-04-00-local-host-command-result-loop.md
+.agent/command-authority-audit/2026-07-09T22-50-53-04-00-result-first-debug-fixture-contract.md
+.agent/interaction-audit/2026-07-09T22-50-53-04-00-silent-noop-reason-readback-map.md
+.agent/deploy-audit/2026-07-09T22-50-53-04-00-command-fixture-check-gate.md
 ```
 
 ## Build checklist
