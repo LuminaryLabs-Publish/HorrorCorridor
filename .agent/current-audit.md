@@ -2,28 +2,28 @@
 
 **Repository:** `LuminaryLabs-Publish/HorrorCorridor`
 
-**Audit timestamp:** `2026-07-09T18-30-30-04-00`
+**Audit timestamp:** `2026-07-09T22-50-53-04-00`
 
 ## Summary
 
 `HorrorCorridor` is a playable Next/React cooperative first-person maze with solo, host, and join flows, PeerJS transport, Three.js rendering, minimap rendering, runtime debug export, and validation scripts.
 
-This pass refreshed repo-local `.agent` docs and central tracking around the next proof cut: command consumer readback, result-first fixtures, and runtime debug command projection.
+This pass refreshed repo-local `.agent` docs and central tracking around the next proof cut: command-result readback, runtime debug command projection, and result-first fixtures.
 
 No runtime source changed in this pass.
 
 ## Repo selection
 
 ```txt
-LuminaryLabs-Publish/MyCozyIsland         tracked / root .agent present / central latest 2026-07-09T17-48-20-04-00
-LuminaryLabs-Publish/TheUnmappedHouse     tracked / root .agent present / central latest 2026-07-09T16-58-52-04-00
-LuminaryLabs-Publish/ZombieOrchard        tracked / root .agent present / central latest 2026-07-09T16-38-14-04-00
-LuminaryLabs-Publish/PhantomCommand       tracked / root .agent present / central latest 2026-07-09T16-29-23-04-00
-LuminaryLabs-Publish/HorrorCorridor       selected / oldest eligible documented fallback / central latest 2026-07-09T16-00-13-04-00
-LuminaryLabs-Publish/PrehistoricRush      tracked / root .agent present / central latest 2026-07-09T18-11-58-04-00
-LuminaryLabs-Publish/IntoTheMeadow        tracked / root .agent present / central latest 2026-07-09T18-20-18-04-00
+LuminaryLabs-Publish/MyCozyIsland         tracked / root .agent present / central latest 2026-07-09T19-09-44-04-00
+LuminaryLabs-Publish/TheUnmappedHouse     tracked / root .agent present / central latest 2026-07-09T19-00-15-04-00
+LuminaryLabs-Publish/ZombieOrchard        tracked / root .agent present / central latest 2026-07-09T18-49-13-04-00
+LuminaryLabs-Publish/PhantomCommand       tracked / root .agent present / central latest 2026-07-09T18-41-55-04-00
+LuminaryLabs-Publish/HorrorCorridor       selected / oldest eligible documented fallback / central latest 2026-07-09T18-30-30-04-00
+LuminaryLabs-Publish/PrehistoricRush      tracked / root .agent present / central latest 2026-07-09T19-29-23-04-00
+LuminaryLabs-Publish/IntoTheMeadow        tracked / root .agent present / central latest 2026-07-09T22-40-25-04-00
 LuminaryLabs-Publish/TheCavalryOfRome     excluded by rule
-LuminaryLabs-Publish/TheOpenAbove         tracked / root .agent present / central latest 2026-07-09T17-58-53-04-00
+LuminaryLabs-Publish/TheOpenAbove         tracked / root .agent present / central latest 2026-07-09T19-21-19-04-00
 ```
 
 No new untracked eligible public repo was found. `HorrorCorridor` was selected as the oldest eligible documented fallback among checked public non-Cavalry repositories.
@@ -33,7 +33,7 @@ No new untracked eligible public repo was found. `HorrorCorridor` was selected a
 ```txt
 current public LuminaryLabs-Publish repository list
 LuminaryLabs-Dev/LuminaryLabs repo-ledger/LuminaryLabs-Publish/*.md sampled by direct file reads
-sampled root .agent/START_HERE.md state for public non-Cavalry repos
+sampled root .agent state for public non-Cavalry repos
 LuminaryLabs-Publish/HorrorCorridor:.agent/START_HERE.md
 LuminaryLabs-Publish/HorrorCorridor:.agent/current-audit.md
 LuminaryLabs-Publish/HorrorCorridor:.agent/next-steps.md
@@ -44,8 +44,6 @@ HorrorCorridor-V1/package.json
 HorrorCorridor-V1/src/components/game/GameCanvas.tsx
 HorrorCorridor-V1/src/features/game-state/domain/networkRules.ts
 HorrorCorridor-V1/src/features/game-state/domain/interactionRules.ts
-HorrorCorridor-V1/src/features/game-state/domain/oozeRules.ts
-HorrorCorridor-V1/src/features/game-state/domain/winRules.ts
 HorrorCorridor-V1/src/features/debug/store/runtimeDebugStore.ts
 HorrorCorridor-V1/src/features/networking/protocol/syncSnapshot.ts
 ```
@@ -156,5 +154,5 @@ The runtime can play, render, sync, and complete, but command authority is still
 ## Next safe ledge
 
 ```txt
-HorrorCorridor Command Consumer Readback Ledger Refresh + Result-First Fixture Gate
+HorrorCorridor Command Result Debug Readback + Result-First Fixture Gate
 ```
