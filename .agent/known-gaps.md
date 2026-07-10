@@ -2,7 +2,7 @@
 
 **Repository:** `LuminaryLabs-Publish/HorrorCorridor`
 
-**Updated:** `2026-07-10T00-18-38-04-00`
+**Updated:** `2026-07-10T01-49-13-04-00`
 
 ## Selection gap handled in this pass
 
@@ -11,8 +11,8 @@
 - TheCavalryOfRome was excluded.
 - sampled root .agent state was present for checked public non-Cavalry repos.
 - checked public non-Cavalry repos were tracked in the central repo ledger.
-- HorrorCorridor was selected as the oldest eligible documented fallback after IntoTheMeadow advanced to 2026-07-10T00-09-51-04-00.
-- central tracking is refreshed to 2026-07-10T00-18-38-04-00 by this run.
+- HorrorCorridor was selected as the oldest eligible documented fallback after IntoTheMeadow advanced to 2026-07-10T01-38-16-04-00.
+- central tracking is refreshed to 2026-07-10T01-49-13-04-00 by this run.
 ```
 
 ## Authority and command gaps
@@ -67,7 +67,7 @@
 - runtime debug frames expose cadence, snapshot, cube, anomaly, input, and scene dressing data, but not command-result data.
 - runtime debug exports do not expose latestCommandResult, latestPublishDecision, latestRejectionReason, latestConsumerAction, commandJournal, or latestFixtureParity.
 - no RuntimeDebugCommandProjection helper exists.
-- no DOM-free replay fixture proves accepted/rejected/unchanged/publish-only/final-victory snapshot parity.
+- no DOM-free replay fixture proves accepted/rejected/unchanged/publish-only/skipped/ooze/victory snapshot parity.
 - the browser overlay cannot yet explain why an interaction was rejected or why a host publish was skipped.
 ```
 
@@ -77,6 +77,7 @@
 - do not start with new visual object kits
 - do not extract PeerJS first
 - do not extract renderer first
+- do not extract minimap first
 - do not rewrite GameCanvas wholesale
 - do not change routes or deployment first
 - do not remove existing solo, host, client, minimap, debug, or PeerJS behavior
