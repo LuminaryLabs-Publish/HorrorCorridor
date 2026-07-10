@@ -2,28 +2,28 @@
 
 **Repository:** `LuminaryLabs-Publish/HorrorCorridor`
 
-**Audit timestamp:** `2026-07-09T22-50-53-04-00`
+**Audit timestamp:** `2026-07-10T00-18-38-04-00`
 
 ## Summary
 
 `HorrorCorridor` is a playable Next/React cooperative first-person maze with solo, host, and join flows, PeerJS transport, Three.js rendering, minimap rendering, runtime debug export, and validation scripts.
 
-This pass refreshed repo-local `.agent` docs and central tracking around the next proof cut: command-result readback, runtime debug command projection, and result-first fixtures.
+This pass refreshed repo-local `.agent` docs and central tracking around the next proof cut: command-result readback, runtime debug command projection, ooze/win result wrappers, and result-first fixtures.
 
 No runtime source changed in this pass.
 
 ## Repo selection
 
 ```txt
-LuminaryLabs-Publish/MyCozyIsland         tracked / root .agent present / central latest 2026-07-09T19-09-44-04-00
-LuminaryLabs-Publish/TheUnmappedHouse     tracked / root .agent present / central latest 2026-07-09T19-00-15-04-00
-LuminaryLabs-Publish/ZombieOrchard        tracked / root .agent present / central latest 2026-07-09T18-49-13-04-00
-LuminaryLabs-Publish/PhantomCommand       tracked / root .agent present / central latest 2026-07-09T18-41-55-04-00
-LuminaryLabs-Publish/HorrorCorridor       selected / oldest eligible documented fallback / central latest 2026-07-09T18-30-30-04-00
-LuminaryLabs-Publish/PrehistoricRush      tracked / root .agent present / central latest 2026-07-09T19-29-23-04-00
-LuminaryLabs-Publish/IntoTheMeadow        tracked / root .agent present / central latest 2026-07-09T22-40-25-04-00
+LuminaryLabs-Publish/PrehistoricRush      tracked / root .agent present / central latest 2026-07-09T23-58-41-04-00
+LuminaryLabs-Publish/TheOpenAbove         tracked / root .agent present / central latest 2026-07-09T23-51-04-04-00
+LuminaryLabs-Publish/MyCozyIsland         tracked / root .agent present / central latest 2026-07-09T23-41-15-04-00
+LuminaryLabs-Publish/TheUnmappedHouse     tracked / root .agent present / central latest 2026-07-09T23-28-35-04-00
+LuminaryLabs-Publish/ZombieOrchard        tracked / root .agent present / central latest 2026-07-09T23-20-43-04-00
+LuminaryLabs-Publish/IntoTheMeadow        tracked / root .agent present / central latest 2026-07-10T00-09-51-04-00
+LuminaryLabs-Publish/PhantomCommand       tracked / root .agent present / central latest 2026-07-09T23-02-05-04-00
+LuminaryLabs-Publish/HorrorCorridor       selected / oldest eligible central-ledger fallback / central latest 2026-07-09T22-50-53-04-00
 LuminaryLabs-Publish/TheCavalryOfRome     excluded by rule
-LuminaryLabs-Publish/TheOpenAbove         tracked / root .agent present / central latest 2026-07-09T19-21-19-04-00
 ```
 
 No new untracked eligible public repo was found. `HorrorCorridor` was selected as the oldest eligible documented fallback among checked public non-Cavalry repositories.
@@ -44,6 +44,8 @@ HorrorCorridor-V1/package.json
 HorrorCorridor-V1/src/components/game/GameCanvas.tsx
 HorrorCorridor-V1/src/features/game-state/domain/networkRules.ts
 HorrorCorridor-V1/src/features/game-state/domain/interactionRules.ts
+HorrorCorridor-V1/src/features/game-state/domain/oozeRules.ts
+HorrorCorridor-V1/src/features/game-state/domain/winRules.ts
 HorrorCorridor-V1/src/features/debug/store/runtimeDebugStore.ts
 HorrorCorridor-V1/src/features/networking/protocol/syncSnapshot.ts
 ```
@@ -87,6 +89,10 @@ client TRY_INTERACT
 client PLAYER_UPDATE
 -> host applies applyNetworkPlayerUpdate
 -> missing-player and no-diff paths need explicit result metadata
+
+ooze and win rules
+-> mutate or return GameState
+-> no changed/no-op/reason metadata
 ```
 
 ## Domains in use
@@ -123,6 +129,8 @@ host-authority
 local-authoritative-simulation
 legacy-game-state-interaction-rules
 legacy-game-state-network-rules
+legacy-game-state-ooze-rules
+legacy-game-state-win-rules
 ooze-cadence
 ooze-decay-and-spawn
 runtime-debug-frame-store
@@ -139,6 +147,7 @@ command-result-contract
 publish-decision-snapshot
 command-result-journal
 interaction-preflight-diagnostics
+network-command-preflight-diagnostics
 local-authority-command-consumer
 host-authority-command-consumer
 runtime-debug-command-projection
@@ -149,10 +158,12 @@ central-ledger-synchronization
 
 ## Main finding
 
-The runtime can play, render, sync, and complete, but command authority is still not fixture-safe. Rejected, skipped, publish-only, unchanged, recovery, ooze, and victory commands are not first-class result records yet.
+The runtime can play, render, sync, advance ooze, and complete, but command authority is still not fixture-safe.
+
+Rejected, skipped, publish-only, unchanged, recovery, ooze, and victory commands are not first-class result records yet.
 
 ## Next safe ledge
 
 ```txt
-HorrorCorridor Command Result Debug Readback + Result-First Fixture Gate
+HorrorCorridor Command Result Debug Readback Catch-up + Result-First Fixture Gate
 ```
