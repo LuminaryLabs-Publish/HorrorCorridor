@@ -2,7 +2,7 @@
 
 **Repository:** `LuminaryLabs-Publish/HorrorCorridor`
 
-**Updated:** `2026-07-10T05-11-51-04-00`
+**Updated:** `2026-07-10T06-48-54-04-00`
 
 ## Available validation commands
 
@@ -23,7 +23,7 @@ npm run validate:live-player:dev
 ## Validation target for the next implementation pass
 
 ```txt
-1. node scripts/horror-corridor-command-fixture.mjs
+1. npm run fixture:commands
 2. npm run lint
 3. npm run smoke:protokits
 4. npm run harness:horror-corridor
@@ -64,7 +64,7 @@ host consumer skips rejected TRY_INTERACT broadcast
 host consumer publishes request-sync recovery
 runtime debug projects latest command result
 runtime debug projects latest publish decision
-runtime debug projects journal counts
+runtime debug projects command journal counts
 GameCanvas consumer splice preserves legacy snapshot shape
 final snapshot summary parity
 central ledger is updated after implementation lands
@@ -82,7 +82,6 @@ central ledger is updated after implementation lands
 [done] interactionRules silent no-op branches read.
 [done] oozeRules GameState-only branch read.
 [done] winRules GameState-only branch read.
-[done] gameTypes existing GameStateUpdateResult read.
 [done] runtimeDebugStore current debug export shape read.
 [done] syncSnapshot and messageTypes snapshot/message shape read.
 [done] Documentation-only .agent audit files written to main.
@@ -96,7 +95,7 @@ central ledger is updated after implementation lands
 [not-run] npm run lint
 [not-run] npm run smoke:protokits
 [not-run] npm run harness:horror-corridor
-[not-run] node scripts/horror-corridor-command-fixture.mjs, because the fixture does not exist yet
+[not-run] npm run fixture:commands, because the fixture does not exist yet
 [not-run] npm run validate:live-player:dev
 [not-run] browser route check
 [not-run] live host/client multiplayer check
