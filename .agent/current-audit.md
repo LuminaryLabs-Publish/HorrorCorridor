@@ -2,37 +2,34 @@
 
 **Repository:** `LuminaryLabs-Publish/HorrorCorridor`
 
-**Updated:** `2026-07-10T17-00-54-04-00`
+**Updated:** `2026-07-10T18-31-21-04-00`
 
 ## Status
 
 ```txt
-status: request-identity-authoritative-ack-fixture-gate-planned
+status: authoritative-snapshot-acceptance-monotonic-replay-fixture-gate-planned
 runtime source changed: no
 branch: main
 root .agent state: refreshed
-central ledger sync: complete
-central commit: b739d51a95ea2731a5ffe5f99fefbec6507f7dc7
+central ledger sync: pending until repo-local audit commit is recorded
 ```
 
 ## Selection
 
-No eligible repository was new, ledger-missing, root-audit-missing, or otherwise undocumented. `HorrorCorridor` was selected as the oldest eligible documented fallback. `TheCavalryOfRome` remained excluded.
+No eligible repository was new, absent from the central ledger, missing root `.agent` state, or otherwise undocumented. `HorrorCorridor` was selected as the oldest eligible documented fallback. `TheCavalryOfRome` remained excluded.
 
 ## Interaction loop
 
 ```txt
-menu and session selection
-  -> solo, host, or join
-  -> room identity, readiness, and deterministic maze bootstrap
-  -> GameCanvas initializes rendering, input, transport, cadence, and diagnostics
-  -> pointer-lock movement updates local pose
-  -> interact derives pickup, drop, place, or remove
-  -> local authority applies a rule directly
-  -> client sends TRY_INTERACT to host
-  -> host applies the rule and publishes a SYNC snapshot
-  -> client consumes the snapshot
-  -> world, minimap, HUD, completion, and runtime debug update
+select solo, host, or join
+  -> create or join a room
+  -> bootstrap deterministic maze state
+  -> move through pointer-lock first-person controls
+  -> derive pickup, drop, place, or remove
+  -> apply locally or send TRY_INTERACT
+  -> host mutates state and publishes SYNC
+  -> client accepts snapshot and replaces room/runtime/UI state
+  -> world, minimap, HUD, completion, and debug project the snapshot
 ```
 
 ## Domains in use
@@ -41,8 +38,9 @@ menu and session selection
 application shell and session lifecycle
 PeerJS host/client transport
 protocol envelopes and message routing
-request identity fields
-replicated snapshot construction
+full-sync snapshot construction
+snapshot reception and runtime-store replacement
+room and lobby projection
 seeded maze, cube, and anomaly bootstrap
 first-person input, movement, collision, camera, and prediction
 interaction, network, ooze, and victory rules
@@ -50,7 +48,7 @@ local and host authority consumers
 authoritative publication cadence
 Three.js world, post-processing, minimap, and scene dressing
 runtime debug frame and event storage
-planned request generation, pending ledger, acknowledgement, deduplication, and fixture domains
+planned envelope preflight, authority-source validation, monotonic acceptance, rejection results, snapshot ledger, and replay fixtures
 ```
 
 ## Kits and services
@@ -71,23 +69,37 @@ ordered-anomaly-sequence-kit
 ooze-trail-domain-kit
   cadence, decay, spawn, spacing guard, capacity guard
 corridor-authoritative-publication-kit
-  snapshot tick, full-sync creation, transport broadcast, cadence counters
+  snapshot tick, full sync, broadcast, cadence counters, publication reasons
 corridor-render-world-kit
   Three.js world, maze, cubes, players, anomaly, ooze, scene dressing
 corridor-minimap-kit
-  minimap geometry, player markers, object markers
+  minimap projection, player markers, object markers
 runtime-debug-frame-kit
-  bounded frame and event capture, browser export, overlay preferences
+  bounded frames, bounded events, browser export, overlay preferences
+```
+
+## Source findings
+
+```txt
+FullSyncPayload carries authoritativeTick and snapshot.tick.
+ProtocolEnvelope carries version, senderId, roomId, timestampMs, and optional requestId.
+GameShell accepts every SYNC and immediately replaces room, players, snapshot, readiness, and UI state.
+No consumer checks authoritativeTick === snapshot.tick.
+No consumer checks next tick > current accepted tick.
+No consumer checks roomId, gameId, seed, sender authority, or protocol version before commit.
+RuntimeStore setAuthoritativeSnapshot is an unconditional setter.
+Duplicate or out-of-order SYNC delivery has no explicit result or debug row.
+Victory can be projected back to playing if an older snapshot arrives later.
 ```
 
 ## Main finding
 
-The protocol already permits request identity, but the runtime does not generate, propagate, echo, or acknowledge it. Snapshot publication cannot be the sole acknowledgement because rejected or no-op authority decisions may deliberately skip a new snapshot.
+The current blocker is authoritative snapshot acceptance. The host publishes monotonic ticks, but the client has no validation or commit policy. A stale, duplicate, cross-room, wrong-source, or internally inconsistent snapshot can replace authoritative state and drive gameplay and UI backwards.
 
 ## Next safe ledge
 
 ```txt
-HorrorCorridor Request Identity Propagation + Authoritative Acknowledgement Fixture Gate
+HorrorCorridor Authoritative Snapshot Acceptance + Monotonic Replay Fixture Gate
 ```
 
 ## Validation
@@ -97,8 +109,8 @@ runtime source changed: no
 branch created: no
 pull request created: no
 existing checks run: no
-request acknowledgement fixture: unavailable
-repo-local docs pushed to main: yes
-central ledger updated: yes
-central change log added: yes
+snapshot acceptance fixture: unavailable
+repo-local docs pushed to main: in progress
+central ledger updated: pending
+central change log added: pending
 ```
