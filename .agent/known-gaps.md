@@ -2,7 +2,7 @@
 
 **Repository:** `LuminaryLabs-Publish/HorrorCorridor`
 
-**Updated:** `2026-07-10T05-11-51-04-00`
+**Updated:** `2026-07-10T06-48-54-04-00`
 
 ## Selection gap handled in this pass
 
@@ -11,8 +11,8 @@
 - TheCavalryOfRome was excluded.
 - sampled root .agent state was present for checked public non-Cavalry repos.
 - checked public non-Cavalry repos were tracked in the central repo ledger.
-- HorrorCorridor was selected as the oldest eligible documented fallback because its prior central ledger timestamp was 2026-07-10T03-49-48-04-00.
-- central tracking is refreshed to 2026-07-10T05-11-51-04-00 by this pass.
+- HorrorCorridor was selected as the oldest eligible documented fallback because its prior central ledger timestamp was 2026-07-10T05-11-51-04-00.
+- central tracking is refreshed to 2026-07-10T06-48-54-04-00 by this pass.
 ```
 
 ## Authority and command gaps
@@ -23,17 +23,17 @@
 - oozeRules returns GameState only.
 - winRules returns GameState only.
 - invalid pickup, drop, place, and remove branches silently return unchanged state.
-- request-sync, toggle-ready, cancel, and default network actions return unchanged state without result metadata.
+- request-sync, toggle-ready, cancel, and default network actions return unchanged state or implicit recovery behavior without result metadata.
 - syncHeldCubesToPlayers has accepted and unchanged paths but no result metadata.
 - applyNetworkPlayerUpdate returns unchanged state for missing players without reason metadata.
 - ooze spawn/decay/no-state-diff paths have no result metadata.
 - ordered sequence victory and victory rollback have no result metadata.
 - local authority uses object identity to decide whether to publish after interaction.
-- host authority publishes TRY_INTERACT outcomes without knowing whether the command was accepted, rejected, or skipped.
+- host authority publishes TRY_INTERACT outcomes without knowing whether the command was accepted, rejected, skipped, no-op, or recovery-only.
 - host authority can publish or recover without a first-class PublishDecision record.
 - no stable CommandReason catalog exists for rejected, skipped, unchanged, publish-only, ooze, or victory commands.
 - no CommandResult envelope exists for before/after state, changed flag, events, diagnostics, and source metadata.
-- no publish-decision snapshot exists to classify publish, skip, recovery, victory, or no-op behavior.
+- no CommandJournal exists to retain ordered command facts.
 - no explicit local-authority result consumer exists.
 - no explicit host-authority result consumer exists.
 ```
