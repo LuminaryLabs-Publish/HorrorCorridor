@@ -2,7 +2,7 @@
 
 **Repository:** `LuminaryLabs-Publish/HorrorCorridor`
 
-**Last aligned:** `2026-07-09T22-50-53-04-00`
+**Last aligned:** `2026-07-10T00-18-38-04-00`
 
 ## Purpose
 
@@ -18,27 +18,27 @@ No checked public non-Cavalry repo was new, absent from central tracking, missin
 
 `LuminaryLabs-Publish/TheCavalryOfRome` remains excluded by standing rule.
 
-`HorrorCorridor` was selected as the oldest eligible documented fallback. Its central ledger was at `2026-07-09T18-30-30-04-00`, older than the other checked eligible public entries.
+`HorrorCorridor` was selected as the oldest eligible central-ledger fallback after `IntoTheMeadow` advanced to `2026-07-10T00-09-51-04-00`.
 
 ## Public Publish repos checked
 
 ```txt
-LuminaryLabs-Publish/MyCozyIsland         tracked / root .agent present / central latest 2026-07-09T19-09-44-04-00
-LuminaryLabs-Publish/TheUnmappedHouse     tracked / root .agent present / central latest 2026-07-09T19-00-15-04-00
-LuminaryLabs-Publish/ZombieOrchard        tracked / root .agent present / central latest 2026-07-09T18-49-13-04-00
-LuminaryLabs-Publish/PhantomCommand       tracked / root .agent present / central latest 2026-07-09T18-41-55-04-00
-LuminaryLabs-Publish/HorrorCorridor       selected / oldest eligible documented fallback / central latest 2026-07-09T18-30-30-04-00
-LuminaryLabs-Publish/PrehistoricRush      tracked / root .agent present / central latest 2026-07-09T19-29-23-04-00
-LuminaryLabs-Publish/IntoTheMeadow        tracked / root .agent present / central latest 2026-07-09T22-40-25-04-00
+LuminaryLabs-Publish/PrehistoricRush      tracked / root .agent present / central latest 2026-07-09T23-58-41-04-00
+LuminaryLabs-Publish/TheOpenAbove         tracked / root .agent present / central latest 2026-07-09T23-51-04-04-00
+LuminaryLabs-Publish/MyCozyIsland         tracked / root .agent present / central latest 2026-07-09T23-41-15-04-00
+LuminaryLabs-Publish/TheUnmappedHouse     tracked / root .agent present / central latest 2026-07-09T23-28-35-04-00
+LuminaryLabs-Publish/ZombieOrchard        tracked / root .agent present / central latest 2026-07-09T23-20-43-04-00
+LuminaryLabs-Publish/IntoTheMeadow        tracked / root .agent present / central latest 2026-07-10T00-09-51-04-00
+LuminaryLabs-Publish/PhantomCommand       tracked / root .agent present / central latest 2026-07-09T23-02-05-04-00
+LuminaryLabs-Publish/HorrorCorridor       selected / oldest eligible central-ledger fallback / central latest 2026-07-09T22-50-53-04-00
 LuminaryLabs-Publish/TheCavalryOfRome     excluded by rule
-LuminaryLabs-Publish/TheOpenAbove         tracked / root .agent present / central latest 2026-07-09T19-21-19-04-00
 ```
 
 ## Current product read
 
 `HorrorCorridor` is a cooperative first-person horror maze under `HorrorCorridor-V1`.
 
-The active runtime is a Next/React client surface that mounts `GameCanvas`, creates a Three.js maze world, uses pointer-lock movement, routes cube interactions through `GameState`-returning rules, publishes authoritative snapshots for solo/host modes, accepts peer messages in host mode, and exposes runtime debug frames/events.
+The active runtime is a Next/React client surface that mounts `GameCanvas`, creates a Three.js maze world, uses pointer-lock movement, routes cube interactions through `GameState`-returning rules, publishes authoritative snapshots for solo/host modes, accepts peer messages in host mode, advances ooze/victory through `GameState` rules, and exposes runtime debug frames/events.
 
 ## Current interaction loop
 
@@ -59,7 +59,8 @@ open app
   -> host applies PLAYER_UPDATE or TRY_INTERACT through GameState-returning rules
   -> request-sync/toggle-ready/cancel/default collapse to unchanged state
   -> sync held cubes to players
-  -> advance ooze on authoritative cadence
+  -> ooze cadence advances through GameState-returning rules
+  -> ordered sequence completion validates victory through GameState-returning rules
   -> publish authoritative snapshot through implicit reason strings
   -> update Three world, minimap, HUD, completion route, and runtime debug frame
 ```
@@ -87,18 +88,18 @@ CommandFixtureSeed
 .agent/known-gaps.md
 .agent/next-steps.md
 .agent/validation.md
-.agent/architecture-audit/2026-07-09T22-50-53-04-00-command-result-debug-readback-dsk-map.md
-.agent/render-audit/2026-07-09T22-50-53-04-00-runtime-debug-command-projection-gap.md
-.agent/gameplay-audit/2026-07-09T22-50-53-04-00-local-host-command-result-loop.md
-.agent/command-authority-audit/2026-07-09T22-50-53-04-00-result-first-debug-fixture-contract.md
-.agent/interaction-audit/2026-07-09T22-50-53-04-00-silent-noop-reason-readback-map.md
-.agent/deploy-audit/2026-07-09T22-50-53-04-00-command-fixture-check-gate.md
-.agent/trackers/2026-07-09T22-50-53-04-00/project-breakdown.md
-.agent/turn-ledger/2026-07-09T22-50-53-04-00.md
+.agent/architecture-audit/2026-07-10T00-18-38-04-00-command-result-debug-readback-catchup-dsk-map.md
+.agent/render-audit/2026-07-10T00-18-38-04-00-runtime-debug-command-projection-catchup.md
+.agent/gameplay-audit/2026-07-10T00-18-38-04-00-local-host-result-authority-loop.md
+.agent/command-authority-audit/2026-07-10T00-18-38-04-00-result-first-fixture-contract.md
+.agent/interaction-audit/2026-07-10T00-18-38-04-00-silent-noop-reason-fixture-map.md
+.agent/deploy-audit/2026-07-10T00-18-38-04-00-command-fixture-check-gate.md
+.agent/trackers/2026-07-10T00-18-38-04-00/project-breakdown.md
+.agent/turn-ledger/2026-07-10T00-18-38-04-00.md
 .agent/kit-registry.json
 ```
 
-## Source files to inspect next
+## Source files to inspect before implementation
 
 ```txt
 HorrorCorridor-V1/package.json
@@ -124,6 +125,8 @@ HorrorCorridor-V1/src/features/game-state/domain/commandFixtureRows.ts
 HorrorCorridor-V1/src/features/game-state/domain/interactionPreflight.ts
 HorrorCorridor-V1/src/features/game-state/domain/interactionResultRules.ts
 HorrorCorridor-V1/src/features/game-state/domain/networkResultRules.ts
+HorrorCorridor-V1/src/features/game-state/domain/oozeResultRules.ts
+HorrorCorridor-V1/src/features/game-state/domain/winResultRules.ts
 HorrorCorridor-V1/src/features/game-state/domain/localAuthorityCommandConsumer.ts
 HorrorCorridor-V1/src/features/game-state/domain/hostAuthorityCommandConsumer.ts
 HorrorCorridor-V1/src/features/debug/domain/runtimeDebugCommandProjection.ts
@@ -133,7 +136,7 @@ HorrorCorridor-V1/scripts/horror-corridor-command-fixture.mjs
 ## Current next safe ledge
 
 ```txt
-HorrorCorridor Command Result Debug Readback + Result-First Fixture Gate
+HorrorCorridor Command Result Debug Readback Catch-up + Result-First Fixture Gate
 ```
 
 Build this before touching renderer extraction, PeerJS extraction, minimap extraction, post-processing extraction, scene dressing, new maze content, or visual object-kit expansion.
