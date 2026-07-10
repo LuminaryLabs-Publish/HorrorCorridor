@@ -2,94 +2,99 @@
 
 **Repository:** `LuminaryLabs-Publish/HorrorCorridor`
 
-**Updated:** `2026-07-10T17-00-54-04-00`
+**Updated:** `2026-07-10T18-31-21-04-00`
 
 ## Goal
 
-Create a stable request and acknowledgement path so every local or network command can be traced from intent through authority result, publish decision, acknowledgement, and optional snapshot tick without changing current gameplay behavior.
+Add one deterministic authoritative snapshot acceptance boundary so every inbound `SYNC` is validated, classified, committed or rejected, journaled, and correlated with UI/render projection before request acknowledgements depend on it.
 
 ## Current next build slice
 
 ```txt
-HorrorCorridor Request Identity Propagation + Authoritative Acknowledgement Fixture Gate
+HorrorCorridor Authoritative Snapshot Acceptance + Monotonic Replay Fixture Gate
 ```
 
 ## Plan ledger
 
 ```txt
 [ ] Preserve current solo, host, client, rendering, minimap, HUD, completion, and cadence behavior.
-[ ] Define RequestId, RequestSource, RequestStatus, AckStatus, and AckReason values.
-[ ] Generate a stable request id for every local interaction.
-[ ] Generate and pass requestId in every TRY_INTERACT message.
-[ ] Decide whether PLAYER_UPDATE uses requestId, input.sequence, or a separate cadence correlation id.
-[ ] Add a bounded pending-command ledger for client requests.
-[ ] Carry inbound requestId into the authority command envelope.
-[ ] Return an explicit command result for accepted, rejected, skipped, no-op, recovery, and duplicate requests.
-[ ] Keep PublishDecision independent from acknowledgement.
-[ ] Echo requestId on SYNC when a snapshot publication acknowledges the request.
-[ ] Add a command-result acknowledgement path for deliberate no-publish decisions.
-[ ] Define duplicate request behavior and prove idempotency.
-[ ] Define acknowledgement timeout and expiry policy.
-[ ] Record acknowledged tick only when a snapshot was published.
-[ ] Record no-publish acknowledgement without manufacturing a snapshot tick.
-[ ] Add request latency and pending-count diagnostics.
-[ ] Add runtime-debug request/result/decision/ack projection.
-[ ] Preserve version-1 message compatibility during additive rollout.
-[ ] Add deterministic fixture seeds before changing GameCanvas consumers.
-[ ] Prove accepted local and host interaction acknowledgement parity.
-[ ] Prove rejected and no-op host commands acknowledge without forced snapshot publication.
-[ ] Prove request-sync recovery acknowledgement.
-[ ] Prove cadence publication has no command request id.
-[ ] Prove duplicate request replay does not duplicate mutation.
-[ ] Prove legacy final GameState and replicated snapshot parity.
-[ ] Add package script fixture:request-ack.
+[ ] Define SnapshotAcceptanceInput, SnapshotAcceptanceResult, SnapshotRejectReason, and AcceptedSnapshotRecord.
+[ ] Validate protocol version before consuming payload state.
+[ ] Validate sender identity against the active host authority.
+[ ] Validate envelope roomId, payload room.roomId, and snapshot.room.roomId agreement.
+[ ] Validate gameId and seed continuity after the first accepted snapshot.
+[ ] Validate payload.authoritativeTick === payload.snapshot.tick.
+[ ] Reject ticks lower than the last accepted authoritative tick.
+[ ] Classify equal ticks as duplicate, idempotent replay, or conflicting duplicate.
+[ ] Define whether reconnect/recovery may reset the acceptance epoch.
+[ ] Add a session epoch or authority epoch so a new run can legitimately restart tick numbering.
+[ ] Keep snapshot acceptance separate from command acknowledgement and publish decision.
+[ ] Commit room, lobby players, runtime snapshot, readiness, and UI as one projection transaction.
+[ ] Prevent stale snapshots from regressing COMPLETED to PLAYING.
+[ ] Prevent stale snapshots from restoring removed cubes, old ooze, or earlier anomaly slots.
+[ ] Record accepted, duplicate, stale, conflicting, wrong-room, wrong-source, wrong-version, and malformed rows.
+[ ] Add bounded last-accepted and rejected-snapshot ledgers.
+[ ] Add runtime-debug acceptance result, previous tick, candidate tick, source, reason, and commit status.
+[ ] Keep version-1 wire compatibility during additive rollout.
+[ ] Add deterministic fixture seeds before changing GameShell consumers.
+[ ] Prove monotonic accepted delivery.
+[ ] Prove duplicate idempotency.
+[ ] Prove stale and out-of-order rejection.
+[ ] Prove conflicting duplicate rejection.
+[ ] Prove cross-room and wrong-host rejection.
+[ ] Prove authoritativeTick and snapshot.tick mismatch rejection.
+[ ] Prove recovery epoch reset behavior.
+[ ] Prove victory cannot rewind to playing.
+[ ] Prove accepted snapshot parity with the current final runtime state.
+[ ] Add package script fixture:snapshot-acceptance.
 [ ] Run existing validation only after the fixture passes.
 ```
 
 ## Suggested source order
 
 ```txt
-1. requestIdentity.ts
-2. commandAcknowledgement.ts
-3. pendingCommandLedger.ts
-4. commandTypes.ts and commandResults.ts
-5. publishDecisions.ts
-6. authorityCommandConsumer.ts
-7. requestDeduplication.ts
-8. requestAckFixtureSeeds.ts
-9. requestAckFixtureRows.ts
-10. horror-corridor-request-ack-fixture.mjs
-11. package.json fixture:request-ack
-12. runtimeDebugRequestProjection.ts
-13. runtimeDebugStore.ts additive projection
-14. GameCanvas.tsx request generation, pending registration, authority consumption, and ack handling
+1. snapshotAcceptanceTypes.ts
+2. protocolEnvelopePreflight.ts
+3. authoritySourceIdentity.ts
+4. snapshotAcceptancePolicy.ts
+5. snapshotAcceptanceLedger.ts
+6. snapshotProjectionTransaction.ts
+7. snapshotAcceptanceFixtureSeeds.ts
+8. snapshotAcceptanceFixtureRows.ts
+9. horror-corridor-snapshot-acceptance-fixture.mjs
+10. package.json fixture:snapshot-acceptance
+11. runtimeDebugSnapshotProjection.ts
+12. runtimeDebugStore.ts additive projection
+13. runtimeStore.ts accepted-snapshot metadata
+14. GameShell.tsx preflight and atomic projection
+15. GameCanvas.tsx accepted-snapshot readback only
 ```
 
 ## Required fixture rows
 
 ```txt
-local accepted pickup -> request/result/publish/ack/tick joined
-host accepted pickup -> request/result/publish/ack/tick joined
-client accepted pickup -> outbound request and inbound ack share requestId
-rejected pickup -> explicit rejected ack with no forced snapshot
-no nearby cube -> explicit rejected ack with no forced snapshot
-accepted drop/place/remove parity
-final place -> victory result and acknowledgement
-request-sync -> recovery ack and optional recovery snapshot
-cancel and toggle-ready -> explicit skipped ack
-unknown action -> explicit unsupported ack
-duplicate request -> one mutation and duplicate ack
-expired request -> pending ledger timeout row
-cadence SYNC -> no command requestId
-runtime debug -> request, result, decision, ack, tick, and latency visible
-legacy GameState parity
-replicated snapshot parity
+first initial snapshot accepted
+higher tick accepted
+same payload and same tick classified duplicate without re-projection
+same tick with different payload rejected as conflicting duplicate
+lower tick rejected stale
+out-of-order sequence 10, 12, 11 leaves tick 12 committed
+payload authoritativeTick mismatch rejected
+wrong protocol version rejected
+wrong room rejected
+wrong host sender rejected
+changed gameId or seed rejected inside one epoch
+reconnect/recovery epoch reset explicitly accepted
+victory snapshot followed by stale playing snapshot remains victory
+accepted cube, ooze, player, anomaly, room, and UI parity
+runtime debug acceptance and rejection rows remain JSON-safe
+legacy version-1 valid snapshot still accepted
 ```
 
 ## Acceptance checks
 
 ```txt
-[ ] npm run fixture:request-ack
+[ ] npm run fixture:snapshot-acceptance
 [ ] npm run lint
 [ ] npm run smoke:protokits
 [ ] npm run harness:horror-corridor
@@ -97,7 +102,8 @@ replicated snapshot parity
 [ ] npm run review:object-kit
 [ ] browser solo smoke
 [ ] browser host/client smoke
-[ ] runtime debug export inspection
+[ ] delayed-message and reconnect smoke
+[ ] runtime-debug export inspection
 ```
 
 ## Explicit non-goals
@@ -113,4 +119,5 @@ scene-dressing expansion
 visual object-kit expansion
 network tick retuning
 gameplay balance changes
+request acknowledgement implementation beyond preserving its integration boundary
 ```
