@@ -2,27 +2,27 @@
 
 **Repository:** `LuminaryLabs-Publish/HorrorCorridor`
 
-**Audit timestamp:** `2026-07-10T00-18-38-04-00`
+**Audit timestamp:** `2026-07-10T01-49-13-04-00`
 
 ## Summary
 
 `HorrorCorridor` is a playable Next/React cooperative first-person maze with solo, host, and join flows, PeerJS transport, Three.js rendering, minimap rendering, runtime debug export, and validation scripts.
 
-This pass refreshed repo-local `.agent` docs and central tracking around the next proof cut: command-result readback, runtime debug command projection, ooze/win result wrappers, and result-first fixtures.
+This pass refreshed repo-local `.agent` docs and central tracking around the next proof cut: command-result host/debug readback, publish decision rows, runtime debug command projection, and a result-first command fixture.
 
 No runtime source changed in this pass.
 
 ## Repo selection
 
 ```txt
-LuminaryLabs-Publish/PrehistoricRush      tracked / root .agent present / central latest 2026-07-09T23-58-41-04-00
-LuminaryLabs-Publish/TheOpenAbove         tracked / root .agent present / central latest 2026-07-09T23-51-04-04-00
-LuminaryLabs-Publish/MyCozyIsland         tracked / root .agent present / central latest 2026-07-09T23-41-15-04-00
-LuminaryLabs-Publish/TheUnmappedHouse     tracked / root .agent present / central latest 2026-07-09T23-28-35-04-00
-LuminaryLabs-Publish/ZombieOrchard        tracked / root .agent present / central latest 2026-07-09T23-20-43-04-00
-LuminaryLabs-Publish/IntoTheMeadow        tracked / root .agent present / central latest 2026-07-10T00-09-51-04-00
-LuminaryLabs-Publish/PhantomCommand       tracked / root .agent present / central latest 2026-07-09T23-02-05-04-00
-LuminaryLabs-Publish/HorrorCorridor       selected / oldest eligible central-ledger fallback / central latest 2026-07-09T22-50-53-04-00
+LuminaryLabs-Publish/IntoTheMeadow        tracked / root .agent present / central latest 2026-07-10T01-38-16-04-00
+LuminaryLabs-Publish/PrehistoricRush      tracked / root .agent present / central latest 2026-07-10T01-31-29-04-00
+LuminaryLabs-Publish/TheOpenAbove         tracked / root .agent present / central latest 2026-07-10T01-20-47-04-00
+LuminaryLabs-Publish/MyCozyIsland         tracked / root .agent present / central latest 2026-07-10T01-11-51-04-00
+LuminaryLabs-Publish/TheUnmappedHouse     tracked / root .agent present / central latest 2026-07-10T00-51-03-04-00
+LuminaryLabs-Publish/ZombieOrchard        tracked / root .agent present / central latest 2026-07-10T00-38-44-04-00
+LuminaryLabs-Publish/PhantomCommand       tracked / root .agent present / central latest 2026-07-10T00-30-20-04-00
+LuminaryLabs-Publish/HorrorCorridor       selected / oldest eligible central-ledger fallback / prior central latest 2026-07-10T00-18-38-04-00
 LuminaryLabs-Publish/TheCavalryOfRome     excluded by rule
 ```
 
@@ -148,6 +148,8 @@ publish-decision-snapshot
 command-result-journal
 interaction-preflight-diagnostics
 network-command-preflight-diagnostics
+ooze-result-diagnostics
+win-result-diagnostics
 local-authority-command-consumer
 host-authority-command-consumer
 runtime-debug-command-projection
@@ -162,8 +164,10 @@ The runtime can play, render, sync, advance ooze, and complete, but command auth
 
 Rejected, skipped, publish-only, unchanged, recovery, ooze, and victory commands are not first-class result records yet.
 
+Runtime debug frames expose useful frame and snapshot facts, but not command causes, publish decisions, rejection reasons, or command journal counts.
+
 ## Next safe ledge
 
 ```txt
-HorrorCorridor Command Result Debug Readback Catch-up + Result-First Fixture Gate
+HorrorCorridor Command Result Host Debug Readback + Fixture Gate
 ```
