@@ -42,6 +42,7 @@ The command cannot be added meaningfully until the command contracts, correlatio
 [done] GameCanvas host TRY_INTERACT unconditional publish path
 [done] GameCanvas periodic authority cadence publication path
 [done] runtimeDebugStore bounded frames/events and window export
+[done] central repo ledger and internal change-log synchronized
 ```
 
 ## Required implementation validation matrix
@@ -102,6 +103,6 @@ routes changed: no
 deployment changed: no
 authority parity fixture: unavailable
 repo-local documentation pushed to main: yes
-central ledger update: pending
-central internal change-log: pending
+central ledger updated: yes
+central internal change-log added: yes
 ```
