@@ -2,7 +2,7 @@
 
 **Repository:** `LuminaryLabs-Publish/HorrorCorridor`
 
-**Last aligned:** `2026-07-10T06-48-54-04-00`
+**Last aligned:** `2026-07-10T08-11-35-04-00`
 
 ## Purpose
 
@@ -14,23 +14,23 @@ Read this folder before changing implementation code.
 
 The current public `LuminaryLabs-Publish` repository list was compared against sampled repo-local `.agent` state and the central `LuminaryLabs-Dev/LuminaryLabs` repo ledger.
 
-No checked public non-Cavalry repo was new, absent from central tracking, missing root `.agent` state, recently added but undocumented, or otherwise undocumented.
+No checked public non-Cavalry repo was new, absent from central tracking, missing root `.agent` state, recently added, or otherwise undocumented.
 
 `LuminaryLabs-Publish/TheCavalryOfRome` remains excluded by standing rule.
 
-`HorrorCorridor` was selected as the oldest eligible documented fallback. Its prior central tracking was `2026-07-10T05-11-51-04-00`.
+`HorrorCorridor` was selected as the oldest eligible documented fallback.
 
 ## Public Publish repos checked
 
 ```txt
-LuminaryLabs-Publish/IntoTheMeadow        tracked / root .agent present / central latest 2026-07-10T06-30-49-04-00
-LuminaryLabs-Publish/PrehistoricRush      tracked / root .agent present / central latest 2026-07-10T06-21-03-04-00
-LuminaryLabs-Publish/TheOpenAbove         tracked / root .agent present / central latest 2026-07-10T06-08-36-04-00
-LuminaryLabs-Publish/MyCozyIsland         tracked / root .agent present / central latest 2026-07-10T05-49-25-04-00
-LuminaryLabs-Publish/TheUnmappedHouse     tracked / root .agent present / central latest 2026-07-10T05-40-17-04-00
-LuminaryLabs-Publish/ZombieOrchard        tracked / root .agent present / central latest 2026-07-10T05-28-12-04-00
-LuminaryLabs-Publish/PhantomCommand       tracked / root .agent present / central latest 2026-07-10T05-21-20-04-00
-LuminaryLabs-Publish/HorrorCorridor       selected / oldest eligible fallback / prior central latest 2026-07-10T05-11-51-04-00
+LuminaryLabs-Publish/HorrorCorridor       selected / prior central latest 2026-07-10T06-48-54-04-00
+LuminaryLabs-Publish/PhantomCommand       tracked / root .agent present / central latest 2026-07-10T06-59-18-04-00
+LuminaryLabs-Publish/ZombieOrchard        tracked / root .agent present / central latest 2026-07-10T07-08-10-04-00
+LuminaryLabs-Publish/TheUnmappedHouse     tracked / root .agent present / central latest 2026-07-10T07-20-08-04-00
+LuminaryLabs-Publish/MyCozyIsland         tracked / root .agent present / central latest 2026-07-10T07-29-12-04-00
+LuminaryLabs-Publish/TheOpenAbove         tracked / root .agent present / central latest 2026-07-10T07-41-42-04-00
+LuminaryLabs-Publish/PrehistoricRush      tracked / root .agent present / central latest 2026-07-10T07-50-29-04-00
+LuminaryLabs-Publish/IntoTheMeadow        tracked / root .agent present / central latest 2026-07-10T07-59-27-04-00
 LuminaryLabs-Publish/TheCavalryOfRome     excluded by rule
 ```
 
@@ -60,7 +60,7 @@ open app
   -> request-sync/toggle-ready/cancel/default return unchanged or recovery-only state
   -> ooze cadence advances through GameState-returning rules
   -> ordered sequence completion validates victory through GameState-returning rules
-  -> publishAuthoritativeState emits full-sync reason strings
+  -> publishAuthoritativeState emits implicit reason strings
   -> renderer, minimap, HUD, completion route, and runtime debug consume latest snapshot
 ```
 
@@ -69,11 +69,11 @@ open app
 ```txt
 CommandEnvelope
   -> CommandReasonCatalog
-  -> Interaction/Network/Ooze/Win result wrapper
-  -> CommandResult
-  -> PublishDecision
+  -> CommandResultEnvelope
+  -> PublishDecisionSnapshot
   -> CommandJournal
-  -> LocalAuthorityCommandConsumer or HostAuthorityCommandConsumer
+  -> LocalAuthorityCommandConsumer
+  -> HostAuthorityCommandConsumer
   -> RuntimeDebugCommandProjection
   -> CommandFixtureMatrix
   -> GameCanvas consumer splice after proof
@@ -86,14 +86,14 @@ CommandEnvelope
 .agent/known-gaps.md
 .agent/next-steps.md
 .agent/validation.md
-.agent/architecture-audit/2026-07-10T06-48-54-04-00-command-result-journal-catchup-dsk-map.md
-.agent/render-audit/2026-07-10T06-48-54-04-00-runtime-debug-command-journal-gap.md
-.agent/gameplay-audit/2026-07-10T06-48-54-04-00-local-host-command-result-loop.md
-.agent/command-authority-audit/2026-07-10T06-48-54-04-00-result-journal-publish-decision-contract.md
-.agent/interaction-audit/2026-07-10T06-48-54-04-00-silent-noop-command-reason-map.md
-.agent/deploy-audit/2026-07-10T06-48-54-04-00-command-fixture-validation-gate.md
-.agent/trackers/2026-07-10T06-48-54-04-00/project-breakdown.md
-.agent/turn-ledger/2026-07-10T06-48-54-04-00.md
+.agent/architecture-audit/2026-07-10T08-11-35-04-00-command-debug-projection-dsk-map.md
+.agent/render-audit/2026-07-10T08-11-35-04-00-runtime-debug-command-projection-gap.md
+.agent/gameplay-audit/2026-07-10T08-11-35-04-00-local-host-command-debug-loop.md
+.agent/command-authority-audit/2026-07-10T08-11-35-04-00-result-publish-decision-contract.md
+.agent/interaction-audit/2026-07-10T08-11-35-04-00-noop-rejection-reason-map.md
+.agent/deploy-audit/2026-07-10T08-11-35-04-00-command-debug-fixture-gate.md
+.agent/trackers/2026-07-10T08-11-35-04-00/project-breakdown.md
+.agent/turn-ledger/2026-07-10T08-11-35-04-00.md
 .agent/kit-registry.json
 ```
 
@@ -115,7 +115,7 @@ HorrorCorridor-V1/src/features/networking/protocol/syncSnapshot.ts
 ## Current next safe ledge
 
 ```txt
-HorrorCorridor Command Result Journal Catch-up + Runtime Debug Fixture Gate
+HorrorCorridor Command Debug Projection Ledger Refresh + Result Fixture Gate
 ```
 
 Build this before touching renderer extraction, PeerJS extraction, minimap extraction, post-processing extraction, scene dressing, new maze content, or visual object-kit expansion.
