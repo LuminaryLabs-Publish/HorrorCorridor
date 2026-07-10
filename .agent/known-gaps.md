@@ -2,17 +2,17 @@
 
 **Repository:** `LuminaryLabs-Publish/HorrorCorridor`
 
-**Updated:** `2026-07-09T18-30-30-04-00`
+**Updated:** `2026-07-09T22-50-53-04-00`
 
 ## Selection gap handled in this pass
 
 ```txt
-- the current public LuminaryLabs-Publish repo list was checked.
+- current public LuminaryLabs-Publish repo list was checked.
 - TheCavalryOfRome was excluded.
-- sampled root .agent/START_HERE.md state was present for checked public non-Cavalry repos.
+- sampled root .agent state was present for checked public non-Cavalry repos.
 - checked public non-Cavalry repos were tracked in the central repo ledger.
 - HorrorCorridor was selected as the oldest eligible documented fallback.
-- central tracking is refreshed to 2026-07-09T18-30-30-04-00 by this run.
+- central tracking is refreshed to 2026-07-09T22-50-53-04-00 by this run.
 ```
 
 ## Authority and command gaps
@@ -27,7 +27,7 @@
 - syncHeldCubesToPlayers has accepted and unchanged paths but no result metadata.
 - applyNetworkPlayerUpdate returns unchanged state for missing players without reason metadata.
 - local authority uses object identity to decide whether to publish after interaction.
-- host authority needs a single consumer path for PLAYER_UPDATE, TRY_INTERACT, request-sync, skipped actions, and victory.
+- host authority needs one consumer path for PLAYER_UPDATE, TRY_INTERACT, request-sync, skipped actions, and victory.
 - host authority can publish or recover without a first-class PublishDecision record.
 - no stable CommandReason catalog exists for rejected, skipped, unchanged, publish-only, ooze, or victory commands.
 - no CommandResult envelope exists for before/after state, changed flag, events, diagnostics, and source metadata.
