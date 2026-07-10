@@ -2,7 +2,7 @@
 
 **Repository:** `LuminaryLabs-Publish/HorrorCorridor`
 
-**Updated:** `2026-07-09T22-50-53-04-00`
+**Updated:** `2026-07-10T00-18-38-04-00`
 
 ## Available validation commands
 
@@ -57,6 +57,7 @@ ooze tick spawn
 ooze tick decay
 ooze tick no-state-diff
 victory ordered-sequence completion
+victory rollback if slots become invalid
 local consumer skips rejected/no-op broadcast
 local consumer publishes accepted changed/victory
 host consumer skips rejected TRY_INTERACT broadcast
@@ -79,6 +80,8 @@ central ledger is updated after implementation lands
 [done] GameCanvas runtime/publish/render loop sampled.
 [done] networkRules authority seam read.
 [done] interactionRules silent no-op branches read.
+[done] oozeRules GameState-only branch read.
+[done] winRules GameState-only branch read.
 [done] runtimeDebugStore current debug export shape read.
 [done] syncSnapshot snapshot/message shape read.
 [done] Documentation-only .agent audit files written to main.
