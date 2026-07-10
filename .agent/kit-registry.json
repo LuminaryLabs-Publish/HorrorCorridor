@@ -1,59 +1,45 @@
 {
-  "schemaVersion": 43,
+  "schemaVersion": 44,
+  "generatedAt": "2026-07-10T09-40-13-04-00",
   "repository": "LuminaryLabs-Publish/HorrorCorridor",
-  "generatedAt": "2026-07-10T08-11-35-04-00",
-  "status": "command-debug-projection-ledger-result-fixture-gate-planned",
-  "latestTracker": ".agent/trackers/2026-07-10T08-11-35-04-00/project-breakdown.md",
-  "latestTurnLedger": ".agent/turn-ledger/2026-07-10T08-11-35-04-00.md",
-  "latestArchitectureAudit": ".agent/architecture-audit/2026-07-10T08-11-35-04-00-command-debug-projection-dsk-map.md",
-  "latestRenderAudit": ".agent/render-audit/2026-07-10T08-11-35-04-00-runtime-debug-command-projection-gap.md",
-  "latestGameplayAudit": ".agent/gameplay-audit/2026-07-10T08-11-35-04-00-local-host-command-debug-loop.md",
-  "latestCommandAuthorityAudit": ".agent/command-authority-audit/2026-07-10T08-11-35-04-00-result-publish-decision-contract.md",
-  "latestInteractionAudit": ".agent/interaction-audit/2026-07-10T08-11-35-04-00-noop-rejection-reason-map.md",
-  "latestDeployAudit": ".agent/deploy-audit/2026-07-10T08-11-35-04-00-command-debug-fixture-gate.md",
+  "status": "command-result-debug-projection-ledger-fixture-gate-planned",
+  "selectedBecause": "oldest eligible documented fallback after public LuminaryLabs-Publish repo list and central ledger comparison; TheCavalryOfRome excluded",
   "sourceRoots": [
     "HorrorCorridor-V1/src/components/game",
     "HorrorCorridor-V1/src/features",
     "HorrorCorridor-V1/src/protokits",
     "HorrorCorridor-V1/scripts"
   ],
-  "selection": {
-    "selectedRepo": "LuminaryLabs-Publish/HorrorCorridor",
-    "excludedRepo": "LuminaryLabs-Publish/TheCavalryOfRome",
-    "reason": "No checked public non-Cavalry repo was new, central-ledger absent, undocumented, recently added, or missing sampled root .agent state. HorrorCorridor was selected as the oldest eligible documented fallback."
-  },
-  "currentNextSlice": "HorrorCorridor Command Debug Projection Ledger Refresh + Result Fixture Gate",
-  "interactionLoop": {
-    "current": [
-      "start-menu",
-      "solo-host-or-join",
-      "room-identity-and-lobby",
-      "loading-readiness-steps",
-      "seeded-maze-bootstrap",
-      "game-canvas-runtime-init",
-      "pointer-lock-first-person-navigation",
-      "distance-and-carry-derived-interact-action",
-      "client-player-update-and-try-interact-send",
-      "host-message-rule-application",
-      "silent-unchanged-state-for-invalid-interactions",
-      "cube-pickup-carry-drop-place-remove",
-      "ordered-sequence-validation",
-      "ooze-host-cadence",
-      "replicated-snapshot-publish",
-      "render-minimap-hud-debug"
-    ],
-    "target": [
-      "canonical seeded GameState rows establish fixture before and after facts",
-      "local input and peer messages normalize into CommandEnvelope records",
-      "command-reason-catalog-kit classifies every silent no-op branch",
-      "command-result-envelope-kit wraps interaction, network, ooze, request-sync, toggle-ready, cancel, and victory outcomes",
-      "publish-decision-snapshot-kit derives publish, skip, recovery, victory, or no-op behavior",
-      "command-result-journal-kit retains ordered command facts",
-      "runtime-debug-command-projection-kit exposes latest result, publish decision, and journal counters",
-      "command-fixture-matrix-kit proves deterministic accepted, rejected, unchanged, skipped, victory, ooze, and publish-only parity",
-      "GameCanvas consumes decisions only after fixture proof"
-    ]
-  },
+  "currentNextSlice": "HorrorCorridor Command Result Debug Projection Ledger Refresh + Fixture Gate",
+  "interactionLoop": [
+    "start-menu",
+    "solo-host-or-join",
+    "room-identity-and-lobby",
+    "loading-readiness-steps",
+    "seeded-maze-bootstrap",
+    "game-canvas-runtime-init",
+    "pointer-lock-first-person-navigation",
+    "distance-and-carry-derived-interact-action",
+    "client-player-update-and-try-interact-send",
+    "host-message-rule-application",
+    "silent-unchanged-state-for-invalid-interactions",
+    "cube-pickup-carry-drop-place-remove",
+    "ordered-sequence-validation",
+    "ooze-host-cadence",
+    "replicated-snapshot-publish",
+    "render-minimap-hud-debug"
+  ],
+  "targetLoop": [
+    "canonical seeded GameState rows establish fixture before/after facts",
+    "local input and peer messages normalize into CommandEnvelope",
+    "command-reason-catalog-kit classifies silent no-op branches",
+    "command-result-envelope-kit wraps interaction, network, ooze, request-sync, toggle-ready, cancel, victory, and recovery outcomes",
+    "publish-decision-snapshot-kit derives publish, skip, recovery, victory, no-op, and publish-only decisions",
+    "command-result-journal-kit retains ordered command facts",
+    "runtime-debug-command-projection-kit exposes latest result, publish decision, journal counters, and fixture parity",
+    "command-fixture-matrix-kit proves deterministic accepted/rejected/unchanged/skipped/victory/ooze/publish-only parity",
+    "GameCanvas consumes decisions after fixture proof"
+  ],
   "domains": [
     "application-shell",
     "next-client-runtime",
@@ -62,49 +48,155 @@
     "peer-networking",
     "host-transport",
     "client-transport",
+    "network-message-protocol",
     "replicated-snapshot-protocol",
     "seeded-maze-bootstrap",
-    "first-person-input",
-    "cube-carry-interaction",
+    "maze-cell-lookup",
+    "cube-spawn-bootstrap",
+    "anomaly-sequence-bootstrap",
+    "sequence-slot-authority",
     "ordered-sequence-validation",
-    "ooze-trail-navigation",
-    "legacy-game-state-rule-adapters",
-    "command-envelope-contract",
-    "command-reason-catalog",
-    "command-result-envelope",
-    "publish-decision-snapshot",
-    "command-result-journal",
-    "runtime-debug-command-projection",
-    "command-fixture-matrix",
+    "victory-completion",
+    "first-person-input",
+    "pointer-lock-control",
+    "keyboard-input",
+    "mouse-look-input",
+    "player-view-angles",
+    "player-movement-integration",
+    "maze-collision-resolution",
+    "camera-bob",
+    "local-pose-prediction",
+    "local-carry-state-sync",
+    "host-authority",
+    "local-authoritative-simulation",
+    "legacy-game-state-interaction-rules",
+    "legacy-game-state-network-rules",
+    "legacy-game-state-ooze-rules",
+    "legacy-game-state-win-rules",
+    "ooze-cadence",
+    "ooze-decay-and-spawn",
+    "runtime-debug-frame-store",
+    "runtime-debug-event-store",
+    "runtime-debug-command-projection-next",
+    "render-world-snapshot-consumption",
     "three-renderer",
+    "post-processing",
+    "maze-world-rendering",
     "minimap-rendering",
+    "scene-dressing-descriptors",
+    "command-envelope-contract-next",
+    "command-reason-catalog-next",
+    "command-result-envelope-next",
+    "publish-decision-snapshot-next",
+    "command-result-journal-next",
+    "command-fixture-matrix-next",
+    "command-replay-fixture-next",
     "central-ledger-synchronization"
   ],
-  "kits": [
-    { "id": "corridor-session-domain-kit", "status": "implemented-source", "kind": "domain-kit", "provides": ["mode selection", "room identity", "readiness"] },
-    { "id": "peer-room-sync-domain-kit", "status": "implemented-source", "kind": "network-kit", "provides": ["host/client transport", "full sync", "player update", "try interact"] },
-    { "id": "maze-snapshot-bootstrap-kit", "status": "implemented-source", "kind": "bootstrap-kit", "provides": ["maze snapshot", "cell lookup", "cube spawns", "sequence slots"] },
-    { "id": "first-person-corridor-player-kit", "status": "implemented-source", "kind": "player-kit", "provides": ["input", "look", "movement", "collision", "camera pose"] },
-    { "id": "corridor-interaction-domain-kit", "status": "implemented-source", "kind": "interaction-kit", "provides": ["pickup", "drop", "place", "remove"] },
-    { "id": "ordered-anomaly-sequence-kit", "status": "implemented-source", "kind": "domain-kit", "provides": ["sequence slots", "ordered color validation", "victory state"] },
-    { "id": "ooze-trail-domain-kit", "status": "implemented-source", "kind": "domain-kit", "provides": ["ooze cadence", "decay", "spawn", "spacing guard"] },
-    { "id": "corridor-render-world-kit", "status": "implemented-source", "kind": "render-kit", "provides": ["Three.js world rendering", "maze world render objects"] },
-    { "id": "corridor-minimap-kit", "status": "implemented-source", "kind": "render-kit", "provides": ["minimap draw", "snapshot minimap projection"] },
-    { "id": "runtime-debug-frame-kit", "status": "implemented-source", "kind": "diagnostic-kit", "provides": ["frame capture", "event capture", "debug export"] },
-    { "id": "command-envelope-contract-kit", "status": "planned-next", "kind": "contract-kit", "provides": ["command id", "source", "player id", "action", "payload"] },
-    { "id": "command-reason-catalog-kit", "status": "planned-next", "kind": "catalog-kit", "provides": ["stable rejection reasons", "stable skipped reasons", "stable publish-only reasons"] },
-    { "id": "command-result-envelope-kit", "status": "planned-next", "kind": "envelope-kit", "provides": ["before state", "after state", "changed flag", "reason", "events", "legacy adapter"] },
-    { "id": "publish-decision-snapshot-kit", "status": "planned-next", "kind": "policy-kit", "provides": ["publish", "skip", "recovery", "no-op", "victory"] },
-    { "id": "command-result-journal-kit", "status": "planned-next", "kind": "diagnostic-kit", "provides": ["accepted counts", "rejected counts", "skipped counts", "latest reason", "latest decision"] },
-    { "id": "runtime-debug-command-projection-kit", "status": "planned-next", "kind": "diagnostic-kit", "provides": ["latest result", "latest decision", "journal counts", "fixture parity"] },
-    { "id": "command-fixture-matrix-kit", "status": "planned-next", "kind": "fixture-kit", "provides": ["accepted rows", "rejected rows", "unchanged rows", "publish-only rows", "skipped rows", "victory rows", "ooze rows"] },
-    { "id": "command-replay-fixture-kit", "status": "planned-next", "kind": "fixture-kit", "provides": ["DOM-free replay", "snapshot parity", "proof output"] },
-    { "id": "central-ledger-sync-kit", "status": "documentation-source", "kind": "ledger-kit", "provides": ["repo-local tracker", "root .agent pointer", "central repo ledger", "internal change log"] }
+  "implementedKits": [
+    {
+      "name": "corridor-session-domain-kit",
+      "services": ["mode selection", "room identity", "readiness state", "host/client/solo session entry"]
+    },
+    {
+      "name": "peer-room-sync-domain-kit",
+      "services": ["host/client transport", "full sync", "player updates", "interaction requests", "room lifecycle messages"]
+    },
+    {
+      "name": "maze-snapshot-bootstrap-kit",
+      "services": ["deterministic maze snapshot", "cell lookup", "cube spawns", "anomaly slots"]
+    },
+    {
+      "name": "first-person-corridor-player-kit",
+      "services": ["pointer lock", "movement integration", "collision", "camera pose", "local prediction"]
+    },
+    {
+      "name": "corridor-interaction-domain-kit",
+      "services": ["pickup", "drop", "place", "remove", "carried cube synchronization"]
+    },
+    {
+      "name": "ordered-anomaly-sequence-kit",
+      "services": ["sequence slots", "ordered color validation", "completion", "victory state"]
+    },
+    {
+      "name": "ooze-trail-domain-kit",
+      "services": ["ooze cadence", "spawn", "decay", "spacing guard", "trail transitions"]
+    },
+    {
+      "name": "corridor-render-world-kit",
+      "services": ["Three.js world rendering", "maze surfaces", "cubes", "anomaly markers", "scene dressing"]
+    },
+    {
+      "name": "corridor-minimap-kit",
+      "services": ["minimap projection", "player markers", "object markers"]
+    },
+    {
+      "name": "runtime-debug-frame-kit",
+      "services": ["frame capture", "event capture", "debug export"]
+    }
   ],
+  "legacyAdapters": [
+    "legacy-interaction-rules-adapter",
+    "legacy-network-rules-adapter",
+    "legacy-ooze-rules-adapter",
+    "legacy-win-rules-adapter"
+  ],
+  "plannedKits": [
+    {
+      "name": "command-envelope-contract-kit",
+      "services": ["command identity", "command source", "target", "action", "before/after metadata"]
+    },
+    {
+      "name": "command-reason-catalog-kit",
+      "services": ["accepted reasons", "rejected reasons", "skipped reasons", "no-op reasons", "recovery reasons", "victory reasons", "ooze reasons"]
+    },
+    {
+      "name": "command-result-envelope-kit",
+      "services": ["status", "reason", "events", "changed flag", "diagnostics", "source metadata"]
+    },
+    {
+      "name": "publish-decision-snapshot-kit",
+      "services": ["publish", "skip", "recovery", "victory", "no-op", "publish-only decisions"]
+    },
+    {
+      "name": "command-result-journal-kit",
+      "services": ["ordered command facts", "local counters", "host counters", "ooze counters", "victory counters"]
+    },
+    {
+      "name": "local-authority-command-consumer-kit",
+      "services": ["local result journaling", "skip rejected/no-op broadcast", "publish accepted changed/victory"]
+    },
+    {
+      "name": "host-authority-command-consumer-kit",
+      "services": ["host result journaling", "request-sync recovery", "TRY_INTERACT decision", "publish/skip classification"]
+    },
+    {
+      "name": "runtime-debug-command-projection-kit",
+      "services": ["latest command result", "latest publish decision", "latest rejection reason", "journal counts", "fixture parity"]
+    },
+    {
+      "name": "command-fixture-matrix-kit",
+      "services": ["accepted rows", "rejected rows", "unchanged rows", "skipped rows", "publish-only rows", "ooze rows", "victory rows"]
+    },
+    {
+      "name": "command-replay-fixture-kit",
+      "services": ["DOM-free replay", "legacy snapshot parity", "volatile-field normalization"]
+    },
+    {
+      "name": "central-ledger-sync-kit",
+      "services": ["central repo ledger update", "internal change-log update"]
+    }
+  ],
+  "currentBlocker": "Command outcomes are not first-class records. Rejected, skipped, no-op, recovery, ooze, victory, and publish-only paths collapse into unchanged state or implicit reason strings, while runtime debug lacks command result and publish decision projection.",
   "validation": {
     "runtimeSourceChanged": false,
-    "localValidationRun": false,
-    "browserValidationRun": false,
-    "nextFixtureCommand": "npm run fixture:commands"
+    "branchCreated": false,
+    "pullRequestCreated": false,
+    "npmRunLint": "not-run",
+    "npmRunSmokeProtokits": "not-run",
+    "npmRunHarnessHorrorCorridor": "not-run",
+    "npmRunValidateLivePlayerDev": "not-run",
+    "browserSmoke": "not-run",
+    "commandFixture": "not-run; proof files do not exist yet"
   }
 }
