@@ -2,7 +2,7 @@
 
 **Repository:** `LuminaryLabs-Publish/HorrorCorridor`
 
-**Updated:** `2026-07-10T08-11-35-04-00`
+**Updated:** `2026-07-10T09-40-13-04-00`
 
 ## Selection gap handled in this pass
 
@@ -11,10 +11,10 @@
 - TheCavalryOfRome was excluded.
 - checked public non-Cavalry repos were tracked in the central repo ledger.
 - HorrorCorridor was selected as the oldest eligible documented fallback.
-- central tracking is refreshed to 2026-07-10T08-11-35-04-00 by this pass.
+- central tracking is refreshed by this pass.
 ```
 
-## Authority and command gaps
+## Command authority gaps
 
 ```txt
 - interactionRules returns GameState only.
@@ -28,9 +28,10 @@
 - ooze spawn/decay/no-state-diff paths have no result metadata.
 - ordered sequence victory and victory rollback have no result metadata.
 - local authority uses object identity to decide whether to publish after interaction.
-- host authority publishes TRY_INTERACT outcomes without knowing whether the command was accepted, rejected, skipped, no-op, or recovery-only.
-- no stable CommandReason catalog exists for rejected, skipped, unchanged, publish-only, ooze, or victory commands.
+- host authority publishes TRY_INTERACT outcomes without knowing whether the command was accepted, rejected, skipped, no-op, victory, recovery-only, ooze, or publish-only.
+- no stable CommandReason catalog exists.
 - no CommandResult envelope exists for before/after state, changed flag, events, diagnostics, and source metadata.
+- no PublishDecision snapshot exists.
 - no CommandJournal exists to retain ordered command facts.
 - no explicit local-authority result consumer exists.
 - no explicit host-authority result consumer exists.
