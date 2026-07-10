@@ -2,23 +2,23 @@
 
 **Repository:** `LuminaryLabs-Publish/HorrorCorridor`
 
-**Updated:** `2026-07-09T22-50-53-04-00`
+**Updated:** `2026-07-10T00-18-38-04-00`
 
 ## Current next build slice
 
 ```txt
-HorrorCorridor Command Result Debug Readback + Result-First Fixture Gate
+HorrorCorridor Command Result Debug Readback Catch-up + Result-First Fixture Gate
 ```
 
 Start from:
 
 ```txt
-.agent/architecture-audit/2026-07-09T22-50-53-04-00-command-result-debug-readback-dsk-map.md
-.agent/render-audit/2026-07-09T22-50-53-04-00-runtime-debug-command-projection-gap.md
-.agent/gameplay-audit/2026-07-09T22-50-53-04-00-local-host-command-result-loop.md
-.agent/command-authority-audit/2026-07-09T22-50-53-04-00-result-first-debug-fixture-contract.md
-.agent/interaction-audit/2026-07-09T22-50-53-04-00-silent-noop-reason-readback-map.md
-.agent/deploy-audit/2026-07-09T22-50-53-04-00-command-fixture-check-gate.md
+.agent/architecture-audit/2026-07-10T00-18-38-04-00-command-result-debug-readback-catchup-dsk-map.md
+.agent/render-audit/2026-07-10T00-18-38-04-00-runtime-debug-command-projection-catchup.md
+.agent/gameplay-audit/2026-07-10T00-18-38-04-00-local-host-result-authority-loop.md
+.agent/command-authority-audit/2026-07-10T00-18-38-04-00-result-first-fixture-contract.md
+.agent/interaction-audit/2026-07-10T00-18-38-04-00-silent-noop-reason-fixture-map.md
+.agent/deploy-audit/2026-07-10T00-18-38-04-00-command-fixture-check-gate.md
 ```
 
 ## Build checklist
@@ -27,7 +27,7 @@ Start from:
 [ ] Preserve current solo, host, client, renderer, minimap, debug overlay, and PeerJS behavior.
 [ ] Add serializable command contracts under game-state/domain.
 [ ] Define CommandEnvelope, CommandSource, CommandStatus, CommandReason, CommandResult, PublishDecision, CommandEvent, and CommandSnapshotSummary.
-[ ] Define stable CommandReason values for every silent no-op branch in interactionRules.ts and networkRules.ts.
+[ ] Define stable CommandReason values for every silent no-op branch in interactionRules.ts, networkRules.ts, oozeRules.ts, and winRules.ts.
 [ ] Add command result constructors and before/after snapshot summary helpers.
 [ ] Add publish decision helper before GameCanvas consumes result metadata.
 [ ] Add command journal helpers and summary counters.
@@ -38,6 +38,8 @@ Start from:
 [ ] Keep legacy interaction exports returning result.state.
 [ ] Add result-returning wrappers for player update, held-cube sync, and network interaction request.
 [ ] Keep legacy network exports returning result.state.
+[ ] Add result-returning wrappers for ooze spawn, ooze decay, and ooze no-state-diff.
+[ ] Add result-returning wrapper for ordered sequence completion and victory rollback.
 [ ] Classify request-sync as publish-only recovery.
 [ ] Classify toggle-ready and cancel as explicit skipped commands until lobby policy exists.
 [ ] Classify unknown/default actions as skipped:unknown-action.
@@ -51,8 +53,6 @@ Start from:
 [ ] Add package script for the command fixture after the script exists.
 [ ] Add RuntimeDebugCommandProjection type and projection helper after the headless fixture passes.
 [ ] Wire runtimeDebugStore to expose command projection fields additively.
-[ ] Wire local-authority consumer to journal rejections and only publish accepted changed/victory results.
-[ ] Wire host-authority consumer to skip rejected TRY_INTERACT publishes and publish request-sync recovery.
 [ ] Replace GameCanvas object-identity publish checks only after fixture proof.
 [ ] Normalize only volatile fields in fixture comparison.
 [ ] Keep central LuminaryLabs repo-ledger in sync after implementation lands.
@@ -72,6 +72,8 @@ HorrorCorridor-V1/src/features/game-state/domain/commandFixtureRows.ts
 HorrorCorridor-V1/src/features/game-state/domain/interactionPreflight.ts
 HorrorCorridor-V1/src/features/game-state/domain/interactionResultRules.ts
 HorrorCorridor-V1/src/features/game-state/domain/networkResultRules.ts
+HorrorCorridor-V1/src/features/game-state/domain/oozeResultRules.ts
+HorrorCorridor-V1/src/features/game-state/domain/winResultRules.ts
 HorrorCorridor-V1/src/features/game-state/domain/localAuthorityCommandConsumer.ts
 HorrorCorridor-V1/src/features/game-state/domain/hostAuthorityCommandConsumer.ts
 HorrorCorridor-V1/src/features/debug/domain/runtimeDebugCommandProjection.ts
