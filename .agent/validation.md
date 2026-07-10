@@ -2,7 +2,7 @@
 
 **Repository:** `LuminaryLabs-Publish/HorrorCorridor`
 
-**Updated:** `2026-07-10T10-58-54-04-00`
+**Updated:** `2026-07-10T12-29-26-04-00`
 
 ## Available validation commands
 
@@ -31,7 +31,7 @@ npm run validate:live-player:dev
 6. npm run review:object-kit
 ```
 
-## Required command decision fixture matrix
+## Required command result fixture matrix
 
 ```txt
 accepted pickup near loose cube
@@ -80,6 +80,8 @@ central ledger is updated after implementation lands
 [done] GameCanvas command/publish seam sampled.
 [done] interactionRules GameState-only command seam sampled.
 [done] networkRules GameState-only command seam sampled.
+[done] oozeRules GameState-only cadence seam sampled.
+[done] winRules GameState-only victory seam sampled.
 [done] runtimeDebugStore current debug export shape sampled.
 [done] Documentation-only .agent audit files written to main.
 [done] Central LuminaryLabs ledger and change log written to main after repo-local pass.
@@ -105,6 +107,10 @@ central ledger is updated after implementation lands
 runtime source changed: no
 branch created: no
 pull request created: no
+npm run lint: not run
+npm run smoke:protokits: not run
+npm run harness:horror-corridor: not run
+npm run validate:live-player:dev: not run
 browser smoke: not run
 command fixture: not run because proof files do not exist yet
 pushed to main: yes
