@@ -1,10 +1,10 @@
 # HorrorCorridor Next Steps
 
-**Updated:** `2026-07-11T11-39-11-04-00`
+**Updated:** `2026-07-11T13-20-45-04-00`
 
 ## Plan ledger
 
-**Goal:** finish canonical roster and transport identity, then implement one correlation-complete lobby-start transaction before run exit, readiness, snapshot, movement or pause authority depends on an active run.
+**Goal:** finish canonical roster, actor, start, run-epoch and snapshot foundations, then implement one monotonic terminal-outcome authority before movement, pause or restart behavior depends on a completed run.
 
 ### Gate 1: roster identity and peer binding
 
@@ -34,28 +34,10 @@
 - [ ] Build a detached deterministic bootstrap plan.
 - [ ] Revalidate expected room and roster revisions after loading.
 - [ ] Commit local host state exactly once from the accepted plan.
-- [ ] Replace independent uncorrelated START_GAME/SYNC application with a complete correlation contract.
-- [ ] Record per-peer send results rather than discarding broadcast counts.
-- [ ] Require client admission and semantic acknowledgement.
-- [ ] Define explicit all-peers, quorum or admitted-peer-only start policy.
+- [ ] Replace independent START_GAME/SYNC application with a complete correlation contract.
+- [ ] Record per-peer send results and require client acknowledgement.
 - [ ] Add bounded retry, timeout, duplicate and conflict handling.
-- [ ] Bind runtime provider acquisition and first frame to the accepted start result.
-- [ ] Add bounded start transition journal and debug projection.
-
-### Gate 3 fixture set
-
-- [ ] `fixture:lobby-start-admission`
-- [ ] `fixture:lobby-start-roster-seal`
-- [ ] `fixture:lobby-start-loading-race`
-- [ ] `fixture:lobby-start-publication`
-- [ ] `fixture:lobby-start-partial-delivery`
-- [ ] `fixture:lobby-start-reorder`
-- [ ] `fixture:lobby-start-duplicate`
-- [ ] `fixture:lobby-start-retry`
-- [ ] `fixture:lobby-start-acknowledgement`
-- [ ] `fixture:lobby-start-stale-epoch`
-- [ ] `fixture:lobby-start-first-frame`
-- [ ] browser multi-peer start smoke.
+- [ ] Bind provider acquisition and first frame to the accepted start result.
 
 ### Gate 4: run exit and session epoch
 
@@ -64,7 +46,7 @@
 - [ ] Quarantine late messages and snapshots from prior epochs.
 - [ ] Correlate lobby/title projection with the committed exit result.
 
-### Gate 4a: runtime readiness lease and generation fencing
+### Gate 4a: runtime readiness and generation fencing
 
 - [ ] Add `runtimeSessionId`, monotonic `runtimeGeneration` and readiness revision.
 - [ ] Treat shell writes as capability requests, not ready commits.
@@ -73,58 +55,104 @@
 - [ ] Reject old-generation setup and cleanup writes.
 - [ ] Add rollback, idempotent cleanup and strict-mode fixtures.
 
-### Gate 5: dependent runtime authority
+### Gate 5: snapshot acceptance authority
 
-- [ ] Add snapshot duplicate, stale, ordering and conflict policy.
-- [ ] Add host movement validation and active client reconciliation.
-- [ ] Add replicated pause/resume authority and atomic input suspension.
+- [ ] Add authoritative sender, room, run, epoch, sequence and revision admission.
+- [ ] Reject stale, duplicate and conflicting snapshots before store mutation.
+- [ ] Prevent older snapshots from rewinding terminal or progress state.
+- [ ] Return typed snapshot-admission results.
+- [ ] Correlate accepted snapshots with projection and frame receipts.
 
-## Recommended start DSKs
+### Gate 5a: terminal outcome authority
+
+- [ ] Select and version explicit victory and defeat predicates.
+- [ ] Add one deterministic `OutcomeEvaluationInput` built from an admitted snapshot/result.
+- [ ] Add host/solo authority, active-run, run-session and epoch admission.
+- [ ] Add `terminalOutcomeId` and monotonic `terminalRevision`.
+- [ ] Latch one accepted victory or failure per run epoch.
+- [ ] Reject a conflicting outcome without mutation.
+- [ ] Prevent terminal state from reverting to playing.
+- [ ] Make victory and failure update room phase, game state and snapshot coherently.
+- [ ] Replace generic failure-to-playing routing with explicit failure projection.
+- [ ] Publish terminal results with per-peer delivery rows.
+- [ ] Admit terminal results exactly once on each client.
+- [ ] Require client acknowledgement and first terminal-frame proof.
+- [ ] Bind restart and title exit to the committed terminal result.
+- [ ] Add a bounded terminal-outcome journal and debug projection.
+
+### Gate 5a fixture set
+
+- [ ] `fixture:terminal-victory`
+- [ ] `fixture:terminal-failure`
+- [ ] `fixture:terminal-policy-version`
+- [ ] `fixture:terminal-simultaneous-predicates`
+- [ ] `fixture:terminal-duplicate`
+- [ ] `fixture:terminal-conflict`
+- [ ] `fixture:terminal-late-playing-snapshot`
+- [ ] `fixture:terminal-stale-epoch`
+- [ ] `fixture:terminal-loss-reorder-retry`
+- [ ] `fixture:terminal-client-acknowledgement`
+- [ ] `fixture:terminal-first-frame`
+- [ ] `fixture:terminal-restart-handoff`
+- [ ] `fixture:terminal-title-exit-handoff`
+- [ ] browser multi-peer victory/failure convergence smoke.
+
+### Gate 6: movement and reconciliation
+
+- [ ] Add host movement validation and accepted movement results.
+- [ ] Bind client prediction to admitted command sequences.
+- [ ] Add active correction and reconciliation.
+
+### Gate 7: pause and resume
+
+- [ ] Add replicated pause/resume authority.
+- [ ] Suspend simulation, input and publication atomically.
+- [ ] Require host/client pause-state convergence.
+
+## Recommended terminal DSKs
 
 ```txt
-lobby-start-command-kit
-lobby-start-admission-policy-kit
-lobby-start-roster-seal-kit
-lobby-start-transaction-id-kit
-run-session-identity-kit
-run-session-epoch-kit
-lobby-start-bootstrap-plan-kit
-lobby-start-commit-kit
-lobby-start-publication-bundle-kit
-lobby-start-client-admission-kit
-lobby-start-acknowledgement-kit
-lobby-start-retry-and-dedupe-kit
-lobby-start-result-kit
-lobby-start-transition-journal-kit
-lobby-start-debug-projection-kit
-lobby-start-fixture-kit
+terminal-outcome-policy-kit
+outcome-evaluation-input-kit
+victory-predicate-kit
+defeat-predicate-kit
+terminal-outcome-admission-kit
+terminal-outcome-latch-kit
+terminal-outcome-result-kit
+terminal-room-phase-kit
+terminal-publication-kit
+terminal-client-admission-kit
+terminal-ui-projection-kit
+terminal-frame-correlation-kit
+terminal-outcome-acknowledgement-kit
+terminal-outcome-journal-kit
+terminal-outcome-fixture-kit
 ```
 
-## Required start proof
+## Required terminal proof
 
 ```txt
-host cannot start while disconnected or unauthorized
-not-ready required member blocks start
-roster mutation during loading invalidates the plan
-one sealed roster produces one deterministic player set
-START_GAME or SYNC alone cannot enter gameplay
-reordered correlated messages commit once
-zero/partial recipient publication is visible in the result
-each admitted client acknowledges one transaction
-retry does not create a second run
-old epoch start is rejected
-first gameplay frame carries start/run/epoch identity
+same policy input produces the same outcome fingerprint
+failure is executable and explicitly projected
+one run epoch accepts at most one terminal outcome
+terminal state cannot return to playing
+late playing snapshots are rejected
+victory and failure share one publication path
+clients converge under loss, reorder and duplicate delivery
+first terminal frame carries outcome, run and epoch identity
+restart allocates a new admitted run epoch
+exit retires the terminal run exactly once
 ```
 
 ## Do not start with
 
 ```txt
-movement rewrite
 renderer replacement
 new maze content
 visual fidelity work
 save system
-pause convergence
+new defeat effects before defeat policy
+direct UI-only failure handling
 ```
 
-Those depend on canonical member, actor, start transaction, run-session and epoch identity.
+Those depend on canonical actor, start, run-session, epoch, snapshot and terminal-result authority.
