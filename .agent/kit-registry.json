@@ -1,8 +1,8 @@
 {
-  "schemaVersion": 52,
-  "generatedAt": "2026-07-10T21-39-22-04-00",
+  "schemaVersion": 53,
+  "generatedAt": "2026-07-10T23-30-13-04-00",
   "repository": "LuminaryLabs-Publish/HorrorCorridor",
-  "status": "run-exit-authority-session-epoch-reentry-fixture-gate-planned",
+  "status": "run-exit-authority-first-pause-resume-authority-dependent",
   "selectedBecause": "oldest eligible documented fallback after full accessible LuminaryLabs-Publish inventory, central ledger, and root .agent comparison; TheCavalryOfRome excluded",
   "sourceRoots": [
     "HorrorCorridor-V1/src/components/game",
@@ -18,64 +18,69 @@
     "HorrorCorridor-V1/scripts"
   ],
   "currentNextSlice": "HorrorCorridor Run Exit Authority + Session Epoch Re-entry Fixture Gate",
+  "dependentNextSlice": "HorrorCorridor Pause/Resume Authority + Input Suspension Convergence Fixture Gate",
   "dependencyOrder": [
     "lobby-readiness-and-start-admission-authority",
     "sealed-roster-and-initial-session-identity",
     "run-exit-command-result-authority",
-    "authoritative-phase-and-store-transaction",
-    "runtime-teardown-result",
-    "session-epoch-increment",
-    "stale-message-admission",
-    "reentry-fixture-and-browser-smoke"
+    "session-epoch-and-stale-message-admission",
+    "pause-resume-command-result-authority",
+    "simulation-and-interaction-admission",
+    "input-suspension-and-pointer-lock-adapter",
+    "pause-publication-and-projection-transaction",
+    "pause-convergence-ledger-and-fixture"
   ],
   "interactionLoop": [
-    "solo-host-or-client-run-entry",
-    "active-gamecanvas-runtime",
-    "pause-or-victory",
-    "local-return-to-lobby-callback",
-    "gamecanvas-render-resource-cleanup",
-    "room-phase-and-snapshot-retained",
-    "missing-authoritative-exit-publication",
-    "peer-phase-divergence",
-    "stale-message-reentry-risk",
-    "broken-solo-client-lobby-routing"
+    "solo-host-or-client-enters-playing",
+    "gamecanvas-installs-global-input-render-and-transport-ownership",
+    "escape-blur-or-pointer-lock-loss-mutates-local-ui-pause",
+    "local-raf-stops-simulation-when-screen-is-not-playing",
+    "replicated-game-state-and-room-phase-remain-active",
+    "host-continues-consuming-remote-gameplay-commands",
+    "host-publishes-active-sync",
+    "client-sync-projection-restores-playing",
+    "input-and-interaction-state-remain-partially-live",
+    "resume-is-local-ui-only"
   ],
   "domains": [
     "application shell and screen routing",
-    "session mode, identity, room, roster, and connection state",
-    "runtime snapshot, pose, input, and readiness projection",
+    "UI overlay pause completion and game-screen projection",
+    "session mode identity room roster and connection state",
+    "runtime snapshot pose view input flags and readiness",
     "lobby presentation and controls",
     "PeerJS host transport",
     "PeerJS client transport",
     "BroadcastChannel local transport bridge",
     "peer event bus and status projection",
     "versioned protocol envelopes and serialization",
-    "seeded maze, cube, anomaly, room, and player bootstrap",
-    "room phase and game-screen state",
-    "pointer lock and keyboard/mouse input",
-    "movement, collision, camera, and prediction",
+    "seeded maze cube anomaly room and player bootstrap",
+    "room phase and replicated app/game state",
+    "pointer lock keyboard mouse blur and input lifecycle",
+    "movement collision camera walk shake and prediction",
     "host player-update consumption",
     "cube interaction and carried-object synchronization",
     "ordered anomaly completion and rollback",
-    "ooze cadence, decay, spawn, spacing, and capacity",
+    "ooze cadence decay spawn spacing and capacity",
     "authoritative snapshot construction and publication",
     "client snapshot replay",
-    "Three.js world, terrain, props, lights, cubes, players, ooze, and scene dressing",
-    "animation loop, resize, and canvas ownership",
+    "Three.js world terrain props lights cubes players ooze and scene dressing",
+    "animation loop resize and canvas ownership",
     "post-processing composer and bloom",
     "minimap and HUD projection",
     "runtime debug frames and events",
     "resource disposal and component cleanup",
-    "build, lint, harness, visual, object-kit, and live-player validation",
+    "build lint harness visual object-kit and live-player validation",
     "planned lobby entry authority",
-    "planned run-exit authority",
-    "planned session epoch and stale-message admission",
-    "planned teardown ledger and lifecycle fixture"
+    "planned run-exit and session-epoch authority",
+    "planned pause/resume authority",
+    "planned simulation and interaction admission",
+    "planned input suspension and pointer-lock correlation",
+    "planned pause projection convergence and fixture"
   ],
   "implementedKits": [
     {
       "name": "corridor-application-shell-kit",
-      "services": ["screen routing", "menu orchestration", "run entry", "pause", "completion", "local exit callbacks"]
+      "services": ["screen routing", "menu orchestration", "run entry", "local pause/resume", "completion", "exit callbacks"]
     },
     {
       "name": "corridor-session-domain-kit",
@@ -84,6 +89,10 @@
     {
       "name": "runtime-store-snapshot-kit",
       "services": ["authoritative snapshot", "local pose", "view angles", "input flags", "runtime readiness", "runtime reset"]
+    },
+    {
+      "name": "ui-pause-projection-kit",
+      "services": ["local pause flag", "pause reason", "pause overlay", "PLAYING/PAUSED local screen projection"]
     },
     {
       "name": "lobby-screen-presentation-kit",
@@ -172,40 +181,64 @@
       "services": ["run session id", "monotonic session epoch", "room and game correlation", "stable fingerprint"]
     },
     {
-      "name": "run-exit-command-kit",
-      "services": ["request id", "actor", "role", "room", "game", "epoch", "desired destination", "reason"]
-    },
-    {
       "name": "run-exit-authority-kit",
-      "services": ["host-only multiplayer transition", "solo authority", "phase validation", "idempotency", "typed result"]
-    },
-    {
-      "name": "session-phase-transaction-kit",
-      "services": ["active-to-ending", "active-to-lobby", "ending-to-lobby", "room and UI atomic commit", "rollback"]
-    },
-    {
-      "name": "session-state-publication-kit",
-      "services": ["authoritative lifecycle broadcast", "lobby reset", "epoch publication", "peer convergence"]
-    },
-    {
-      "name": "runtime-teardown-result-kit",
-      "services": ["resource ledger", "exactly-once disposal", "no-change replay", "teardown fingerprint"]
+      "services": ["typed command/result", "host multiplayer authority", "solo authority", "phase validation", "idempotency"]
     },
     {
       "name": "session-message-admission-kit",
       "services": ["protocol version", "room", "game", "epoch", "sender", "phase", "stale-message rejection"]
     },
     {
-      "name": "session-lifecycle-ledger-kit",
-      "services": ["bounded command rows", "bounded result rows", "phase pairs", "epoch pairs", "teardown rows"]
+      "name": "runtime-teardown-result-kit",
+      "services": ["resource ledger", "exactly-once disposal", "no-change replay", "teardown fingerprint"]
     },
     {
-      "name": "session-lifecycle-debug-projection-kit",
-      "services": ["current phase", "session epoch", "pending exit", "last result", "stale counts", "teardown result", "JSON-safe export"]
+      "name": "pause-command-kit",
+      "services": ["command id", "request id", "actor and role", "room/game/epoch", "desired state", "scope", "reason"]
     },
     {
-      "name": "session-lifecycle-fixture-kit",
-      "services": ["DOM-free replay", "solo restart", "host/client convergence", "transport preserve/destroy", "exact teardown", "stale message rows"]
+      "name": "pause-authority-policy-kit",
+      "services": ["solo policy", "host-global policy", "client-local overlay policy", "client global request policy", "connection policy"]
+    },
+    {
+      "name": "pause-transition-result-kit",
+      "services": ["accepted/rejected/no-change", "stable reason", "previous/next state", "pause revision", "authority source"]
+    },
+    {
+      "name": "simulation-admission-kit",
+      "services": ["movement admission", "interaction admission", "ooze admission", "client send admission", "host remote-command admission"]
+    },
+    {
+      "name": "input-suspension-kit",
+      "services": ["clear movement flags", "clear interact", "clear look deltas", "suspend gameplay input", "neutral resume"]
+    },
+    {
+      "name": "pointer-lock-pause-adapter-kit",
+      "services": ["unexpected loss intent", "expected release observation", "blur deduplication", "capture result"]
+    },
+    {
+      "name": "pause-publication-policy-kit",
+      "services": ["global pause publication", "global resume publication", "paused heartbeat", "active mutation suppression"]
+    },
+    {
+      "name": "pause-projection-transaction-kit",
+      "services": ["UI pause", "screen", "game screen", "overlay", "readiness", "input suspension", "replicated state", "atomic commit"]
+    },
+    {
+      "name": "pause-convergence-ledger-kit",
+      "services": ["command rows", "result rows", "peer acknowledgement", "pause revision", "projection parity", "stale and duplicate counts"]
+    },
+    {
+      "name": "pause-debug-projection-kit",
+      "services": ["current policy", "authority source", "pause revision", "last result", "simulation admission", "input suspension", "JSON-safe export"]
+    },
+    {
+      "name": "pause-resume-fixture-kit",
+      "services": ["DOM-free replay", "solo/host/client matrices", "remote-command admission", "input clearing", "frame parity", "JSON-safe assertions"]
+    },
+    {
+      "name": "legacy-local-pause-compatibility-kit",
+      "services": ["adapt current uiStore calls", "preserve menu presentation", "route legacy callbacks through pause authority"]
     },
     {
       "name": "lobby-readiness-command-kit",
@@ -224,7 +257,7 @@
       "services": ["request ids", "pending ledger", "terminal acknowledgements", "no-publish results"]
     }
   ],
-  "currentBlocker": "GameCanvas cleans up render resources when it unmounts, but GameShell.returnToLobby is only a local UI change. Room phase and authoritative snapshot remain active or ending, transport stays connected without an authoritative lifecycle publication, solo routes to LOBBY_CLIENT, and active messages have no session epoch to prevent old traffic from entering a later run.",
+  "currentBlocker": "Run exit and session epoch remain the current implementation gate. The newly documented dependent blocker is that pause is only local UI state: host remote-command consumption continues while paused, client pause is overwritten by normal SYNC, replicated gameState stays playing, and input/interaction state is not atomically suspended.",
   "validation": {
     "runtimeSourceChanged": false,
     "branchCreated": false,
@@ -235,6 +268,7 @@
     "npmRunHarnessHorrorCorridor": "not-run",
     "npmRunValidateLivePlayerDev": "not-run",
     "browserSmoke": "not-run",
-    "sessionLifecycleFixture": "not-run; script does not exist"
+    "sessionLifecycleFixture": "not-run; script does not exist",
+    "pauseConvergenceFixture": "not-run; script does not exist"
   }
 }
