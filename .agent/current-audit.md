@@ -11,8 +11,8 @@ status: host-network-cadence-input-simulation-publication-authority-audited
 runtime source changed: no
 branch: main
 root .agent state: refreshed
-central ledger sync: pending current-run synchronization
-central change log: pending current-run synchronization
+central ledger sync: complete
+central change log: internal-change-log/2026-07-11T16-38-10-04-00-horror-corridor-host-network-cadence-authority.md
 ```
 
 ## Summary
@@ -41,6 +41,7 @@ The retained active-run disconnect finding remains unresolved: connection-close 
 - [x] Add timestamped architecture and system audits.
 - [x] Refresh root `.agent` state.
 - [x] Push only to `main` with no branch or pull request.
+- [x] Synchronize the central ledger and internal change log on `main`.
 - [ ] Runtime implementation and executable fixtures remain future work.
 
 ## Product interaction loop
