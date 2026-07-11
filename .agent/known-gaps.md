@@ -1,93 +1,95 @@
 # HorrorCorridor Known Gaps
 
-**Updated:** `2026-07-11T11-39-11-04-00`
+**Updated:** `2026-07-11T13-20-45-04-00`
 
 ## Queue-head identity gaps
 
 - Lobby members do not yet distinguish every real peer, gameplay player and reserved slot through one canonical binding.
 - Transport connection identity and protocol sender identity are not fully converged.
 - Room, roster, run-session, epoch, request and sequence admission remain incomplete.
+- Terminal outcome work depends on those identities and must not create a parallel authority.
 
-## Lobby start transaction gaps
+## Lobby start and run identity gaps
 
-- The lobby primary action is always enabled.
-- Host start does not require connected transport state.
-- Host start does not enforce an all-required-members-ready policy.
-- Client primary action is labeled `Enter run` but toggles readiness.
-- There is no typed start command, command ID or semantic start result.
-- Start has no in-progress lock or cancellation policy.
-- Room and roster revisions are not captured or sealed.
-- The roster has no start-time fingerprint.
-- Loading yields through frames and timers while roster and connection stores remain mutable.
-- `startPlay()` does not revalidate role, room, transport, roster or readiness after loading.
-- Bootstrap uses callback-captured `room` and `lobbyPlayers` values that can be stale.
-- Reserved or disconnected rows can become gameplay players unless an earlier audit gate excludes them.
-- The host commits active room, snapshot, UI and readiness before network publication.
-- Host broadcast recipient counts are returned but ignored.
-- START_GAME and initial SYNC do not share a mandatory start transaction ID.
-- Start messages carry no run-session ID or session epoch.
-- START_GAME alone leaves a client in a lobby/active-room split state.
-- SYNC alone can enter PLAYING without correlated START_GAME admission.
-- Clients do not acknowledge accepted or rejected start commits.
-- The host has no retry, timeout, quorum or partial-start policy.
-- Duplicate and conflicting start payloads have no explicit result policy.
-- Late prior-run start messages cannot be rejected by epoch.
+- Host start does not seal one immutable roster revision and fingerprint.
+- Loading can complete from stale callback-captured room and roster values.
+- START_GAME and SYNC do not share a mandatory transaction identity.
+- Run-session ID, session epoch, per-peer acknowledgement and first-frame proof are absent.
+- Run exit does not commit one epoch transition before old messages and resources retire.
 
-## Render and runtime consequences
+## Snapshot admission gaps
 
-- Host `GameCanvas` can mount before any client publication succeeds.
-- A client can mount from an uncorrelated SYNC.
-- The first gameplay frame has no start transaction, run session, epoch or roster fingerprint.
-- Runtime readiness can be marked true before start publication or provider proof.
-- Debug output cannot prove which start transaction produced a frame.
+- Snapshot acceptance lacks authoritative sender, room, run, epoch, sequence and revision admission.
+- Duplicate, stale, conflicting and reordered snapshots can mutate stores without typed results.
+- Older snapshots can rewind projected gameplay or terminal state.
+- Snapshot acceptance is not correlated with one projection and rendered-frame receipt.
 
-## Existing readiness gaps
+## Terminal outcome gaps
 
-- `RuntimeReadiness` remains four unconditional booleans.
-- Readiness has no session ID, runtime generation, revision, provider identity or resource proof.
-- Shell and inbound SYNC can mark providers ready before initialization.
-- `resetRuntime()` can be followed by a late cleanup patch from an old mount.
-- Cleanup can report networking ready after transport destruction or in solo mode.
+- The executable has an ordered-sequence victory predicate but no defeat predicate.
+- `GameScreenState`, `UiCompletionState` and `CompleteScreen` support `failure`, but gameplay cannot produce it.
+- Ooze state spawns, decays, spaces and caps trail entries but never evaluates a failure threshold.
+- No versioned product policy defines what defeat means.
+- `GameShell` routes an inbound `failure` snapshot through its generic fallback to `PLAYING`.
+- Victory has no terminal outcome ID, revision, result or proof fingerprint.
+- Victory is not monotonic: later incomplete sequence evaluation can change it back to playing and return the room to active.
+- No actor, run-session, epoch, snapshot revision or command result is admitted before outcome mutation.
+- Victory and failure do not share one transaction or publication contract.
+- Terminal publication has no per-peer delivery result, retry policy or acknowledgement.
+- Late playing snapshots are not quarantined after a terminal commit.
+- Restart and title exit do not consume a typed committed terminal result.
+
+## Render and presentation gaps
+
+- GameCanvas remains mounted on `COMPLETED`, but debug frames contain no terminal outcome ID or revision.
+- The first visible completion frame has no run-session or session-epoch correlation.
+- Failure cannot reach authoritative completion projection through the current SYNC route.
+- CompleteScreen is a projection surface but currently appears to be the only failure-capable user-facing boundary.
+- No frame receipt proves that world, HUD and completion overlay correspond to the same terminal result.
+
+## Runtime readiness gaps
+
+- `RuntimeReadiness` remains four mutable booleans without provider leases or revision proof.
+- Shell and inbound SYNC can mark providers ready before resource and first-frame evidence exists.
+- Old-generation setup or cleanup can still write readiness after a reset or exit.
 
 ## Dependent authority gaps
 
-- Run exit does not commit one session epoch transition.
-- Snapshot acceptance lacks duplicate, stale and conflict policy.
 - Remote movement lacks complete speed, collision and temporal validation.
 - Active clients do not reconcile predicted pose to host pose.
 - Pause and resume remain primarily local projection rather than replicated authority.
+- These systems must admit the current run/session/epoch and reject terminal or retired generations.
 
 ## Validation gap
 
 Current package commands do not prove:
 
 ```txt
-start admission policy
-sealed roster parity
-roster mutation during loading
-connection loss during loading
-correlated START_GAME/SYNC handling
-partial delivery and reorder handling
-per-peer acknowledgement
-retry and dedupe
-stale prior-epoch rejection
-host publication rollback or degraded policy
-first-frame start correlation
-provider-owned readiness and generation fencing
+victory policy determinism
+failure policy execution
+simultaneous victory/failure precedence
+terminal monotonicity
+failure client projection
+late playing snapshot rejection
+duplicate or conflicting outcome handling
+loss/reorder/retry convergence
+per-peer terminal acknowledgement
+first terminal-frame correlation
+restart to a new admitted run epoch
+title exit idempotency
 ```
 
 ## Required guarantees
 
 ```txt
-one admitted host actor starts
-one sealed roster feeds bootstrap
-loading-time changes invalidate stale plans
-one transaction binds all initial messages
-one run session and epoch bind room snapshot runtime and frame
-partial messages do not commit gameplay
-host records per-peer publication and acknowledgement
-clients commit exactly once
-retries are idempotent
-old epochs are rejected before mutation
-first frame proves the accepted start identity
+one versioned policy defines all terminal predicates
+one admitted authority evaluates outcomes
+one run session and epoch accepts at most one terminal result
+victory and failure share one typed contract
+failure projects explicitly to COMPLETED
+terminal state cannot return to active
+late snapshots are rejected before mutation
+clients commit and acknowledge exactly once
+first terminal frame proves the accepted result
+restart and exit consume the committed terminal result
 ```
