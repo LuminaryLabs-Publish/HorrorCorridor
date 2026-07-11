@@ -1,21 +1,22 @@
 # HorrorCorridor Validation
 
-**Updated:** `2026-07-11T05-28-29-04-00`
+**Updated:** `2026-07-11T07-30-40-04-00`
 
 ## Plan ledger
 
-**Goal:** distinguish source inspection from executable roster proof and record the exact validation boundary for this documentation-only pass.
+**Goal:** separate source-backed actor-admission findings from executable multiplayer proof and record the exact validation boundary.
 
 - [x] Compare the full Publish inventory with the central ledger.
 - [x] Exclude `TheCavalryOfRome`.
 - [x] Select only `HorrorCorridor`.
-- [x] Read the current root `.agent` state.
-- [x] Read `GameShell`, `LobbyScreen`, `sessionStore`, shared types and bootstrap source.
-- [x] Trace Add guest, peer open/close, ready mutation and bootstrap consumption.
+- [x] Read the current root `.agent` state and prior network audits.
+- [x] Read `GameShell`, `GameCanvas`, peer events, host transport, protocol types, serializers, message constructors and network rules.
+- [x] Trace transport provenance into host dispatch.
+- [x] Trace claimed player identity into movement and interaction mutation.
+- [x] Trace accepted mutation into authoritative publication and render projection.
 - [x] Inventory active domains, implemented kits and services.
-- [x] Add timestamped roster identity and peer-binding audits.
+- [x] Add timestamped actor-identity audits.
 - [x] Refresh required root `.agent` documents.
-- [x] Update the central ledger and internal change log.
 - [x] Change no runtime source, script, dependency or deployment configuration.
 - [x] Create no branch or pull request.
 - [x] Push documentation directly to `main`.
@@ -32,23 +33,25 @@ deployment changed: no
 branch created: no
 pull request created: no
 repo-local docs pushed to main: yes
-central ledger synchronized on main: yes
-central internal change log added on main: yes
+central ledger synchronization: pending current-run synchronization
+central internal change log: pending current-run synchronization
 ```
 
 ## Source inspection performed
 
 ```txt
-full Publish repository inventory reviewed: yes
+full Publish inventory reviewed: yes
 central ledger coverage compared: yes
 nine eligible repositories tracked with root .agent: yes
 TheCavalryOfRome excluded: yes
 selected only HorrorCorridor: yes
-placeholder creation traced: yes
-peer open and close traced: yes
-roster mutation traced: yes
-bootstrap player mapping traced: yes
-world/minimap projection implication documented: yes
+transport remotePeerId and connectionId traced: yes
+envelope senderId and roomId traced: yes
+payload playerId and sequence traced: yes
+structural decoder traced: yes
+host dispatch traced: yes
+movement and interaction mutation traced: yes
+snapshot and render projection traced: yes
 ```
 
 ## Existing commands
@@ -70,33 +73,34 @@ These commands were not run because runtime source was not changed and the conne
 
 ```txt
 fixture:lobby-roster-identity
-fixture:placeholder-admission
-fixture:peer-slot-claim
-fixture:roster-protocol-ordering
-fixture:lobby-ready-authority
-fixture:lobby-start-transaction
-fixture:start-message-ordering
-fixture:start-rollback
-browser host/client roster smoke
-browser host/client correlated-start smoke
+fixture:transport-actor-binding
+fixture:sender-payload-consistency
+fixture:connection-sequence-admission
+fixture:request-deduplication
+fixture:disconnect-retirement
+fixture:multi-peer-impersonation
+browser host-plus-two-clients actor smoke
 ```
 
-## Required roster matrix
+## Required actor matrix
 
 ```txt
-host only seals one admitted member
-host plus reserved slot still seals one admitted member
-reserved slot cannot report connected or ready
-real peer join creates one peer member
-peer slot claim leaves no duplicate row
-same peer join replay is idempotent
-duplicate player binding rejects
-peer close changes exactly the bound member
-stale revision rejects without mutation
-revision gap requests resynchronization
-sealed roster excludes reserved slots
-bootstrap player count equals admitted real-member count
-world, minimap, snapshot and debug share one roster fingerprint
+bound peer updates own player -> accepted once
+bound peer interacts as own player -> accepted or domain no-change
+sender mismatch -> rejected without mutation
+payload player mismatch -> rejected without mutation
+sender and payload disagree -> rejected
+unknown connection -> rejected
+retired connection -> rejected
+wrong room -> rejected
+wrong session or epoch -> rejected
+duplicate request -> duplicate without mutation
+stale sequence -> rejected
+sequence gap -> stable policy result
+duplicate active connection -> conflict result
+rejected command advances no tick
+rejected command publishes no gameplay SYNC
+accepted command correlates to world minimap HUD and debug projection
 ```
 
 ## Runtime proof status
@@ -107,10 +111,11 @@ npm run lint: not run
 npm run smoke:protokits: not run
 npm run harness:horror-corridor: not run
 browser smoke: not run
-roster identity fixture: unavailable
-placeholder admission fixture: unavailable
-peer-slot claim fixture: unavailable
-roster protocol ordering fixture: unavailable
+transport actor fixture: unavailable
+sender/payload fixture: unavailable
+sequence fixture: unavailable
+request dedupe fixture: unavailable
+multi-peer impersonation fixture: unavailable
 ```
 
-No roster, network, gameplay or rendering correctness claim is made by this documentation pass.
+No transport identity, actor admission, network safety, gameplay or rendering correctness claim is made by this documentation pass.
