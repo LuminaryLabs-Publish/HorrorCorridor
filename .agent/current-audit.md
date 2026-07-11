@@ -12,7 +12,7 @@ runtime source changed: no
 branch: main
 root .agent state: refreshed
 central ledger sync: complete
-central change log: internal-change-log/2026-07-10T23-30-13-04-00-horror-corridor-pause-resume-authority.md
+central change log: internal-change-log/2026-07-10T23-30-13-04-00-horrorcorridor-audit.md
 ```
 
 ## Selection
