@@ -2,7 +2,7 @@
 
 **Repository:** `LuminaryLabs-Publish/HorrorCorridor`
 
-**Updated:** `2026-07-10T21-39-22-04-00`
+**Updated:** `2026-07-10T23-30-13-04-00`
 
 ## Current safe ledge
 
@@ -10,20 +10,28 @@
 HorrorCorridor Run Exit Authority + Session Epoch Re-entry Fixture Gate
 ```
 
+## Newly documented dependent gate
+
+```txt
+HorrorCorridor Pause/Resume Authority + Input Suspension Convergence Fixture Gate
+```
+
+Pause authority remains behind the current run-exit/session-identity gate so it can reuse one command envelope, one monotonic session epoch, one terminal-result model, and one stale-message admission policy.
+
 ## Selection result
 
 The complete accessible `LuminaryLabs-Publish` inventory was compared against the central repo ledger and root `.agent` state. All nine eligible non-Cavalry repositories were tracked and documented. `HorrorCorridor` had the oldest eligible central review timestamp and was the only product repository changed. `TheCavalryOfRome` remained excluded.
 
 ```txt
-HorrorCorridor       selected / 2026-07-10T20-08-46-04-00
-PhantomCommand       tracked  / 2026-07-10T20-19-35-04-00
-ZombieOrchard        tracked  / 2026-07-10T20-30-23-04-00
-TheUnmappedHouse     tracked  / 2026-07-10T20-38-24-04-00
-MyCozyIsland         tracked  / 2026-07-10T20-48-55-04-00
-PrehistoricRush      tracked  / 2026-07-10T21-00-16-04-00
-AetherVale           tracked  / 2026-07-10T21-08-52-04-00
-IntoTheMeadow        tracked  / 2026-07-10T21-19-36-04-00
-TheOpenAbove         tracked  / 2026-07-10T21-31-01-04-00
+HorrorCorridor       selected / 2026-07-10T21-39-22-04-00
+PhantomCommand       tracked  / 2026-07-10T21-49-26-04-00
+ZombieOrchard        tracked  / 2026-07-10T22-11-24-04-00
+TheUnmappedHouse     tracked  / 2026-07-10T22-21-17-04-00
+MyCozyIsland         tracked  / 2026-07-10T22-29-21-04-00
+PrehistoricRush      tracked  / 2026-07-10T22-42-00-04-00
+AetherVale           tracked  / 2026-07-10T22-50-02-04-00
+IntoTheMeadow        tracked  / 2026-07-10T22-58-36-04-00
+TheOpenAbove         tracked  / 2026-07-10T23-20-41-04-00
 TheCavalryOfRome     excluded by rule
 ```
 
@@ -35,50 +43,53 @@ TheCavalryOfRome     excluded by rule
 .agent/known-gaps.md
 .agent/validation.md
 .agent/kit-registry.json
-.agent/trackers/2026-07-10T21-39-22-04-00/project-breakdown.md
-.agent/turn-ledger/2026-07-10T21-39-22-04-00.md
-.agent/architecture-audit/2026-07-10T21-39-22-04-00-run-exit-session-epoch-dsk-map.md
-.agent/render-audit/2026-07-10T21-39-22-04-00-runtime-teardown-readback-gap.md
-.agent/gameplay-audit/2026-07-10T21-39-22-04-00-active-ending-lobby-reentry-loop.md
-.agent/interaction-audit/2026-07-10T21-39-22-04-00-return-command-admission-map.md
-.agent/session-lifecycle-audit/2026-07-10T21-39-22-04-00-run-exit-reentry-authority-contract.md
-.agent/deploy-audit/2026-07-10T21-39-22-04-00-session-lifecycle-fixture-gate.md
+.agent/trackers/2026-07-10T23-30-13-04-00/project-breakdown.md
+.agent/turn-ledger/2026-07-10T23-30-13-04-00.md
+.agent/architecture-audit/2026-07-10T23-30-13-04-00-pause-resume-authority-dsk-map.md
+.agent/render-audit/2026-07-10T23-30-13-04-00-paused-frame-projection-convergence-gap.md
+.agent/gameplay-audit/2026-07-10T23-30-13-04-00-local-pause-host-simulation-loop.md
+.agent/interaction-audit/2026-07-10T23-30-13-04-00-pause-command-input-suspension-map.md
+.agent/pause-authority-audit/2026-07-10T23-30-13-04-00-host-client-pause-resume-contract.md
+.agent/deploy-audit/2026-07-10T23-30-13-04-00-pause-convergence-fixture-gate.md
 ```
 
 ## Current interaction loop
 
 ```txt
-solo, host, or client enters active corridor
-  -> GameCanvas owns input, animation, simulation, networking consumer, world, post, and minimap
-  -> pause or victory exposes Return to lobby / Restart
-  -> GameShell.returnToLobby changes only local UI and readiness flags
-  -> GameCanvas unmount cleanup stops RAF, listeners, world, composer, and renderer
-  -> room phase remains active or ending
-  -> authoritative snapshot remains attached to runtimeStore
-  -> no host-owned exit command or lobby-reset publication occurs
-  -> remote peers can remain active and later SYNC can force a client back to PLAYING
-  -> solo is routed to LOBBY_CLIENT, where the primary action toggles readiness instead of starting a new solo run
+solo, host, or client enters PLAYING
+  -> GameCanvas installs global input, pointer-lock, animation, render, and transport handlers
+  -> Escape or pointer-lock loss changes local uiStore pause/screen state only
+  -> local animation branch stops simulation when screen is not PLAYING
+  -> replicated gameState remains playing and room phase remains active
+  -> host still consumes remote PLAYER_UPDATE and TRY_INTERACT while its own UI is paused
+  -> host publishes active SYNC rows
+  -> client GameShell maps snapshot.gameState back to PLAYING
+  -> client pause can be erased by the next SYNC without a resume command
+  -> global key listeners and input state remain partially live
 ```
 
 ## Main finding
 
-The render teardown path exists, but the **run lifecycle has no authority boundary**.
+Pause is a presentation flag rather than an authoritative gameplay/network transaction.
 
 ```txt
-returnToLobby is a local screen change, not a session transition
-room phases idle/lobby/starting/active/ending/closed have no authoritative exit reducer
-protocol has START_GAME and SYNC but no run-exit or session-reset command/result
-active messages carry roomId but no run/session epoch
-old PLAYER_UPDATE, TRY_INTERACT, or SYNC traffic can cross a re-entry boundary
-solo return-to-lobby routes to the client lobby and cannot cleanly restart
-runtime cleanup has no bounded result ledger proving exactly-once teardown
+host pause does not stop remote command consumption
+client pause is overwritten by normal authoritative SYNC
+replicated gameState never enters paused
+room phase remains active
+interaction checks replicated gameState and can still run while local UI is paused
+movement/look/input flags are not atomically cleared
+pointer-lock loss is not correlated with a terminal pause result
+resume is a local screen change with no authority or convergence proof
 ```
 
-The next source pass should keep current rendering and gameplay intact while adding host-owned run exit, a monotonic session epoch, stale-message rejection, deterministic store reset, and a DOM-free exit/re-entry fixture.
+## Ordered safe ledges
 
-## Dependency note
-
-Lobby readiness/start admission remains the required entry gate. Run exit authority is the next independent lifecycle boundary and should consume the sealed roster/session identity created by that work rather than inventing a second authority model.
+```txt
+1. Lobby Readiness Authority + Start Admission Fixture Gate
+2. Run Exit Authority + Session Epoch Re-entry Fixture Gate
+3. Pause/Resume Authority + Input Suspension Convergence Fixture Gate
+```
 
 ## Validation state
 
