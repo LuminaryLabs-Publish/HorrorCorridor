@@ -11,7 +11,8 @@ status: lobby-roster-identity-peer-binding-planned
 runtime source changed: no
 branch: main
 root .agent state: refreshed
-central ledger sync: pending final synchronization
+central ledger sync: complete
+central change log: internal-change-log/2026-07-11T05-28-29-04-00-horror-corridor-roster-identity-peer-binding.md
 ```
 
 ## Product and interaction loop
@@ -25,8 +26,8 @@ title
   -> peer open/close mutates roster by exact peer id
   -> start passes the live roster into deterministic bootstrap
   -> every roster row becomes a gameplay player
-  -> START_GAME and initial SYNC are published separately
-  -> first-person movement, cube interaction, anomaly objective and ooze pressure
+  -> START_GAME and initial SYNC publish separately
+  -> movement, cube interaction, anomaly objective and ooze pressure
   -> world, minimap, HUD and debug projection
 ```
 
@@ -36,139 +37,102 @@ title
 Add guest
   -> makePlayer(random guest-player id, non-host, unready)
   -> default connectionState=connected
-  -> upsert into room.players and lobbyPlayers
   -> no peer binding or reserved-slot marker
 
 peer connection open
-  -> search by remotePeerId
-  -> placeholder id does not match
-  -> create second guest row for the real peer
+  -> exact remotePeerId lookup misses the placeholder
+  -> creates a second guest row for the real peer
 
 start run
   -> createInitialGameState(players: lobbyPlayers)
-  -> sourcePlayers.map creates one active player per row
-  -> placeholder becomes a replicated avatar and minimap marker
+  -> every row becomes an active player
+  -> placeholder reaches snapshot, avatar and minimap projection
 ```
 
 ## Domains in use
 
-- application shell and screen routing
-- UI overlay, pause, completion and settings projection
-- session mode, peer identity, room, roster, readiness and connection state
-- lobby member identity, peer binding and reserved-slot policy
-- lobby presentation, ready controls and start controls
-- PeerJS host/client transport and BroadcastChannel bridge
-- peer event bus and connection-status projection
-- versioned protocol envelopes and message construction
-- roster command admission, revision and fingerprint authority
-- lobby start transaction and START_GAME/SYNC correlation
-- seeded maze, cube, anomaly, room, roster and player bootstrap
-- room phase and replicated app/game state
-- pointer lock, keyboard, mouse, blur and input lifecycle
-- local movement integration, maze collision, camera and walk shake
-- client prediction and player-update publication
-- host remote-player update consumption
-- interaction, cube carry, placement, removal, rollback and victory
-- ooze cadence, decay, spawn, spacing and capacity
-- authoritative snapshot construction and publication
-- client snapshot replay and local pose projection
-- Three.js scene, terrain, maze, props, lights, cubes, players, ooze and dressing
-- animation loop, resize, canvas and frame ownership
-- post-processing composer and bloom
-- minimap and HUD projection
-- runtime debug frames and events
-- resource disposal and component cleanup
-- build, lint, harness, visual, object-kit and live-player validation
+```txt
+application shell and screen routing
+UI overlay, pause, completion and settings projection
+session mode, peer identity, room, roster, readiness and connection state
+lobby member identity, peer binding and reserved-slot policy
+lobby presentation, ready controls and start controls
+PeerJS host/client transport and BroadcastChannel bridge
+peer event bus and connection-status projection
+versioned protocol envelopes and message construction
+roster command admission, revision and fingerprint authority
+lobby start transaction and START_GAME/SYNC correlation
+seeded maze, cube, anomaly, room, roster and player bootstrap
+room phase and replicated app/game state
+pointer lock, keyboard, mouse, blur and input lifecycle
+movement, collision, camera, client prediction and player updates
+cube interaction, ordered anomaly completion and ooze pressure
+authoritative snapshot publication and client replay
+Three.js world, player avatars, minimap, HUD and bloom
+runtime debug, resource cleanup, package validation and deployment
+```
 
 ## Implemented kits and services
 
-- **corridor-application-shell-kit**: screen routing, menu orchestration, solo/host/client entry, pause/resume, completion and exit callbacks.
-- **corridor-session-domain-kit**: session mode, peer identity, room, roster, connection status and session reset.
-- **runtime-store-snapshot-kit**: authoritative snapshot, local pose, view angles, input flags, readiness and runtime reset.
-- **ui-pause-projection-kit**: local pause state, pause reason, pause overlay and PLAYING/PAUSED projection.
-- **lobby-screen-presentation-kit**: room metadata, roster projection, ready badges, primary/secondary controls and connection status.
-- **peer-host-transport-kit**: host peer, connection registry, broadcast, targeted send, disconnect and destroy.
-- **peer-client-transport-kit**: host connection, send, local bridge, status, disconnect and destroy.
-- **peer-event-bus-kit**: typed transport events, subscribe, unsubscribe and clear.
+- **corridor-application-shell-kit**: routing, run entry, pause, completion and exits.
+- **corridor-session-domain-kit**: session mode, peer identity, room, roster, status and reset.
+- **runtime-store-snapshot-kit**: snapshot, local pose, input/readiness and reset.
+- **ui-pause-projection-kit**: pause state and overlay projection.
+- **lobby-screen-presentation-kit**: room metadata, roster rows, ready badges and actions.
+- **peer-host-transport-kit**: host peer, connections, broadcast, send and destroy.
+- **peer-client-transport-kit**: host connection, send, bridge, status and destroy.
+- **peer-event-bus-kit**: transport events, subscriptions and cleanup.
 - **protocol-message-construction-kit**: versioned START_GAME, PLAYER_UPDATE, TRY_INTERACT, SYNC and LOBBY_EVENT envelopes.
-- **maze-snapshot-bootstrap-kit**: deterministic seed, maze, cubes, anomaly, active room, players and initial snapshot.
-- **first-person-input-kit**: keyboard state, pointer lock, look accumulation and input snapshots.
-- **movement-collision-camera-kit**: movement integration, local maze collision, eye position, walk shake and camera projection.
-- **network-player-update-kit**: client update send, host update consume, pose projection and network cadence.
-- **corridor-interaction-domain-kit**: pickup, drop, place, remove and held-cube synchronization.
-- **ordered-anomaly-sequence-kit**: ordered validation, rollback, ending phase and victory.
-- **ooze-trail-domain-kit**: cadence, decay, spawn, spacing guard and capacity guard.
-- **corridor-authoritative-publication-kit**: snapshot tick, full sync, broadcast, publication reason and cadence accounting.
-- **corridor-animation-loop-kit**: RAF start/stop, delta calculation and idempotent running state.
-- **corridor-render-world-kit**: terrain, maze, cubes, players, anomaly, ooze, props, lights, attach, update and dispose.
-- **corridor-post-processing-kit**: composer, bloom, output, resize, render and dispose.
-- **corridor-minimap-kit**: maze projection, player markers, cube markers and anomaly markers.
-- **runtime-debug-frame-kit**: bounded frames/events, overlay preferences and JSON-safe browser export.
-- **runtime-resource-cleanup-kit**: RAF stop, transport unsubscribe, observer disconnect, listener removal, world/composer/renderer disposal and canvas removal.
-- **package-validation-kit**: build, lint, ProtoKit smoke, harness, visual match, object-kit review and live-player validation.
+- **maze-snapshot-bootstrap-kit**: deterministic maze, players, cubes, anomaly, room and snapshot.
+- **first-person-input-kit**: keyboard, pointer lock, look and input snapshots.
+- **movement-collision-camera-kit**: movement, collision, eye position, shake and camera.
+- **network-player-update-kit**: client send, host consume, pose projection and cadence.
+- **corridor-interaction-domain-kit**: pickup, drop, place, remove and held-cube sync.
+- **ordered-anomaly-sequence-kit**: ordered validation, rollback and victory.
+- **ooze-trail-domain-kit**: cadence, decay, spawn, spacing and capacity.
+- **corridor-authoritative-publication-kit**: snapshot ticks, full sync and reasons.
+- **corridor-animation-loop-kit**: RAF lifecycle and delta calculation.
+- **corridor-render-world-kit**: world, player avatars, updates and disposal.
+- **corridor-post-processing-kit**: composer, bloom, output, resize and disposal.
+- **corridor-minimap-kit**: maze, player, cube and anomaly markers.
+- **runtime-debug-frame-kit**: bounded frames/events and JSON-safe export.
+- **runtime-resource-cleanup-kit**: transport, listeners, world, renderer and canvas cleanup.
+- **package-validation-kit**: build, lint, ProtoKit, harness, visual and live-player checks.
 
 ## Source findings
 
 ```txt
-LobbyPlayer has id, name, isHost, ready and connectionState only
-no member kind, peerId, slotId, placeholder flag or bootstrap admission exists
+LobbyPlayer has no member kind, peerId, slotId or bootstrap-admission field
 makePlayer defaults connectionState to connected
-addGuestPlaceholder creates random guest-player-* rows with no transport owner
-peer-open finds members only by exact remotePeerId
-real peer arrival creates a new row instead of claiming a placeholder
-peer-close removes only the exact remotePeerId row
-sessionStore upserts and removes by player id with no revision or result
+Add guest creates guest-player-* rows with no transport owner
+real peer arrival creates another row instead of claiming a placeholder
+peer close removes only the exact real-peer row
+sessionStore has no roster revision, fingerprint or mutation result
 startPlay passes mutable lobbyPlayers directly to bootstrap
-createInitialGameState maps every source player into an active gameplay player
-world, minimap, snapshot and diagnostics cannot distinguish placeholder players
+bootstrap maps every row into an active gameplay player
+render consumers cannot identify placeholder players
 ```
 
 ## Main finding
 
-The queue-head defect is not only readiness or start correlation. The roster being sealed is itself semantically ambiguous. A connected-looking placeholder can survive beside a real peer and enter gameplay as an unowned player identity.
-
-A start transaction must not be implemented against this roster shape. Member identity and peer binding need their own authority boundary first.
-
-## Required authority boundary
-
-```txt
-LobbyMemberRecord
-  memberId
-  memberKind: host-local | peer | reserved-slot
-  peerId
-  playerId
-  slotId
-  ready
-  connectionState
-  admittedForBootstrap
-  joinedRevision
-  lastChangedRevision
-
-RosterAuthority
-  validates host and peer mutations
-  claims/releases reserved slots
-  enforces unique peer and player bindings
-  increments one monotonic revision
-  computes one stable fingerprint
-  seals admitted real members for bootstrap
-  returns typed accepted/rejected/no-change results
-  publishes bounded detached observations
-```
+The roster being sealed is semantically ambiguous. A connected-looking placeholder can survive beside a real peer and enter gameplay as an unowned player identity. Member identity and peer binding therefore need an authority boundary before the existing lobby-start transaction gate.
 
 ## Candidate kits
 
-- **lobby-member-kind-kit**: canonical host-local, peer and reserved-slot records.
-- **lobby-peer-binding-kit**: unique peer-to-member and peer-to-player binding.
-- **lobby-slot-reservation-kit**: create, release and inspect lobby-only reserved slots.
-- **lobby-member-admission-kit**: actor, room, connection and semantic admission.
-- **lobby-member-claim-kit**: atomic peer claim of one reserved slot.
-- **lobby-member-removal-kit**: disconnect, remove and release policy.
-- **lobby-roster-revision-kit**: monotonic semantic revision.
-- **lobby-roster-fingerprint-kit**: stable fingerprint of canonical ordered member records.
-- **bootstrap-roster-filter-kit**: immutable admitted roster and rejected-member results.
-- **lobby-roster-projection-kit**: detached lobby and debug observations.
-- **lobby-roster-authority-ledger-kit**: bounded command/result and revision rows.
-- **lobby-roster-fixture-kit**: placeholder, claim, duplicate, disconnect and bootstrap matrices.
+```txt
+lobby-member-kind-kit
+lobby-peer-binding-kit
+lobby-slot-reservation-kit
+lobby-member-admission-kit
+lobby-member-claim-kit
+lobby-member-removal-kit
+lobby-roster-revision-kit
+lobby-roster-fingerprint-kit
+bootstrap-roster-filter-kit
+lobby-roster-projection-kit
+lobby-roster-authority-ledger-kit
+lobby-roster-fixture-kit
+```
 
 ## Ordered safe ledges
 
