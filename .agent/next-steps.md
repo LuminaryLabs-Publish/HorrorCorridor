@@ -1,10 +1,10 @@
 # HorrorCorridor Next Steps
 
-**Updated:** `2026-07-11T13-20-45-04-00`
+**Updated:** `2026-07-11T15-01-33-04-00`
 
 ## Plan ledger
 
-**Goal:** finish canonical roster, actor, start, run-epoch and snapshot foundations, then implement one monotonic terminal-outcome authority before movement, pause or restart behavior depends on a completed run.
+**Goal:** finish canonical actor, run and snapshot foundations, then make every cube interaction commit one explicit observed target with a typed result before terminal, movement or pause behavior depends on it.
 
 ### Gate 1: roster identity and peer binding
 
@@ -27,17 +27,10 @@
 
 - [ ] Add `StartRunCommand` with command ID and observed revisions.
 - [ ] Validate host actor, transport role/status, lobby phase and readiness policy.
-- [ ] Disable conflicting lobby mutations while a start transaction is active.
 - [ ] Seal one immutable roster revision and fingerprint.
-- [ ] Exclude reserved slots and disconnected members from bootstrap.
 - [ ] Allocate `startTransactionId`, `runSessionId` and monotonic `sessionEpoch`.
-- [ ] Build a detached deterministic bootstrap plan.
-- [ ] Revalidate expected room and roster revisions after loading.
-- [ ] Commit local host state exactly once from the accepted plan.
-- [ ] Replace independent START_GAME/SYNC application with a complete correlation contract.
-- [ ] Record per-peer send results and require client acknowledgement.
-- [ ] Add bounded retry, timeout, duplicate and conflict handling.
-- [ ] Bind provider acquisition and first frame to the accepted start result.
+- [ ] Build and commit one deterministic bootstrap plan.
+- [ ] Correlate START_GAME, SYNC, per-peer acknowledgement and first frame.
 
 ### Gate 4: run exit and session epoch
 
@@ -53,49 +46,54 @@
 - [ ] Add one provider lease per simulation, rendering, networking and input capability.
 - [ ] Require concrete resource and first-frame proof before ready.
 - [ ] Reject old-generation setup and cleanup writes.
-- [ ] Add rollback, idempotent cleanup and strict-mode fixtures.
 
 ### Gate 5: snapshot acceptance authority
 
 - [ ] Add authoritative sender, room, run, epoch, sequence and revision admission.
 - [ ] Reject stale, duplicate and conflicting snapshots before store mutation.
-- [ ] Prevent older snapshots from rewinding terminal or progress state.
+- [ ] Prevent older snapshots from rewinding interaction, progress or terminal state.
 - [ ] Return typed snapshot-admission results.
 - [ ] Correlate accepted snapshots with projection and frame receipts.
 
-### Gate 5a: terminal outcome authority
+### Gate 5a: interaction target intent and claim authority
 
-- [ ] Select and version explicit victory and defeat predicates.
-- [ ] Add one deterministic `OutcomeEvaluationInput` built from an admitted snapshot/result.
-- [ ] Add host/solo authority, active-run, run-session and epoch admission.
-- [ ] Add `terminalOutcomeId` and monotonic `terminalRevision`.
-- [ ] Latch one accepted victory or failure per run epoch.
-- [ ] Reject a conflicting outcome without mutation.
-- [ ] Prevent terminal state from reverting to playing.
-- [ ] Make victory and failure update room phase, game state and snapshot coherently.
-- [ ] Replace generic failure-to-playing routing with explicit failure projection.
-- [ ] Publish terminal results with per-peer delivery rows.
-- [ ] Admit terminal results exactly once on each client.
-- [ ] Require client acknowledgement and first terminal-frame proof.
-- [ ] Bind restart and title exit to the committed terminal result.
-- [ ] Add a bounded terminal-outcome journal and debug projection.
+- [ ] Add `InteractionCommandId`, `actorId`, `runSessionId`, `sessionEpoch` and observed snapshot revision.
+- [ ] Require pickup commands to name one `cubeId` or explicitly declare deterministic nearest-target policy.
+- [ ] Require place and remove commands to name one `slotId`.
+- [ ] Add cube and slot claim revisions.
+- [ ] Preflight actor, phase, distance, ownership, target state and observed revision before mutation.
+- [ ] Reject stale or conflicting targets without substituting another cube or slot.
+- [ ] Commit cube, slot, ownership and sequence state atomically.
+- [ ] Return accepted, rejected, duplicate, stale, conflict and no-change results.
+- [ ] Cache the first result by command ID for idempotent retry.
+- [ ] Publish a snapshot correlated to the accepted interaction result.
+- [ ] Require client acknowledgement and first interaction-frame proof.
+- [ ] Add a bounded interaction journal and detached debug observation.
 
 ### Gate 5a fixture set
 
-- [ ] `fixture:terminal-victory`
-- [ ] `fixture:terminal-failure`
-- [ ] `fixture:terminal-policy-version`
-- [ ] `fixture:terminal-simultaneous-predicates`
-- [ ] `fixture:terminal-duplicate`
-- [ ] `fixture:terminal-conflict`
-- [ ] `fixture:terminal-late-playing-snapshot`
-- [ ] `fixture:terminal-stale-epoch`
-- [ ] `fixture:terminal-loss-reorder-retry`
-- [ ] `fixture:terminal-client-acknowledgement`
-- [ ] `fixture:terminal-first-frame`
-- [ ] `fixture:terminal-restart-handoff`
-- [ ] `fixture:terminal-title-exit-handoff`
-- [ ] browser multi-peer victory/failure convergence smoke.
+- [ ] `fixture:interaction-explicit-cube-target`
+- [ ] `fixture:interaction-explicit-slot-target`
+- [ ] `fixture:interaction-stale-cube-claim`
+- [ ] `fixture:interaction-stale-slot-claim`
+- [ ] `fixture:interaction-pickup-contention`
+- [ ] `fixture:interaction-place-contention`
+- [ ] `fixture:interaction-remove-contention`
+- [ ] `fixture:interaction-duplicate-idempotency`
+- [ ] `fixture:interaction-reorder`
+- [ ] `fixture:interaction-distance-rejection`
+- [ ] `fixture:interaction-ownership-conflict`
+- [ ] `fixture:interaction-result-snapshot-correlation`
+- [ ] `fixture:interaction-first-frame`
+- [ ] browser multi-peer cube/slot contention smoke.
+
+### Gate 5b: terminal outcome authority
+
+- [ ] Select and version explicit victory and defeat predicates.
+- [ ] Build one deterministic outcome input from admitted interaction and snapshot results.
+- [ ] Add terminal outcome ID, revision and monotonic latch.
+- [ ] Make victory and failure update room, game, publication and projection coherently.
+- [ ] Require per-peer acknowledgement and first terminal-frame proof.
 
 ### Gate 6: movement and reconciliation
 
@@ -109,50 +107,50 @@
 - [ ] Suspend simulation, input and publication atomically.
 - [ ] Require host/client pause-state convergence.
 
-## Recommended terminal DSKs
+## Recommended interaction DSKs
 
 ```txt
-terminal-outcome-policy-kit
-outcome-evaluation-input-kit
-victory-predicate-kit
-defeat-predicate-kit
-terminal-outcome-admission-kit
-terminal-outcome-latch-kit
-terminal-outcome-result-kit
-terminal-room-phase-kit
-terminal-publication-kit
-terminal-client-admission-kit
-terminal-ui-projection-kit
-terminal-frame-correlation-kit
-terminal-outcome-acknowledgement-kit
-terminal-outcome-journal-kit
-terminal-outcome-fixture-kit
+interaction-command-envelope-kit
+interaction-target-observation-kit
+cube-target-claim-kit
+anomaly-slot-claim-kit
+interaction-admission-kit
+interaction-preflight-kit
+interaction-transaction-kit
+interaction-result-kit
+interaction-idempotency-kit
+interaction-conflict-kit
+held-cube-ownership-revision-kit
+interaction-publication-kit
+interaction-client-acknowledgement-kit
+interaction-frame-correlation-kit
+interaction-journal-kit
+interaction-target-fixture-kit
 ```
 
-## Required terminal proof
+## Required interaction proof
 
 ```txt
-same policy input produces the same outcome fingerprint
-failure is executable and explicitly projected
-one run epoch accepts at most one terminal outcome
-terminal state cannot return to playing
-late playing snapshots are rejected
-victory and failure share one publication path
-clients converge under loss, reorder and duplicate delivery
-first terminal frame carries outcome, run and epoch identity
-restart allocates a new admitted run epoch
-exit retires the terminal run exactly once
+same explicit target and revision produce the same decision
+stale target rejects without choosing a replacement
+contention yields one accepted claim and one explicit rejection
+command retry returns the original result without another mutation
+cube and slot state commit together
+held ownership has exactly one owner and monotonic revision
+accepted interaction result names the published snapshot revision
+world, minimap, HUD and debug projection acknowledge the same result
+cross-epoch and retired-run commands reject before mutation
 ```
 
 ## Do not start with
 
 ```txt
-renderer replacement
-new maze content
-visual fidelity work
+new cube types
+new anomaly visuals
+pickup animation polish
 save system
-new defeat effects before defeat policy
-direct UI-only failure handling
+client-side target substitution
+UI-only success messages
 ```
 
-Those depend on canonical actor, start, run-session, epoch, snapshot and terminal-result authority.
+Those depend on canonical actor, run/session/epoch, snapshot, explicit target and typed result authority.
