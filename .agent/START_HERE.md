@@ -2,34 +2,34 @@
 
 **Repository:** `LuminaryLabs-Publish/HorrorCorridor`
 
-**Updated:** `2026-07-11T09-29-07-04-00`
+**Updated:** `2026-07-11T11-39-11-04-00`
 
 ## Summary
 
-HorrorCorridor is a cooperative first-person procedural maze with solo, host and client sessions, PeerJS and BroadcastChannel transport, client prediction, host snapshot publication, cube interactions, ordered anomaly completion, ooze pressure, Three.js rendering, bloom, minimap, HUD and bounded runtime debug readback.
+HorrorCorridor is a cooperative first-person procedural maze with solo, host and client sessions, PeerJS and BroadcastChannel transport, client prediction, host snapshots, cube interactions, ordered anomaly completion, ooze pressure, Three.js rendering, bloom, minimap, HUD and bounded runtime debug readback.
 
-This pass isolates a runtime readiness ownership defect. `GameShell` can mark simulation, rendering and input ready before `GameCanvas` creates their providers. On return to title, `resetRuntime()` clears readiness, then the unmounting `GameCanvas` cleanup can write `networking: true` back into the reset store because readiness has no session, generation or provider fence.
+This pass isolates the next unresolved multiplayer boundary: the host start callback commits locally after asynchronous loading, then emits independent START_GAME and SYNC broadcasts without one transaction, run session, epoch, roster seal, acknowledgement or first-frame proof.
 
 ## Plan ledger
 
-**Goal:** make runtime readiness a resource-backed lease owned by one runtime generation so stale setup or cleanup cannot publish false capability state.
+**Goal:** make lobby-to-run transition one host-authoritative transaction so every admitted peer starts from the same sealed roster, bootstrap, run identity and epoch exactly once.
 
 - [x] Compare all ten accessible Publish repositories.
 - [x] Exclude `TheCavalryOfRome`.
-- [x] Confirm all nine eligible repositories are centrally tracked and have root `.agent` state.
-- [x] Select only `HorrorCorridor` under the oldest repo-local audit fallback.
-- [x] Trace readiness writes through `GameShell`, `GameCanvas` and `runtimeStore`.
-- [x] Identify the interaction loop, domains, kits and services.
+- [x] Confirm all nine eligible repositories have central ledger and root `.agent` state.
+- [x] Skip active same-window writes in `TheOpenAbove`.
+- [x] Select only `HorrorCorridor` as the oldest stable fallback.
+- [x] Trace lobby UI, session stores, loading, bootstrap, protocol publication and client projection.
+- [x] Identify interaction loop, domains, kits and services.
 - [x] Add timestamped architecture and system audits.
 - [x] Refresh required root `.agent` state.
 - [x] Push documentation directly to `main`.
-- [x] Synchronize the central ledger and internal change log.
 - [ ] Runtime implementation and executable fixtures remain future work.
 
 ## Read first
 
 ```txt
-.agent/trackers/2026-07-11T09-29-07-04-00/project-breakdown.md
+.agent/trackers/2026-07-11T11-39-11-04-00/project-breakdown.md
 .agent/current-audit.md
 .agent/known-gaps.md
 .agent/next-steps.md
@@ -39,13 +39,13 @@ This pass isolates a runtime readiness ownership defect. `GameShell` can mark si
 Then read:
 
 ```txt
-.agent/turn-ledger/2026-07-11T09-29-07-04-00.md
-.agent/architecture-audit/2026-07-11T09-29-07-04-00-runtime-readiness-lease-dsk-map.md
-.agent/render-audit/2026-07-11T09-29-07-04-00-render-readiness-commit-gap.md
-.agent/gameplay-audit/2026-07-11T09-29-07-04-00-reset-cleanup-readiness-loop.md
-.agent/interaction-audit/2026-07-11T09-29-07-04-00-session-readiness-transition-map.md
-.agent/runtime-readiness-audit/2026-07-11T09-29-07-04-00-provider-lease-generation-contract.md
-.agent/deploy-audit/2026-07-11T09-29-07-04-00-runtime-readiness-fixture-gate.md
+.agent/turn-ledger/2026-07-11T11-39-11-04-00.md
+.agent/architecture-audit/2026-07-11T11-39-11-04-00-lobby-start-transaction-dsk-map.md
+.agent/render-audit/2026-07-11T11-39-11-04-00-first-run-frame-start-correlation-gap.md
+.agent/gameplay-audit/2026-07-11T11-39-11-04-00-loading-roster-bootstrap-divergence-loop.md
+.agent/interaction-audit/2026-07-11T11-39-11-04-00-start-command-admission-map.md
+.agent/lobby-start-audit/2026-07-11T11-39-11-04-00-correlated-start-commit-contract.md
+.agent/deploy-audit/2026-07-11T11-39-11-04-00-lobby-start-fixture-gate.md
 ```
 
 ## Active interaction loop
@@ -53,56 +53,70 @@ Then read:
 ```txt
 title
   -> solo, host or client lobby/run admission
-  -> GameShell predicts runtime readiness
-  -> snapshot and route make GameCanvas mountable
-  -> GameCanvas creates render, input, simulation and transport consumers
-  -> GameCanvas patches readiness
-  -> runtime advances and projects world/minimap/HUD/debug
-  -> lobby/title exit resets or patches readiness
-  -> GameCanvas unmount cleanup patches readiness again
+  -> room, roster, peer identity and connection projection
+  -> host Start run click
+  -> asynchronous loading frames and timers
+  -> deterministic bootstrap from captured room/roster values
+  -> host local active-state commit
+  -> independent START_GAME broadcast
+  -> independent initial SYNC broadcast
+  -> client applies each message independently
+  -> client enters PLAYING from SYNC
+  -> GameCanvas mounts and renders
 ```
 
 ## Current finding
 
 ```txt
-RuntimeReadiness fields: simulation rendering networking input
-session identity: absent
-runtime generation: absent
-provider identity: absent
-resource proof: absent
-revision: absent
-typed transition result: absent
-stale cleanup rejection: absent
+host actor admission: incomplete
+transport connected requirement: absent
+all-ready admission: absent
+start-in-progress lock: absent
+room/roster revision seal: absent
+post-loading revalidation: absent
+startTransactionId: absent
+runSessionId: absent
+sessionEpoch: absent
+START_GAME/SYNC correlation: absent
+per-peer publication result: discarded
+client acknowledgement: absent
+retry/dedupe policy: absent
+first-frame start correlation: absent
 ```
 
-Concrete stale-write path:
+Concrete divergence paths:
 
 ```txt
-returnToStart
-  -> resetRuntime() sets all readiness false
-  -> old GameCanvas cleanup executes later
-  -> patchReadiness({ networking: true })
-  -> reset title state reports networking ready
-```
+roster changes while loading
+  -> bootstrap uses captured stale roster
 
-Solo cleanup also reports networking ready despite no transport.
+host broadcasts to zero peers
+  -> host already entered PLAYING
+
+client receives START_GAME only
+  -> active room projection but remains in lobby
+
+client receives SYNC only
+  -> enters PLAYING without correlated start admission
+```
 
 ## Domains in use
 
 ```txt
 application and screen routing
-UI overlay pause completion and settings projection
+UI loading pause completion and settings projection
 session room roster peer identity readiness and connection state
-runtime readiness provider leases and resource ownership
-lobby identity readiness and start admission
+lobby identity peer binding reserved slots readiness and start admission
+start transaction roster seal run session epoch and bootstrap commit
 PeerJS and BroadcastChannel transport
-protocol construction serialization and message admission
-seeded maze and gameplay bootstrap
+connection registry event bus actor binding and message admission
+protocol construction serialization correlation acknowledgement and retry
+seeded maze gameplay bootstrap and replicated snapshot
 input movement collision camera and prediction
 cube interaction anomaly completion and ooze pressure
-authoritative snapshot publication acceptance and replay
-Three.js world post-processing minimap HUD and completion projection
-RAF resize canvas lifecycle debug cleanup validation and deployment
+authoritative publication acceptance and replay
+Three.js world post-processing minimap HUD first-frame projection
+RAF resize resource ownership debug cleanup validation and deployment
 ```
 
 ## Implemented kits
@@ -138,19 +152,23 @@ package-validation-kit
 ## Required composed domain
 
 ```txt
-horror-corridor-runtime-readiness-authority-domain
-  -> runtime-session-identity-kit
-  -> runtime-generation-kit
-  -> readiness-capability-descriptor-kit
-  -> readiness-provider-lease-kit
-  -> resource-readiness-proof-kit
-  -> readiness-commit-transaction-kit
-  -> readiness-revocation-kit
-  -> capability-specific provider adapters
-  -> stale-cleanup-fence-kit
-  -> readiness-transition-journal-kit
-  -> readiness-debug-projection-kit
-  -> runtime-readiness-fixture-kit
+horror-corridor-lobby-start-authority-domain
+  -> lobby-start-command-kit
+  -> lobby-start-admission-policy-kit
+  -> lobby-start-roster-seal-kit
+  -> lobby-start-transaction-id-kit
+  -> run-session-identity-kit
+  -> run-session-epoch-kit
+  -> lobby-start-bootstrap-plan-kit
+  -> lobby-start-commit-kit
+  -> lobby-start-publication-bundle-kit
+  -> lobby-start-client-admission-kit
+  -> lobby-start-acknowledgement-kit
+  -> lobby-start-retry-and-dedupe-kit
+  -> lobby-start-result-kit
+  -> lobby-start-transition-journal-kit
+  -> lobby-start-debug-projection-kit
+  -> lobby-start-fixture-kit
 ```
 
 ## Ordered safe ledges
@@ -158,7 +176,7 @@ horror-corridor-runtime-readiness-authority-domain
 ```txt
 1. Lobby Roster Identity and Peer Binding + Placeholder Admission Fixture Gate
 2. Transport Actor Binding + Sender/Payload Admission Fixture Gate
-3. Lobby Start Transaction Authority + Correlated START_GAME/SYNC Fixture Gate
+3. Lobby Start Transaction Authority + Correlated START_GAME/SYNC/Ack Fixture Gate
 4. Run Exit Commit + Session Epoch Message Admission Fixture Gate
 4a. Runtime Readiness Lease + Generation-Fenced Cleanup Fixture Gate
 5. Snapshot Acceptance Authority + Projection Transaction Fixture Gate
@@ -172,8 +190,8 @@ horror-corridor-runtime-readiness-authority-domain
 Push only to main.
 Create no branches or pull requests.
 Do not work on TheCavalryOfRome.
-Keep readiness distinct from lobby player ready state.
-Do not mark a capability ready before its provider proves live resources.
-Do not let old-generation cleanup mutate current readiness.
-Do not claim runtime correctness without executable fixtures.
+Do not bootstrap from an unsealed roster.
+Do not let loading-time state changes commit through stale closures.
+Do not treat either START_GAME or SYNC alone as a complete start.
+Do not claim multiplayer start correctness without loss, reorder, retry and multi-peer fixtures.
 ```
