@@ -1,31 +1,29 @@
 {
-  "schemaVersion": 62,
-  "generatedAt": "2026-07-11T13-20-45-04-00",
+  "schemaVersion": 63,
+  "generatedAt": "2026-07-11T15-01-33-04-00",
   "repository": "LuminaryLabs-Publish/HorrorCorridor",
   "branch": "main",
-  "status": "terminal-outcome-victory-failure-convergence-authority-audited",
-  "selectedBecause": "All nine eligible Publish repositories were centrally tracked with root .agent state. HorrorCorridor had the oldest eligible central-ledger timestamp after excluding TheCavalryOfRome.",
-  "latestTracker": ".agent/trackers/2026-07-11T13-20-45-04-00/project-breakdown.md",
-  "latestTurnLedger": ".agent/turn-ledger/2026-07-11T13-20-45-04-00.md",
+  "status": "interaction-target-intent-cube-slot-claim-authority-audited",
+  "selectedBecause": "All nine eligible Publish repositories were centrally tracked with root .agent state. HorrorCorridor was the oldest stable eligible central-ledger entry after excluding TheCavalryOfRome and a concurrently refreshed repo-local audit.",
+  "latestTracker": ".agent/trackers/2026-07-11T15-01-33-04-00/project-breakdown.md",
+  "latestTurnLedger": ".agent/turn-ledger/2026-07-11T15-01-33-04-00.md",
   "latestAudits": {
-    "architecture": ".agent/architecture-audit/2026-07-11T13-20-45-04-00-terminal-outcome-authority-dsk-map.md",
-    "render": ".agent/render-audit/2026-07-11T13-20-45-04-00-terminal-frame-outcome-projection-gap.md",
-    "gameplay": ".agent/gameplay-audit/2026-07-11T13-20-45-04-00-victory-failure-convergence-loop.md",
-    "interaction": ".agent/interaction-audit/2026-07-11T13-20-45-04-00-terminal-result-exit-admission-map.md",
-    "outcomeAuthority": ".agent/outcome-authority-audit/2026-07-11T13-20-45-04-00-monotonic-victory-failure-contract.md",
-    "deploy": ".agent/deploy-audit/2026-07-11T13-20-45-04-00-terminal-outcome-fixture-gate.md"
+    "architecture": ".agent/architecture-audit/2026-07-11T15-01-33-04-00-interaction-target-intent-authority-dsk-map.md",
+    "render": ".agent/render-audit/2026-07-11T15-01-33-04-00-interaction-result-snapshot-frame-gap.md",
+    "gameplay": ".agent/gameplay-audit/2026-07-11T15-01-33-04-00-client-intent-host-target-substitution-loop.md",
+    "interaction": ".agent/interaction-audit/2026-07-11T15-01-33-04-00-cube-slot-claim-result-map.md",
+    "interactionAuthority": ".agent/interaction-authority-audit/2026-07-11T15-01-33-04-00-explicit-target-claim-transaction-contract.md",
+    "deploy": ".agent/deploy-audit/2026-07-11T15-01-33-04-00-interaction-target-fixture-gate.md"
   },
   "selection": {
     "inventoryCount": 10,
     "eligibleCount": 9,
     "newOrLedgerMissingCount": 0,
     "rootUndocumentedCount": 0,
-    "excluded": [
-      "LuminaryLabs-Publish/TheCavalryOfRome"
-    ],
+    "excluded": ["LuminaryLabs-Publish/TheCavalryOfRome"],
     "onlyPublishRepositoryChanged": "LuminaryLabs-Publish/HorrorCorridor"
   },
-  "currentNextSlice": "Terminal Outcome Authority + Victory/Failure Convergence and First-Terminal-Frame Fixture Gate",
+  "currentNextSlice": "Interaction Target Intent Authority + Cube/Slot Claim, Result, Snapshot and First-Frame Fixture Gate",
   "dependencyOrder": [
     "lobby-roster-identity-and-peer-binding",
     "transport-connection-peer-player-binding",
@@ -33,20 +31,20 @@
     "run-session-epoch-and-exit",
     "runtime-readiness-provider-leases",
     "snapshot-acceptance",
+    "interaction-target-intent-and-claims",
     "terminal-outcome-authority",
     "host-movement-and-client-reconciliation",
     "pause-resume-authority"
   ],
   "interactionLoop": [
-    "shell-creates-or-joins-session",
-    "lobby-starts-and-bootstraps-run",
-    "gamecanvas-accepts-input-and-advances-authority",
-    "ordered-anomaly-or-pressure-policy-evaluates",
-    "terminal-outcome-candidate-is-admitted",
-    "host-or-solo-commits-and-publishes-outcome",
-    "clients-admit-outcome",
-    "completion-and-terminal-frame-project",
-    "restart-or-title-exit-consumes-outcome"
+    "local-input-derives-action-from-visible-state",
+    "try-interact-message-omits-explicit-target-and-observed-revision",
+    "host-resolves-nearest-cube-first-empty-slot-or-last-occupied-slot",
+    "host-mutates-or-silently-noops",
+    "held-cubes-sync-to-player-positions",
+    "host-publishes-full-snapshot",
+    "client-infers-result-from-later-state",
+    "world-minimap-hud-and-debug-project"
   ],
   "domains": [
     "application shell and screen routing",
@@ -62,190 +60,62 @@
     "replicated snapshot construction publication acceptance and replay",
     "pointer lock keyboard mouse blur and input lifecycle",
     "movement collision camera client prediction and host admission",
-    "cube interaction held-cube synchronization and ordered anomaly",
-    "victory state and room-ending evaluation",
-    "ooze spawn decay spacing capacity and level",
-    "terminal policy evaluation admission latch result publication client convergence and acknowledgement",
-    "Three.js world minimap HUD bloom completion and terminal-frame projection",
+    "interaction action inference target observation cube claims and slot claims",
+    "cube pickup drop place remove held ownership and position synchronization",
+    "ordered anomaly validation victory and terminal outcome handling",
+    "ooze spawn decay spacing capacity and pressure",
+    "Three.js world minimap HUD bloom completion and interaction-frame projection",
     "animation loop resize resource ownership debug cleanup validation and deployment"
   ],
-  "implementedKits": [
-    {
-      "name": "corridor-application-shell-kit",
-      "services": ["routing", "solo host client entry", "loading", "pause", "completion", "lobby return", "title exit"]
-    },
-    {
-      "name": "corridor-session-domain-kit",
-      "services": ["session mode", "peer identity", "room", "roster", "connection status", "reset"]
-    },
-    {
-      "name": "runtime-store-snapshot-kit",
-      "services": ["authoritative snapshot", "local pose", "view angles", "input flags", "readiness booleans", "reset"]
-    },
-    {
-      "name": "ui-pause-projection-kit",
-      "services": ["pause state", "pause reason", "overlay projection"]
-    },
-    {
-      "name": "ui-completion-projection-kit",
-      "services": ["victory failure state", "message", "timestamp", "acknowledgement", "completed-screen routing"]
-    },
-    {
-      "name": "complete-screen-presentation-kit",
-      "services": ["victory copy", "failure copy", "restart callback", "title-exit callback"]
-    },
-    {
-      "name": "lobby-screen-presentation-kit",
-      "services": ["room metadata", "phase", "roster", "ready badges", "controls", "connection status"]
-    },
-    {
-      "name": "peer-host-transport-kit",
-      "services": ["host peer", "connection registry", "broadcast", "targeted send", "local bridge", "destroy"]
-    },
-    {
-      "name": "peer-client-transport-kit",
-      "services": ["host connection", "send", "local bridge", "status", "disconnect", "destroy"]
-    },
-    {
-      "name": "peer-event-bus-kit",
-      "services": ["typed events", "subscribe", "unsubscribe", "clear"]
-    },
-    {
-      "name": "protocol-message-construction-kit",
-      "services": ["START_GAME", "PLAYER_UPDATE", "TRY_INTERACT", "SYNC", "LOBBY_EVENT"]
-    },
-    {
-      "name": "protocol-serialization-kit",
-      "services": ["JSON encode", "structural decode", "version checks", "shape checks"]
-    },
-    {
-      "name": "maze-snapshot-bootstrap-kit",
-      "services": ["seed", "maze", "players", "cubes", "anomaly", "room", "initial snapshot"]
-    },
-    {
-      "name": "first-person-input-kit",
-      "services": ["keyboard state", "pointer lock", "look accumulation", "input snapshot"]
-    },
-    {
-      "name": "movement-collision-camera-kit",
-      "services": ["movement", "maze collision", "eye position", "walk shake", "camera"]
-    },
-    {
-      "name": "network-player-update-kit",
-      "services": ["client send", "host consume", "pose projection", "cadence"]
-    },
-    {
-      "name": "corridor-interaction-domain-kit",
-      "services": ["pickup", "drop", "place", "remove", "held-cube synchronization"]
-    },
-    {
-      "name": "ordered-anomaly-sequence-kit",
-      "services": ["ordered validation", "slot evaluation", "victory", "current reversible fallback"]
-    },
-    {
-      "name": "ooze-trail-domain-kit",
-      "services": ["spawn", "decay", "random variation", "spacing", "capacity", "ooze level"]
-    },
-    {
-      "name": "snapshot-outcome-routing-kit",
-      "services": ["victory projection", "paused projection", "generic playing fallback"]
-    },
-    {
-      "name": "corridor-authoritative-publication-kit",
-      "services": ["snapshot tick", "clone", "SYNC", "broadcast", "reason"]
-    },
-    {
-      "name": "corridor-animation-loop-kit",
-      "services": ["RAF start", "RAF stop", "delta", "running guard"]
-    },
-    {
-      "name": "corridor-render-world-kit",
-      "services": ["terrain", "maze", "cubes", "players", "anomaly", "ooze", "props", "lights", "update", "dispose"]
-    },
-    {
-      "name": "corridor-post-processing-kit",
-      "services": ["composer", "bloom", "output", "resize", "render", "dispose"]
-    },
-    {
-      "name": "corridor-minimap-kit",
-      "services": ["maze", "players", "cubes", "anomaly markers"]
-    },
-    {
-      "name": "runtime-debug-frame-kit",
-      "services": ["bounded frames", "bounded events", "overlay", "JSON-safe export"]
-    },
-    {
-      "name": "runtime-resource-cleanup-kit",
-      "services": ["RAF stop", "unsubscribe", "observer disconnect", "listener removal", "world composer renderer disposal", "canvas removal"]
-    },
-    {
-      "name": "package-validation-kit",
-      "services": ["build", "lint", "ProtoKit smoke", "harness", "visual match", "object-kit review", "live-player validation"]
-    }
-  ],
-  "plannedTerminalOutcomeKits": [
-    {
-      "name": "terminal-outcome-policy-kit",
-      "services": ["versioned policy", "victory predicates", "defeat predicates", "precedence", "fingerprint"]
-    },
-    {
-      "name": "outcome-evaluation-input-kit",
-      "services": ["run session", "epoch", "snapshot revision", "sequence state", "pressure state", "deterministic payload"]
-    },
-    {
-      "name": "victory-predicate-kit",
-      "services": ["ordered anomaly proof", "source linkage", "typed evaluation"]
-    },
-    {
-      "name": "defeat-predicate-kit",
-      "services": ["selected defeat conditions", "defeat proof", "typed evaluation"]
-    },
-    {
-      "name": "terminal-outcome-admission-kit",
-      "services": ["actor admission", "phase admission", "run epoch admission", "stale duplicate conflict policy"]
-    },
-    {
-      "name": "terminal-outcome-latch-kit",
-      "services": ["monotonic commit", "terminal revision", "late-playing quarantine", "idempotency"]
-    },
-    {
-      "name": "terminal-outcome-result-kit",
-      "services": ["accepted rejected duplicate conflict result", "reason", "before after revision", "proof fingerprint"]
-    },
-    {
-      "name": "terminal-room-phase-kit",
-      "services": ["active to ending transition", "terminal room revision", "exit handoff"]
-    },
-    {
-      "name": "terminal-publication-kit",
-      "services": ["correlated payload", "per-peer send rows", "retry", "timeout", "publication result"]
-    },
-    {
-      "name": "terminal-client-admission-kit",
-      "services": ["sender room run epoch admission", "ordering", "dedupe", "exactly-once commit"]
-    },
-    {
-      "name": "terminal-ui-projection-kit",
-      "services": ["victory projection", "failure projection", "completion acknowledgement", "restart title capability"]
-    },
-    {
-      "name": "terminal-frame-correlation-kit",
-      "services": ["outcome revision", "run epoch", "first terminal frame", "overlay proof"]
-    },
-    {
-      "name": "terminal-outcome-acknowledgement-kit",
-      "services": ["peer result rows", "first-frame attachment", "quorum evidence"]
-    },
-    {
-      "name": "terminal-outcome-journal-kit",
-      "services": ["evaluation", "admission", "commit", "publication", "acknowledgement", "frame rows"]
-    },
-    {
-      "name": "terminal-outcome-fixture-kit",
-      "services": ["victory", "failure", "simultaneous predicates", "duplicate", "conflict", "stale epoch", "loss reorder retry", "first frame", "exit handoff"]
-    }
-  ],
-  "currentBlocker": "HorrorCorridor declares and presents both victory and failure, but only victory has a partial executable path. No defeat policy can produce failure, replicated failure is routed to PLAYING, and victory can revert to active state because no monotonic terminal latch, run/epoch correlation, publication acknowledgement or first-terminal-frame proof exists.",
+  "implementedKits": {
+    "corridor-application-shell-kit": ["routing", "solo host client entry", "loading", "pause", "completion", "lobby return", "title exit"],
+    "corridor-session-domain-kit": ["session mode", "peer identity", "room", "roster", "connection status", "reset"],
+    "runtime-store-snapshot-kit": ["authoritative snapshot", "local pose", "view angles", "input flags", "readiness", "reset"],
+    "ui-pause-projection-kit": ["pause state", "pause reason", "overlay projection"],
+    "ui-completion-projection-kit": ["victory failure state", "message", "timestamp", "acknowledgement", "completed routing"],
+    "complete-screen-presentation-kit": ["victory copy", "failure copy", "restart", "title exit"],
+    "lobby-screen-presentation-kit": ["room metadata", "phase", "roster", "ready badges", "controls", "connection status"],
+    "peer-host-transport-kit": ["host peer", "connection registry", "broadcast", "targeted send", "local bridge", "destroy"],
+    "peer-client-transport-kit": ["host connection", "send", "local bridge", "status", "disconnect", "destroy"],
+    "peer-event-bus-kit": ["typed events", "subscribe", "unsubscribe", "clear"],
+    "protocol-message-construction-kit": ["START_GAME", "PLAYER_UPDATE", "TRY_INTERACT", "SYNC", "LOBBY_EVENT", "optional cube slot cell targets"],
+    "protocol-serialization-kit": ["JSON encode", "structural decode", "version checks", "shape checks"],
+    "maze-snapshot-bootstrap-kit": ["seed", "maze", "players", "cubes", "anomaly", "room", "initial snapshot"],
+    "first-person-input-kit": ["keyboard", "pointer lock", "look accumulation", "input snapshot"],
+    "movement-collision-camera-kit": ["movement", "maze collision", "eye position", "walk shake", "camera"],
+    "network-player-update-kit": ["client send", "host consume", "pose projection", "cadence"],
+    "corridor-interaction-domain-kit": ["action inference", "pickup", "drop", "place", "remove", "implicit target resolution", "held-cube sync"],
+    "ordered-anomaly-sequence-kit": ["ordered validation", "slot evaluation", "victory", "reversible fallback"],
+    "ooze-trail-domain-kit": ["spawn", "decay", "variation", "spacing", "capacity", "ooze level"],
+    "snapshot-outcome-routing-kit": ["victory projection", "paused projection", "playing fallback"],
+    "corridor-authoritative-publication-kit": ["snapshot tick", "clone", "SYNC", "broadcast", "reason"],
+    "corridor-animation-loop-kit": ["RAF start", "RAF stop", "delta", "running guard"],
+    "corridor-render-world-kit": ["terrain", "maze", "cubes", "players", "anomaly", "ooze", "props", "lights", "update", "dispose"],
+    "corridor-post-processing-kit": ["composer", "bloom", "output", "resize", "render", "dispose"],
+    "corridor-minimap-kit": ["maze", "players", "cubes", "anomaly markers"],
+    "runtime-debug-frame-kit": ["bounded frames", "bounded events", "overlay", "JSON export"],
+    "runtime-resource-cleanup-kit": ["RAF stop", "unsubscribe", "observer disconnect", "listener removal", "resource disposal", "canvas removal"],
+    "package-validation-kit": ["build", "lint", "ProtoKit smoke", "harness", "visual match", "object review", "live-player validation"]
+  },
+  "plannedInteractionAuthorityKits": {
+    "interaction-command-envelope-kit": ["command ID", "actor", "room", "run", "epoch", "sequence", "observed snapshot", "action"],
+    "interaction-target-observation-kit": ["cube", "slot", "cell", "distance", "target revision", "fingerprint"],
+    "cube-target-claim-kit": ["explicit cube claim", "availability", "ownership revision", "contention result"],
+    "anomaly-slot-claim-kit": ["explicit slot claim", "occupancy revision", "ordering policy", "contention result"],
+    "interaction-admission-kit": ["actor binding", "phase", "run epoch", "sequence", "duplicate", "stale", "retired run"],
+    "interaction-preflight-kit": ["distance", "ownership", "target state", "observed revision", "non-mutating plan"],
+    "interaction-transaction-kit": ["atomic cube slot ownership sequence commit", "rollback", "before after revisions"],
+    "interaction-result-kit": ["accepted", "rejected", "duplicate", "stale", "conflict", "no-change", "reason", "receipt"],
+    "interaction-idempotency-kit": ["result cache", "duplicate replay", "exactly-once mutation"],
+    "interaction-conflict-kit": ["claim contention", "stale target", "ownership conflict", "declared winner"],
+    "held-cube-ownership-revision-kit": ["one owner", "ownership revision", "claim release receipts"],
+    "interaction-publication-kit": ["result-linked snapshot", "per-peer sends", "retry", "timeout"],
+    "interaction-client-acknowledgement-kit": ["result admission", "snapshot correlation", "exactly-once acknowledgement"],
+    "interaction-frame-correlation-kit": ["result", "snapshot revision", "world minimap HUD debug ack", "first frame"],
+    "interaction-journal-kit": ["command", "target", "admission", "commit", "publication", "ack", "frame rows"],
+    "interaction-target-fixture-kit": ["explicit target", "stale claim", "contention", "duplicate", "reorder", "distance", "ownership", "snapshot correlation", "first frame"]
+  },
+  "currentBlocker": "The active TRY_INTERACT caller omits explicit cube and slot targets and observed state identity. The host re-resolves nearest, first-empty or last-occupied targets at execution time, so contention, delay or reorder can mutate a different object than the player intended. No typed result, idempotency cache, ownership revision, snapshot correlation or first-frame acknowledgement exists.",
   "validation": {
     "runtimeSourceChanged": false,
     "packageScriptsChanged": false,
@@ -257,11 +127,10 @@
     "pullRequestCreated": false,
     "npmRunBuild": "not-run",
     "npmRunLint": "not-run",
-    "terminalVictoryFixture": "unavailable",
-    "terminalFailureFixture": "unavailable",
-    "terminalNetworkFixture": "unavailable",
-    "staleDuplicateConflictFixture": "unavailable",
-    "firstTerminalFrameFixture": "unavailable",
-    "restartExitFixture": "unavailable"
+    "explicitTargetFixture": "unavailable",
+    "contentionFixture": "unavailable",
+    "duplicateReorderFixture": "unavailable",
+    "resultSnapshotCorrelationFixture": "unavailable",
+    "firstInteractionFrameFixture": "unavailable"
   }
 }
