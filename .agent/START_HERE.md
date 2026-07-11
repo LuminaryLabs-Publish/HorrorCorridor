@@ -4,142 +4,111 @@
 
 **Branch:** `main`
 
-**Updated:** `2026-07-11T16-38-10-04-00`
+**Updated:** `2026-07-11T18-11-21-04-00`
 
 ## Summary
 
 HorrorCorridor is a cooperative first-person procedural maze with solo, host and client sessions, PeerJS and BroadcastChannel transport, replicated snapshots, cube interactions, ordered anomaly completion, ooze pressure, Three.js rendering, bloom, minimap, HUD and bounded debug readback.
 
-The current audit isolates a host cadence defect. Every remote `PLAYER_UPDATE` immediately mutates the authoritative pose, increments the snapshot tick, broadcasts a full snapshot and resets `lastNetworkTickAtMs`. The host frame loop uses that same timestamp to decide when to advance ooze, so sustained client traffic can keep publishing snapshots while starving an authoritative gameplay system.
+The current audit isolates the publication-to-delivery boundary. Every remote `PLAYER_UPDATE` can trigger a complete authoritative snapshot. The host builds one full snapshot for local state, rebuilds the full snapshot again inside the SYNC envelope, serializes the complete maze/player/cube/anomaly/ooze payload, then attempts to send that string to every open connection.
 
-The preceding active-run disconnect audit remains valid and retained: a disconnected actor can persist in live gameplay state, ooze inputs and held-cube ownership. Network cadence authority must consume the same canonical actor, membership, run and epoch identities rather than creating a parallel peer model.
+The transport exposes only an aggregate sent count. It does not expose payload bytes, pending buffered bytes, send duration, exceptions, per-peer success/failure, queue depth, backpressure, coalescing, retry or slow-peer isolation. The publication caller discards even the aggregate count.
 
 ## Current ledge
 
 ```txt
-HorrorCorridor Host Network Cadence Authority
-+ Input Queue / Fixed Simulation / Bounded Snapshot Publication Fixture Gate
+HorrorCorridor Snapshot Delivery and Backpressure Authority
++ Payload Budget / Per-Peer Result / Slow-Peer Isolation Fixture Gate
 ```
 
 ## Plan ledger
 
-**Goal:** separate player-update arrival, fixed authoritative simulation and snapshot publication so client traffic cannot control gameplay timing, snapshot tick meaning or host fanout.
+**Goal:** turn each committed snapshot publication into one bounded payload plan and an observable per-peer delivery transaction so full-state fanout cannot grow silently or let one slow connection destabilize the host.
 
 - [x] Compare all ten accessible Publish repositories with central tracking.
 - [x] Exclude `TheCavalryOfRome`.
 - [x] Confirm all nine eligible repositories have central ledger and root `.agent` coverage.
-- [x] Detect a newer repo-local audit in nominal-oldest `TheOpenAbove`.
+- [x] Detect a newer repo-local grass-culling audit in nominal-oldest `TheOpenAbove` and avoid overlapping it.
 - [x] Select only `HorrorCorridor` as the oldest stable eligible fallback.
-- [x] Trace client sequence generation and update cadence.
-- [x] Trace host packet application, snapshot publication and broadcast fanout.
-- [x] Trace the shared timestamp into ooze advancement admission.
-- [x] Identify the full interaction loop, domains, implemented kits and services.
-- [x] Add timestamped cadence-focused architecture and system audits.
-- [x] Preserve the active-run disconnect audit as a retained prerequisite.
+- [x] Trace full snapshot construction, SYNC construction, JSON serialization and host fanout.
+- [x] Trace the host transport contract and per-connection send behavior.
+- [x] Identify the complete interaction loop, domains, implemented kits and services.
+- [x] Add timestamped architecture and system audits.
 - [x] Refresh required root `.agent` documents.
 - [x] Change documentation only.
 - [x] Push directly to `main`; create no branch or pull request.
-- [ ] Runtime implementation and executable cadence/flood fixtures remain future work.
+- [ ] Runtime implementation and executable delivery/backpressure fixtures remain future work.
 
 ## Read first
 
 ```txt
-.agent/trackers/2026-07-11T16-38-10-04-00/project-breakdown.md
-.agent/turn-ledger/2026-07-11T16-38-10-04-00.md
+.agent/trackers/2026-07-11T18-11-21-04-00/project-breakdown.md
+.agent/turn-ledger/2026-07-11T18-11-21-04-00.md
 .agent/current-audit.md
 .agent/known-gaps.md
 .agent/next-steps.md
 .agent/validation.md
 .agent/kit-registry.json
-.agent/architecture-audit/2026-07-11T16-38-10-04-00-host-network-cadence-authority-dsk-map.md
-.agent/render-audit/2026-07-11T16-38-10-04-00-simulation-publication-frame-correlation-gap.md
-.agent/gameplay-audit/2026-07-11T16-38-10-04-00-client-update-ooze-starvation-loop.md
-.agent/interaction-audit/2026-07-11T16-38-10-04-00-player-update-queue-admission-map.md
-.agent/network-cadence-audit/2026-07-11T16-38-10-04-00-input-simulation-publication-clock-contract.md
-.agent/deploy-audit/2026-07-11T16-38-10-04-00-host-cadence-flood-fixture-gate.md
+.agent/architecture-audit/2026-07-11T18-11-21-04-00-snapshot-delivery-backpressure-dsk-map.md
+.agent/render-audit/2026-07-11T18-11-21-04-00-publication-delivery-frame-proof-gap.md
+.agent/gameplay-audit/2026-07-11T18-11-21-04-00-full-sync-fanout-slow-peer-loop.md
+.agent/interaction-audit/2026-07-11T18-11-21-04-00-publication-plan-delivery-result-map.md
+.agent/transport-audit/2026-07-11T18-11-21-04-00-payload-budget-backpressure-contract.md
+.agent/deploy-audit/2026-07-11T18-11-21-04-00-snapshot-delivery-backpressure-fixture-gate.md
 ```
 
-Retained prerequisite audit:
+Retained prerequisite audits:
 
 ```txt
-.agent/trackers/2026-07-11T16-21-09-04-00/project-breakdown.md
+.agent/network-cadence-audit/2026-07-11T16-38-10-04-00-input-simulation-publication-clock-contract.md
 .agent/disconnect-authority-audit/2026-07-11T16-21-09-04-00-player-retirement-owned-state-contract.md
+.agent/movement-authority-audit/2026-07-11T03-08-43-04-00-player-update-admission-correction-contract.md
+.agent/pause-authority-audit/2026-07-10T23-30-13-04-00-host-client-pause-resume-contract.md
 ```
 
 ## Product interaction loop
 
 ```txt
-title
-  -> solo, host or client admission
-  -> lobby roster, readiness and deterministic start
+title and mode selection
+  -> lobby identity, readiness and deterministic start
   -> first-person input and client prediction
   -> client PLAYER_UPDATE stream
-  -> host movement application
-  -> held-cube and ooze gameplay systems
-  -> authoritative snapshot publication
-  -> client snapshot acceptance/replay
+  -> host movement and gameplay mutation
+  -> authoritative snapshot construction
+  -> full SYNC envelope construction and JSON serialization
+  -> host fanout to every open peer
+  -> client snapshot admission and replay
   -> world, minimap, HUD, completion and debug projection
 ```
 
-## Current cadence loop
+## Current publication and delivery loop
 
 ```txt
-client
-  -> generate monotonic input.sequence
-  -> send PLAYER_UPDATE when local network timer elapses
-
-host message callback
-  -> ignore input.sequence for application
-  -> apply absolute client pose immediately
-  -> publish full snapshot immediately
-  -> snapshot tick += 1
-  -> broadcast to every client
-  -> lastNetworkTickAtMs = now
-
-host RAF
-  -> only advance ooze when now - lastNetworkTickAtMs reaches threshold
-```
-
-## Concrete starvation case
-
-```txt
-client updates arrive before each host threshold expires
-  -> every packet causes publication
-  -> every publication resets lastNetworkTickAtMs
-  -> ooze branch never reaches its threshold
-  -> snapshots and ticks continue advancing
-  -> ooze remains unchanged
+publishAuthoritativeState
+  -> increment state tick
+  -> buildReplicatedSnapshot for local runtime state
+  -> createFullSyncMessage from GameState
+       -> buildReplicatedSnapshot again
+       -> clone room again
+  -> JSON.stringify complete SYNC envelope
+  -> for every connection
+       -> check only connection.open
+       -> connection.send(serialized payload)
+       -> increment aggregate sent count
+  -> discard aggregate sent count
 ```
 
 ## Main architecture split
 
 ```txt
-input arrival clock
-  per-peer sequence and queue admission
-
-fixed simulation clock
-  movement, collision, held cubes, ooze and objective systems
-
-snapshot publication clock
-  bounded dirty-state dissemination and per-peer delivery results
-
-presentation frame clock
-  world/minimap/HUD/debug acknowledgement of one committed revision
-```
-
-## Required authority flow
-
-```txt
-PLAYER_UPDATE
-  -> connection/actor/room/run/epoch admission
-  -> monotonic per-player sequence admission
-  -> bounded queue or deterministic coalescing
-  -> fixed-step input selection
-  -> movement/collision and all scheduled systems advance
-  -> committed simulation revision
-  -> bounded snapshot publication plan
-  -> per-peer delivery result
-  -> accepted snapshot and first-frame acknowledgement
+committed state revision
+  -> snapshot publication intent
+  -> canonical payload construction
+  -> byte/fingerprint budget admission
+  -> per-peer send admission and backpressure policy
+  -> per-peer delivery results
+  -> retry, coalesce, isolate or disconnect policy
+  -> accepted snapshot and first-visible-frame acknowledgement
 ```
 
 ## Ordered safe ledges
@@ -156,7 +125,8 @@ PLAYER_UPDATE
 5c. Terminal Outcome Authority
 6. Host Network Cadence and Fixed Simulation Authority
 6a. Host Movement Admission and Client Reconciliation
+6b. Snapshot Delivery and Backpressure Authority
 7. Pause/Resume Authority
 ```
 
-Documentation only. Runtime implementation and executable cadence, flood, starvation and frame-correlation fixtures remain future work.
+Documentation only. Runtime implementation and executable payload-budget, partial-delivery, backpressure, slow-peer and frame-correlation fixtures remain future work.
