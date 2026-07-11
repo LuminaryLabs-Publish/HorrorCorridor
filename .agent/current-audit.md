@@ -1,46 +1,39 @@
 # HorrorCorridor Current Audit
 
-**Repository:** `LuminaryLabs-Publish/HorrorCorridor`
-
-**Updated:** `2026-07-11T18-11-21-04-00`
+**Repository:** `LuminaryLabs-Publish/HorrorCorridor`  
+**Updated:** `2026-07-11T19-38-14-04-00`
 
 ## Status
 
 ```txt
-status: snapshot-delivery-payload-budget-backpressure-authority-audited
+status: authoritative-randomness-replay-authority-audited
 runtime source changed: no
 branch: main
 root .agent state: refreshed
-central ledger sync: complete
-central change log: internal-change-log/2026-07-11T18-11-21-04-00-horror-corridor-snapshot-delivery-backpressure-authority.md
+central ledger sync: pending until central commit
 ```
 
 ## Summary
 
-The host publication path creates a complete replicated snapshot for local runtime state, then `createFullSyncMessage()` creates another complete replicated snapshot from the same mutable `GameState`. The message is serialized with `JSON.stringify()` and sent to every open host connection.
+Maze generation already uses a deterministic linear-congruential stream derived from the authored run seed. Authoritative ooze behavior does not use that stream. `oozeRules.ts` resolves an omitted RNG to `Math.random()`, and `GameCanvas.tsx` calls `advanceOozeTrail()` without an RNG.
 
-`HostTransportAdapter.broadcast()` returns only a number. The transport does not expose payload byte size, payload fingerprint, pending buffered bytes, queue depth, send duration, exception classification, intended peer set, per-peer result, retries or slow-peer isolation. `GameCanvas` discards the aggregate number returned by `broadcast()`.
-
-The preceding host cadence finding remains active: remote movement packets can force this full-state publication path for every update. The resulting cost can scale with both input rate and peer count while no transport pressure is measured.
+The resulting ooze trail is replicated, so connected clients can observe the host's current result. However, the random draw sequence is not represented in `GameState`, `ReplicatedGameSnapshot`, protocol messages, debug frames or any replay/checkpoint surface. Re-running the same seed and inputs, restoring a snapshot, migrating host authority or resuming after a crash cannot reproduce the same next ooze state.
 
 ## Plan ledger
 
-**Goal:** define one bounded and observable transaction from committed snapshot revision through canonical payload construction, per-peer send admission, delivery results and first visible frame.
+**Goal:** define one deterministic random authority from run seed through named stream draws, simulation commit, snapshot checkpoint, replay/restore and first visible frame.
 
 - [x] Compare the complete Publish inventory and central ledger.
 - [x] Exclude `TheCavalryOfRome`.
 - [x] Confirm all nine eligible repositories are tracked and have root `.agent` state.
-- [x] Detect the active newer `TheOpenAbove` grass-culling audit and avoid overlapping it.
-- [x] Select only the next stable oldest repository, `HorrorCorridor`.
-- [x] Read `GameCanvas.tsx`, `syncSnapshot.ts`, `serializers.ts`, `createHost.ts` and `peerTypes.ts`.
-- [x] Trace local snapshot construction and outbound SYNC construction.
-- [x] Confirm complete maze, room, player, cube, anomaly and ooze data is replicated.
-- [x] Confirm JSON serialization has no payload budget or fingerprint result.
-- [x] Confirm host send checks only `connection.open` before `connection.send()`.
-- [x] Confirm broadcast returns an aggregate sent count only.
-- [x] Confirm the publication caller discards that count.
+- [x] Select only `HorrorCorridor` as the oldest eligible repository.
+- [x] Read `generateMaze.ts`, `createInitialGameState.ts`, `oozeRules.ts`, `GameCanvas.tsx`, `syncSnapshot.ts` and `shared.ts`.
+- [x] Confirm maze topology, cube placement and target sequence consume a seeded RNG.
+- [x] Confirm ooze decay, height and rotation consume an optional RNG that defaults to `Math.random()`.
+- [x] Confirm the authoritative host does not inject a deterministic RNG.
+- [x] Confirm snapshots carry final ooze values but no RNG stream ID, algorithm, state, draw index or checkpoint.
 - [x] Identify the interaction loop, domains, implemented kits and services.
-- [x] Define payload, delivery, backpressure, isolation and fixture kits.
+- [x] Define deterministic randomness, checkpoint, replay and fixture kits.
 - [x] Add timestamped architecture and system audits.
 - [x] Refresh root `.agent` state and synchronize central tracking.
 - [ ] Runtime implementation and executable fixtures remain future work.
@@ -48,43 +41,15 @@ The preceding host cadence finding remains active: remote movement packets can f
 ## Product interaction loop
 
 ```txt
-title and session admission
-  -> lobby readiness and deterministic bootstrap
-  -> pointer-lock input and local prediction
-  -> client PLAYER_UPDATE
-  -> host state mutation
-  -> complete replicated snapshot construction
-  -> complete SYNC envelope construction
-  -> JSON serialization and all-peer fanout
-  -> client snapshot acceptance and replay
-  -> world, minimap, HUD and debug projection
-  -> cube objective and ooze pressure continue
-```
-
-## Current publication path
-
-```txt
-GameCanvas.publishAuthoritativeState
-  -> currentGameState.tick += 1
-  -> buildReplicatedSnapshot(currentGameState)
-       room
-       maze
-       players
-       cubes
-       anomaly
-       oozeTrail
-       oozeLevel
-  -> set local authoritative snapshot
-  -> createFullSyncMessage({ state: currentGameState })
-       -> buildReplicatedSnapshot(currentGameState) again
-       -> clone room again
-  -> serializeProtocolMessage
-       -> JSON.stringify(message)
-  -> host.broadcast
-       -> iterate every connection
-       -> if connection.open, connection.send(serialized)
-       -> return aggregate sent count
-  -> aggregate sent count not retained
+lobby and run bootstrap
+  -> hash seedSource into game seed
+  -> generate deterministic maze, cubes and target sequence
+  -> start local or host simulation
+  -> accept movement and interaction commands
+  -> advance ooze using wall-clock gate and ambient random draws
+  -> commit snapshot tick and timestamp
+  -> publish complete snapshot
+  -> client replay and visible frame
 ```
 
 ## Domains in use
@@ -99,14 +64,13 @@ PeerJS host and client transport
 BroadcastChannel local transport bridge
 peer event bus connection registry delivery and actor binding
 versioned protocol envelopes serialization request and sequence admission
-seeded maze room player cube anomaly and ooze bootstrap
-replicated snapshot construction publication acceptance and replay
-snapshot payload identity size budgeting and delta/full policy
-per-peer send admission delivery results retry and backpressure
-slow-peer isolation and disconnect policy
+seed derivation seeded maze topology cube placement and target sequence
+authoritative randomness streams random draws checkpoints and replay
+replicated snapshot construction publication acceptance and delivery
+snapshot payload identity size budgeting delta/full policy and backpressure
 pointer lock keyboard mouse blur and input lifecycle
 client prediction movement collision camera and host admission
-per-peer input sequence queue coalescing and fixed simulation cadence
+fixed simulation cadence and authoritative systems
 interaction target observation cube/slot claims and results
 cube ownership ordered anomaly terminal outcome and ooze pressure
 Three.js world post-processing minimap HUD debug and frame correlation
@@ -127,7 +91,8 @@ RAF resize resources cleanup validation build and deployment
 - **peer-event-bus-kit:** typed transport events, subscription and cleanup.
 - **protocol-message-construction-kit:** START_GAME, PLAYER_UPDATE, TRY_INTERACT, SYNC and LOBBY_EVENT envelopes.
 - **protocol-serialization-kit:** JSON encode/decode, protocol version and structural admission.
-- **maze-snapshot-bootstrap-kit:** deterministic maze, players, cubes, anomaly, room and initial snapshot.
+- **maze-snapshot-bootstrap-kit:** seed hashing, deterministic maze, players, cubes, anomaly, room and initial snapshot.
+- **seeded-maze-rng-kit:** deterministic LCG stream for maze topology, cube placement and target sequence.
 - **first-person-input-kit:** keyboard, pointer lock, look accumulation and input snapshots.
 - **movement-collision-camera-kit:** movement, maze collision, eye pose, shake and camera.
 - **network-player-update-kit:** client sequence/send cadence, pose envelope, host consume and projection.
@@ -147,102 +112,99 @@ RAF resize resources cleanup validation build and deployment
 ## Source findings
 
 ```txt
-local snapshot built before publication: yes
-SYNC message rebuilds full snapshot: yes
-room cloned again in SYNC payload: yes
-serialization: JSON.stringify complete envelope
-payload byte measurement: absent
-payload fingerprint: absent
-payload size limit: absent
-full-versus-delta policy: absent
+maze seed source: room/run-derived string
+maze seed hash: FNV-like 32-bit hash
+maze RNG: deterministic LCG
+maze RNG state exposed/checkpointed: no
+maze output replicated: yes
 
-send admission checks connection.open only: yes
-connection.send exception classification: absent
-pending buffered bytes observation: absent
-queue depth observation: absent
-send duration observation: absent
-per-peer result: absent
-retry/coalesce/drop policy: absent
-slow-peer isolation policy: absent
-
-broadcast result: aggregate sent count
-publication caller consumes result: no
-intended peer set recorded: no
-first-delivery/first-frame correlation: absent
+ooze RNG input: optional
+ooze RNG fallback: Math.random
+authoritative host injects RNG: no
+decay survivor draw: ambient random
+ooze height draw: ambient random
+ooze rotation draw: ambient random
+random stream ID: absent
+random algorithm/version in state: absent
+random draw index: absent
+random draw journal: absent
+random checkpoint in GameState: absent
+random checkpoint in snapshot/protocol: absent
+replay/restore continuation proof: absent
+host migration continuation proof: absent
 ```
 
 ## Main finding
 
-The publication path duplicates full snapshot construction before serialization and then reduces the entire fanout transaction to an unconsumed integer.
+The repository has deterministic world generation but nondeterministic ongoing authoritative simulation.
 
 ```txt
-remote update
-  -> complete local snapshot clone
-  -> complete outbound snapshot clone
-  -> JSON serialization
-  -> N connection.send calls
-  -> aggregate count discarded
+same seed + same accepted inputs + same simulation steps
+  -> same maze
+  -> potentially different ooze survival, height and rotation
 ```
 
-For `P` clients each producing `U` update-triggered publications per second, the current cadence audit estimated approximately `P * P * U` peer sends per second. This audit adds that each publication rebuilds and serializes the complete maze/player/cube/anomaly/ooze state without a byte budget or slow-peer result.
+The divergence is externally masked by full-state replication but remains material for replay, save/restore, reconnect recovery, host migration, debugging and fixture reproducibility.
+
+The ambient stream also couples results to call count. Because current cadence can change when ooze advancement occurs, frame/network timing can change how many random draws are consumed before a checkpoint.
 
 ## Required parent domain
 
 ```txt
-corridor-snapshot-delivery-backpressure-authority-domain
+corridor-authoritative-randomness-replay-authority-domain
 ```
 
 ## Candidate kits
 
 ```txt
-snapshot-publication-intent-kit
-canonical-snapshot-payload-kit
-snapshot-payload-byte-budget-kit
-snapshot-payload-fingerprint-kit
-snapshot-full-delta-policy-kit
-snapshot-delivery-plan-kit
-peer-send-capability-kit
-peer-send-admission-kit
-per-peer-backpressure-state-kit
-per-peer-delivery-result-kit
-snapshot-delivery-commit-kit
-snapshot-delivery-retry-kit
-slow-peer-isolation-kit
-snapshot-delivery-journal-kit
-snapshot-delivery-observation-kit
-snapshot-delivery-fixture-kit
-browser-slow-peer-smoke-kit
+run-random-seed-kit
+random-algorithm-version-kit
+named-random-stream-kit
+random-stream-state-kit
+random-draw-index-kit
+simulation-random-budget-kit
+random-draw-command-kit
+random-draw-result-kit
+ooze-random-stream-kit
+random-checkpoint-kit
+snapshot-random-checkpoint-projection-kit
+random-restore-admission-kit
+host-migration-random-transfer-kit
+random-draw-journal-kit
+random-observation-kit
+deterministic-ooze-replay-fixture-kit
+random-checkpoint-roundtrip-fixture-kit
+host-migration-random-continuation-fixture-kit
+random-frame-parity-fixture-kit
 ```
 
 ## Required authority flow
 
 ```txt
-committed simulation revision
-  -> publication intent and reason
-  -> build one canonical snapshot payload
-  -> measure bytes and compute fingerprint
-  -> select full or delta policy
-  -> capture intended peer set
-  -> admit each peer against connection and backpressure state
-  -> attempt bounded sends
-  -> classify sent, skipped, closed, failed, timed-out and backpressured rows
-  -> commit publication and delivery result
-  -> retry, coalesce, isolate or disconnect under explicit policy
-  -> correlate accepted client snapshot and first visible frame
+run seed + session epoch
+  -> derive named stream seed for authoritative ooze
+  -> select versioned deterministic algorithm
+  -> admit simulation step and expected draw index
+  -> draw through one stream owner
+  -> return typed draw receipts
+  -> apply decay/spawn mutation
+  -> atomically commit gameplay state and next RNG checkpoint
+  -> project checkpoint into snapshot/save/replay state
+  -> restore or transfer only with matching algorithm and stream identity
+  -> render frame citing simulation revision and RNG checkpoint
 ```
 
 ## Required guarantees
 
 ```txt
-one publication builds one canonical payload
-payload bytes and fingerprint are known before fanout
-publication work has explicit byte, peer and time budgets
-one slow or failed peer cannot block or invalidate healthy peers
-all intended peers produce a typed delivery row
-exceptions are classified instead of escaping silently
-retry and coalescing remain bounded
-full snapshots and deltas cite one committed state revision
-client acceptance and visible frame cite the same publication identity
+gameplay-affecting code never falls back to ambient Math.random
+same seed, accepted commands and simulation steps produce the same ooze state
+stream identity and algorithm version survive snapshot/save/replay
+draw counts and checkpoints advance monotonically
+duplicate or stale steps cannot consume additional draws
+failed transactions do not advance the committed stream
+host migration resumes from the exact committed checkpoint
+debug and frame records cite the checkpoint that produced visible ooze
 ```
 
 ## Ordered safe ledges
@@ -260,6 +222,7 @@ client acceptance and visible frame cite the same publication identity
 6. Host Network Cadence and Fixed Simulation Authority
 6a. Host Movement Admission and Client Reconciliation
 6b. Snapshot Delivery and Backpressure Authority
+6c. Authoritative Randomness and Replay Authority
 7. Pause/Resume Authority
 ```
 
