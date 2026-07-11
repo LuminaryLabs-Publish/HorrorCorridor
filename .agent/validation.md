@@ -1,26 +1,25 @@
 # HorrorCorridor Validation
 
-**Updated:** `2026-07-11T07-30-40-04-00`
+**Updated:** `2026-07-11T09-29-07-04-00`
 
 ## Plan ledger
 
-**Goal:** separate source-backed actor-admission findings from executable multiplayer proof and record the exact validation boundary.
+**Goal:** separate source-backed runtime readiness findings from executable lifecycle proof and record the exact validation boundary.
 
-- [x] Compare the full Publish inventory with the central ledger.
+- [x] Compare the full Publish inventory with central and repo-local tracking.
 - [x] Exclude `TheCavalryOfRome`.
 - [x] Select only `HorrorCorridor`.
-- [x] Read the current root `.agent` state and prior network audits.
-- [x] Read `GameShell`, `GameCanvas`, peer events, host transport, protocol types, serializers, message constructors and network rules.
-- [x] Trace transport provenance into host dispatch.
-- [x] Trace claimed player identity into movement and interaction mutation.
-- [x] Trace accepted mutation into authoritative publication and render projection.
+- [x] Read the current root `.agent` state and prior session/network audits.
+- [x] Read `runtimeStore.ts`, `GameShell.tsx`, `GameCanvas.tsx` and package scripts.
+- [x] Trace readiness writes across entry, SYNC, initialization, lobby return, title reset and cleanup.
+- [x] Trace the reset-before-unmount stale cleanup sequence.
 - [x] Inventory active domains, implemented kits and services.
-- [x] Add timestamped actor-identity audits.
+- [x] Add timestamped readiness audits.
 - [x] Refresh required root `.agent` documents.
-- [x] Update the central ledger and internal change log.
 - [x] Change no runtime source, script, dependency or deployment configuration.
 - [x] Create no branch or pull request.
 - [x] Push documentation directly to `main`.
+- [ ] Central ledger synchronization and internal change log are pending current-run synchronization.
 
 ## Documentation-only result
 
@@ -34,8 +33,8 @@ deployment changed: no
 branch created: no
 pull request created: no
 repo-local docs pushed to main: yes
-central ledger synchronized on main: yes
-central internal change log added on main: yes
+central ledger synchronization: pending current-run synchronization
+central internal change log: pending current-run synchronization
 ```
 
 ## Source inspection performed
@@ -43,16 +42,17 @@ central internal change log added on main: yes
 ```txt
 full Publish inventory reviewed: yes
 central ledger coverage compared: yes
+repo-local audit freshness compared: yes
 nine eligible repositories tracked with root .agent: yes
 TheCavalryOfRome excluded: yes
 selected only HorrorCorridor: yes
-transport remotePeerId and connectionId traced: yes
-envelope senderId and roomId traced: yes
-payload playerId and sequence traced: yes
-structural decoder traced: yes
-host dispatch traced: yes
-movement and interaction mutation traced: yes
-snapshot and render projection traced: yes
+runtime readiness shape traced: yes
+shell readiness producers traced: yes
+GameCanvas provider initialization traced: yes
+return-to-lobby and return-to-title traced: yes
+resetRuntime ordering traced: yes
+GameCanvas cleanup patch traced: yes
+solo networking mismatch traced: yes
 ```
 
 ## Existing commands
@@ -73,35 +73,30 @@ These commands were not run because runtime source was not changed and the conne
 ## Missing fixture gates
 
 ```txt
-fixture:lobby-roster-identity
-fixture:transport-actor-binding
-fixture:sender-payload-consistency
-fixture:connection-sequence-admission
-fixture:request-deduplication
-fixture:disconnect-retirement
-fixture:multi-peer-impersonation
-browser host-plus-two-clients actor smoke
+fixture:runtime-readiness
+fixture:runtime-readiness-stale-cleanup
+fixture:runtime-readiness-rollback
+fixture:runtime-readiness-strict-mode
+browser session entry/exit lifecycle smoke
 ```
 
-## Required actor matrix
+## Required readiness matrix
 
 ```txt
-bound peer updates own player -> accepted once
-bound peer interacts as own player -> accepted or domain no-change
-sender mismatch -> rejected without mutation
-payload player mismatch -> rejected without mutation
-sender and payload disagree -> rejected
-unknown connection -> rejected
-retired connection -> rejected
-wrong room -> rejected
-wrong session or epoch -> rejected
-duplicate request -> duplicate without mutation
-stale sequence -> rejected
-sequence gap -> stable policy result
-duplicate active connection -> conflict result
-rejected command advances no tick
-rejected command publishes no gameplay SYNC
-accepted command correlates to world minimap HUD and debug projection
+shell capability request -> not ready until provider proof
+solo mount -> simulation/rendering/input ready, networking unavailable
+host lobby before peer open -> networking not committed ready
+host connected -> networking ready from transport provider
+client before connection -> networking not committed ready
+client connected -> networking ready from transport provider
+renderer failure -> rendering failed and rolled back
+listener failure -> input failed and rolled back
+return to lobby with live transport -> only networking may remain ready
+return to title -> all capabilities revoked
+reset then late old cleanup -> rejected stale generation
+reset then immediate new mount -> old provider cannot patch new generation
+double cleanup -> no-change/idempotent
+strict-mode mount/unmount/remount -> one current provider per capability
 ```
 
 ## Runtime proof status
@@ -112,11 +107,10 @@ npm run lint: not run
 npm run smoke:protokits: not run
 npm run harness:horror-corridor: not run
 browser smoke: not run
-transport actor fixture: unavailable
-sender/payload fixture: unavailable
-sequence fixture: unavailable
-request dedupe fixture: unavailable
-multi-peer impersonation fixture: unavailable
+runtime readiness fixture: unavailable
+stale cleanup fixture: unavailable
+rollback fixture: unavailable
+strict-mode remount fixture: unavailable
 ```
 
-No transport identity, actor admission, network safety, gameplay or rendering correctness claim is made by this documentation pass.
+No runtime readiness, lifecycle, networking, gameplay or rendering correctness claim is made by this documentation pass.
