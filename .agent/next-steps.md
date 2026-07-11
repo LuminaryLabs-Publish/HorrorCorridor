@@ -1,80 +1,87 @@
 # HorrorCorridor Next Steps
 
-**Updated:** `2026-07-11T05-28-29-04-00`
+**Updated:** `2026-07-11T07-30-40-04-00`
 
 ## Plan ledger
 
-**Goal:** make the lobby roster semantically authoritative before the existing ready/start transaction work seals it into a run.
+**Goal:** establish roster identity first, then bind every live transport connection to one canonical member and player before implementing additional multiplayer commands.
 
 ### Gate 1: roster identity and peer binding
 
-- [ ] Replace ambiguous `LobbyPlayer` rows with canonical `LobbyMemberRecord` data.
-- [ ] Add `memberKind: host-local | peer | reserved-slot`.
-- [ ] Add explicit `peerId`, `playerId`, `slotId` and `admittedForBootstrap` fields.
-- [ ] Ensure reserved slots are never reported as connected or ready.
-- [ ] Route Add guest through a typed `ReserveSlotCommand`.
-- [ ] Route peer arrival through typed join or slot-claim admission.
-- [ ] Enforce one peer, one member and one player identity.
-- [ ] Add monotonic roster revision and stable roster fingerprint.
-- [ ] Return accepted, rejected or no-change results with stable reasons.
-- [ ] Publish authoritative roster observations to all peers.
-- [ ] Filter bootstrap input to a sealed admitted-real-member roster.
-- [ ] Return admitted and rejected member rows from bootstrap preflight.
-- [ ] Add `fixture:lobby-roster-identity`.
-- [ ] Add `fixture:placeholder-admission`.
-- [ ] Add `fixture:peer-slot-claim`.
-- [ ] Add `fixture:roster-protocol-ordering`.
-- [ ] Add a browser host/client roster smoke.
+- [ ] Replace ambiguous roster rows with canonical member records.
+- [ ] Distinguish `host-local`, `peer` and `reserved-slot` membership.
+- [ ] Add explicit peer, member, player and slot identities.
+- [ ] Add monotonic roster revision and stable fingerprint.
+- [ ] Ensure reserved slots never enter gameplay bootstrap.
+- [ ] Add placeholder, peer-claim and disconnect fixtures.
 
-### Gate 2: lobby readiness and start transaction
+### Gate 2: transport actor binding and message admission
 
-- [ ] Route client ready changes to the host instead of mutating local state.
-- [ ] Admit readiness against actor binding and expected roster revision.
-- [ ] Reject non-host, wrong-phase, stale-roster and unready start requests.
-- [ ] Introduce `starting` as an explicit room phase.
-- [ ] Seal the admitted roster revision and fingerprint before bootstrap.
-- [ ] Generate `startTransactionId`, `runSessionId` and session epoch.
-- [ ] Correlate `START_GAME` and initial `SYNC` with the same identities.
-- [ ] Commit host and client PLAYING state exactly once.
-- [ ] Roll back to the previous lobby observation on staged failure.
-- [ ] Add deterministic message-ordering and rollback fixtures.
+- [ ] Add a canonical live connection record for `connectionId` and `remotePeerId`.
+- [ ] Resolve the connection to one admitted member and gameplay player.
+- [ ] Require envelope `senderId` to match the bound player.
+- [ ] Require payload `playerId` to match the same bound player.
+- [ ] Admit envelope `roomId`, run session ID and session epoch.
+- [ ] Enforce monotonic PLAYER_UPDATE sequence per connection.
+- [ ] Deduplicate request IDs before domain dispatch.
+- [ ] Return typed accepted, rejected, duplicate, stale and no-change results.
+- [ ] Reject unknown, retired, duplicate and reserved-slot bindings.
+- [ ] Publish no gameplay snapshot for a rejected command.
+- [ ] Add bounded actor-admission and rejection observations.
+- [ ] Add `fixture:transport-actor-binding`.
+- [ ] Add `fixture:sender-payload-consistency`.
+- [ ] Add `fixture:connection-sequence-admission`.
+- [ ] Add `fixture:request-deduplication`.
+- [ ] Add `fixture:disconnect-retirement`.
+- [ ] Add a browser host-plus-two-clients impersonation smoke.
 
-### Gate 3: dependent runtime authority
+### Gate 3: lobby readiness and start transaction
 
-- [ ] Add run-exit commit and session-epoch message admission.
+- [ ] Route readiness through the host and actor-admission layer.
+- [ ] Seal one roster revision and fingerprint before bootstrap.
+- [ ] Introduce start transaction ID, run session ID and epoch.
+- [ ] Correlate START_GAME and initial SYNC.
+- [ ] Commit or roll back exactly once.
+
+### Gate 4: dependent runtime authority
+
+- [ ] Add run-exit commit and epoch-based message quarantine.
 - [ ] Add snapshot duplicate, stale, ordering and conflict policy.
-- [ ] Add host movement admission and active client reconciliation.
+- [ ] Add host movement validation and active client reconciliation.
 - [ ] Add replicated pause/resume authority and atomic input suspension.
 
-## Recommended DSKs
+## Recommended actor DSKs
 
 ```txt
-lobby-member-kind-kit
-lobby-peer-binding-kit
-lobby-slot-reservation-kit
-lobby-member-admission-kit
-lobby-member-claim-kit
-lobby-member-removal-kit
-lobby-roster-revision-kit
-lobby-roster-fingerprint-kit
-bootstrap-roster-filter-kit
-lobby-roster-projection-kit
-lobby-roster-authority-ledger-kit
-lobby-roster-fixture-kit
+transport-connection-identity-kit
+peer-player-binding-kit
+inbound-envelope-preflight-kit
+room-session-admission-kit
+actor-claim-resolution-kit
+sender-payload-consistency-kit
+connection-sequence-ledger-kit
+request-deduplication-kit
+message-admission-result-kit
+host-command-dispatch-kit
+rejected-message-observation-kit
+transport-identity-fixture-kit
 ```
 
 ## Required proof
 
 ```txt
-reserved slots never become active players
-one real peer creates exactly one member and one player
-peer claim does not leave a duplicate placeholder
-peer disconnect changes exactly the bound member
-same command replay does not drift revision
-stale command rejects without mutation
-sealed roster fingerprint matches bootstrap input
-world, minimap, snapshot and debug output contain only admitted members
-START_GAME and initial SYNC identify that same sealed roster
+one live connection resolves to one admitted player
+bound peer can update only its own player
+bound peer can interact only as its own player
+sender mismatch rejects before mutation
+payload player mismatch rejects before mutation
+wrong room session or epoch rejects
+retired connection rejects
+same request replay is duplicate without mutation
+stale sequence rejects
+accepted mutation publishes at most once
+rejected command advances no tick and changes no render projection
+world minimap HUD and debug reflect only accepted actor-bound state
 ```
 
 ## Do not start with
@@ -88,4 +95,4 @@ save system
 pause convergence
 ```
 
-Those depend on a stable roster and run-session identity.
+Those depend on canonical roster, actor and run-session identity.
