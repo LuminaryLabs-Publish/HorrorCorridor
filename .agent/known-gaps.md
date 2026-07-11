@@ -1,6 +1,6 @@
 # HorrorCorridor Known Gaps
 
-**Updated:** `2026-07-11T18-11-21-04-00`
+**Updated:** `2026-07-11T19-38-14-04-00`
 
 ## Primary ordered gaps
 
@@ -17,122 +17,51 @@
 10. host network cadence and fixed simulation authority
 11. host movement admission and client reconciliation
 12. snapshot delivery, payload budgeting and backpressure authority
-13. replicated pause/resume convergence
+13. authoritative randomness, checkpoint and replay authority
+14. replicated pause/resume convergence
 ```
 
-## Snapshot construction gaps
+## Current randomness gap
 
 ```txt
-publishAuthoritativeState builds a complete local replicated snapshot
-createFullSyncMessage rebuilds the complete replicated snapshot
-room state is cloned again into the SYNC payload
-maze, players, cubes, anomaly and ooze are copied for every publication
-no canonical one-build payload result
-no payload schema revision beyond protocol version
-no payload fingerprint
-no serialized byte count
-no maximum snapshot byte budget
-no full-versus-delta selection policy
-no dirty-field or dirty-entity set
+seeded maze topology: present
+seeded cube placement: present
+seeded target sequence: present
+seeded authoritative ooze stream: absent
 ```
 
-## Delivery and backpressure gaps
+`advanceOozeTrail()` defaults to `Math.random()` when no RNG is supplied. The authoritative host supplies no RNG, so decay survival, ooze height and ooze rotation depend on ambient process state and call count.
+
+## Missing random authority
 
 ```txt
-HostTransportAdapter.broadcast returns only an integer
-HostTransportAdapter.sendTo returns only a boolean
-send admission checks only connection.open
-connection.send is not wrapped in a typed attempt result
-no intended peer set is captured
-no sent/skipped/closed/failed/timed-out/backpressured rows
-no pending buffered bytes observation
-no send queue depth or oldest-age observation
-no send duration or delivery-lag observation
-no retry, coalesce, drop or timeout policy
-no slow-peer isolation policy
-no per-peer publication sequence baseline
-no connection-specific payload budget
-no exception classification or partial-success commit
-publication caller discards the aggregate sent count
-BroadcastChannel path increments sent without delivery acknowledgement
+run-scoped random seed derivation
+named stream identity
+PRNG algorithm version
+serializable stream state
+monotonic draw index
+simulation-step draw budget
+typed draw receipts
+atomic gameplay + RNG commit
+snapshot checkpoint projection
+save/replay checkpoint projection
+restore and migration admission
+bounded draw journal
+frame correlation
 ```
 
-## Cadence amplification interaction
+## Consequences
 
 ```txt
-remote PLAYER_UPDATE
-  -> direct state mutation
-  -> full local snapshot clone
-  -> full outbound snapshot clone
-  -> complete JSON serialization
-  -> all-peer fanout
-
-P clients * U update-triggered publications/s
-  -> approximately P * U full payload builds/s
-  -> approximately P * P * U peer send attempts/s
+same seed/input history can produce different ooze evolution
+snapshot restore cannot prove the next random result
+host migration cannot continue the exact stream
+failed or duplicate steps can consume untracked draws
+timing/cadence changes can alter call count and future results
+debug captures cannot reconstruct why an ooze item survived or spawned
+fixtures cannot prove deterministic replay beyond the seeded maze
 ```
 
-## Frame-correlation gaps
+## Retained transport and lifecycle gaps
 
-```txt
-no publication ID distinct from snapshot tick
-no canonical payload fingerprint in debug state
-no per-peer delivery completion revision
-no accepted-client acknowledgement tied to a delivery row
-no first visible frame tied to publication and payload identity
-world, minimap, HUD and debug cannot prove which delivered payload they consumed
-```
-
-## Retained cadence gaps
-
-```txt
-client input sequence is generated but not admitted by host
-no bounded per-player input queue or deterministic coalescing
-remote movement directly triggers publication
-lastNetworkTickAtMs aliases send, publication and ooze timing
-continuous traffic can postpone ooze advancement
-snapshot tick represents publication count rather than stable simulation steps
-```
-
-## Retained disconnect gaps
-
-```txt
-connection close mutates session/lobby state but not live GameState
-retired/disconnected actors can remain in players, ooze inputs and snapshots
-held cube ownership can reference a missing actor
-no suspension, grace, retirement or reconnect claim result
-```
-
-## Required snapshot-delivery fixtures
-
-```txt
-fixture:snapshot-single-build
-fixture:snapshot-payload-fingerprint
-fixture:snapshot-payload-byte-budget
-fixture:snapshot-full-delta-policy
-fixture:delivery-intended-peer-set
-fixture:delivery-all-open-peers
-fixture:delivery-closed-peer
-fixture:delivery-send-exception
-fixture:delivery-partial-success
-fixture:delivery-backpressured-peer
-fixture:delivery-slow-peer-isolation
-fixture:delivery-retry-coalescing-budget
-fixture:delivery-publication-frame-correlation
-fixture:browser-slow-peer-fanout
-fixture:pages-slow-peer-fanout
-```
-
-## Required guarantees
-
-```txt
-one publication creates one canonical payload
-payload size and fingerprint are known before send admission
-publication cannot exceed configured byte, peer or time budgets silently
-every intended peer receives one typed result row
-one slow or failing peer cannot block healthy peers
-partial success is committed and observable
-retries and queued payloads remain bounded
-stale payloads can be coalesced or superseded deterministically
-delivery and rendered-frame evidence cite one committed state revision
-```
+The prior snapshot-delivery, network-cadence, movement, disconnect, interaction, outcome, startup and pause findings remain open. This audit does not supersede them.
