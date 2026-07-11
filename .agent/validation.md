@@ -2,7 +2,7 @@
 
 **Repository:** `LuminaryLabs-Publish/HorrorCorridor`
 
-**Updated:** `2026-07-10T23-30-13-04-00`
+**Updated:** `2026-07-11T01-01-32-04-00`
 
 ## Available commands
 
@@ -29,57 +29,41 @@ npm run fixture:pause-convergence
 ## Evidence sampled
 
 ```txt
-[done] full accessible LuminaryLabs-Publish inventory
+[done] complete accessible LuminaryLabs-Publish inventory
 [done] central ledger ordering and root .agent state
-[done] GameShell solo/host/client entry, SYNC projection, pause/resume, exit routing, and transport ownership
-[done] GameCanvas pointer-lock, keyboard, blur, pause, local simulation, host command consumption, publication, rendering, and cleanup paths
-[done] uiStore pause state, reason, overlay, and screen projection
-[done] shared room phase, app screen, game screen, snapshot, and network envelope types
-[done] START_GAME, PLAYER_UPDATE, TRY_INTERACT, SYNC, and LOBBY_EVENT protocol surface
-[done] runtime debug frame/event shape
-[done] package scripts
+[done] GameShell entry, transport creation/destruction, message handling, returnToLobby, returnToStart, and screen projection
+[done] GameCanvas publication, transport consumption, local admission, RAF/render ownership, and cleanup
+[done] sessionStore room/roster/identity/reset shape
+[done] runtimeStore snapshot/readiness/reset shape
+[done] Peer host destroy, broadcast, send, disconnect, and event-bus behavior
+[done] shared room phase, snapshot, and network envelope types
+[done] existing repo-local lifecycle and pause audits
+[done] package command inventory from current audit state
 [done] repo-local documentation update on main
 [done] central ledger and internal change-log synchronization
 ```
 
-## Required lifecycle validation retained
+## Required session lifecycle validation
 
 ```txt
-solo and host/client exit transitions converge
-run re-entry increments session epoch exactly once
-old-epoch active messages reject
-return-to-lobby preserves transport
-return-to-title destroys transport exactly once
-runtime resources dispose exactly once
-room phase, UI, snapshot, readiness, and epoch commit coherently
+solo pause-return and victory-restart produce terminal results
+host return publishes lifecycle lobby state to clients
+client leave does not close the host room
+host close and title exit destroy transport exactly once
+lobby return preserves transport under a new admission generation
+accepted exit freezes simulation and gameplay commands
+old-epoch PLAYER_UPDATE and TRY_INTERACT reject
+old-epoch START_GAME, SYNC, and LOBBY_EVENT reject
+duplicate exit request replays one terminal result
+room phase, UI, runtime readiness, snapshot policy, transport policy, and epoch commit coherently
+GameCanvas cleanup correlates with the terminal exit result
+new run increments sessionEpoch exactly once
+new run accepts only new-epoch traffic
+first lobby frame/readback references the accepted exit result
+all lifecycle rows remain JSON-safe
 ```
 
-## Required pause validation
-
-```txt
-solo playing -> paused accepted
-solo paused -> playing accepted
-solo pause stops movement, interaction, and ooze
-host global pause accepted and published
-host paused rejects remote PLAYER_UPDATE mutation
-host paused rejects remote TRY_INTERACT mutation
-host resume accepted and published
-client local-overlay pause remains visible under active host SYNC
-client local pause stops prediction and outbound gameplay commands
-wrong-role, wrong-room, wrong-game, stale-epoch, and stale-revision commands reject
-duplicate pause/resume request replays one terminal result
-movement, sprint, interact, and look-delta state clear on accepted pause
-resume begins with neutral input
-unexpected pointer-lock loss emits one command
-blur plus pointer-lock loss deduplicates
-expected pointer-lock release emits no duplicate command
-first paused frame references the accepted pause result
-first resumed frame references the accepted resume result
-UI, replicated state, readiness, input suspension, and authority source remain correlated
-all command/result/debug/frame rows remain JSON-safe
-```
-
-## Validation order for the next source passes
+## Validation order for the next source pass
 
 ```txt
 1. npm run fixture:session-lifecycle
@@ -90,11 +74,11 @@ all command/result/debug/frame rows remain JSON-safe
 6. npm run build
 7. npm run validate:live-player:dev
 8. npm run review:object-kit
-9. browser solo Escape and pointer-lock pause smoke
-10. browser host-global pause with client smoke
-11. browser client-local overlay pause smoke
-12. browser held-input pause/resume smoke
-13. runtime-debug pause export inspection
+9. browser solo return/restart smoke
+10. browser host return with client convergence smoke
+11. browser client leave/rejoin smoke
+12. browser title exit and transport disposal smoke
+13. runtime-debug lifecycle export inspection
 ```
 
 ## Documentation-pass validation
@@ -111,6 +95,7 @@ branch created: no
 pull request created: no
 existing tests run: no
 session lifecycle fixture: unavailable
+transport quarantine fixture: unavailable
 pause convergence fixture: unavailable
 repo-local documentation pushed to main: yes
 central ledger updated: yes
@@ -119,4 +104,4 @@ central internal change-log added: yes
 
 ## Why existing checks were not run
 
-This pass changed Markdown and JSON audit state only. Existing build, visual, and live-player commands cannot prove pause command authority, host/client convergence, input suspension, duplicate/stale admission, or first-frame pause/resume attribution. Those guarantees require the missing deterministic fixtures.
+This pass changed Markdown and JSON audit state only. Existing build, visual, and live-player commands cannot prove run-exit command authority, lifecycle publication, epoch admission, late-callback quarantine, exactly-once teardown, or re-entry convergence. Those guarantees require the missing deterministic lifecycle fixture.

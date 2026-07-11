@@ -1,8 +1,8 @@
 {
-  "schemaVersion": 53,
-  "generatedAt": "2026-07-10T23-30-13-04-00",
+  "schemaVersion": 54,
+  "generatedAt": "2026-07-11T01-01-32-04-00",
   "repository": "LuminaryLabs-Publish/HorrorCorridor",
-  "status": "run-exit-authority-first-pause-resume-authority-dependent",
+  "status": "run-exit-commit-session-epoch-transport-quarantine-planned",
   "selectedBecause": "oldest eligible documented fallback after full accessible LuminaryLabs-Publish inventory, central ledger, and root .agent comparison; TheCavalryOfRome excluded",
   "sourceRoots": [
     "HorrorCorridor-V1/src/components/game",
@@ -17,247 +17,114 @@
     "HorrorCorridor-V1/src/types",
     "HorrorCorridor-V1/scripts"
   ],
-  "currentNextSlice": "HorrorCorridor Run Exit Authority + Session Epoch Re-entry Fixture Gate",
+  "currentNextSlice": "HorrorCorridor Run Exit Commit + Session Epoch Transport Quarantine Fixture Gate",
   "dependentNextSlice": "HorrorCorridor Pause/Resume Authority + Input Suspension Convergence Fixture Gate",
   "dependencyOrder": [
     "lobby-readiness-and-start-admission-authority",
-    "sealed-roster-and-initial-session-identity",
+    "sealed-roster-and-initial-run-session-identity",
     "run-exit-command-result-authority",
-    "session-epoch-and-stale-message-admission",
-    "pause-resume-command-result-authority",
-    "simulation-and-interaction-admission",
-    "input-suspension-and-pointer-lock-adapter",
-    "pause-publication-and-projection-transaction",
-    "pause-convergence-ledger-and-fixture"
+    "gameplay-and-transport-command-freeze",
+    "lifecycle-publication-and-projection-commit",
+    "transport-preserve-or-destroy-policy",
+    "session-epoch-and-stale-callback-quarantine",
+    "snapshot-archive-or-reset",
+    "exactly-once-runtime-teardown",
+    "fresh-reentry-bootstrap",
+    "pause-resume-authority"
   ],
   "interactionLoop": [
     "solo-host-or-client-enters-playing",
-    "gamecanvas-installs-global-input-render-and-transport-ownership",
-    "escape-blur-or-pointer-lock-loss-mutates-local-ui-pause",
-    "local-raf-stops-simulation-when-screen-is-not-playing",
-    "replicated-game-state-and-room-phase-remain-active",
-    "host-continues-consuming-remote-gameplay-commands",
-    "host-publishes-active-sync",
-    "client-sync-projection-restores-playing",
-    "input-and-interaction-state-remain-partially-live",
-    "resume-is-local-ui-only"
+    "gamecanvas-owns-local-runtime-and-host-or-client-gameplay-adapters",
+    "return-or-restart-invokes-gameshell-returntolobby",
+    "ui-and-readiness-change-locally",
+    "gamecanvas-unmount-disposes-local-render-input-and-frame-resources",
+    "authoritative-room-and-snapshot-remain-active-or-ending",
+    "transport-and-shell-message-handler-remain-live",
+    "old-start-or-sync-has-no-session-epoch-admission",
+    "late-sync-can-restore-playing-or-completed",
+    "reentry-bootstraps-without-old-callback-quarantine"
   ],
   "domains": [
     "application shell and screen routing",
     "UI overlay pause completion and game-screen projection",
-    "session mode identity room roster and connection state",
-    "runtime snapshot pose view input flags and readiness",
+    "session mode peer identity room roster and connection state",
+    "runtime snapshot local pose view angles input flags and readiness",
     "lobby presentation and controls",
-    "PeerJS host transport",
-    "PeerJS client transport",
-    "BroadcastChannel local transport bridge",
-    "peer event bus and status projection",
+    "PeerJS host/client transport and BroadcastChannel bridge",
+    "peer event bus and transport status projection",
     "versioned protocol envelopes and serialization",
     "seeded maze cube anomaly room and player bootstrap",
     "room phase and replicated app/game state",
     "pointer lock keyboard mouse blur and input lifecycle",
     "movement collision camera walk shake and prediction",
-    "host player-update consumption",
-    "cube interaction and carried-object synchronization",
-    "ordered anomaly completion and rollback",
+    "client player-update publication and host consumption",
+    "interaction cube carry placement removal rollback and victory",
     "ooze cadence decay spawn spacing and capacity",
     "authoritative snapshot construction and publication",
-    "client snapshot replay",
-    "Three.js world terrain props lights cubes players ooze and scene dressing",
-    "animation loop resize and canvas ownership",
+    "client snapshot replay and local pose projection",
+    "Three.js scene maze world terrain props lights cubes players ooze and dressing",
+    "animation loop resize canvas and frame ownership",
     "post-processing composer and bloom",
     "minimap and HUD projection",
     "runtime debug frames and events",
     "resource disposal and component cleanup",
     "build lint harness visual object-kit and live-player validation",
-    "planned lobby entry authority",
-    "planned run-exit and session-epoch authority",
-    "planned pause/resume authority",
-    "planned simulation and interaction admission",
-    "planned input suspension and pointer-lock correlation",
-    "planned pause projection convergence and fixture"
+    "planned run-session identity and epoch authority",
+    "planned run-exit command/result authority",
+    "planned lifecycle publication and projection commit",
+    "planned transport quarantine and stale callback admission",
+    "planned snapshot archive/reset and re-entry bootstrap",
+    "planned pause/resume and input-suspension authority"
   ],
   "implementedKits": [
-    {
-      "name": "corridor-application-shell-kit",
-      "services": ["screen routing", "menu orchestration", "run entry", "local pause/resume", "completion", "exit callbacks"]
-    },
-    {
-      "name": "corridor-session-domain-kit",
-      "services": ["session mode", "peer identity", "room", "roster", "connection status", "session reset"]
-    },
-    {
-      "name": "runtime-store-snapshot-kit",
-      "services": ["authoritative snapshot", "local pose", "view angles", "input flags", "runtime readiness", "runtime reset"]
-    },
-    {
-      "name": "ui-pause-projection-kit",
-      "services": ["local pause flag", "pause reason", "pause overlay", "PLAYING/PAUSED local screen projection"]
-    },
-    {
-      "name": "lobby-screen-presentation-kit",
-      "services": ["room metadata", "roster projection", "ready badges", "primary and secondary controls", "connection status"]
-    },
-    {
-      "name": "peer-host-transport-kit",
-      "services": ["host peer", "connection registry", "broadcast", "targeted send", "disconnect", "destroy"]
-    },
-    {
-      "name": "peer-client-transport-kit",
-      "services": ["host connection", "send", "local bridge", "status", "destroy"]
-    },
-    {
-      "name": "peer-event-bus-kit",
-      "services": ["typed transport events", "subscription", "unsubscribe", "clear"]
-    },
-    {
-      "name": "protocol-message-construction-kit",
-      "services": ["versioned envelopes", "START_GAME", "PLAYER_UPDATE", "TRY_INTERACT", "SYNC", "LOBBY_EVENT"]
-    },
-    {
-      "name": "maze-snapshot-bootstrap-kit",
-      "services": ["deterministic seed", "maze", "cubes", "anomaly", "active room", "players", "initial snapshot"]
-    },
-    {
-      "name": "first-person-input-kit",
-      "services": ["keyboard state", "pointer lock", "look accumulation", "input snapshots"]
-    },
-    {
-      "name": "movement-collision-camera-kit",
-      "services": ["movement integration", "maze collision", "eye position", "walk shake", "camera projection"]
-    },
-    {
-      "name": "network-player-update-kit",
-      "services": ["client update send", "host update consume", "pose projection", "network cadence"]
-    },
-    {
-      "name": "corridor-interaction-domain-kit",
-      "services": ["pickup", "drop", "place", "remove", "held-cube synchronization"]
-    },
-    {
-      "name": "ordered-anomaly-sequence-kit",
-      "services": ["ordered validation", "rollback", "ending phase", "victory"]
-    },
-    {
-      "name": "ooze-trail-domain-kit",
-      "services": ["cadence", "decay", "spawn", "spacing guard", "capacity guard"]
-    },
-    {
-      "name": "corridor-authoritative-publication-kit",
-      "services": ["snapshot tick", "full sync", "broadcast", "publication reason", "cadence accounting"]
-    },
-    {
-      "name": "corridor-animation-loop-kit",
-      "services": ["RAF start", "RAF stop", "delta calculation", "idempotent running state"]
-    },
-    {
-      "name": "corridor-render-world-kit",
-      "services": ["terrain", "maze", "cubes", "players", "anomaly", "ooze", "props", "lights", "attach", "update", "dispose"]
-    },
-    {
-      "name": "corridor-post-processing-kit",
-      "services": ["composer", "bloom", "output", "resize", "render", "dispose"]
-    },
-    {
-      "name": "corridor-minimap-kit",
-      "services": ["maze projection", "player markers", "cube markers", "anomaly markers"]
-    },
-    {
-      "name": "runtime-debug-frame-kit",
-      "services": ["bounded frames", "bounded events", "overlay preferences", "JSON-safe browser export"]
-    },
-    {
-      "name": "runtime-resource-cleanup-kit",
-      "services": ["RAF stop", "transport unsubscribe", "ResizeObserver disconnect", "listener removal", "world disposal", "composer disposal", "renderer disposal", "canvas removal"]
-    },
-    {
-      "name": "package-validation-kit",
-      "services": ["build", "lint", "ProtoKit smoke", "harness", "visual match", "object-kit review", "live-player validation"]
-    }
+    {"name":"corridor-application-shell-kit","services":["screen routing","menu orchestration","run entry","local pause/resume","completion","exit callbacks"]},
+    {"name":"corridor-session-domain-kit","services":["session mode","peer identity","room","roster","connection status","session reset"]},
+    {"name":"runtime-store-snapshot-kit","services":["authoritative snapshot","local pose","view angles","input flags","runtime readiness","runtime reset"]},
+    {"name":"ui-pause-projection-kit","services":["local pause flag","pause reason","pause overlay","PLAYING/PAUSED local projection"]},
+    {"name":"lobby-screen-presentation-kit","services":["room metadata","roster projection","ready badges","primary/secondary controls","connection status"]},
+    {"name":"peer-host-transport-kit","services":["host peer","connection registry","broadcast","targeted send","disconnect","destroy"]},
+    {"name":"peer-client-transport-kit","services":["host connection","send","local bridge","status","disconnect","destroy"]},
+    {"name":"peer-event-bus-kit","services":["typed transport events","subscribe","unsubscribe","clear"]},
+    {"name":"protocol-message-construction-kit","services":["versioned envelopes","START_GAME","PLAYER_UPDATE","TRY_INTERACT","SYNC","LOBBY_EVENT"]},
+    {"name":"maze-snapshot-bootstrap-kit","services":["deterministic seed","maze","cubes","anomaly","active room","players","initial snapshot"]},
+    {"name":"first-person-input-kit","services":["keyboard state","pointer lock","look accumulation","input snapshots"]},
+    {"name":"movement-collision-camera-kit","services":["movement integration","maze collision","eye position","walk shake","camera projection"]},
+    {"name":"network-player-update-kit","services":["client update send","host update consume","pose projection","network cadence"]},
+    {"name":"corridor-interaction-domain-kit","services":["pickup","drop","place","remove","held-cube synchronization"]},
+    {"name":"ordered-anomaly-sequence-kit","services":["ordered validation","rollback","ending phase","victory"]},
+    {"name":"ooze-trail-domain-kit","services":["cadence","decay","spawn","spacing guard","capacity guard"]},
+    {"name":"corridor-authoritative-publication-kit","services":["snapshot tick","full sync","broadcast","publication reason","cadence accounting"]},
+    {"name":"corridor-animation-loop-kit","services":["RAF start","RAF stop","delta calculation","idempotent running state"]},
+    {"name":"corridor-render-world-kit","services":["terrain","maze","cubes","players","anomaly","ooze","props","lights","attach","update","dispose"]},
+    {"name":"corridor-post-processing-kit","services":["composer","bloom","output","resize","render","dispose"]},
+    {"name":"corridor-minimap-kit","services":["maze projection","player markers","cube markers","anomaly markers"]},
+    {"name":"runtime-debug-frame-kit","services":["bounded frames","bounded events","overlay preferences","JSON-safe browser export"]},
+    {"name":"runtime-resource-cleanup-kit","services":["RAF stop","transport unsubscribe","observer disconnect","listener removal","world/composer/renderer disposal","canvas removal"]},
+    {"name":"package-validation-kit","services":["build","lint","ProtoKit smoke","harness","visual match","object-kit review","live-player validation"]}
   ],
   "plannedKits": [
-    {
-      "name": "run-session-identity-kit",
-      "services": ["run session id", "monotonic session epoch", "room and game correlation", "stable fingerprint"]
-    },
-    {
-      "name": "run-exit-authority-kit",
-      "services": ["typed command/result", "host multiplayer authority", "solo authority", "phase validation", "idempotency"]
-    },
-    {
-      "name": "session-message-admission-kit",
-      "services": ["protocol version", "room", "game", "epoch", "sender", "phase", "stale-message rejection"]
-    },
-    {
-      "name": "runtime-teardown-result-kit",
-      "services": ["resource ledger", "exactly-once disposal", "no-change replay", "teardown fingerprint"]
-    },
-    {
-      "name": "pause-command-kit",
-      "services": ["command id", "request id", "actor and role", "room/game/epoch", "desired state", "scope", "reason"]
-    },
-    {
-      "name": "pause-authority-policy-kit",
-      "services": ["solo policy", "host-global policy", "client-local overlay policy", "client global request policy", "connection policy"]
-    },
-    {
-      "name": "pause-transition-result-kit",
-      "services": ["accepted/rejected/no-change", "stable reason", "previous/next state", "pause revision", "authority source"]
-    },
-    {
-      "name": "simulation-admission-kit",
-      "services": ["movement admission", "interaction admission", "ooze admission", "client send admission", "host remote-command admission"]
-    },
-    {
-      "name": "input-suspension-kit",
-      "services": ["clear movement flags", "clear interact", "clear look deltas", "suspend gameplay input", "neutral resume"]
-    },
-    {
-      "name": "pointer-lock-pause-adapter-kit",
-      "services": ["unexpected loss intent", "expected release observation", "blur deduplication", "capture result"]
-    },
-    {
-      "name": "pause-publication-policy-kit",
-      "services": ["global pause publication", "global resume publication", "paused heartbeat", "active mutation suppression"]
-    },
-    {
-      "name": "pause-projection-transaction-kit",
-      "services": ["UI pause", "screen", "game screen", "overlay", "readiness", "input suspension", "replicated state", "atomic commit"]
-    },
-    {
-      "name": "pause-convergence-ledger-kit",
-      "services": ["command rows", "result rows", "peer acknowledgement", "pause revision", "projection parity", "stale and duplicate counts"]
-    },
-    {
-      "name": "pause-debug-projection-kit",
-      "services": ["current policy", "authority source", "pause revision", "last result", "simulation admission", "input suspension", "JSON-safe export"]
-    },
-    {
-      "name": "pause-resume-fixture-kit",
-      "services": ["DOM-free replay", "solo/host/client matrices", "remote-command admission", "input clearing", "frame parity", "JSON-safe assertions"]
-    },
-    {
-      "name": "legacy-local-pause-compatibility-kit",
-      "services": ["adapt current uiStore calls", "preserve menu presentation", "route legacy callbacks through pause authority"]
-    },
-    {
-      "name": "lobby-readiness-command-kit",
-      "services": ["command ids", "desired ready value", "actor identity", "room identity", "roster revision", "preflight"]
-    },
-    {
-      "name": "lobby-start-admission-policy-kit",
-      "services": ["host authorization", "phase validation", "capacity", "readiness", "connection", "placeholder rejection", "typed result"]
-    },
-    {
-      "name": "snapshot-acceptance-companion-kit",
-      "services": ["authoritative SYNC preflight", "monotonic acceptance", "atomic projection", "stale replay rejection"]
-    },
-    {
-      "name": "request-identity-and-ack-companion-kit",
-      "services": ["request ids", "pending ledger", "terminal acknowledgements", "no-publish results"]
-    }
+    {"name":"run-session-identity-kit","services":["runSessionId","monotonic sessionEpoch","room/game correlation","stable fingerprint"]},
+    {"name":"run-exit-command-kit","services":["exit intent","actor/role","scope","reason","request id","epoch"]},
+    {"name":"run-exit-authority-kit","services":["host multiplayer authority","solo authority","phase validation","idempotency","terminal result"]},
+    {"name":"run-exit-commit-kit","services":["freeze admission","lifecycle publication","projection commit","snapshot archive/reset","teardown handoff"]},
+    {"name":"session-message-admission-kit","services":["version","room","game","epoch","sender","phase","stale-message rejection"]},
+    {"name":"transport-quarantine-kit","services":["accepted-exit fence","late callback suppression","old connection isolation","re-entry release"]},
+    {"name":"lifecycle-publication-kit","services":["lobby/closed phase publication","exit acknowledgement","peer convergence","reason"]},
+    {"name":"runtime-teardown-result-kit","services":["resource ledger","exactly-once disposal","no-change replay","teardown fingerprint"]},
+    {"name":"snapshot-archive-kit","services":["terminal snapshot retention","active snapshot clearing","epoch-indexed history","re-entry bootstrap boundary"]},
+    {"name":"run-exit-debug-projection-kit","services":["last command/result","epoch","admission state","transport policy","teardown result","JSON-safe export"]},
+    {"name":"run-exit-fixture-kit","services":["DOM-free solo/host/client replay","late-message matrix","teardown assertions","JSON-safe rows"]},
+    {"name":"pause-command-kit","services":["desired pause state","actor/role","room/game/epoch","scope","reason","request id"]},
+    {"name":"pause-authority-policy-kit","services":["solo policy","host-global policy","client-local-overlay policy","connection policy"]},
+    {"name":"pause-transition-result-kit","services":["accepted/rejected/no-change","stable reason","pause revision","authority source"]},
+    {"name":"simulation-admission-kit","services":["movement","interaction","ooze","client send","host remote-command admission"]},
+    {"name":"input-suspension-kit","services":["clear movement","clear interact","clear look deltas","neutral resume"]},
+    {"name":"pause-publication-policy-kit","services":["global pause/resume publication","paused heartbeat","active mutation suppression"]},
+    {"name":"pause-projection-transaction-kit","services":["UI/store/readiness/input/replicated-state atomic commit"]},
+    {"name":"pause-convergence-ledger-kit","services":["command/result rows","peer acknowledgement","projection parity","stale/duplicate counts"]},
+    {"name":"pause-resume-fixture-kit","services":["DOM-free policy replay","solo/host/client matrices","input clearing","frame parity"]}
   ],
-  "currentBlocker": "Run exit and session epoch remain the current implementation gate. The newly documented dependent blocker is that pause is only local UI state: host remote-command consumption continues while paused, client pause is overwritten by normal SYNC, replicated gameState stays playing, and input/interaction state is not atomically suspended.",
+  "currentBlocker": "Local GameCanvas cleanup is not an authoritative run-exit commit. GameShell keeps transport and shell-level callbacks live, RoomState/Snapshot/NetworkEnvelope have no runSessionId/sessionEpoch, and old START_GAME/SYNC/PLAYER_UPDATE/TRY_INTERACT/LOBBY_EVENT traffic can cross lobby return or re-entry.",
   "validation": {
     "runtimeSourceChanged": false,
     "branchCreated": false,
@@ -269,6 +136,7 @@
     "npmRunValidateLivePlayerDev": "not-run",
     "browserSmoke": "not-run",
     "sessionLifecycleFixture": "not-run; script does not exist",
+    "transportQuarantineFixture": "not-run; script does not exist",
     "pauseConvergenceFixture": "not-run; script does not exist"
   }
 }

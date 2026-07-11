@@ -2,17 +2,17 @@
 
 **Repository:** `LuminaryLabs-Publish/HorrorCorridor`
 
-**Updated:** `2026-07-10T23-30-13-04-00`
+**Updated:** `2026-07-11T01-01-32-04-00`
 
 ## Status
 
 ```txt
-status: run-exit-authority-first-pause-resume-authority-dependent
+status: run-exit-commit-session-epoch-transport-quarantine-planned
 runtime source changed: no
 branch: main
 root .agent state: refreshed
 central ledger sync: complete
-central change log: internal-change-log/2026-07-10T23-30-13-04-00-horrorcorridor-audit.md
+central change log: internal-change-log/2026-07-11T01-01-32-04-00-horror-corridor-run-exit-commit-transport-quarantine.md
 ```
 
 ## Selection
@@ -23,16 +23,18 @@ No eligible repository was new, absent from the central ledger, missing root `.a
 
 ```txt
 enter solo, host, or client PLAYING state
-  -> GameCanvas owns input, pointer lock, animation, local simulation/prediction, host command consumption, rendering, minimap, and runtime debug
-  -> Escape, blur, or pointer-lock loss changes local UI pause state
-  -> local RAF stops advancing simulation when screen is PAUSED
-  -> currentGameState.gameState remains playing and room.phase remains active
-  -> host transport callback still consumes remote player updates and interactions
-  -> host publication emits new active SYNC rows
-  -> client GameShell selects PAUSED only when snapshot.gameState is paused
-  -> normal host snapshot therefore projects client back to PLAYING
-  -> input state and interaction admission are not atomically suspended
-  -> resume changes local UI only
+  -> GameCanvas initializes local runtime ownership
+  -> host/solo mutates and publishes authoritative state
+  -> client predicts and sends gameplay commands
+  -> victory or pause menu exposes restart/return controls
+  -> returnToLobby resets UI and readiness only
+  -> GameCanvas unmount cleanup stops local frame/render/input ownership
+  -> active/ending room and authoritative snapshot remain stored
+  -> PeerJS/BroadcastChannel transport remains connected
+  -> GameShell transport handler remains active
+  -> START_GAME/SYNC/LOBBY_EVENT are accepted without run-session admission
+  -> late old-run SYNC can replace lobby projection
+  -> re-entry creates a new bootstrap without monotonic epoch fencing
 ```
 
 ## Domains in use
@@ -40,7 +42,7 @@ enter solo, host, or client PLAYING state
 ```txt
 application shell and screen routing
 UI overlay, pause, completion, and game-screen projection
-session mode, identity, room, roster, and connection state
+session mode, peer identity, room, roster, and connection state
 runtime snapshot, local pose, view angles, input flags, and readiness
 lobby presentation and controls
 PeerJS host/client transport and BroadcastChannel bridge
@@ -62,11 +64,12 @@ minimap and HUD projection
 runtime debug frames and events
 resource disposal and component cleanup
 build, lint, harness, visual, object-kit, and live-player validation
-planned lobby readiness/start admission authority
-planned run-exit/session-epoch authority
-planned pause/resume command and policy authority
-planned simulation/interaction admission and input suspension
-planned pause projection convergence and fixture
+planned run-session identity and epoch authority
+planned run-exit command/result authority
+planned lifecycle publication and projection commit
+planned transport quarantine and stale callback admission
+planned snapshot archive/reset and re-entry bootstrap
+planned pause/resume and input-suspension authority
 ```
 
 ## Implemented kits and services
@@ -75,49 +78,49 @@ planned pause projection convergence and fixture
 corridor-application-shell-kit
   screen routing, menu orchestration, run entry, local pause/resume, completion, exit callbacks
 corridor-session-domain-kit
-  mode, peer identity, room, roster, connection status, reset
+  session mode, peer identity, room, roster, connection status, session reset
 runtime-store-snapshot-kit
-  authoritative snapshot, local pose, view angles, input flags, readiness, reset
+  authoritative snapshot, local pose, view angles, input flags, runtime readiness, runtime reset
 ui-pause-projection-kit
-  local pause flag, reason, overlay, PLAYING/PAUSED projection
+  local pause flag, pause reason, pause overlay, PLAYING/PAUSED local projection
 lobby-screen-presentation-kit
-  roster, ready badges, room status, controls, connection state
+  room metadata, roster projection, ready badges, primary/secondary controls, connection status
 peer-host-transport-kit
   host peer, connection registry, broadcast, targeted send, disconnect, destroy
 peer-client-transport-kit
-  host connection, send, local bridge, status, destroy
+  host connection, send, local bridge, status, disconnect, destroy
 peer-event-bus-kit
-  typed events, subscriptions, clear
+  typed transport events, subscribe, unsubscribe, clear
 protocol-message-construction-kit
-  START_GAME, PLAYER_UPDATE, TRY_INTERACT, SYNC, LOBBY_EVENT envelopes
+  versioned envelopes, START_GAME, PLAYER_UPDATE, TRY_INTERACT, SYNC, LOBBY_EVENT
 maze-snapshot-bootstrap-kit
   deterministic seed, maze, cubes, anomaly, active room, players, initial snapshot
 first-person-input-kit
-  keyboard/pointer state, pointer lock, look accumulation, snapshots
+  keyboard state, pointer lock, look accumulation, input snapshots
 movement-collision-camera-kit
-  movement integration, collision, eye position, walk shake, camera projection
+  movement integration, maze collision, eye position, walk shake, camera projection
 network-player-update-kit
-  client update send, host update consume, pose projection, cadence
+  client update send, host update consume, pose projection, network cadence
 corridor-interaction-domain-kit
   pickup, drop, place, remove, held-cube synchronization
 ordered-anomaly-sequence-kit
   ordered validation, rollback, ending phase, victory
 ooze-trail-domain-kit
-  cadence, decay, spawn, spacing and capacity guards
+  cadence, decay, spawn, spacing guard, capacity guard
 corridor-authoritative-publication-kit
-  tick, full sync, broadcast, reason, cadence accounting
+  snapshot tick, full sync, broadcast, publication reason, cadence accounting
 corridor-animation-loop-kit
-  RAF start/stop and delta calculation
+  RAF start, RAF stop, delta calculation, idempotent running state
 corridor-render-world-kit
-  terrain, maze, cubes, players, anomaly, ooze, props, lights, attach/update/dispose
+  terrain, maze, cubes, players, anomaly, ooze, props, lights, attach, update, dispose
 corridor-post-processing-kit
   composer, bloom, output, resize, render, dispose
 corridor-minimap-kit
-  maze and object top-down projection
+  maze projection, player markers, cube markers, anomaly markers
 runtime-debug-frame-kit
-  bounded frame/event records and JSON-safe browser export
+  bounded frames, bounded events, overlay preferences, JSON-safe browser export
 runtime-resource-cleanup-kit
-  listener removal, observer disconnect, world/composer/renderer disposal, canvas removal
+  RAF stop, transport unsubscribe, observer disconnect, listener removal, world/composer/renderer disposal, canvas removal
 package-validation-kit
   build, lint, ProtoKit smoke, harness, visual match, object-kit review, live-player validation
 ```
@@ -125,33 +128,32 @@ package-validation-kit
 ## Source findings
 
 ```txt
-uiStore.setPaused mutates local UI only
-local simulation admission reads uiState.screen
-host transport consumption does not consult pause state
-host publication forces room.phase active
-client SYNC projection reads snapshot.gameState
-local pause never changes snapshot.gameState to paused
-client pause can be erased by the next normal SYNC
-pointer-lock loss uses the same local-only path
-global key listeners remain active during pause
-input flags and look deltas are not cleared atomically
-interact may execute because applyInteraction checks currentGameState.gameState, which remains playing
-resume has no command, result, authority source, revision, or acknowledgement
-runtime debug has no pause command/result/convergence projection
-no fixture:pause-convergence command exists
+GameShell.returnToLobby resets UI and readiness but does not change room.phase
+GameShell.returnToLobby does not clear/archive authoritativeSnapshot
+GameShell.returnToLobby intentionally leaves transport connected
+GameShell.handleTransportEvent accepts START_GAME, SYNC, and LOBBY_EVENT without exit/epoch preflight
+SYNC directly selects COMPLETED, PAUSED, or PLAYING from snapshot.gameState
+GameCanvas cleanup stops RAF, unsubscribes its transport listener, removes browser listeners, and disposes render resources
+GameCanvas cleanup leaves networking readiness true
+GameCanvas authoritative publication forces room.phase active
+RoomState, ReplicatedGameSnapshot, and NetworkEnvelope have no runSessionId or sessionEpoch
+transport destroy is available for title exit but returns no typed teardown result
+no terminal lifecycle publication exists for lobby return, restart, client leave, host close, or room close
+no transport quarantine blocks callbacks captured before an accepted exit
+no fixture:session-lifecycle command exists
 ```
 
 ## Main finding
 
-Pause is not a coherent runtime authority boundary. Solo, host, and client modes currently interpret pause differently through incidental UI and frame-loop behavior. Host UI pause can coexist with remote gameplay mutation, client pause can be overwritten by authoritative traffic, and input/interaction state is not suspended through one transaction.
+HorrorCorridor has a renderer/component teardown path, but no session transaction that commits exit across gameplay state, room phase, snapshot ownership, transport admission, peer projection, and re-entry identity. The highest-risk gap is not raw disposal. It is the interval after local cleanup while old transport callbacks remain admissible.
 
 ## Current next safe ledge
 
 ```txt
-HorrorCorridor Run Exit Authority + Session Epoch Re-entry Fixture Gate
+HorrorCorridor Run Exit Commit + Session Epoch Transport Quarantine Fixture Gate
 ```
 
-## Newly documented dependent ledge
+## Dependent ledge
 
 ```txt
 HorrorCorridor Pause/Resume Authority + Input Suspension Convergence Fixture Gate
@@ -161,16 +163,19 @@ HorrorCorridor Pause/Resume Authority + Input Suspension Convergence Fixture Gat
 
 ```txt
 lobby readiness/start admission authority
-  -> sealed roster and initial session identity
-  -> run-exit command/result authority
-  -> authoritative phase/store transition and session epoch
-  -> pause command/result authority
-  -> simulation and interaction admission
-  -> input suspension and pointer-lock adapter
-  -> pause publication and projection transaction
-  -> JSON-safe convergence ledger
-  -> DOM-free pause fixture
-  -> browser solo/host/client pause smoke
+  -> sealed roster and initial runSessionId/sessionEpoch
+  -> typed run-exit command/result
+  -> freeze gameplay and transport command admission
+  -> authoritative lifecycle publication
+  -> UI/runtime/snapshot exit commit
+  -> transport preserve/destroy policy
+  -> old-epoch callback quarantine
+  -> exactly-once teardown result
+  -> fresh re-entry bootstrap and epoch increment
+  -> JSON-safe lifecycle ledger
+  -> DOM-free session lifecycle fixture
+  -> browser solo/host/client re-entry smoke
+  -> pause/resume authority
 ```
 
 ## Validation
@@ -181,7 +186,7 @@ branch created: no
 pull request created: no
 existing checks run: no
 session lifecycle fixture: unavailable
-pause convergence fixture: unavailable
+transport quarantine fixture: unavailable
 repo-local docs pushed to main: yes
 central ledger updated: yes
 central change log added: yes

@@ -2,7 +2,7 @@
 
 **Repository:** `LuminaryLabs-Publish/HorrorCorridor`
 
-**Updated:** `2026-07-10T23-30-13-04-00`
+**Updated:** `2026-07-11T01-01-32-04-00`
 
 ## Selection state
 
@@ -14,128 +14,113 @@ TheCavalryOfRome excluded
 HorrorCorridor selected as oldest eligible documented fallback
 ```
 
-## Existing lifecycle gaps retained
+## Run-exit authority gaps
 
 ```txt
-lobby readiness is local instead of host-authoritative
-host start admission does not require a sealed connected/ready roster
-returnToLobby changes local UI only
-room phase and authoritative snapshot remain active or ending after local exit
-no run-exit command/result or lifecycle publication exists
-no monotonic session epoch exists
-late PLAYER_UPDATE, TRY_INTERACT, START_GAME, or SYNC can cross a run boundary
-solo return routes through LOBBY_CLIENT and cannot cleanly restart
-runtime teardown has no exactly-once result ledger
+returnToLobby changes local UI/readiness only
+no RunExitCommand or RunExitResult exists
+no exit request id, actor, role, scope, reason, or authority source exists
+room.phase remains active or ending
+authoritative snapshot remains active
+completion state has no archive/reset policy
+host/client lifecycle state is not published
+solo restart routes through client-lobby presentation
+client leave and host room-close are not distinct transactions
 ```
 
-## Pause authority gaps
+## Session identity and admission gaps
 
 ```txt
-uiStore pause is local presentation state only
-no PauseCommand or PauseResult exists
-no request id, actor role, room/game/epoch identity, scope, or pause revision exists
-no explicit solo, host-global, client-local-overlay, or connection policy exists
-no authoritative host-global pause publication exists
-no client global-pause request/response contract exists
-resume is a local screen change with no terminal result
+no runSessionId exists
+no monotonic sessionEpoch exists
+NetworkEnvelope has roomId but no gameId/epoch
+START_GAME, PLAYER_UPDATE, TRY_INTERACT, SYNC, and LOBBY_EVENT have no epoch fence
+GameShell accepts START_GAME and SYNC without current phase/epoch preflight
+late old-run SYNC can restore PLAYING after local lobby return
+late active commands can cross into the next bootstrap
+no duplicate/stale lifecycle command ledger exists
 ```
 
-## Simulation and command-admission gaps
+## Transport quarantine gaps
 
 ```txt
-local animation admission reads uiState.screen
-host transport consumption does not read pause state
-host can process remote PLAYER_UPDATE while its own UI is paused
-host can process remote TRY_INTERACT while its own UI is paused
+lobby return preserves transport but does not change its admission generation
+GameShell transport callback remains live after GameCanvas unmount
+GameCanvas transport listener unsubscribes, but shell-level message handling remains
+transport destroy returns no typed result
+no callback generation or lease identity exists
+no terminal lifecycle acknowledgement is sent before room close/title exit
+no explicit preserve-versus-destroy policy result exists
+no proof that destroy/disconnect is exactly once
+```
+
+## Runtime commit gaps
+
+```txt
+GameCanvas cleanup disposes local RAF/listeners/world/composer/renderer
+cleanup is not correlated with a RunExitResult
+cleanup leaves networking readiness true
+snapshot archive/reset is outside cleanup and absent from lobby return
+UI, room phase, snapshot, readiness, transport policy, and teardown do not commit atomically
 publishAuthoritativeState forces room.phase active
-normal active publication can continue during host UI pause
-interaction admission checks currentGameState.gameState, which stays playing
-no simulation-admission or interaction-admission result exists
-no paused heartbeat versus gameplay publication policy exists
+no first-lobby-frame acknowledgement references the terminal exit result
 ```
 
-## Client projection gaps
+## Dependent pause gaps
 
 ```txt
-GameShell maps SYNC to PAUSED only when snapshot.gameState is paused
-local pause never changes snapshot.gameState
-next host SYNC can force a paused client back to PLAYING
-client-local overlay pause has no explicit policy
-snapshot.appState and local screen can disagree
-no pause revision or authority source is projected
-no pending/accepted/rejected/no-change UI state exists
-```
-
-## Input-suspension gaps
-
-```txt
-global keyboard listeners remain active during pause
-movement/sprint/interact flags are not cleared atomically
-look deltas are not cleared through a pause transaction
-interact can execute while local pause UI is visible
-stale held-key state can survive into resume
-resume does not require fresh input edges
-pointer-lock release is not correlated with a pause result
-blur plus pointer-lock events have no deduplication identity
-capture failure has no stable browser-effect result
-```
-
-## Render/readback gaps
-
-```txt
-RAF and rendering continue during pause without a pause revision
-paused frame has no authority source or result id
-world/minimap/HUD/overlay can consume different pause notions
-first paused frame and first resumed frame have no acknowledgement
-runtime debug records screen/pointer lock but not pause policy or projection parity
-no detached pause-frame observation exists
+pause remains local presentation state
+host remote gameplay consumption continues during local pause
+client pause can be overwritten by active SYNC
+input flags are not atomically suspended
+pause authority must reuse runSessionId/sessionEpoch and stale-message admission
 ```
 
 ## Missing source files
 
 ```txt
-HorrorCorridor-V1/src/features/pause/domain/pauseTypes.ts
-HorrorCorridor-V1/src/features/pause/domain/pausePolicy.ts
-HorrorCorridor-V1/src/features/pause/domain/pauseReducer.ts
-HorrorCorridor-V1/src/features/pause/domain/simulationAdmission.ts
-HorrorCorridor-V1/src/features/pause/domain/inputSuspension.ts
-HorrorCorridor-V1/src/features/pause/domain/pauseLedger.ts
-HorrorCorridor-V1/src/features/pause/domain/pauseFixtureSeeds.ts
-HorrorCorridor-V1/src/features/pause/domain/pauseFixtureRows.ts
-HorrorCorridor-V1/src/features/debug/domain/pauseDebugProjection.ts
-HorrorCorridor-V1/scripts/horror-corridor-pause-convergence-fixture.mjs
+HorrorCorridor-V1/src/features/session/domain/runSessionTypes.ts
+HorrorCorridor-V1/src/features/session/domain/runSessionIdentity.ts
+HorrorCorridor-V1/src/features/session/domain/runExitReducer.ts
+HorrorCorridor-V1/src/features/session/domain/runExitPolicy.ts
+HorrorCorridor-V1/src/features/session/domain/sessionMessageAdmission.ts
+HorrorCorridor-V1/src/features/session/domain/transportQuarantine.ts
+HorrorCorridor-V1/src/features/session/domain/snapshotArchive.ts
+HorrorCorridor-V1/src/features/session/domain/runtimeTeardownResult.ts
+HorrorCorridor-V1/src/features/session/domain/sessionLifecycleLedger.ts
+HorrorCorridor-V1/src/features/debug/domain/sessionLifecycleDebugProjection.ts
+HorrorCorridor-V1/scripts/horror-corridor-session-lifecycle-fixture.mjs
 ```
 
 ## Validation gaps
 
 ```txt
 package.json has no fixture:session-lifecycle script
-package.json has no fixture:pause-convergence script
-no DOM-free solo/host/client pause policy replay
-no host paused remote-command rejection proof
-no client local-overlay pause persistence proof
-no input clearing and neutral resume proof
-no pointer-lock event deduplication proof
-no duplicate/stale pause command proof
-no pause frame projection parity proof
-no browser multi-peer pause smoke contract
+no DOM-free solo/host/client exit replay
+no transport preserve/destroy policy proof
+no late callback quarantine proof
+no old-epoch START_GAME/SYNC rejection proof
+no old-epoch PLAYER_UPDATE/TRY_INTERACT rejection proof
+no duplicate exit replay proof
+no exactly-once cleanup proof
+no clean re-entry epoch proof
+no first-lobby-frame/result correlation proof
 ```
 
 ## Planned candidate kits
 
 ```txt
-pause-command-kit
-pause-authority-policy-kit
-pause-transition-result-kit
-simulation-admission-kit
-input-suspension-kit
-pointer-lock-pause-adapter-kit
-pause-publication-policy-kit
-pause-projection-transaction-kit
-pause-convergence-ledger-kit
-pause-debug-projection-kit
-pause-resume-fixture-kit
-legacy-local-pause-compatibility-kit
+run-session-identity-kit
+run-exit-command-kit
+run-exit-authority-kit
+run-exit-commit-kit
+session-message-admission-kit
+transport-quarantine-kit
+lifecycle-publication-kit
+runtime-teardown-result-kit
+snapshot-archive-kit
+run-exit-debug-projection-kit
+run-exit-fixture-kit
 ```
 
 ## Ordered boundaries
@@ -143,10 +128,13 @@ legacy-local-pause-compatibility-kit
 ```txt
 lobby readiness/start admission
   -> stable initial run identity
-  -> run exit/session epoch authority
+  -> run-exit command/result authority
+  -> lifecycle publication and atomic projection commit
+  -> transport preserve/destroy policy
+  -> old-epoch callback quarantine
+  -> exactly-once teardown and snapshot archive/reset
+  -> clean re-entry
   -> pause/resume authority
-  -> simulation and input admission
-  -> projection convergence and fixture
 ```
 
 ## Deferred work
@@ -162,6 +150,6 @@ scene-dressing expansion
 visual object-kit expansion
 network cadence retuning
 gameplay balance changes
-pause menu visual redesign
+pause menu redesign
 host migration
 ```

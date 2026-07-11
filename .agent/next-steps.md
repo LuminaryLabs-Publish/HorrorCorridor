@@ -2,137 +2,114 @@
 
 **Repository:** `LuminaryLabs-Publish/HorrorCorridor`
 
-**Updated:** `2026-07-10T23-30-13-04-00`
+**Updated:** `2026-07-11T01-01-32-04-00`
 
 ## Goal
 
-Establish one authoritative run/session identity first, then make pause and resume explicit command/result transactions that suspend simulation, interaction, and input coherently across solo, host, and client modes.
+Make every run exit a terminal authority transaction that freezes gameplay admission, publishes a lifecycle result, commits UI/runtime/snapshot state, applies an explicit transport policy, and rejects all old-epoch traffic before any new run can bootstrap.
 
 ## Ordered build slices
 
 ```txt
 1. HorrorCorridor Lobby Readiness Authority + Start Admission Fixture Gate
-2. HorrorCorridor Run Exit Authority + Session Epoch Re-entry Fixture Gate
+2. HorrorCorridor Run Exit Commit + Session Epoch Transport Quarantine Fixture Gate
 3. HorrorCorridor Pause/Resume Authority + Input Suspension Convergence Fixture Gate
 ```
 
 ## Current source slice
 
 ```txt
-HorrorCorridor Run Exit Authority + Session Epoch Re-entry Fixture Gate
+HorrorCorridor Run Exit Commit + Session Epoch Transport Quarantine Fixture Gate
 ```
 
-### Plan ledger
+## Plan ledger
 
 ```txt
 [ ] Preserve current maze generation, movement, interaction, rendering, minimap, HUD, post-processing, and visual output.
-[ ] Complete or reuse lobby readiness/start admission and its sealed roster contract.
-[ ] Define RunSessionId and monotonic sessionEpoch.
-[ ] Add sessionEpoch to START_GAME, PLAYER_UPDATE, TRY_INTERACT, SYNC, and lifecycle messages.
-[ ] Define typed run-exit command/result and stable reasons.
-[ ] Make the host the multiplayer run-exit authority and define explicit solo exit authority.
-[ ] Publish one authoritative lifecycle state after accepted exit.
-[ ] Clear/archive snapshots only after a terminal exit result.
-[ ] Preserve transport for lobby return and destroy it for title/room close.
-[ ] Add idempotent runtime teardown results.
-[ ] Reject stale old-epoch messages after re-entry.
-[ ] Add JSON-safe lifecycle command/result/debug rows.
-[ ] Add fixture:session-lifecycle.
-[ ] Prove solo restart, host/client lobby convergence, transport policy, teardown, and stale-message rejection.
-```
-
-## Dependent pause/resume slice
-
-```txt
-HorrorCorridor Pause/Resume Authority + Input Suspension Convergence Fixture Gate
-```
-
-### Plan ledger
-
-```txt
-[ ] Reuse RunSessionId, sessionEpoch, request ids, result status, and reason conventions from lifecycle work.
-[ ] Define PauseCommand with actor, role, room, game, epoch, desired state, scope, reason, and request id.
-[ ] Define PauseResult with accepted/rejected/no-change status and monotonic pauseRevision.
-[ ] Define explicit solo, host-global, client-local-overlay, client-global-request, and connection/system policies.
-[ ] Make simulation admission independent from local UI screen strings.
-[ ] Make interaction admission consume the resolved pause policy.
-[ ] Stop host remote PLAYER_UPDATE and TRY_INTERACT mutation during accepted global pause.
-[ ] Prevent normal active SYNC from silently clearing client-local overlay pause.
-[ ] Publish authoritative paused/resumed state for host-global policy.
-[ ] Clear movement, sprint, interact, and look-delta state on accepted pause.
-[ ] Require fresh input edges after resume.
-[ ] Correlate pointer-lock loss, blur, expected release, and capture failure with command/result rows.
-[ ] Project UI pause, screen, game screen, overlay, readiness, input suspension, pointer-lock expectation, and replicated game state atomically.
-[ ] Add bounded pause command/result/convergence ledgers.
-[ ] Add JSON-safe pause debug projection.
-[ ] Add deterministic fixture seeds and rows.
-[ ] Add package script fixture:pause-convergence.
-[ ] Prove solo pause/resume, host-global pause, client-local overlay pause, duplicate replay, stale epoch rejection, input clearing, and frame projection parity.
-[ ] Run browser pause smoke only after the DOM-free fixture passes.
+[ ] Reuse or complete lobby readiness/start admission and the sealed-roster contract.
+[ ] Define RunSessionIdentity with runSessionId, sessionEpoch, roomId, gameId, rosterRevision, and source fingerprint.
+[ ] Add sessionEpoch to START_GAME, PLAYER_UPDATE, TRY_INTERACT, SYNC, LOBBY_EVENT, and lifecycle messages.
+[ ] Define RunExitCommand for pause-return, victory-restart, client-leave, host-return, room-close, and title-exit.
+[ ] Define RunExitResult with accepted/rejected/no-change, stable reason, previous/next phase, epoch, and authority source.
+[ ] Make host authoritative for multiplayer run exit and solo host authoritative for local exit.
+[ ] Freeze movement, interaction, ooze, client send, host remote-command consumption, and active publication after accepted exit.
+[ ] Publish a terminal lifecycle message before projection or transport teardown.
+[ ] Commit room phase, game/app state, readiness, UI screen, snapshot archive/reset, and completion state coherently.
+[ ] Preserve transport for lobby return and destroy it for room close/title exit.
+[ ] Add a quarantine generation to every transport callback and reject callbacks from closed/old epochs.
+[ ] Make GameCanvas cleanup and transport teardown return exactly-once results.
+[ ] Increment sessionEpoch exactly once before a fresh bootstrap.
+[ ] Prevent old START_GAME/SYNC/PLAYER_UPDATE/TRY_INTERACT/LOBBY_EVENT traffic from crossing re-entry.
+[ ] Add bounded lifecycle command/result/publication/quarantine/teardown ledgers.
+[ ] Add JSON-safe runtime-debug projection.
+[ ] Add scripts/horror-corridor-session-lifecycle-fixture.mjs.
+[ ] Add npm run fixture:session-lifecycle.
+[ ] Prove solo restart, host/client convergence, transport preservation, transport destruction, late-callback rejection, duplicate exit replay, and clean re-entry.
+[ ] Run browser smoke only after deterministic fixtures pass.
 ```
 
 ## Suggested source order
 
 ```txt
-1. features/session/domain run identity and epoch work
-2. features/pause/domain/pauseTypes.ts
-3. features/pause/domain/pausePolicy.ts
-4. features/pause/domain/pauseReducer.ts
-5. features/pause/domain/simulationAdmission.ts
-6. features/pause/domain/inputSuspension.ts
-7. features/pause/domain/pauseLedger.ts
-8. features/pause/domain/pauseFixtureSeeds.ts
-9. features/pause/domain/pauseFixtureRows.ts
-10. features/debug/domain/pauseDebugProjection.ts
-11. scripts/horror-corridor-pause-convergence-fixture.mjs
-12. package.json fixture:pause-convergence
-13. protocol additive pause request/result/session-state support
-14. GameCanvas simulation, interaction, input, pointer-lock, and transport adapters
-15. GameShell SYNC and pause/resume projection adapter
-16. PauseMenu pending/result presentation
+1. features/session/domain/runSessionTypes.ts
+2. features/session/domain/runSessionIdentity.ts
+3. features/session/domain/runExitReducer.ts
+4. features/session/domain/runExitPolicy.ts
+5. features/session/domain/sessionMessageAdmission.ts
+6. features/session/domain/transportQuarantine.ts
+7. features/session/domain/snapshotArchive.ts
+8. features/session/domain/runtimeTeardownResult.ts
+9. features/session/domain/sessionLifecycleLedger.ts
+10. features/debug/domain/sessionLifecycleDebugProjection.ts
+11. protocol additive epoch and lifecycle-message support
+12. GameShell exit, transport, and projection adapters
+13. GameCanvas simulation/publication admission and cleanup adapter
+14. sessionStore/runtimeStore lifecycle transaction adapter
+15. scripts/horror-corridor-session-lifecycle-fixture.mjs
+16. package.json fixture:session-lifecycle
 ```
 
-## Required pause fixture rows
+## Required fixture rows
 
 ```txt
-solo playing -> paused accepted
-solo paused -> playing accepted
-solo repeated pause returns no-change
-solo pause stops movement, interaction, and ooze
-host global pause accepted and published
-host paused rejects remote PLAYER_UPDATE mutation
-host paused rejects remote TRY_INTERACT mutation
-host resume accepted and published
-client local-overlay pause is not overwritten by active SYNC
-client local pause stops prediction and outbound gameplay commands
-client local resume accepted
-wrong role/room/game/epoch/revision rejected
-duplicate request replays one result
-movement and interact flags clear on pause
-look deltas clear on pause
-resume begins with neutral input
-unexpected pointer-lock loss emits one command
-blur plus pointer-lock loss deduplicates
-first paused and first resumed frames reference terminal results
-all rows remain JSON-safe
+solo pause-return accepted
+solo victory-restart accepted
+solo repeated exit returns no-change
+host return-to-lobby accepted and published
+client receives lifecycle lobby state
+client local leave accepted without closing host room
+host room close accepted and transport destroyed
+title exit destroys transport exactly once
+lobby return preserves transport
+accepted exit freezes simulation before projection
+accepted exit rejects late PLAYER_UPDATE
+accepted exit rejects late TRY_INTERACT
+accepted exit rejects late START_GAME
+accepted exit rejects late SYNC
+accepted exit rejects late LOBBY_EVENT from old epoch
+wrong room/game/epoch/actor rejected
+duplicate request replays one terminal result
+active snapshot archived or cleared by policy
+new run increments epoch exactly once
+new run accepts only new-epoch traffic
+all result, ledger, snapshot, and debug rows remain JSON-safe
 ```
 
 ## Acceptance checks
 
 ```txt
 [ ] npm run fixture:session-lifecycle
-[ ] npm run fixture:pause-convergence
 [ ] npm run lint
 [ ] npm run smoke:protokits
 [ ] npm run harness:horror-corridor
 [ ] npm run build
 [ ] npm run validate:live-player:dev
 [ ] npm run review:object-kit
-[ ] browser solo Escape/pointer-lock pause smoke
-[ ] browser host-global pause with client smoke
-[ ] browser client-local overlay pause smoke
-[ ] browser held-input pause/resume smoke
-[ ] runtime-debug pause export inspection
+[ ] browser solo return/restart smoke
+[ ] browser host return with connected client smoke
+[ ] browser client leave/rejoin smoke
+[ ] browser title exit and transport disposal smoke
+[ ] runtime-debug lifecycle export inspection
 ```
 
 ## Explicit non-goals
@@ -147,6 +124,6 @@ scene-dressing expansion
 visual object-kit expansion
 network cadence retuning
 gameplay balance changes
-pause menu visual redesign
+pause menu redesign
 host migration
 ```
