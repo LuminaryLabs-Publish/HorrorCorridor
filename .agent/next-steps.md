@@ -1,10 +1,10 @@
 # HorrorCorridor Next Steps
 
-**Updated:** `2026-07-11T09-29-07-04-00`
+**Updated:** `2026-07-11T11-39-11-04-00`
 
 ## Plan ledger
 
-**Goal:** establish canonical roster and transport identity first, then make runtime readiness a generation-fenced provider lease before downstream snapshot, movement and pause work.
+**Goal:** finish canonical roster and transport identity, then implement one correlation-complete lobby-start transaction before run exit, readiness, snapshot, movement or pause authority depends on an active run.
 
 ### Gate 1: roster identity and peer binding
 
@@ -19,19 +19,43 @@
 
 - [ ] Bind each live connection to one admitted member and gameplay player.
 - [ ] Require transport, envelope sender and payload player identities to converge.
-- [ ] Admit room, run session, epoch, request and sequence before mutation.
+- [ ] Admit room, session, epoch, request and sequence before mutation.
 - [ ] Return typed accepted, rejected, duplicate, stale and no-change results.
-- [ ] Publish no gameplay snapshot for a rejected command.
-- [ ] Add bounded admission and rejection observations.
 - [ ] Add transport actor, sender/payload, sequence, dedupe and retirement fixtures.
 
 ### Gate 3: lobby start transaction
 
-- [ ] Route readiness through host actor admission.
-- [ ] Seal one roster revision and fingerprint before bootstrap.
-- [ ] Introduce start transaction ID, run session ID and epoch.
-- [ ] Correlate START_GAME and initial SYNC.
-- [ ] Commit or roll back exactly once.
+- [ ] Add `StartRunCommand` with command ID and observed revisions.
+- [ ] Validate host actor, transport role/status, lobby phase and readiness policy.
+- [ ] Disable conflicting lobby mutations while a start transaction is active.
+- [ ] Seal one immutable roster revision and fingerprint.
+- [ ] Exclude reserved slots and disconnected members from bootstrap.
+- [ ] Allocate `startTransactionId`, `runSessionId` and monotonic `sessionEpoch`.
+- [ ] Build a detached deterministic bootstrap plan.
+- [ ] Revalidate expected room and roster revisions after loading.
+- [ ] Commit local host state exactly once from the accepted plan.
+- [ ] Replace independent uncorrelated START_GAME/SYNC application with a complete correlation contract.
+- [ ] Record per-peer send results rather than discarding broadcast counts.
+- [ ] Require client admission and semantic acknowledgement.
+- [ ] Define explicit all-peers, quorum or admitted-peer-only start policy.
+- [ ] Add bounded retry, timeout, duplicate and conflict handling.
+- [ ] Bind runtime provider acquisition and first frame to the accepted start result.
+- [ ] Add bounded start transition journal and debug projection.
+
+### Gate 3 fixture set
+
+- [ ] `fixture:lobby-start-admission`
+- [ ] `fixture:lobby-start-roster-seal`
+- [ ] `fixture:lobby-start-loading-race`
+- [ ] `fixture:lobby-start-publication`
+- [ ] `fixture:lobby-start-partial-delivery`
+- [ ] `fixture:lobby-start-reorder`
+- [ ] `fixture:lobby-start-duplicate`
+- [ ] `fixture:lobby-start-retry`
+- [ ] `fixture:lobby-start-acknowledgement`
+- [ ] `fixture:lobby-start-stale-epoch`
+- [ ] `fixture:lobby-start-first-frame`
+- [ ] browser multi-peer start smoke.
 
 ### Gate 4: run exit and session epoch
 
@@ -42,23 +66,12 @@
 
 ### Gate 4a: runtime readiness lease and generation fencing
 
-- [ ] Add `runtimeSessionId`, monotonic `runtimeGeneration` and readiness `revision`.
+- [ ] Add `runtimeSessionId`, monotonic `runtimeGeneration` and readiness revision.
 - [ ] Treat shell writes as capability requests, not ready commits.
 - [ ] Add one provider lease per simulation, rendering, networking and input capability.
-- [ ] Require a concrete resource proof before a provider can commit ready.
-- [ ] Derive networking readiness from the actual transport role and status.
-- [ ] Require renderer, world, composer, canvas, RAF and first-frame proof for rendering readiness.
-- [ ] Require installed listener ownership for input readiness.
-- [ ] Advance runtime generation before old resources are disposed.
+- [ ] Require concrete resource and first-frame proof before ready.
 - [ ] Reject old-generation setup and cleanup writes.
-- [ ] Make partial initialization rollback reverse-ordered and typed.
-- [ ] Make revocation and cleanup idempotent.
-- [ ] Add bounded readiness transition, failure and stale-write journals.
-- [ ] Project generation, revision, provider and proof through debug readback.
-- [ ] Add `fixture:runtime-readiness`.
-- [ ] Add `fixture:runtime-readiness-stale-cleanup`.
-- [ ] Add `fixture:runtime-readiness-rollback`.
-- [ ] Add `fixture:runtime-readiness-strict-mode`.
+- [ ] Add rollback, idempotent cleanup and strict-mode fixtures.
 
 ### Gate 5: dependent runtime authority
 
@@ -66,39 +79,41 @@
 - [ ] Add host movement validation and active client reconciliation.
 - [ ] Add replicated pause/resume authority and atomic input suspension.
 
-## Recommended readiness DSKs
+## Recommended start DSKs
 
 ```txt
-runtime-session-identity-kit
-runtime-generation-kit
-readiness-capability-descriptor-kit
-readiness-provider-lease-kit
-resource-readiness-proof-kit
-readiness-commit-transaction-kit
-readiness-revocation-kit
-simulation-readiness-adapter-kit
-rendering-readiness-adapter-kit
-networking-readiness-adapter-kit
-input-readiness-adapter-kit
-stale-cleanup-fence-kit
-readiness-transition-journal-kit
-readiness-debug-projection-kit
-runtime-readiness-fixture-kit
+lobby-start-command-kit
+lobby-start-admission-policy-kit
+lobby-start-roster-seal-kit
+lobby-start-transaction-id-kit
+run-session-identity-kit
+run-session-epoch-kit
+lobby-start-bootstrap-plan-kit
+lobby-start-commit-kit
+lobby-start-publication-bundle-kit
+lobby-start-client-admission-kit
+lobby-start-acknowledgement-kit
+lobby-start-retry-and-dedupe-kit
+lobby-start-result-kit
+lobby-start-transition-journal-kit
+lobby-start-debug-projection-kit
+lobby-start-fixture-kit
 ```
 
-## Required readiness proof
+## Required start proof
 
 ```txt
-shell intent alone never marks rendering or input ready
-solo runtime never reports networking ready
-networking ready requires a live transport lease
-rendering ready requires live resources and first committed frame
-input ready requires installed listener ownership
-reset advances runtime generation before cleanup
-old cleanup cannot mutate the current generation
-failed initialization leaves no partial ready capability
-cleanup is idempotent
-final readiness equals the live resource inventory
+host cannot start while disconnected or unauthorized
+not-ready required member blocks start
+roster mutation during loading invalidates the plan
+one sealed roster produces one deterministic player set
+START_GAME or SYNC alone cannot enter gameplay
+reordered correlated messages commit once
+zero/partial recipient publication is visible in the result
+each admitted client acknowledges one transaction
+retry does not create a second run
+old epoch start is rejected
+first gameplay frame carries start/run/epoch identity
 ```
 
 ## Do not start with
@@ -112,4 +127,4 @@ save system
 pause convergence
 ```
 
-Those depend on canonical roster, actor, run-session and runtime-generation identity.
+Those depend on canonical member, actor, start transaction, run-session and epoch identity.
