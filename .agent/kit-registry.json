@@ -1,26 +1,26 @@
 {
-  "schemaVersion": 65,
-  "generatedAt": "2026-07-11T16-38-10-04-00",
+  "schemaVersion": 66,
+  "generatedAt": "2026-07-11T18-11-21-04-00",
   "repository": "LuminaryLabs-Publish/HorrorCorridor",
   "branch": "main",
-  "status": "host-network-cadence-input-simulation-publication-authority-audited",
-  "selectedBecause": "All nine eligible Publish repositories were tracked and had root .agent state. TheOpenAbove had a newer repo-local audit than its central timestamp, so HorrorCorridor was selected as the next stable oldest eligible repository after excluding TheCavalryOfRome.",
-  "latestTracker": ".agent/trackers/2026-07-11T16-38-10-04-00/project-breakdown.md",
-  "latestTurnLedger": ".agent/turn-ledger/2026-07-11T16-38-10-04-00.md",
+  "status": "snapshot-delivery-payload-budget-backpressure-authority-audited",
+  "selectedBecause": "All nine eligible Publish repositories were tracked and had root .agent state. TheOpenAbove had a newer repo-local grass-culling audit not yet reflected by its older central timestamp, so HorrorCorridor was selected as the next stable oldest eligible repository after excluding TheCavalryOfRome.",
+  "latestTracker": ".agent/trackers/2026-07-11T18-11-21-04-00/project-breakdown.md",
+  "latestTurnLedger": ".agent/turn-ledger/2026-07-11T18-11-21-04-00.md",
   "latestAudits": {
-    "architecture": ".agent/architecture-audit/2026-07-11T16-38-10-04-00-host-network-cadence-authority-dsk-map.md",
-    "render": ".agent/render-audit/2026-07-11T16-38-10-04-00-simulation-publication-frame-correlation-gap.md",
-    "gameplay": ".agent/gameplay-audit/2026-07-11T16-38-10-04-00-client-update-ooze-starvation-loop.md",
-    "interaction": ".agent/interaction-audit/2026-07-11T16-38-10-04-00-player-update-queue-admission-map.md",
-    "networkCadence": ".agent/network-cadence-audit/2026-07-11T16-38-10-04-00-input-simulation-publication-clock-contract.md",
-    "deploy": ".agent/deploy-audit/2026-07-11T16-38-10-04-00-host-cadence-flood-fixture-gate.md"
+    "architecture": ".agent/architecture-audit/2026-07-11T18-11-21-04-00-snapshot-delivery-backpressure-dsk-map.md",
+    "render": ".agent/render-audit/2026-07-11T18-11-21-04-00-publication-delivery-frame-proof-gap.md",
+    "gameplay": ".agent/gameplay-audit/2026-07-11T18-11-21-04-00-full-sync-fanout-slow-peer-loop.md",
+    "interaction": ".agent/interaction-audit/2026-07-11T18-11-21-04-00-publication-plan-delivery-result-map.md",
+    "transport": ".agent/transport-audit/2026-07-11T18-11-21-04-00-payload-budget-backpressure-contract.md",
+    "deploy": ".agent/deploy-audit/2026-07-11T18-11-21-04-00-snapshot-delivery-backpressure-fixture-gate.md"
   },
   "retainedAudits": {
+    "networkCadence": ".agent/network-cadence-audit/2026-07-11T16-38-10-04-00-input-simulation-publication-clock-contract.md",
     "disconnectAuthority": ".agent/disconnect-authority-audit/2026-07-11T16-21-09-04-00-player-retirement-owned-state-contract.md",
     "interactionTarget": ".agent/interaction-authority-audit/2026-07-11T15-01-33-04-00-explicit-target-claim-transaction-contract.md",
     "terminalOutcome": ".agent/outcome-authority-audit/2026-07-11T13-20-45-04-00-monotonic-victory-failure-contract.md",
     "movement": ".agent/movement-authority-audit/2026-07-11T03-08-43-04-00-player-update-admission-correction-contract.md",
-    "lobbyStart": ".agent/architecture-audit/2026-07-11T03-18-44-04-00-lobby-start-transaction-dsk-map.md",
     "pause": ".agent/pause-authority-audit/2026-07-10T23-30-13-04-00-host-client-pause-resume-contract.md"
   },
   "selection": {
@@ -32,9 +32,9 @@
       "LuminaryLabs-Publish/TheCavalryOfRome"
     ],
     "concurrentRepoAvoided": "LuminaryLabs-Publish/TheOpenAbove",
-    "onlyPublishRepositoryChanged": "LuminaryLabs-Publish/HorrorCorridor"
+    "selectedRepository": "LuminaryLabs-Publish/HorrorCorridor"
   },
-  "currentNextSlice": "Host Network Cadence Authority + Input Queue, Fixed Simulation, Bounded Snapshot Publication, Delivery Result and Multi-Peer Flood Fixture Gate",
+  "currentNextSlice": "Snapshot Delivery and Backpressure Authority + Payload Budget, Per-Peer Result, Partial Success, Slow-Peer Isolation and Frame-Correlation Fixture Gate",
   "dependencyOrder": [
     "lobby-roster-identity-and-peer-binding",
     "transport-connection-peer-player-binding",
@@ -47,16 +47,17 @@
     "terminal-outcome-authority",
     "host-network-cadence-and-fixed-simulation",
     "host-movement-and-client-reconciliation",
+    "snapshot-delivery-and-backpressure-authority",
     "pause-resume-authority"
   ],
   "interactionLoop": [
     "client-input-and-local-prediction",
-    "player-update-sequence-and-absolute-pose-send",
-    "host-immediate-pose-mutation",
-    "host-immediate-full-snapshot-publication",
-    "shared-network-timestamp-reset",
-    "host-periodic-ooze-step-admission",
-    "client-snapshot-replay",
+    "host-state-mutation",
+    "complete-local-snapshot-build",
+    "complete-outbound-snapshot-rebuild",
+    "json-serialization",
+    "all-peer-send-attempts",
+    "client-snapshot-acceptance",
     "world-minimap-hud-and-debug-projection"
   ],
   "domains": [
@@ -71,372 +72,95 @@
     "versioned protocol envelopes serializers and message construction",
     "seeded maze room player cube anomaly and ooze bootstrap",
     "replicated snapshot construction publication acceptance and replay",
+    "snapshot payload identity byte budgeting and full-delta policy",
+    "per-peer send admission delivery results retry and backpressure",
+    "slow-peer isolation and disconnect policy",
     "pointer lock keyboard mouse blur and input lifecycle",
     "movement collision camera prediction and host admission",
-    "per-peer input sequence queue coalescing and cadence policy",
-    "fixed simulation clock and authoritative system advancement",
+    "fixed simulation cadence and authoritative systems",
     "interaction target observation cube claims slot claims and results",
-    "cube pickup drop place remove held ownership and synchronization",
-    "active membership player suspension retirement owned-state recovery and reconnect claims",
-    "ordered anomaly terminal outcomes and completion",
-    "ooze spawn decay spacing capacity pressure and fixed-step input",
-    "snapshot publication cadence transport backpressure and delivery results",
+    "ordered anomaly terminal outcomes and ooze pressure",
     "Three.js world minimap HUD bloom debug and frame projection",
     "animation loop resize resource cleanup validation and deployment"
   ],
   "implementedKits": {
-    "corridor-application-shell-kit": [
-      "routing",
-      "solo host client entry",
-      "loading",
-      "pause",
-      "completion",
-      "lobby return",
-      "title exit"
-    ],
-    "corridor-session-domain-kit": [
-      "session mode",
-      "peer identity",
-      "room",
-      "roster",
-      "connection status",
-      "reset"
-    ],
-    "runtime-store-snapshot-kit": [
-      "authoritative snapshot",
-      "local pose",
-      "view angles",
-      "input flags",
-      "readiness",
-      "reset"
-    ],
-    "ui-pause-projection-kit": [
-      "pause state",
-      "pause reason",
-      "overlay projection"
-    ],
-    "ui-completion-projection-kit": [
-      "victory failure state",
-      "message",
-      "timestamp",
-      "acknowledgement",
-      "completed routing"
-    ],
-    "complete-screen-presentation-kit": [
-      "victory copy",
-      "failure copy",
-      "restart",
-      "title exit"
-    ],
-    "lobby-screen-presentation-kit": [
-      "room metadata",
-      "phase",
-      "roster",
-      "ready badges",
-      "controls",
-      "connection status"
-    ],
-    "peer-host-transport-kit": [
-      "host peer",
-      "connection registry",
-      "connection close events",
-      "broadcast",
-      "sent recipient count",
-      "targeted send",
-      "local bridge",
-      "destroy"
-    ],
-    "peer-client-transport-kit": [
-      "host connection",
-      "send",
-      "local bridge",
-      "status",
-      "disconnect",
-      "destroy"
-    ],
-    "peer-event-bus-kit": [
-      "typed events",
-      "subscribe",
-      "unsubscribe",
-      "clear"
-    ],
-    "protocol-message-construction-kit": [
-      "START_GAME",
-      "PLAYER_UPDATE",
-      "TRY_INTERACT",
-      "SYNC",
-      "LOBBY_EVENT"
-    ],
-    "protocol-serialization-kit": [
-      "JSON encode",
-      "structural decode",
-      "version checks",
-      "shape checks"
-    ],
-    "maze-snapshot-bootstrap-kit": [
-      "seed",
-      "maze",
-      "players",
-      "cubes",
-      "anomaly",
-      "room",
-      "initial snapshot"
-    ],
-    "first-person-input-kit": [
-      "keyboard",
-      "pointer lock",
-      "look accumulation",
-      "input snapshot"
-    ],
-    "movement-collision-camera-kit": [
-      "movement",
-      "maze collision",
-      "eye position",
-      "walk shake",
-      "camera"
-    ],
-    "network-player-update-kit": [
-      "client sequence",
-      "client send cadence",
-      "absolute pose envelope",
-      "host consume",
-      "projection"
-    ],
-    "corridor-interaction-domain-kit": [
-      "action inference",
-      "pickup",
-      "drop",
-      "place",
-      "remove",
-      "held-cube sync"
-    ],
-    "ordered-anomaly-sequence-kit": [
-      "ordered validation",
-      "slot evaluation",
-      "victory",
-      "reversible fallback"
-    ],
-    "ooze-trail-domain-kit": [
-      "spawn",
-      "decay",
-      "variation",
-      "spacing",
-      "capacity",
-      "ooze level"
-    ],
-    "snapshot-outcome-routing-kit": [
-      "victory projection",
-      "paused projection",
-      "playing fallback"
-    ],
-    "corridor-authoritative-publication-kit": [
-      "snapshot tick",
-      "clone",
-      "SYNC",
-      "broadcast",
-      "reason"
-    ],
-    "corridor-animation-loop-kit": [
-      "RAF start",
-      "RAF stop",
-      "delta",
-      "running guard"
-    ],
-    "corridor-render-world-kit": [
-      "terrain",
-      "maze",
-      "cubes",
-      "players",
-      "anomaly",
-      "ooze",
-      "props",
-      "lights",
-      "update",
-      "dispose"
-    ],
-    "corridor-post-processing-kit": [
-      "composer",
-      "bloom",
-      "output",
-      "resize",
-      "render",
-      "dispose"
-    ],
-    "corridor-minimap-kit": [
-      "maze",
-      "players",
-      "cubes",
-      "anomaly markers"
-    ],
-    "runtime-debug-frame-kit": [
-      "bounded frames",
-      "bounded events",
-      "aggregate cadence",
-      "overlay",
-      "JSON export"
-    ],
-    "runtime-resource-cleanup-kit": [
-      "RAF stop",
-      "unsubscribe",
-      "observer disconnect",
-      "listener removal",
-      "resource disposal",
-      "canvas removal"
-    ],
-    "package-validation-kit": [
-      "build",
-      "lint",
-      "ProtoKit smoke",
-      "harness",
-      "visual match",
-      "object review",
-      "live-player validation"
-    ]
+    "corridor-application-shell-kit": ["routing", "solo host client entry", "loading", "pause", "completion", "lobby return", "title exit"],
+    "corridor-session-domain-kit": ["session mode", "peer identity", "room", "roster", "connection status", "reset"],
+    "runtime-store-snapshot-kit": ["authoritative snapshot", "local pose", "view angles", "input flags", "readiness", "reset"],
+    "ui-pause-projection-kit": ["pause state", "pause reason", "overlay projection"],
+    "ui-completion-projection-kit": ["victory failure state", "message", "timestamp", "acknowledgement", "completed routing"],
+    "complete-screen-presentation-kit": ["victory copy", "failure copy", "restart", "title exit"],
+    "lobby-screen-presentation-kit": ["room metadata", "phase", "roster", "ready badges", "controls", "connection status"],
+    "peer-host-transport-kit": ["host peer", "connection registry", "connection close events", "broadcast", "aggregate sent count", "targeted send", "local bridge", "destroy"],
+    "peer-client-transport-kit": ["host connection", "send", "local bridge", "status", "disconnect", "destroy"],
+    "peer-event-bus-kit": ["typed events", "subscribe", "unsubscribe", "clear"],
+    "protocol-message-construction-kit": ["START_GAME", "PLAYER_UPDATE", "TRY_INTERACT", "SYNC", "LOBBY_EVENT"],
+    "protocol-serialization-kit": ["JSON encode", "structural decode", "version checks", "shape checks"],
+    "maze-snapshot-bootstrap-kit": ["seed", "maze", "players", "cubes", "anomaly", "room", "initial snapshot"],
+    "first-person-input-kit": ["keyboard", "pointer lock", "look accumulation", "input snapshot"],
+    "movement-collision-camera-kit": ["movement", "maze collision", "eye position", "walk shake", "camera"],
+    "network-player-update-kit": ["client sequence", "client send cadence", "absolute pose envelope", "host consume", "projection"],
+    "corridor-interaction-domain-kit": ["action inference", "pickup", "drop", "place", "remove", "held-cube sync"],
+    "ordered-anomaly-sequence-kit": ["ordered validation", "slot evaluation", "victory", "reversible fallback"],
+    "ooze-trail-domain-kit": ["spawn", "decay", "variation", "spacing", "capacity", "ooze level"],
+    "snapshot-outcome-routing-kit": ["victory projection", "paused projection", "playing fallback"],
+    "corridor-authoritative-publication-kit": ["snapshot tick", "snapshot clone", "SYNC construction", "broadcast", "reason"],
+    "corridor-animation-loop-kit": ["RAF start", "RAF stop", "delta", "running guard"],
+    "corridor-render-world-kit": ["terrain", "maze", "cubes", "players", "anomaly", "ooze", "props", "lights", "update", "dispose"],
+    "corridor-post-processing-kit": ["composer", "bloom", "output", "resize", "render", "dispose"],
+    "corridor-minimap-kit": ["maze", "players", "cubes", "anomaly markers"],
+    "runtime-debug-frame-kit": ["bounded frames", "bounded events", "aggregate cadence", "overlay", "JSON export"],
+    "runtime-resource-cleanup-kit": ["RAF stop", "unsubscribe", "observer disconnect", "listener removal", "resource disposal", "canvas removal"],
+    "package-validation-kit": ["build", "lint", "ProtoKit smoke", "harness", "visual match", "object review", "live-player validation"]
   },
-  "plannedNetworkCadenceKits": {
-    "inbound-player-update-envelope-kit": [
-      "connection peer actor player room run epoch identity",
-      "input sequence",
-      "sender and receive timestamps"
-    ],
-    "per-peer-input-sequence-kit": [
-      "last accepted sequence",
-      "duplicate stale gap future classification"
-    ],
-    "player-update-admission-kit": [
-      "actor binding",
-      "phase and epoch",
-      "finite range and skew checks",
-      "typed result"
-    ],
-    "movement-input-queue-kit": [
-      "bounded per-player queue",
-      "depth age overflow and retirement"
-    ],
-    "latest-input-coalescing-kit": [
-      "deterministic step bucket",
-      "selected and superseded sequence results"
-    ],
-    "fixed-simulation-clock-kit": [
-      "fixed delta",
-      "accumulator",
-      "catch-up budget",
-      "pause policy"
-    ],
-    "simulation-step-sequence-kit": [
-      "run-scoped step identity",
-      "selected per-player input set"
-    ],
-    "authoritative-system-tick-kit": [
-      "movement collision",
-      "held cubes",
-      "ooze",
-      "objective and terminal systems",
-      "committed state revision"
-    ],
-    "snapshot-publication-cadence-kit": [
-      "bounded rate",
-      "dirty-state coalescing",
-      "high-priority event policy"
-    ],
-    "snapshot-publication-plan-kit": [
-      "state revision",
-      "snapshot revision",
-      "intended peers",
-      "payload fingerprint"
-    ],
-    "per-peer-delivery-result-kit": [
-      "attempted sent skipped failed backpressured rows"
-    ],
-    "transport-backpressure-policy-kit": [
-      "pending byte limits",
-      "queue drop coalesce retry and disconnect policy"
-    ],
-    "network-cadence-journal-kit": [
-      "admission queue selection step publication delivery rows",
-      "bounded retention"
-    ],
-    "network-cadence-observation-kit": [
-      "per-peer rates",
-      "queue depth",
-      "step and publication rates",
-      "delivery lag"
-    ],
-    "host-network-cadence-fixture-kit": [
-      "baseline one client multi client burst duplicate reorder flood starvation publication and frame fixtures"
-    ],
-    "multi-peer-flood-smoke-kit": [
-      "normal and flood peers",
-      "bounded work",
-      "ooze continuity",
-      "state and frame convergence"
-    ]
+  "plannedSnapshotDeliveryKits": {
+    "snapshot-publication-intent-kit": ["state revision", "publication reason", "priority", "deadline"],
+    "canonical-snapshot-payload-kit": ["single payload build", "schema revision", "stable serialization input"],
+    "snapshot-payload-byte-budget-kit": ["serialized bytes", "maximum budget", "over-budget classification"],
+    "snapshot-payload-fingerprint-kit": ["stable fingerprint", "duplicate and supersession identity"],
+    "snapshot-full-delta-policy-kit": ["full or delta selection", "dirty state", "baseline revision"],
+    "snapshot-delivery-plan-kit": ["publication identity", "intended peers", "payload identity", "budget"],
+    "peer-send-capability-kit": ["open state", "pending bytes", "queue state", "transport capability"],
+    "peer-send-admission-kit": ["admit skip defer reject", "reason", "deadline"],
+    "per-peer-backpressure-state-kit": ["pending bytes", "queue depth", "oldest age", "slow-peer state"],
+    "per-peer-delivery-result-kit": ["sent", "skipped", "closed", "failed", "timed out", "backpressured"],
+    "snapshot-delivery-commit-kit": ["partial success", "complete result set", "publication revision"],
+    "snapshot-delivery-retry-kit": ["bounded retry", "coalescing", "supersession"],
+    "slow-peer-isolation-kit": ["isolate", "degrade", "disconnect", "recovery"],
+    "snapshot-delivery-journal-kit": ["bounded publication and peer rows"],
+    "snapshot-delivery-observation-kit": ["payload bytes", "send latency", "pending bytes", "peer outcomes"],
+    "snapshot-delivery-fixture-kit": ["payload", "partial success", "exception", "backpressure", "slow-peer", "frame fixtures"],
+    "browser-slow-peer-smoke-kit": ["healthy peers", "slow peer", "bounded host work", "continued frame convergence"]
   },
-  "plannedDisconnectAuthorityKits": {
-    "transport-actor-connection-binding-kit": [
-      "connection peer member player run epoch binding"
-    ],
-    "peer-disconnect-observation-kit": [
-      "connection close timestamp cause and lineage"
-    ],
-    "disconnect-command-envelope-kit": [
-      "command actor room run epoch and membership revision"
-    ],
-    "disconnect-classification-kit": [
-      "transient timeout leave kick and host loss"
-    ],
-    "active-membership-revision-kit": [
-      "active suspended retired sets and fingerprint"
-    ],
-    "player-suspension-kit": [
-      "grace period command rejection and reserved state"
-    ],
-    "player-retirement-kit": [
-      "player and input-queue retirement result"
-    ],
-    "owned-cube-recovery-kit": [
-      "drop return reserve transfer and orphan rejection"
-    ],
-    "gameplay-roster-transaction-kit": [
-      "session room GameState room and players atomic commit"
-    ],
-    "disconnect-result-kit": [
-      "accepted duplicate stale rejected reason and revisions"
-    ],
-    "disconnect-publication-kit": [
-      "result-linked snapshot retry and acknowledgement"
-    ],
-    "reconnect-claim-kit": [
-      "suspended actor and sequence-baseline claim"
-    ],
-    "disconnect-frame-correlation-kit": [
-      "world minimap HUD debug and first frame"
-    ],
-    "disconnect-journal-kit": [
-      "observation admission retirement ownership publication reconnect and frame"
-    ],
-    "active-run-disconnect-fixture-kit": [
-      "ghost held cube ooze duplicate late cross epoch reconnect queue retirement and frame"
-    ]
+  "sourceFindings": {
+    "localSnapshotBuild": true,
+    "outboundSnapshotRebuild": true,
+    "roomClonedAgain": true,
+    "serialization": "JSON.stringify",
+    "payloadByteMeasurement": false,
+    "payloadFingerprint": false,
+    "payloadBudget": false,
+    "fullDeltaPolicy": false,
+    "sendChecksOnlyConnectionOpen": true,
+    "perPeerResult": false,
+    "pendingBytesObservation": false,
+    "sendExceptionClassification": false,
+    "retryCoalescePolicy": false,
+    "slowPeerIsolation": false,
+    "broadcastResult": "aggregate sent count",
+    "broadcastResultConsumed": false
   },
-  "currentBlocker": "The host applies every PLAYER_UPDATE immediately, ignores the client input sequence, publishes a full snapshot for every packet and resets the same lastNetworkTickAtMs used to admit ooze advancement. Sustained client traffic can inflate snapshot ticks and fanout while starving authoritative periodic systems. No bounded input queue, fixed simulation sequence, publication cadence, per-peer delivery result or backpressure policy exists.",
   "validation": {
     "runtimeSourceChanged": false,
     "packageScriptsChanged": false,
     "dependenciesChanged": false,
     "networkBehaviorChanged": false,
-    "renderingChanged": false,
+    "renderBehaviorChanged": false,
     "deploymentChanged": false,
     "branchCreated": false,
     "pullRequestCreated": false,
-    "npmRunBuild": "not-run",
-    "npmRunLint": "not-run",
-    "inputSequenceFixture": "unavailable",
-    "fixedSimulationFixture": "unavailable",
-    "oozeStarvationFixture": "unavailable",
-    "publicationBudgetFixture": "unavailable",
-    "deliveryBackpressureFixture": "unavailable",
-    "cadenceFrameFixture": "unavailable",
-    "multiPeerFloodSmoke": "not-run"
+    "existingChecksRun": false,
+    "snapshotDeliveryFixturesAvailable": false,
+    "browserSlowPeerSmokeRun": false
   }
 }
