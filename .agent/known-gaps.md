@@ -2,7 +2,7 @@
 
 **Repository:** `LuminaryLabs-Publish/HorrorCorridor`
 
-**Updated:** `2026-07-10T21-39-22-04-00`
+**Updated:** `2026-07-10T23-30-13-04-00`
 
 ## Selection state
 
@@ -14,137 +14,140 @@ TheCavalryOfRome excluded
 HorrorCorridor selected as oldest eligible documented fallback
 ```
 
-## Run-exit authority gaps
+## Existing lifecycle gaps retained
 
 ```txt
+lobby readiness is local instead of host-authoritative
+host start admission does not require a sealed connected/ready roster
 returnToLobby changes local UI only
-no host-owned run-exit command exists
-no typed exit accepted/rejected/no-change result exists
-no exit request id or duplicate-result replay exists
-no authority check separates host reset, client request, and solo exit
-no room/game/session identity preflight exists for exit
-no authoritative active/ending -> lobby transaction exists
-no rollback result exists if teardown or projection fails
+room phase and authoritative snapshot remain active or ending after local exit
+no run-exit command/result or lifecycle publication exists
+no monotonic session epoch exists
+late PLAYER_UPDATE, TRY_INTERACT, START_GAME, or SYNC can cross a run boundary
+solo return routes through LOBBY_CLIENT and cannot cleanly restart
+runtime teardown has no exactly-once result ledger
 ```
 
-## Phase and state convergence gaps
+## Pause authority gaps
 
 ```txt
-RoomPhase defines idle/lobby/starting/active/ending/closed but exit paths do not use a reducer
-returnToLobby leaves room.phase active or ending
-runtimeStore retains the previous authoritativeSnapshot
-sessionStore retains the previous room and roster without a new revision/epoch
-UI screen can say lobby while replicated room/snapshot still say active or victory
-client SYNC handling can force a locally returned client back to PLAYING
-host can return locally while clients remain active
-host ignores client PLAYER_UPDATE traffic after GameCanvas unmounts
+uiStore pause is local presentation state only
+no PauseCommand or PauseResult exists
+no request id, actor role, room/game/epoch identity, scope, or pause revision exists
+no explicit solo, host-global, client-local-overlay, or connection policy exists
+no authoritative host-global pause publication exists
+no client global-pause request/response contract exists
+resume is a local screen change with no terminal result
 ```
 
-## Solo re-entry gaps
+## Simulation and command-admission gaps
 
 ```txt
-returnToLobby maps every non-host mode to LOBBY_CLIENT
-solo therefore returns to LOBBY_CLIENT
-LOBBY_CLIENT primary action calls startPlay
-startPlay routes every non-host mode to toggleReady
-solo restart cannot cleanly create a new solo run from that path
-cleanup patches networking true even for solo
-no solo-specific lobby or restart authority exists
+local animation admission reads uiState.screen
+host transport consumption does not read pause state
+host can process remote PLAYER_UPDATE while its own UI is paused
+host can process remote TRY_INTERACT while its own UI is paused
+publishAuthoritativeState forces room.phase active
+normal active publication can continue during host UI pause
+interaction admission checks currentGameState.gameState, which stays playing
+no simulation-admission or interaction-admission result exists
+no paused heartbeat versus gameplay publication policy exists
 ```
 
-## Session identity and stale-message gaps
+## Client projection gaps
 
 ```txt
-active messages use roomId but no run/session epoch
-PLAYER_UPDATE has no game id or session epoch
-TRY_INTERACT has no game id or session epoch
-START_GAME has no monotonic session epoch
-SYNC contains gameId only inside snapshot and has no exit/re-entry admission boundary
-late old-run messages can cross into a new bootstrap
-no accepted epoch ledger exists
-no stale-epoch rejection result exists
-no per-run message quarantine exists during ending/lobby transitions
+GameShell maps SYNC to PAUSED only when snapshot.gameState is paused
+local pause never changes snapshot.gameState
+next host SYNC can force a paused client back to PLAYING
+client-local overlay pause has no explicit policy
+snapshot.appState and local screen can disagree
+no pause revision or authority source is projected
+no pending/accepted/rejected/no-change UI state exists
 ```
 
-## Runtime teardown proof gaps
+## Input-suspension gaps
 
 ```txt
-GameCanvas cleanup calls loop.stop, unsubscribe, observer disconnect, listener removal, world.dispose, postProcessing.dispose, and renderer.dispose
-no typed teardown result records which resources were actually released
-no exactly-once disposal counters exist
-no teardown epoch or runtime instance id exists
-no proof that pointer lock is released before teardown completion
-no proof that renderer canvas removal and GPU resource disposal are idempotent
-no proof that repeated return/re-entry creates only one RAF and one listener set
-runtime debug has no lifecycle/teardown rows
+global keyboard listeners remain active during pause
+movement/sprint/interact flags are not cleared atomically
+look deltas are not cleared through a pause transaction
+interact can execute while local pause UI is visible
+stale held-key state can survive into resume
+resume does not require fresh input edges
+pointer-lock release is not correlated with a pause result
+blur plus pointer-lock events have no deduplication identity
+capture failure has no stable browser-effect result
 ```
 
-## Protocol gaps
+## Render/readback gaps
 
 ```txt
-no RUN_EXIT message
-no RUN_EXIT_RESULT message
-no SESSION_STATE message
-LOBBY_EVENT state-reset is defined but has no producer
-no canonical lifecycle compatibility adapter
-no session epoch on existing active-game messages
-no lifecycle reason vocabulary for pause-return, victory-restart, client-leave, host-reset, room-close, or title-exit
-```
-
-## Projection gaps
-
-```txt
-PauseMenu and CompleteScreen call local callbacks with no pending/accepted/rejected state
-no host/client convergence indicator exists
-no lifecycle transaction id is visible
-no previous/current phase pair is exposed
-no session epoch is visible
-no stale-message rejection count is visible
-no teardown result is visible
-no restart blocked reason exists
+RAF and rendering continue during pause without a pause revision
+paused frame has no authority source or result id
+world/minimap/HUD/overlay can consume different pause notions
+first paused frame and first resumed frame have no acknowledgement
+runtime debug records screen/pointer lock but not pause policy or projection parity
+no detached pause-frame observation exists
 ```
 
 ## Missing source files
 
 ```txt
-HorrorCorridor-V1/src/features/session/domain/runSessionTypes.ts
-HorrorCorridor-V1/src/features/session/domain/sessionEpoch.ts
-HorrorCorridor-V1/src/features/session/domain/runExitPolicy.ts
-HorrorCorridor-V1/src/features/session/domain/sessionPhaseReducer.ts
-HorrorCorridor-V1/src/features/session/domain/runtimeTeardownResult.ts
-HorrorCorridor-V1/src/features/session/domain/sessionLifecycleLedger.ts
-HorrorCorridor-V1/src/features/session/domain/sessionMessageAdmission.ts
-HorrorCorridor-V1/src/features/session/domain/sessionFixtureSeeds.ts
-HorrorCorridor-V1/src/features/session/domain/sessionFixtureRows.ts
-HorrorCorridor-V1/src/features/debug/domain/sessionLifecycleDebugProjection.ts
-HorrorCorridor-V1/scripts/horror-corridor-session-lifecycle-fixture.mjs
+HorrorCorridor-V1/src/features/pause/domain/pauseTypes.ts
+HorrorCorridor-V1/src/features/pause/domain/pausePolicy.ts
+HorrorCorridor-V1/src/features/pause/domain/pauseReducer.ts
+HorrorCorridor-V1/src/features/pause/domain/simulationAdmission.ts
+HorrorCorridor-V1/src/features/pause/domain/inputSuspension.ts
+HorrorCorridor-V1/src/features/pause/domain/pauseLedger.ts
+HorrorCorridor-V1/src/features/pause/domain/pauseFixtureSeeds.ts
+HorrorCorridor-V1/src/features/pause/domain/pauseFixtureRows.ts
+HorrorCorridor-V1/src/features/debug/domain/pauseDebugProjection.ts
+HorrorCorridor-V1/scripts/horror-corridor-pause-convergence-fixture.mjs
 ```
 
 ## Validation gaps
 
 ```txt
 package.json has no fixture:session-lifecycle script
-no DOM-free active/ending/lobby transition replay
-no solo restart routing proof
-no host/client return-to-lobby convergence proof
-no transport preserve-vs-destroy proof
-no exactly-once runtime teardown proof
-no stale old-epoch message rejection rows
-no re-entry epoch increment proof
-no runtime-debug lifecycle projection proof
-no browser multi-peer lifecycle smoke contract
+package.json has no fixture:pause-convergence script
+no DOM-free solo/host/client pause policy replay
+no host paused remote-command rejection proof
+no client local-overlay pause persistence proof
+no input clearing and neutral resume proof
+no pointer-lock event deduplication proof
+no duplicate/stale pause command proof
+no pause frame projection parity proof
+no browser multi-peer pause smoke contract
 ```
 
-## Existing prerequisite gaps retained
+## Planned candidate kits
 
 ```txt
-lobby readiness/start admission authority is still missing
-authoritative SYNC snapshot acceptance is still missing
-request identity and acknowledgement are still missing
-protocol source validation and monotonic snapshot projection are still missing
+pause-command-kit
+pause-authority-policy-kit
+pause-transition-result-kit
+simulation-admission-kit
+input-suspension-kit
+pointer-lock-pause-adapter-kit
+pause-publication-policy-kit
+pause-projection-transaction-kit
+pause-convergence-ledger-kit
+pause-debug-projection-kit
+pause-resume-fixture-kit
+legacy-local-pause-compatibility-kit
 ```
 
-These are separate but ordered boundaries. Start admission should seal the initial roster/session identity. Run-exit authority should then own phase change, teardown, epoch advancement, and re-entry admission without being folded into render or interaction reducers.
+## Ordered boundaries
+
+```txt
+lobby readiness/start admission
+  -> stable initial run identity
+  -> run exit/session epoch authority
+  -> pause/resume authority
+  -> simulation and input admission
+  -> projection convergence and fixture
+```
 
 ## Deferred work
 
@@ -159,4 +162,6 @@ scene-dressing expansion
 visual object-kit expansion
 network cadence retuning
 gameplay balance changes
+pause menu visual redesign
+host migration
 ```
