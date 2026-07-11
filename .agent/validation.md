@@ -4,16 +4,18 @@
 
 ## Plan ledger
 
-**Goal:** separate source inspection from executable roster proof and record the exact validation boundary for this documentation-only pass.
+**Goal:** distinguish source inspection from executable roster proof and record the exact validation boundary for this documentation-only pass.
 
-- [x] Compare the complete accessible Publish inventory with the central ledger.
+- [x] Compare the full Publish inventory with the central ledger.
 - [x] Exclude `TheCavalryOfRome`.
 - [x] Select only `HorrorCorridor`.
-- [x] Read the current root `.agent` audit state.
+- [x] Read the current root `.agent` state.
 - [x] Read `GameShell`, `LobbyScreen`, `sessionStore`, shared types and bootstrap source.
 - [x] Trace Add guest, peer open/close, ready mutation and bootstrap consumption.
 - [x] Inventory active domains, implemented kits and services.
 - [x] Add timestamped roster identity and peer-binding audits.
+- [x] Refresh required root `.agent` documents.
+- [x] Update the central ledger and internal change log.
 - [x] Change no runtime source, script, dependency or deployment configuration.
 - [x] Create no branch or pull request.
 - [x] Push documentation directly to `main`.
@@ -30,7 +32,8 @@ deployment changed: no
 branch created: no
 pull request created: no
 repo-local docs pushed to main: yes
-central ledger synchronization: pending final synchronization
+central ledger synchronized on main: yes
+central internal change log added on main: yes
 ```
 
 ## Source inspection performed
@@ -42,8 +45,8 @@ nine eligible repositories tracked with root .agent: yes
 TheCavalryOfRome excluded: yes
 selected only HorrorCorridor: yes
 placeholder creation traced: yes
-peer open and peer close traced: yes
-roster store mutation traced: yes
+peer open and close traced: yes
+roster mutation traced: yes
 bootstrap player mapping traced: yes
 world/minimap projection implication documented: yes
 ```
@@ -61,7 +64,7 @@ npm run validate:live-player:dev
 npm run review:object-kit
 ```
 
-These commands were not run because runtime source was not changed and the connector environment did not provide a checked-out browser runtime.
+These commands were not run because runtime source was not changed and the connector did not provide a checked-out browser runtime.
 
 ## Missing fixture gates
 
@@ -78,34 +81,22 @@ browser host/client roster smoke
 browser host/client correlated-start smoke
 ```
 
-## Required roster fixture matrix
+## Required roster matrix
 
 ```txt
 host only seals one admitted member
 host plus reserved slot still seals one admitted member
 reserved slot cannot report connected or ready
 real peer join creates one peer member
-real peer claim removes or transforms one slot without duplicate membership
+peer slot claim leaves no duplicate row
 same peer join replay is idempotent
-same player id with another peer rejects
+duplicate player binding rejects
 peer close changes exactly the bound member
-stale roster revision rejects without mutation
+stale revision rejects without mutation
 revision gap requests resynchronization
 sealed roster excludes reserved slots
 bootstrap player count equals admitted real-member count
-world, minimap, snapshot and debug share the sealed roster fingerprint
-```
-
-## Required start fixture matrix
-
-```txt
-client ready reaches host and all peers
-host plus ready client starts successfully
-unready client rejects start
-double start accepts exactly once
-bootstrap failure restores the same lobby revision
-START_GAME and SYNC carry the same roster fingerprint and run identity
-missing or conflicting start messages do not enter PLAYING
+world, minimap, snapshot and debug share one roster fingerprint
 ```
 
 ## Runtime proof status
