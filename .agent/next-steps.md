@@ -2,108 +2,116 @@
 
 **Repository:** `LuminaryLabs-Publish/HorrorCorridor`
 
-**Updated:** `2026-07-10T18-31-21-04-00`
+**Updated:** `2026-07-10T20-08-46-04-00`
 
 ## Goal
 
-Add one deterministic authoritative snapshot acceptance boundary so every inbound `SYNC` is validated, classified, committed or rejected, journaled, and correlated with UI/render projection before request acknowledgements depend on it.
+Make lobby readiness a host-owned, versioned command domain and make `Start run` pass a deterministic admission policy before any active maze state or player entity is created.
 
 ## Current next build slice
 
 ```txt
-HorrorCorridor Authoritative Snapshot Acceptance + Monotonic Replay Fixture Gate
+HorrorCorridor Lobby Readiness Authority + Start Admission Fixture Gate
 ```
 
 ## Plan ledger
 
 ```txt
-[ ] Preserve current solo, host, client, rendering, minimap, HUD, completion, and cadence behavior.
-[ ] Define SnapshotAcceptanceInput, SnapshotAcceptanceResult, SnapshotRejectReason, and AcceptedSnapshotRecord.
-[ ] Validate protocol version before consuming payload state.
-[ ] Validate sender identity against the active host authority.
-[ ] Validate envelope roomId, payload room.roomId, and snapshot.room.roomId agreement.
-[ ] Validate gameId and seed continuity after the first accepted snapshot.
-[ ] Validate payload.authoritativeTick === payload.snapshot.tick.
-[ ] Reject ticks lower than the last accepted authoritative tick.
-[ ] Classify equal ticks as duplicate, idempotent replay, or conflicting duplicate.
-[ ] Define whether reconnect/recovery may reset the acceptance epoch.
-[ ] Add a session epoch or authority epoch so a new run can legitimately restart tick numbering.
-[ ] Keep snapshot acceptance separate from command acknowledgement and publish decision.
-[ ] Commit room, lobby players, runtime snapshot, readiness, and UI as one projection transaction.
-[ ] Prevent stale snapshots from regressing COMPLETED to PLAYING.
-[ ] Prevent stale snapshots from restoring removed cubes, old ooze, or earlier anomaly slots.
-[ ] Record accepted, duplicate, stale, conflicting, wrong-room, wrong-source, wrong-version, and malformed rows.
-[ ] Add bounded last-accepted and rejected-snapshot ledgers.
-[ ] Add runtime-debug acceptance result, previous tick, candidate tick, source, reason, and commit status.
-[ ] Keep version-1 wire compatibility during additive rollout.
-[ ] Add deterministic fixture seeds before changing GameShell consumers.
-[ ] Prove monotonic accepted delivery.
-[ ] Prove duplicate idempotency.
-[ ] Prove stale and out-of-order rejection.
-[ ] Prove conflicting duplicate rejection.
-[ ] Prove cross-room and wrong-host rejection.
-[ ] Prove authoritativeTick and snapshot.tick mismatch rejection.
-[ ] Prove recovery epoch reset behavior.
-[ ] Prove victory cannot rewind to playing.
-[ ] Prove accepted snapshot parity with the current final runtime state.
-[ ] Add package script fixture:snapshot-acceptance.
+[ ] Preserve current solo, host, client, active gameplay, rendering, minimap, HUD, completion, and cadence behavior.
+[ ] Define LobbyReadyCommand, LobbyStartCommand, LobbyCommandResult, and stable reason types.
+[ ] Add command ids and roster revisions.
+[ ] Define one canonical readiness wire contract.
+[ ] Add compatibility translation for client/ready, client/action toggle-ready, and TRY_INTERACT toggle-ready.
+[ ] Route lobby commands before active-game interaction rules.
+[ ] Validate protocol version, room, sender, actor membership, connection state, phase, and roster revision.
+[ ] Make the host the only readiness and roster authority.
+[ ] Classify same-value readiness as no-change.
+[ ] Increment roster revision exactly once per accepted mutation.
+[ ] Publish one authoritative roster state after accepted mutations.
+[ ] Distinguish pending-local readiness from host-accepted readiness in UI state.
+[ ] Classify placeholder/debug participants separately from real peers.
+[ ] Define LobbyStartAdmissionInput and LobbyStartAdmissionResult.
+[ ] Require host authority and lobby phase.
+[ ] Require all real connected clients to satisfy the explicit readiness policy.
+[ ] Reject disconnected, stale, over-capacity, and placeholder-containing rosters.
+[ ] Seal an immutable admitted roster and fingerprint.
+[ ] Transition lobby -> starting before async loading/bootstrap.
+[ ] Prevent duplicate start transactions.
+[ ] Pass the sealed roster directly to createInitialGameState.
+[ ] Record the admitted roster fingerprint in active session diagnostics.
+[ ] Roll back starting -> lobby atomically if bootstrap fails.
+[ ] Add bounded ready/start command and result ledgers.
+[ ] Add JSON-safe lobby debug projection.
+[ ] Add deterministic fixture seeds and rows before changing GameShell consumers.
+[ ] Add package script fixture:lobby-admission.
+[ ] Prove ready replication and authoritative roster parity.
+[ ] Prove invalid start requests create no runtime state and publish no START_GAME/SYNC.
+[ ] Prove accepted admission and active snapshot use the same roster fingerprint.
 [ ] Run existing validation only after the fixture passes.
 ```
 
 ## Suggested source order
 
 ```txt
-1. snapshotAcceptanceTypes.ts
-2. protocolEnvelopePreflight.ts
-3. authoritySourceIdentity.ts
-4. snapshotAcceptancePolicy.ts
-5. snapshotAcceptanceLedger.ts
-6. snapshotProjectionTransaction.ts
-7. snapshotAcceptanceFixtureSeeds.ts
-8. snapshotAcceptanceFixtureRows.ts
-9. horror-corridor-snapshot-acceptance-fixture.mjs
-10. package.json fixture:snapshot-acceptance
-11. runtimeDebugSnapshotProjection.ts
-12. runtimeDebugStore.ts additive projection
-13. runtimeStore.ts accepted-snapshot metadata
-14. GameShell.tsx preflight and atomic projection
-15. GameCanvas.tsx accepted-snapshot readback only
+1. features/lobby/domain/lobbyCommandTypes.ts
+2. features/lobby/domain/lobbyRosterSnapshot.ts
+3. features/lobby/domain/lobbyReadinessReducer.ts
+4. features/lobby/domain/lobbyStartAdmissionPolicy.ts
+5. features/lobby/domain/lobbyPhaseTransition.ts
+6. features/lobby/domain/lobbyResultLedger.ts
+7. features/lobby/domain/lobbyCompatibilityAdapter.ts
+8. features/lobby/domain/lobbyFixtureSeeds.ts
+9. features/lobby/domain/lobbyFixtureRows.ts
+10. scripts/horror-corridor-lobby-admission-fixture.mjs
+11. package.json fixture:lobby-admission
+12. networking protocol additive LOBBY_COMMAND/RESULT/STATE support
+13. sessionStore authoritative roster revision projection
+14. debug lobby projection
+15. GameShell lobby command routing and start transaction
+16. LobbyScreen authoritative view state and blocked reasons
+17. createInitialGameState admitted-roster fingerprint input
 ```
 
 ## Required fixture rows
 
 ```txt
-first initial snapshot accepted
-higher tick accepted
-same payload and same tick classified duplicate without re-projection
-same tick with different payload rejected as conflicting duplicate
-lower tick rejected stale
-out-of-order sequence 10, 12, 11 leaves tick 12 committed
-payload authoritativeTick mismatch rejected
-wrong protocol version rejected
+solo host admission accepted
+host plus ready client admission accepted
+host plus unready client rejected
+client ready accepted and replicated to host/client projections
+client unready accepted and replicated
+same-value ready returns no-change
+unknown player rejected
 wrong room rejected
-wrong host sender rejected
-changed gameId or seed rejected inside one epoch
-reconnect/recovery epoch reset explicitly accepted
-victory snapshot followed by stale playing snapshot remains victory
-accepted cube, ooze, player, anomaly, room, and UI parity
-runtime debug acceptance and rejection rows remain JSON-safe
-legacy version-1 valid snapshot still accepted
+disconnected player ready rejected
+stale roster revision rejected
+duplicate command id replays terminal result
+non-host start rejected
+placeholder participant start rejected
+capacity overflow rejected
+double start accepts exactly once
+bootstrap failure rolls phase back to lobby
+rejected start emits no START_GAME or SYNC
+accepted roster fingerprint equals active snapshot roster fingerprint
+legacy readiness vocabularies translate to canonical commands
+all result and debug rows are JSON-safe
 ```
 
 ## Acceptance checks
 
 ```txt
-[ ] npm run fixture:snapshot-acceptance
+[ ] npm run fixture:lobby-admission
 [ ] npm run lint
 [ ] npm run smoke:protokits
 [ ] npm run harness:horror-corridor
+[ ] npm run build
 [ ] npm run validate:live-player:dev
 [ ] npm run review:object-kit
-[ ] browser solo smoke
-[ ] browser host/client smoke
-[ ] delayed-message and reconnect smoke
-[ ] runtime-debug export inspection
+[ ] browser solo lobby/start smoke
+[ ] browser host/client ready/unready smoke
+[ ] browser blocked-start reason smoke
+[ ] browser accepted-start roster parity smoke
+[ ] runtime-debug lobby export inspection
 ```
 
 ## Explicit non-goals
@@ -119,5 +127,6 @@ scene-dressing expansion
 visual object-kit expansion
 network tick retuning
 gameplay balance changes
-request acknowledgement implementation beyond preserving its integration boundary
+snapshot acceptance implementation beyond preserving its boundary
+request acknowledgement implementation beyond preserving its boundary
 ```
