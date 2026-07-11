@@ -2,117 +2,168 @@
 
 **Repository:** `LuminaryLabs-Publish/HorrorCorridor`
 
-**Updated:** `2026-07-10T20-08-46-04-00`
+**Updated:** `2026-07-10T21-39-22-04-00`
 
 ## Status
 
 ```txt
-status: lobby-readiness-authority-start-admission-fixture-gate-planned
+status: run-exit-authority-session-epoch-reentry-fixture-gate-planned
 runtime source changed: no
 branch: main
 root .agent state: refreshed
 central ledger sync: complete
-central change log: internal-change-log/2026-07-10T20-08-46-04-00-horror-corridor-lobby-readiness-start-admission.md
+central change log: internal-change-log/2026-07-10T21-39-22-04-00-horror-corridor-run-exit-session-epoch.md
 ```
 
 ## Selection
 
-No eligible repository was new, absent from the central ledger, missing root `.agent` state, or otherwise undocumented. `HorrorCorridor` was selected as the oldest eligible documented fallback. `TheCavalryOfRome` remained excluded.
+No eligible repository was new, absent from the central ledger, missing root `.agent` state, or otherwise undocumented. `HorrorCorridor` was the oldest eligible documented fallback. `TheCavalryOfRome` remained excluded.
 
 ## Interaction loop
 
 ```txt
-select host or join
-  -> create or join lobby
-  -> host tracks peer membership
-  -> render roster and readiness badges
-  -> client presses Enter run or Toggle ready
-  -> local sessionStore row changes only on that client
-  -> host receives no readiness command
-  -> host presses Start run
-  -> startPlay checks host mode and room presence only
-  -> createInitialGameState converts host roster into active room and players
-  -> host publishes START_GAME and initial SYNC
-  -> active first-person corridor loop begins
+enter solo, host, or client run
+  -> createInitialGameState publishes an active room and initial snapshot
+  -> GameCanvas initializes render/runtime ownership from authoritativeSnapshot
+  -> requestAnimationFrame advances local simulation or client prediction
+  -> host publishes periodic SYNC rows
+  -> pause, victory, or completion exposes Return to lobby / Restart
+  -> returnToLobby changes local screen, overlay, pause, and readiness flags
+  -> GameCanvas unmount cleanup stops RAF and disposes local render resources
+  -> sessionStore room still carries active/ending phase
+  -> runtimeStore still carries the previous authoritative snapshot
+  -> transport remains connected
+  -> no authoritative exit/reset message is published
+  -> peers can disagree about phase and old traffic can enter a later run
 ```
 
 ## Domains in use
 
 ```txt
-application shell and session lifecycle
+application shell and screen routing
+session mode, identity, room, roster, and connection state
+runtime snapshot, local pose, input, and readiness projection
 lobby presentation and controls
-session room and roster projection
-PeerJS host/client transport
-protocol envelopes and message construction
-lobby membership and connection-state tracking
-partial readiness vocabulary and local readiness presentation
-inline host start orchestration
+PeerJS host/client transport and local BroadcastChannel bridge
+peer event bus and transport status projection
+versioned protocol envelopes and serialization
 seeded maze, cube, anomaly, room, and player bootstrap
-first-person input, movement, collision, camera, and prediction
-interaction, network, ooze, and victory rules
-authoritative active-game publication
-Three.js world, post-processing, minimap, HUD, and scene dressing
-runtime debug frame and event storage
-package-level build, lint, harness, visual, and live-player validation
-planned lobby command, host readiness authority, roster fingerprint, start admission, phase transaction, result ledger, debug projection, compatibility, and fixture domains
+room phase and game-screen state
+first-person input and pointer lock
+movement, collision, camera, and prediction
+authoritative host player update consumption
+interaction, cube carry, placement, rollback, and victory rules
+ooze cadence, decay, placement, and limits
+authoritative snapshot construction and publication
+client snapshot replay and local pose projection
+Three.js scene, maze world, terrain, props, lights, cubes, players, ooze, and scene dressing
+animation loop and resize ownership
+post-processing composer and bloom
+minimap and HUD projection
+runtime debug frames and events
+resource disposal and component unmount cleanup
+build, lint, harness, visual, object-kit, and live-player validation
+planned lobby entry authority
+planned run-exit command/result authority
+planned session epoch and stale-message admission
+planned teardown ledger and re-entry fixture
 ```
 
-## Kits and services
+## Implemented kits and services
 
 ```txt
+corridor-application-shell-kit
+  screen routing, menu orchestration, run entry, pause, completion, local exit callbacks
 corridor-session-domain-kit
-  mode selection, identity, room lifecycle, session entry/exit
+  mode, peer identity, room, roster, connection status, reset
+runtime-store-snapshot-kit
+  authoritative snapshot, local pose, view angles, input flags, readiness, reset
 lobby-screen-presentation-kit
-  room metadata, roster, ready badges, lobby controls
-session-store-room-projection-kit
-  room/roster storage, upsert/remove, local reset
-peer-room-sync-domain-kit
-  PeerJS host/client transport, send, broadcast, transport events
+  roster, ready badges, room status, primary/secondary actions
+peer-host-transport-kit
+  host peer, connection registry, broadcast, targeted send, disconnect, destroy
+peer-client-transport-kit
+  host connection, send, local bridge, status, destroy
+peer-event-bus-kit
+  typed transport events, subscriptions, clear
 protocol-message-construction-kit
-  versioned START_GAME, PLAYER_UPDATE, TRY_INTERACT, SYNC, LOBBY_EVENT envelopes
+  START_GAME, PLAYER_UPDATE, TRY_INTERACT, SYNC, LOBBY_EVENT envelopes
 maze-snapshot-bootstrap-kit
-  deterministic maze, cubes, anomaly, active room, players, initial snapshot
-first-person-corridor-player-kit
-  pointer lock, input, movement, collision, camera, prediction
+  deterministic seed, maze, cubes, anomaly, active room, players, initial snapshot
+first-person-input-kit
+  keyboard/pointer state, pointer lock, look accumulation, snapshots
+movement-collision-camera-kit
+  movement integration, maze collision, eye position, walk shake, camera projection
+network-player-update-kit
+  client update send, host update consume, pose projection
 corridor-interaction-domain-kit
-  pickup, drop, place, remove, carried-cube synchronization
+  pickup, drop, place, remove, held-cube synchronization
 ordered-anomaly-sequence-kit
-  ordered validation, rollback, completion, victory
-ooze-trail-domain-kit
+  ordered validation, rollback, ending phase, victory
+ ooze-trail-domain-kit
   cadence, decay, spawn, spacing and capacity guards
 corridor-authoritative-publication-kit
-  tick, snapshot, broadcast, publication reasons and cadence
+  tick, full sync, broadcast, reason and cadence accounting
+corridor-animation-loop-kit
+  idempotent start/stop and RAF cancellation
 corridor-render-world-kit
-  Three.js world, maze, cubes, players, anomaly, ooze, dressing, post
+  terrain, maze, cubes, players, anomaly, ooze, props, lights, attach/update/dispose
+corridor-post-processing-kit
+  composer, bloom, output, resize, render, dispose
 corridor-minimap-kit
   maze and object top-down projection
 runtime-debug-frame-kit
-  bounded active-game frames/events and JSON-safe export
+  bounded frame/event records and JSON-safe browser export
+runtime-resource-cleanup-kit
+  listener removal, ResizeObserver disconnect, world/composer/renderer disposal
+package-validation-kit
+  build, lint, ProtoKit smoke, harness, visual, object-kit, and live-player commands
 ```
 
 ## Source findings
 
 ```txt
-LobbyScreen renders ready/waiting and says to start when the room is ready.
-Client primary and secondary lobby actions both call local toggleReady().
-toggleReady() mutates only local Zustand state and sends no network message.
-messageTypes names toggle-ready plus player-ready/player-unready.
-shared.ts separately defines client/ready and client/action toggle-ready.
-networkRules treats toggle-ready as an unchanged active-game state.
-Host startPlay has no all-ready, connection, placeholder, revision, or phase admission checks.
-addGuestPlaceholder can create a connected row that bootstrap turns into an active player.
-createInitialGameState consumes the current roster and immediately creates an active room.
-No lobby command result, roster fingerprint, admission result, debug row, or fixture exists.
+RoomPhase already defines idle, lobby, starting, active, ending, and closed.
+createInitialGameState produces an active room.
+winRules moves a completed room to ending.
+returnToLobby does not mutate room phase or authoritative snapshot.
+returnToLobby does not broadcast a lobby reset or run-exit result.
+protocol messageTypes has no RUN_EXIT, SESSION_STATE, or lifecycle result message.
+PLAYER_UPDATE and TRY_INTERACT identify only roomId and actor; they carry no run epoch.
+SYNC carries gameId in the snapshot but GameShell accepts every SYNC without an exit/re-entry boundary.
+GameCanvas cleanup stops RAF, unsubscribes its transport listener, removes DOM listeners, disposes the world/composer/renderer, and removes the canvas.
+cleanup patches networking to true even for solo and after renderer teardown.
+solo returnToLobby chooses LOBBY_CLIENT because only host mode maps to LOBBY_HOST.
+LOBBY_CLIENT primary action calls startPlay, which routes non-host modes to toggleReady, so a returned solo run cannot cleanly restart.
+client returnToLobby is local-only; a later host SYNC can set the client back to PLAYING.
+host returnToLobby leaves clients active and ignores their PLAYER_UPDATE traffic outside GameCanvas.
+no session epoch, exit request id, terminal result, teardown ledger, stale-message rejection, or DOM-free lifecycle fixture exists.
 ```
 
 ## Main finding
 
-The lobby is not authoritative. A client can appear ready locally while the host remains unaware, and the host can begin the run from an unready, disconnected, stale, or placeholder-containing roster. Readiness must become a host-owned lobby command domain before bootstrap.
+Render resources are mostly disposed on component unmount, but the gameplay/network session is not exited authoritatively. Local UI state, room phase, runtime snapshot, transport state, and remote peers can diverge across pause, completion, return-to-lobby, and restart paths.
 
 ## Next safe ledge
 
 ```txt
-HorrorCorridor Lobby Readiness Authority + Start Admission Fixture Gate
+HorrorCorridor Run Exit Authority + Session Epoch Re-entry Fixture Gate
+```
+
+## Required dependency order
+
+```txt
+lobby readiness/start admission authority
+  -> sealed roster and initial session epoch
+  -> typed run-exit command/result
+  -> host-owned active/ending -> lobby transition
+  -> authoritative lobby reset publication
+  -> deterministic runtime/store teardown
+  -> epoch increment before re-entry
+  -> stale PLAYER_UPDATE / TRY_INTERACT / SYNC rejection
+  -> JSON-safe lifecycle ledger
+  -> DOM-free exit/re-entry fixture
+  -> browser solo and host/client lifecycle smoke
 ```
 
 ## Validation
@@ -122,7 +173,7 @@ runtime source changed: no
 branch created: no
 pull request created: no
 existing checks run: no
-lobby admission fixture: unavailable
+session lifecycle fixture: unavailable
 repo-local docs pushed to main: yes
 central ledger updated: yes
 central change log added: yes
