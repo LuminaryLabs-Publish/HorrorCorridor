@@ -1,77 +1,82 @@
 # HorrorCorridor Known Gaps
 
-**Updated:** `2026-07-11T05-28-29-04-00`
+**Updated:** `2026-07-11T07-30-40-04-00`
 
 ## Queue-head roster gaps
 
-- `LobbyPlayer` has no member kind, peer binding, slot identity or bootstrap-admission field.
-- `makePlayer()` defaults every row to `connectionState: "connected"`.
-- Add guest creates a synthetic connected-looking player rather than a reserved slot.
-- Real peer arrival creates a second row because the placeholder ID does not match `remotePeerId`.
-- Peer close removes only the real peer row and leaves synthetic rows untouched.
-- Session roster mutation has no monotonic revision, fingerprint or typed result.
-- Duplicate peer IDs and duplicate player IDs have no explicit rejection policy.
-- Slot claim, release and disconnect are not atomic transactions.
-- Reserved slots can be displayed as ready-capable participants.
-- `createInitialGameState()` maps every roster row into an active gameplay player.
-- Placeholder players can consume spawn offsets, colors, snapshot rows, avatars and minimap markers.
-- World, minimap and debug output cannot prove that projected players are transport-owned.
-- No deterministic roster identity, placeholder admission or peer-slot-claim fixture exists.
+- Lobby members do not distinguish real peers from reserved slots.
+- Peer, member and player identities are not canonically bound.
+- Roster mutations have no revision, fingerprint or typed result.
+- Reserved slots can enter gameplay bootstrap.
 
-## Start-transaction gaps
+## Transport actor-binding gaps
 
-- Client readiness mutates only local Zustand state.
-- The host does not own readiness admission.
-- The Start button is not guarded by roster policy.
-- `startPlay()` has no duplicate-start fence while loading.
-- The host commits local PLAYING state before correlated client publication.
-- `START_GAME` and initial `SYNC` have no shared start transaction ID.
-- Neither message proves a sealed roster revision or fingerprint.
-- Clients can enter PLAYING from `SYNC` without matching `START_GAME`.
-- No rollback restores the prior lobby observation after partial start failure.
+- `PeerTransportEvent` exposes `remotePeerId` and `connectionId`, but host gameplay dispatch ignores both.
+- The protocol envelope independently claims `senderId`.
+- PLAYER_UPDATE and TRY_INTERACT independently claim `payload.playerId`.
+- Structural decoding does not compare transport, envelope and payload identities.
+- Envelope `roomId` is not admitted against the live host room before gameplay dispatch.
+- There is no run-session or session-epoch field on current gameplay messages.
+- PLAYER_UPDATE input sequence is not checked for monotonicity.
+- Request IDs are not deduplicated.
+- Unknown or retired connections have no shared rejection path.
+- Duplicate active connections for one peer/player have no conflict policy.
+- Reserved-slot or disconnected member claims have no admission policy.
+- Host dispatch has no typed accepted, rejected, duplicate, stale or no-change result.
+- Rejected actor claims have no bounded debug observation.
+
+## Gameplay consequences
+
+- A connected peer can claim another existing player ID in PLAYER_UPDATE.
+- `applyNetworkPlayerUpdate()` replaces the selected player's position, rotation, pitch and velocity.
+- Held cubes follow the selected player after the update.
+- A peer can claim another player in TRY_INTERACT.
+- Pickup, drop, place and remove actions can execute under the claimed identity.
+- The host can publish the resulting mutation as an authoritative SYNC.
 
 ## Dependent gaps
 
+- Lobby readiness and start requests are not routed through host actor admission.
 - Run exit does not commit one session epoch transition.
-- Network messages are not admitted against run-session identity and epoch.
 - Snapshot acceptance lacks duplicate, stale and conflict policy.
-- Remote movement is not host validated.
-- Active clients do not reconcile to host pose.
+- Remote movement lacks speed, collision and temporal validation.
+- Active clients do not reconcile predicted pose to host pose.
 - Pause and resume remain local projection rather than replicated authority.
 
 ## Render and readback gaps
 
-- Gameplay player descriptors omit member kind, peer ID and roster fingerprint.
-- Reserved slots and real peers are indistinguishable after bootstrap.
-- Minimap and world projection have no roster-consumption result.
-- Debug state cannot expose unowned or duplicate player identities.
-- No shared roster revision links lobby UI, bootstrap, snapshot, world and minimap.
+- Snapshots do not identify the accepted actor-bound command that produced a player change.
+- World, minimap, HUD and debug output cannot distinguish bound from unbound mutations.
+- No committed frame ID correlates command result, published tick and projected frame.
+- Rejected message counters and reasons are absent from host diagnostics.
 
 ## Validation gap
 
-Current package commands prove build, lint, visual, ProtoKit and live-player surfaces, but none prove:
+Current package commands do not prove:
 
 ```txt
-member-kind semantics
-unique peer/player binding
-reserved-slot exclusion
-slot claim and release
-disconnect ownership
-roster revision and fingerprint ordering
-sealed-roster bootstrap
-placeholder-free world and minimap projection
-correlated START_GAME and initial SYNC
+connection-to-peer-to-player ownership
+transport/envelope/payload identity consistency
+wrong-room rejection
+session/epoch admission
+request deduplication
+sequence ordering
+connection retirement
+duplicate connection conflict
+no-publication on rejection
+multi-peer impersonation resistance
+actor-bound render projection
 ```
 
 ## Required guarantees
 
 ```txt
-reserved slots remain lobby-only
-one peer binds to one member and one player
-accepted mutations increment revision once
-same semantic replay returns no-change
-stale or conflicting revisions reject
-bootstrap receives one immutable admitted roster
-all gameplay player descriptors originate from admitted real members
-world, minimap, snapshot and debug share the same roster fingerprint
+one active connection owns at most one admitted player
+remotePeerId senderId and payload.playerId resolve to the same actor
+wrong room session epoch or phase rejects before mutation
+duplicate request and stale sequence never mutate
+retired connection never regains authority from message claims
+accepted command produces one terminal result
+rejected command advances no gameplay tick
+only accepted state changes are published and rendered
 ```
