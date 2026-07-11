@@ -1,108 +1,103 @@
 # HorrorCorridor Known Gaps
 
-**Updated:** `2026-07-11T15-01-33-04-00`
+**Updated:** `2026-07-11T16-21-09-04-00`
 
-## Queue-head identity gaps
-
-- Lobby members do not yet distinguish every real peer, gameplay player and reserved slot through one canonical binding.
-- Transport connection identity and protocol sender identity are not fully converged.
-- Room, roster, run-session, epoch, request and sequence admission remain incomplete.
-- Interaction commands depend on those identities and must not create a parallel actor authority.
-
-## Lobby start and run identity gaps
-
-- Host start does not seal one immutable roster revision and fingerprint.
-- START_GAME and SYNC do not share a mandatory transaction identity.
-- Run-session ID, session epoch, per-peer acknowledgement and first-frame proof are absent.
-- Run exit does not commit one epoch transition before old messages and resources retire.
-
-## Snapshot admission gaps
-
-- Snapshot acceptance lacks authoritative sender, room, run, epoch, sequence and revision admission.
-- Duplicate, stale, conflicting and reordered snapshots can mutate stores without typed results.
-- Older snapshots can rewind interaction ownership, anomaly progress or terminal state.
-- Snapshot acceptance is not correlated with one projection and rendered-frame receipt.
-
-## Interaction target gaps
-
-- The interaction message schema supports `cubeId`, `slotId` and `targetCellId`, but the active client caller supplies none of them.
-- Local authoritative interaction also omits explicit cube and slot targets.
-- Pickup without `cubeId` selects the nearest eligible cube at host execution time.
-- Place without `slotId` selects the first empty slot at host execution time.
-- Remove without `slotId` selects the last occupied slot at host execution time.
-- Client intent carries no observed snapshot tick, target revision, ownership revision or claim fingerprint.
-- A stale or contended request can mutate a different cube or slot instead of rejecting.
-- Optional protocol `requestId` is not generated for interaction requests in the active path.
-- Interaction rules return only a new or unchanged `GameState`; no typed result or rejection reason exists.
-- Remote host handling publishes a full snapshot after every request, including silent no-change outcomes.
-- Local host handling suppresses no-change publication, so local and remote outcome semantics differ.
-- No command-result cache makes duplicate retry idempotent.
-- Held cube ownership has no revision, lease or exactly-once claim result.
-- No first interaction-frame receipt proves world, minimap, HUD and debug state consumed the same result.
-
-## Concrete substitution risks
+## Primary ordered gaps
 
 ```txt
-pickup contention -> second request may select another nearby cube
-place contention  -> second request may fill the next empty slot
-remove contention -> second request may remove the new last occupied slot
+1. canonical lobby member, peer and gameplay-player identity
+2. transport actor binding and message admission
+3. sealed lobby start transaction and correlated initial SYNC
+4. run exit, session epoch and late-message quarantine
+5. runtime readiness leases and generation fencing
+6. snapshot acceptance ordering and monotonic revision
+7. explicit interaction targets and cube/slot claims
+8. active-run disconnect, player retirement and reconnect claims
+9. monotonic terminal outcome authority
+10. host movement admission and client reconciliation
+11. replicated pause/resume convergence
 ```
 
-## Terminal outcome gaps
-
-- The executable has an ordered-sequence victory predicate but no defeat predicate.
-- `GameScreenState`, `UiCompletionState` and `CompleteScreen` support `failure`, but gameplay cannot produce it.
-- Victory is not monotonic and can return to playing under later incomplete evaluation.
-- Terminal work must consume accepted interaction and snapshot results rather than raw mutable state.
-
-## Render and presentation gaps
-
-- Render/debug frames contain cube state but no interaction command ID, target claim revision or result ID.
-- The first visible pickup, placement or removal frame has no run-session or epoch correlation.
-- No frame receipt proves world, minimap and HUD correspond to the accepted interaction result.
-- Clients infer interaction success from later snapshots rather than receiving explicit acknowledgement.
-
-## Runtime readiness gaps
-
-- `RuntimeReadiness` remains four mutable booleans without provider leases or revision proof.
-- Shell and inbound SYNC can mark providers ready before resource and first-frame evidence exists.
-- Old-generation setup or cleanup can still write readiness after a reset or exit.
-
-## Dependent authority gaps
-
-- Remote movement lacks complete speed, collision and temporal validation.
-- Active clients do not reconcile predicted pose to host pose.
-- Pause and resume remain primarily local projection rather than replicated authority.
-- These systems must admit the current run/session/epoch and reject terminal or retired generations.
-
-## Validation gap
-
-Current package commands do not prove:
+## Active-run disconnect gaps
 
 ```txt
-explicit cube and slot target admission
-stale target rejection without substitution
-pickup, place and remove contention
-interaction duplicate idempotency
-reorder handling
-ownership conflict handling
-result-to-snapshot correlation
-first interaction-frame acknowledgement
-cross-epoch interaction rejection
-local/remote result parity
+connectionId is not bound to canonical gameplay actor identity
+connection-close mutates only session/lobby state
+GameCanvas currentGameState is not subscribed to roster removal
+no active membership revision
+no suspended/disconnected/retired gameplay-player state
+no disconnect command or result
+no grace-period or timeout policy
+no explicit leave/kick distinction
+no reconnect claim or token
+no stale or duplicate close rejection
+```
+
+## Owned-state recovery gaps
+
+```txt
+held cube ownership survives disconnect
+no drop/return/reserve/transfer policy
+syncHeldCubesToPlayers leaves cubes unchanged when owner is missing
+no orphaned-owner invariant check
+no cube recovery result
+no interaction-claim release result
+no anomaly-slot policy for disconnected ownership
+```
+
+## Simulation and publication gaps
+
+```txt
+disconnected players remain in GameState.players
+disconnected positions remain ooze inputs
+GameState.room.players can diverge from sessionStore.room.players
+buildReplicatedSnapshot republishes ghost players
+world and minimap can continue projecting ghosts
+no disconnect-result-linked snapshot revision
+no first post-disconnect frame acknowledgement
+```
+
+## Reconnect gaps
+
+```txt
+new connection open is treated as lobby join/upsert
+no suspended actor identity to reclaim
+no previous connection lineage
+no run/epoch/revision claim
+no ownership restoration policy
+no duplicate live connection policy
+no reconnect success or rejection result
+```
+
+## Required fixtures
+
+```txt
+fixture:disconnect-actor-binding
+fixture:disconnect-active-player-retirement
+fixture:disconnect-held-cube-recovery
+fixture:disconnect-no-orphan-owner
+fixture:disconnect-ooze-input-removal
+fixture:disconnect-snapshot-convergence
+fixture:disconnect-duplicate-close
+fixture:disconnect-late-close
+fixture:disconnect-cross-epoch-close
+fixture:disconnect-grace-timeout
+fixture:reconnect-suspended-actor
+fixture:reconnect-wrong-actor
+fixture:reconnect-duplicate-live-connection
+fixture:disconnect-first-frame
+fixture:browser-active-disconnect
+fixture:pages-active-disconnect
 ```
 
 ## Required guarantees
 
 ```txt
-every interaction carries one command identity and observed state revision
-interaction actor is bound to the admitted transport connection
-every mutating action identifies one target
-stale targets reject before mutation
-no host-side replacement target is silently selected
-one claim accepts and all competing claims receive typed results
-duplicate retry returns the first result
-cube, slot, ownership and sequence state commit atomically
-published snapshots cite the interaction result
-clients acknowledge the same result and visible frame
+session and gameplay membership cannot diverge silently
+one connection close affects only its bound actor and run epoch
+all actor-owned mutable state has an explicit recovery result
+no cube references a missing owner
+retired actor is absent from simulation interaction snapshot and render inputs
+reconnect cannot create a duplicate player or steal another actor
+all projections share one membership revision and result fingerprint
 ```
