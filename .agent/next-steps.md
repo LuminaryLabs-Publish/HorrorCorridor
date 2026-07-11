@@ -1,10 +1,10 @@
 # HorrorCorridor Next Steps
 
-**Updated:** `2026-07-11T07-30-40-04-00`
+**Updated:** `2026-07-11T09-29-07-04-00`
 
 ## Plan ledger
 
-**Goal:** establish roster identity first, then bind every live transport connection to one canonical member and player before implementing additional multiplayer commands.
+**Goal:** establish canonical roster and transport identity first, then make runtime readiness a generation-fenced provider lease before downstream snapshot, movement and pause work.
 
 ### Gate 1: roster identity and peer binding
 
@@ -17,71 +17,88 @@
 
 ### Gate 2: transport actor binding and message admission
 
-- [ ] Add a canonical live connection record for `connectionId` and `remotePeerId`.
-- [ ] Resolve the connection to one admitted member and gameplay player.
-- [ ] Require envelope `senderId` to match the bound player.
-- [ ] Require payload `playerId` to match the same bound player.
-- [ ] Admit envelope `roomId`, run session ID and session epoch.
-- [ ] Enforce monotonic PLAYER_UPDATE sequence per connection.
-- [ ] Deduplicate request IDs before domain dispatch.
+- [ ] Bind each live connection to one admitted member and gameplay player.
+- [ ] Require transport, envelope sender and payload player identities to converge.
+- [ ] Admit room, run session, epoch, request and sequence before mutation.
 - [ ] Return typed accepted, rejected, duplicate, stale and no-change results.
-- [ ] Reject unknown, retired, duplicate and reserved-slot bindings.
 - [ ] Publish no gameplay snapshot for a rejected command.
-- [ ] Add bounded actor-admission and rejection observations.
-- [ ] Add `fixture:transport-actor-binding`.
-- [ ] Add `fixture:sender-payload-consistency`.
-- [ ] Add `fixture:connection-sequence-admission`.
-- [ ] Add `fixture:request-deduplication`.
-- [ ] Add `fixture:disconnect-retirement`.
-- [ ] Add a browser host-plus-two-clients impersonation smoke.
+- [ ] Add bounded admission and rejection observations.
+- [ ] Add transport actor, sender/payload, sequence, dedupe and retirement fixtures.
 
-### Gate 3: lobby readiness and start transaction
+### Gate 3: lobby start transaction
 
-- [ ] Route readiness through the host and actor-admission layer.
+- [ ] Route readiness through host actor admission.
 - [ ] Seal one roster revision and fingerprint before bootstrap.
 - [ ] Introduce start transaction ID, run session ID and epoch.
 - [ ] Correlate START_GAME and initial SYNC.
 - [ ] Commit or roll back exactly once.
 
-### Gate 4: dependent runtime authority
+### Gate 4: run exit and session epoch
 
-- [ ] Add run-exit commit and epoch-based message quarantine.
+- [ ] Add one typed run-exit command and terminal result.
+- [ ] Advance the session epoch before old runtime disposal begins.
+- [ ] Quarantine late messages and snapshots from prior epochs.
+- [ ] Correlate lobby/title projection with the committed exit result.
+
+### Gate 4a: runtime readiness lease and generation fencing
+
+- [ ] Add `runtimeSessionId`, monotonic `runtimeGeneration` and readiness `revision`.
+- [ ] Treat shell writes as capability requests, not ready commits.
+- [ ] Add one provider lease per simulation, rendering, networking and input capability.
+- [ ] Require a concrete resource proof before a provider can commit ready.
+- [ ] Derive networking readiness from the actual transport role and status.
+- [ ] Require renderer, world, composer, canvas, RAF and first-frame proof for rendering readiness.
+- [ ] Require installed listener ownership for input readiness.
+- [ ] Advance runtime generation before old resources are disposed.
+- [ ] Reject old-generation setup and cleanup writes.
+- [ ] Make partial initialization rollback reverse-ordered and typed.
+- [ ] Make revocation and cleanup idempotent.
+- [ ] Add bounded readiness transition, failure and stale-write journals.
+- [ ] Project generation, revision, provider and proof through debug readback.
+- [ ] Add `fixture:runtime-readiness`.
+- [ ] Add `fixture:runtime-readiness-stale-cleanup`.
+- [ ] Add `fixture:runtime-readiness-rollback`.
+- [ ] Add `fixture:runtime-readiness-strict-mode`.
+
+### Gate 5: dependent runtime authority
+
 - [ ] Add snapshot duplicate, stale, ordering and conflict policy.
 - [ ] Add host movement validation and active client reconciliation.
 - [ ] Add replicated pause/resume authority and atomic input suspension.
 
-## Recommended actor DSKs
+## Recommended readiness DSKs
 
 ```txt
-transport-connection-identity-kit
-peer-player-binding-kit
-inbound-envelope-preflight-kit
-room-session-admission-kit
-actor-claim-resolution-kit
-sender-payload-consistency-kit
-connection-sequence-ledger-kit
-request-deduplication-kit
-message-admission-result-kit
-host-command-dispatch-kit
-rejected-message-observation-kit
-transport-identity-fixture-kit
+runtime-session-identity-kit
+runtime-generation-kit
+readiness-capability-descriptor-kit
+readiness-provider-lease-kit
+resource-readiness-proof-kit
+readiness-commit-transaction-kit
+readiness-revocation-kit
+simulation-readiness-adapter-kit
+rendering-readiness-adapter-kit
+networking-readiness-adapter-kit
+input-readiness-adapter-kit
+stale-cleanup-fence-kit
+readiness-transition-journal-kit
+readiness-debug-projection-kit
+runtime-readiness-fixture-kit
 ```
 
-## Required proof
+## Required readiness proof
 
 ```txt
-one live connection resolves to one admitted player
-bound peer can update only its own player
-bound peer can interact only as its own player
-sender mismatch rejects before mutation
-payload player mismatch rejects before mutation
-wrong room session or epoch rejects
-retired connection rejects
-same request replay is duplicate without mutation
-stale sequence rejects
-accepted mutation publishes at most once
-rejected command advances no tick and changes no render projection
-world minimap HUD and debug reflect only accepted actor-bound state
+shell intent alone never marks rendering or input ready
+solo runtime never reports networking ready
+networking ready requires a live transport lease
+rendering ready requires live resources and first committed frame
+input ready requires installed listener ownership
+reset advances runtime generation before cleanup
+old cleanup cannot mutate the current generation
+failed initialization leaves no partial ready capability
+cleanup is idempotent
+final readiness equals the live resource inventory
 ```
 
 ## Do not start with
@@ -95,4 +112,4 @@ save system
 pause convergence
 ```
 
-Those depend on canonical roster, actor and run-session identity.
+Those depend on canonical roster, actor, run-session and runtime-generation identity.
