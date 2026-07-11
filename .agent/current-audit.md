@@ -2,17 +2,17 @@
 
 **Repository:** `LuminaryLabs-Publish/HorrorCorridor`
 
-**Updated:** `2026-07-11T11-39-11-04-00`
+**Updated:** `2026-07-11T13-20-45-04-00`
 
 ## Status
 
 ```txt
-status: lobby-start-transaction-correlation-authority-planned
+status: terminal-outcome-victory-failure-convergence-authority-audited
 runtime source changed: no
 branch: main
 root .agent state: refreshed
-central ledger sync: complete
-central change log: internal-change-log/2026-07-11T11-39-11-04-00-horror-corridor-lobby-start-transaction.md
+central ledger sync: pending current-run synchronization
+central change log: pending current-run synchronization
 ```
 
 ## Product interaction loop
@@ -20,53 +20,55 @@ central change log: internal-change-log/2026-07-11T11-39-11-04-00-horror-corrido
 ```txt
 title
   -> solo, host or client admission
-  -> room, roster, identity and connection projection
-  -> host or client lobby action
-  -> host async loading and deterministic bootstrap
-  -> local host active-state commit
-  -> independent START_GAME and SYNC broadcasts
-  -> client applies messages independently
-  -> client enters PLAYING from SYNC
-  -> GameCanvas mounts, simulates and renders
+  -> lobby start and deterministic bootstrap
+  -> input, movement, interaction and authoritative simulation
+  -> ordered anomaly or pressure evaluation
+  -> terminal outcome candidate
+  -> host/solo commit and snapshot publication
+  -> client outcome admission
+  -> completion and terminal-frame projection
+  -> restart to lobby or exit to title
 ```
 
-## Lobby start authority loop
+## Terminal outcome loop
 
 ```txt
-LobbyScreen primary click
-  -> no disabled state or typed command
-  -> host checks only mode and non-null room
-  -> loading yields across frames and timers
-  -> room, roster and connection can change
-  -> no revision revalidation
-  -> bootstrap uses captured room and lobbyPlayers
-  -> host commits locally before publication
-  -> START_GAME broadcast result ignored
-  -> SYNC broadcast result ignored
-  -> client has no correlated transaction admission
+correct final cube placement
+  -> ordered sequence validation
+  -> gameState = victory
+  -> room.phase = ending
+  -> authoritative SYNC publication
+  -> local/client COMPLETED projection
+
+failure-capable type or UI
+  -> no gameplay defeat predicate
+  -> no authoritative failure transition
+
+incoming failure snapshot
+  -> generic shell fallback
+  -> PLAYING projection
 ```
 
 ## Domains in use
 
 ```txt
 application shell and screen routing
-UI loading pause completion and settings projection
-session mode peer identity room roster connection and reset
-lobby member identity peer binding reserved slots and readiness
-lobby start command admission roster seal and bootstrap planning
-start transaction run session epoch commit publication acknowledgement and retry
-runtime readiness provider ownership and generation fencing
+UI loading pause completion settings and terminal projection
+session mode peer identity room roster connection readiness and reset
+lobby identity actor binding start admission and bootstrap
+run session epoch exit and runtime readiness
 PeerJS host/client transport and BroadcastChannel bridge
-connection registry event bus and transport actor binding
-versioned protocol envelopes serializers and message construction
-seeded maze room player cube anomaly and ooze bootstrap
-replicated snapshot construction publication acceptance and replay
-pointer lock keyboard mouse blur and input lifecycle
+protocol construction serialization correlation and admission
+seeded maze player cube anomaly and ooze bootstrap
+replicated snapshot publication acceptance and replay
+pointer lock keyboard mouse and input lifecycle
 movement collision camera prediction and host admission
-cube interaction held-cube synchronization ordered anomaly and victory
-ooze cadence decay spawn spacing and capacity
-Three.js world players minimap HUD bloom and first-frame projection
-RAF resize canvas resources debug cleanup validation and deployment
+cube interaction held-cube synchronization and ordered anomaly
+victory and room-ending evaluation
+ooze spawn decay spacing capacity and level
+terminal policy evaluation admission latch result publication client convergence and acknowledgement
+Three.js world post-processing minimap HUD completion and terminal-frame projection
+RAF resize resources debug cleanup validation and deployment
 ```
 
 ## Implemented kits and services
@@ -74,7 +76,9 @@ RAF resize canvas resources debug cleanup validation and deployment
 - **corridor-application-shell-kit:** routing, solo/host/client entry, loading, pause, completion, lobby return and title exit.
 - **corridor-session-domain-kit:** session mode, peer identity, room, roster, connection status and reset.
 - **runtime-store-snapshot-kit:** authoritative snapshot, local pose, view angles, input, readiness and reset.
-- **ui-pause-projection-kit:** pause state, reason and overlay projection.
+- **ui-pause-projection-kit:** pause state, pause reason and overlay projection.
+- **ui-completion-projection-kit:** victory/failure completion state, message, timestamp, acknowledgement and completed-screen routing.
+- **complete-screen-presentation-kit:** victory/failure copy, restart callback and title-exit callback.
 - **lobby-screen-presentation-kit:** room metadata, phase, roster, readiness badges, controls and connection status.
 - **peer-host-transport-kit:** host peer, connection registry, broadcast, targeted send, local bridge and destroy.
 - **peer-client-transport-kit:** host connection, send, local bridge, status, disconnect and destroy.
@@ -86,94 +90,86 @@ RAF resize canvas resources debug cleanup validation and deployment
 - **movement-collision-camera-kit:** movement, maze collision, eye position, walk shake and camera.
 - **network-player-update-kit:** client send, host consume, pose projection and cadence.
 - **corridor-interaction-domain-kit:** pickup, drop, place, remove and held-cube synchronization.
-- **ordered-anomaly-sequence-kit:** ordered validation, rollback and victory.
-- **ooze-trail-domain-kit:** cadence, decay, spawn, spacing and capacity.
-- **corridor-authoritative-publication-kit:** snapshot tick, clone, SYNC, broadcast and reason.
+- **ordered-anomaly-sequence-kit:** exact-order evaluation, slot state, victory and current reversible fallback.
+- **ooze-trail-domain-kit:** spawn, decay, random variation, spacing, capacity and ooze-level projection.
+- **snapshot-outcome-routing-kit:** inbound snapshot to victory, paused or generic playing UI projection.
+- **corridor-authoritative-publication-kit:** snapshot tick, clone, SYNC, broadcast and publication reason.
 - **corridor-animation-loop-kit:** RAF start, stop, delta and running guard.
 - **corridor-render-world-kit:** terrain, maze, cubes, players, anomaly, ooze, props, lights, update and dispose.
 - **corridor-post-processing-kit:** composer, bloom, output, resize, render and dispose.
 - **corridor-minimap-kit:** maze, players, cubes and anomaly markers.
 - **runtime-debug-frame-kit:** bounded frames/events, overlay preferences and JSON-safe export.
-- **runtime-resource-cleanup-kit:** RAF, subscription, observer, listeners, world, composer, renderer and canvas cleanup.
+- **runtime-resource-cleanup-kit:** RAF, subscriptions, observer, listeners, world, composer, renderer and canvas cleanup.
 - **package-validation-kit:** build, lint, ProtoKit smoke, harness, visual match, object review and live-player validation.
 
 ## Source findings
 
 ```txt
-LobbyScreen primary action is always enabled
-client primary label says Enter run but invokes toggleReady
-host start does not require connected transport
-host start does not validate all-ready policy
-host start does not seal room or roster revision
-loading yields through five frames and five timers
-session and roster events can mutate stores during loading
-startPlay does not revalidate after loading
-bootstrap consumes captured room and lobbyPlayers values
-host room/snapshot/UI/readiness commit occurs before broadcasts
-broadcast recipient counts are discarded
-START_GAME and SYNC use no mandatory shared transaction identity
-START_GAME alone does not enter PLAYING
-SYNC alone enters PLAYING without correlated START_GAME admission
-client acknowledgement, retry and duplicate policy are absent
-start messages have no run session or epoch
-first rendered frame carries no start transaction identity
+GameScreenState includes failure
+UiCompletionState includes failure
+CompleteScreen supports failure presentation
+validateOrderedSequenceCompletion can produce victory
+victory changes room phase to ending
+victory can revert to playing if later evaluation is incomplete
+ooze rules have no defeat threshold or failure transition
+commitVictory has no failure counterpart
+GameShell SYNC handles victory and paused explicitly
+all other states, including failure, are routed to PLAYING
+terminal outcome has no ID, revision, run session or epoch
+terminal publication has no acknowledgement or first-frame proof
 ```
 
 ## Main finding
 
-The current code performs a local host transition plus best-effort publications, not a distributed lobby-start transaction. A roster or connection change during loading can make bootstrap stale, and host/client peers can enter different half-commit states because START_GAME and SYNC are not application-atomically correlated.
+The product exposes a two-outcome contract but implements only a partial victory authority. Failure is representable and renderable but unreachable from gameplay, and replicated failure is misclassified as active play. Victory is also not terminally latched, so a later incomplete sequence evaluation can reopen the run.
 
 ## Candidate kits
 
 ```txt
-lobby-start-command-kit
-lobby-start-admission-policy-kit
-lobby-start-roster-seal-kit
-lobby-start-transaction-id-kit
-run-session-identity-kit
-run-session-epoch-kit
-lobby-start-bootstrap-plan-kit
-lobby-start-commit-kit
-lobby-start-publication-bundle-kit
-lobby-start-client-admission-kit
-lobby-start-acknowledgement-kit
-lobby-start-retry-and-dedupe-kit
-lobby-start-result-kit
-lobby-start-transition-journal-kit
-lobby-start-debug-projection-kit
-lobby-start-fixture-kit
+terminal-outcome-policy-kit
+outcome-evaluation-input-kit
+victory-predicate-kit
+defeat-predicate-kit
+terminal-outcome-admission-kit
+terminal-outcome-latch-kit
+terminal-outcome-result-kit
+terminal-room-phase-kit
+terminal-publication-kit
+terminal-client-admission-kit
+terminal-ui-projection-kit
+terminal-frame-correlation-kit
+terminal-outcome-acknowledgement-kit
+terminal-outcome-journal-kit
+terminal-outcome-fixture-kit
 ```
 
 ## Required guarantees
 
 ```txt
-only admitted host actor can start
-transport and room must be in an allowed state
-required members must be connected and ready
-one immutable roster revision and fingerprint feeds bootstrap
-loading-time mutations invalidate the start plan
-one startTransactionId binds publication and acknowledgement
-one runSessionId and epoch bind all initial messages and frames
-START_GAME or SYNC alone cannot commit gameplay
-host records zero, partial or full publication results
-clients commit exactly once and acknowledge semantically
-retries preserve transaction identity
-duplicates return no-change
-old-epoch start messages are rejected before store mutation
-first frame proves accepted start, run and epoch identity
+one versioned policy defines victory and failure
+only authoritative host or solo authority commits outcomes
+one run session and epoch accepts at most one terminal result
+terminal outcome is monotonic
+victory and failure share one result and publication contract
+client routing handles failure explicitly
+late playing snapshots cannot reopen terminal state
+terminal publication exposes per-peer results
+clients acknowledge admitted outcome and first terminal frame
+restart and title exit consume the committed terminal result
 ```
 
 ## Ordered safe ledges
 
 ```txt
-1. Lobby Roster Identity and Peer Binding + Placeholder Admission Fixture Gate
-2. Transport Actor Binding + Sender/Payload Admission Fixture Gate
-3. Lobby Start Transaction Authority + Correlated START_GAME/SYNC/Ack Fixture Gate
-4. Run Exit Commit + Session Epoch Message Admission Fixture Gate
-4a. Runtime Readiness Lease + Generation-Fenced Cleanup Fixture Gate
-5. Snapshot Acceptance Authority + Projection Transaction Fixture Gate
-6. Host Movement Admission + Client Reconciliation Fixture Gate
-7. Pause/Resume Authority + Input Suspension Convergence Fixture Gate
+1. Lobby Roster Identity and Peer Binding
+2. Transport Actor Binding and Message Admission
+3. Lobby Start Transaction Authority
+4. Run Exit Commit and Session Epoch
+4a. Runtime Readiness Lease and Generation Fencing
+5. Snapshot Acceptance Authority
+5a. Terminal Outcome Authority and Victory/Failure Convergence
+6. Host Movement Admission and Client Reconciliation
+7. Pause/Resume Authority
 ```
 
 Documentation only. This pass changed no runtime source, dependency, package script, network behavior, rendering or deployment configuration.
