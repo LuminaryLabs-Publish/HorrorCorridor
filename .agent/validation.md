@@ -1,25 +1,27 @@
 # HorrorCorridor Validation
 
-**Updated:** `2026-07-11T11-39-11-04-00`
+**Updated:** `2026-07-11T13-20-45-04-00`
 
 ## Plan ledger
 
-**Goal:** separate source-backed lobby-start findings from executable distributed-commit proof and record the exact validation boundary.
+**Goal:** separate source-backed terminal-outcome findings from executable victory/failure convergence proof and record the exact validation boundary.
 
 - [x] Compare the full Publish inventory with central and repo-local tracking.
 - [x] Exclude `TheCavalryOfRome`.
-- [x] Select only `HorrorCorridor` after avoiding active same-window writes in `TheOpenAbove`.
-- [x] Read the current root `.agent` state and prior roster, transport, exit, snapshot and readiness audits.
-- [x] Read `GameShell.tsx`, `LobbyScreen.tsx`, `sessionStore.ts`, `createInitialGameState.ts`, protocol builders/types, host transport and package scripts.
-- [x] Trace host start admission, asynchronous loading, roster mutation windows, bootstrap, local commit and publication.
-- [x] Trace independent client START_GAME and SYNC application.
+- [x] Select only `HorrorCorridor` as the oldest eligible documented repository.
+- [x] Read the current root `.agent` state and prior roster, transport, start, exit, snapshot and readiness audits.
+- [x] Read `GameShell.tsx`, `GameCanvas.tsx`, `winRules.ts`, `oozeRules.ts`, `uiStore.ts`, shared types and package scripts.
+- [x] Trace local victory, authoritative publication, client outcome routing, completion projection and exit callbacks.
+- [x] Confirm failure is type- and UI-declared but has no defeat predicate or state transition.
+- [x] Confirm inbound failure currently routes to playing.
+- [x] Confirm victory can revert to playing under later incomplete sequence evaluation.
 - [x] Inventory active domains, implemented kits and services.
-- [x] Add timestamped lobby-start audits.
+- [x] Add timestamped terminal-outcome audits.
 - [x] Refresh all required root `.agent` documents.
 - [x] Change no runtime source, script, dependency or deployment configuration.
 - [x] Create no branch or pull request.
 - [x] Push documentation directly to `main`.
-- [x] Synchronize the central ledger and internal change log on `main`.
+- [ ] Synchronize the central ledger and internal change log on `main`.
 
 ## Documentation-only result
 
@@ -33,8 +35,8 @@ deployment changed: no
 branch created: no
 pull request created: no
 repo-local docs pushed to main: yes
-central ledger synchronized on main: yes
-central internal change log added on main: yes
+central ledger synchronized on main: pending current-run synchronization
+central internal change log added on main: pending current-run synchronization
 ```
 
 ## Source inspection performed
@@ -42,21 +44,18 @@ central internal change log added on main: yes
 ```txt
 full Publish inventory reviewed: yes
 central ledger coverage compared: yes
-repo-local audit freshness compared: yes
 nine eligible repositories tracked with root .agent: yes
 TheCavalryOfRome excluded: yes
-TheOpenAbove active-write collision avoided: yes
 selected only HorrorCorridor: yes
-lobby primary interaction traced: yes
-host and client start branches traced: yes
-loading yield sequence traced: yes
-roster and connection mutation paths traced: yes
-bootstrap input capture traced: yes
-host local commit order traced: yes
-START_GAME and SYNC construction traced: yes
-broadcast result handling traced: yes
-client message application traced: yes
-first-frame correlation boundary traced: yes
+ordered-sequence victory path traced: yes
+ooze update path traced: yes
+shared failure types traced: yes
+UI failure presentation traced: yes
+local victory projection traced: yes
+client SYNC outcome routing traced: yes
+victory reversal path traced: yes
+completion restart/title callbacks traced: yes
+terminal-frame evidence boundary traced: yes
 ```
 
 ## Existing commands
@@ -72,45 +71,46 @@ npm run validate:live-player:dev
 npm run review:object-kit
 ```
 
-These commands were not run because this was a documentation-only connector pass without a checked-out browser runtime. Existing broad harnesses do not replace a focused start-transaction loss, reorder and acknowledgement fixture.
+These commands were not run because this was a documentation-only connector pass without a checked-out browser runtime. Existing broad harnesses do not replace focused terminal policy, network convergence and frame-correlation fixtures.
 
 ## Missing fixture gates
 
 ```txt
-fixture:lobby-start-admission
-fixture:lobby-start-roster-seal
-fixture:lobby-start-loading-race
-fixture:lobby-start-publication
-fixture:lobby-start-partial-delivery
-fixture:lobby-start-reorder
-fixture:lobby-start-duplicate
-fixture:lobby-start-retry
-fixture:lobby-start-acknowledgement
-fixture:lobby-start-stale-epoch
-fixture:lobby-start-first-frame
-browser multi-peer start smoke
+fixture:terminal-victory
+fixture:terminal-failure
+fixture:terminal-policy-version
+fixture:terminal-simultaneous-predicates
+fixture:terminal-duplicate
+fixture:terminal-conflict
+fixture:terminal-late-playing-snapshot
+fixture:terminal-stale-epoch
+fixture:terminal-loss-reorder-retry
+fixture:terminal-client-acknowledgement
+fixture:terminal-first-frame
+fixture:terminal-restart-handoff
+fixture:terminal-title-exit-handoff
+browser multi-peer victory/failure convergence smoke
 ```
 
-## Required start matrix
+## Required terminal matrix
 
 ```txt
-host disconnected -> rejected
-host actor mismatch -> rejected
-member not ready -> rejected
-reserved slot present -> excluded or rejected by declared policy
-roster changes during loading -> stale/rejected
-connection closes during loading -> stale/rejected
-all admitted members stable -> accepted once
-START_GAME only -> incomplete, no gameplay commit
-SYNC only -> incomplete, no gameplay commit
-reordered correlated messages -> one commit after complete admission
-duplicate messages -> duplicate/no-change
-conflicting same-ID messages -> rejected conflict
+exact ordered sequence -> accepted victory once
+selected defeat predicate -> accepted failure once
+same policy input -> same proof fingerprint
+simultaneous predicates -> declared precedence
+same outcome repeated -> duplicate/no-change
+conflicting outcome after latch -> rejected conflict
+failure SYNC -> COMPLETED/failure
+playing SYNC after terminal -> stale/rejected
+old epoch outcome -> rejected before store mutation
 zero recipients -> visible publication failure
 partial recipients -> explicit policy result
+reordered terminal delivery -> one client commit
 missing acknowledgement -> timeout/quorum result
-late prior-epoch start -> rejected before store mutation
-first successful frame -> carries start transaction, run and epoch identity
+first terminal frame -> carries outcome/run/epoch identity
+restart -> new admitted run epoch
+quit to title -> one idempotent retirement
 ```
 
 ## Runtime proof status
@@ -121,12 +121,12 @@ npm run lint: not run
 npm run smoke:protokits: not run
 npm run harness:horror-corridor: not run
 browser smoke: not run
-lobby-start admission fixture: unavailable
-loading-race fixture: unavailable
-partial-delivery/reorder fixture: unavailable
-retry/acknowledgement fixture: unavailable
-stale-epoch fixture: unavailable
-first-frame fixture: unavailable
+terminal victory fixture: unavailable
+terminal failure fixture: unavailable
+terminal network convergence fixture: unavailable
+stale/duplicate/conflict fixture: unavailable
+first-terminal-frame fixture: unavailable
+restart/exit handoff fixture: unavailable
 ```
 
-No multiplayer start, transport convergence, runtime readiness, gameplay or rendering correctness claim is made by this documentation pass.
+No terminal-outcome, multiplayer convergence, runtime readiness, gameplay or rendering correctness claim is made by this documentation pass.
