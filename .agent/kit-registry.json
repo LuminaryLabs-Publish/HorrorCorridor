@@ -1,63 +1,78 @@
 {
-  "schemaVersion": 50,
-  "generatedAt": "2026-07-10T18-31-21-04-00",
+  "schemaVersion": 51,
+  "generatedAt": "2026-07-10T20-08-46-04-00",
   "repository": "LuminaryLabs-Publish/HorrorCorridor",
-  "status": "authoritative-snapshot-acceptance-monotonic-replay-fixture-gate-planned",
+  "status": "lobby-readiness-authority-start-admission-fixture-gate-planned",
   "selectedBecause": "oldest eligible documented fallback after full accessible LuminaryLabs-Publish inventory, central ledger, and root .agent comparison; TheCavalryOfRome excluded",
   "sourceRoots": [
     "HorrorCorridor-V1/src/components/game",
+    "HorrorCorridor-V1/src/components/menus",
     "HorrorCorridor-V1/src/features/game-state",
     "HorrorCorridor-V1/src/features/networking",
     "HorrorCorridor-V1/src/features/debug",
     "HorrorCorridor-V1/src/features/render",
+    "HorrorCorridor-V1/src/types",
     "HorrorCorridor-V1/scripts"
   ],
-  "currentNextSlice": "HorrorCorridor Authoritative Snapshot Acceptance + Monotonic Replay Fixture Gate",
+  "currentNextSlice": "HorrorCorridor Lobby Readiness Authority + Start Admission Fixture Gate",
   "interactionLoop": [
     "menu-and-session-selection",
-    "solo-host-or-join",
-    "room-readiness-and-seeded-bootstrap",
-    "gamecanvas-runtime-initialization",
-    "pointer-lock-navigation",
-    "derive-interaction",
-    "local-authority-or-client-try-interact",
-    "host-rule-consumption",
-    "authoritative-snapshot-publication",
-    "unconditional-sync-consumption",
-    "runtime-room-ui-render-projection"
+    "host-room-or-client-join",
+    "peer-membership-projection",
+    "lobby-roster-and-ready-badges",
+    "client-local-ready-toggle",
+    "missing-host-ready-command",
+    "host-unconditional-start",
+    "roster-to-active-player-bootstrap",
+    "start-game-and-initial-sync-publication",
+    "first-person-corridor-runtime"
   ],
   "domains": [
     "application shell and session lifecycle",
+    "lobby presentation and controls",
+    "session room and roster projection",
     "PeerJS host/client transport",
-    "protocol envelopes and message routing",
-    "full-sync snapshot construction",
-    "snapshot reception and runtime-store replacement",
-    "room and lobby projection",
-    "seeded maze, cube, and anomaly bootstrap",
+    "protocol envelopes and message construction",
+    "lobby membership and connection-state tracking",
+    "partial readiness vocabulary and local readiness presentation",
+    "inline host start orchestration",
+    "seeded maze, cube, anomaly, room, and player bootstrap",
     "first-person input, movement, collision, camera, and prediction",
     "interaction, network, ooze, and victory rules",
-    "local and host authority consumers",
-    "authoritative publication cadence",
-    "Three.js world, post-processing, minimap, and scene dressing",
+    "authoritative active-game publication",
+    "Three.js world, post-processing, minimap, HUD, and scene dressing",
     "runtime debug frame and event storage",
-    "planned envelope preflight, source validation, monotonic acceptance, rejection results, accepted-snapshot ledger, atomic projection, and replay fixtures"
+    "build, lint, harness, visual, and live-player validation",
+    "planned lobby command, readiness authority, roster fingerprint, start admission, phase transaction, result ledger, debug projection, compatibility, and fixture domains"
   ],
   "implementedKits": [
     {
       "name": "corridor-session-domain-kit",
-      "services": ["mode selection", "room identity", "readiness", "session entry"]
+      "services": ["mode selection", "peer identity", "room identity", "session entry", "lifecycle reset"]
+    },
+    {
+      "name": "lobby-screen-presentation-kit",
+      "services": ["room metadata", "roster projection", "ready badges", "lobby controls", "connection status"]
+    },
+    {
+      "name": "session-store-room-projection-kit",
+      "services": ["room storage", "roster storage", "player upsert", "player removal", "session reset"]
     },
     {
       "name": "peer-room-sync-domain-kit",
-      "services": ["host/client transport", "protocol routing", "full sync", "player updates", "interaction requests", "lobby events"]
+      "services": ["host/client transport", "connection events", "send", "broadcast", "generic protocol delivery"]
+    },
+    {
+      "name": "protocol-message-construction-kit",
+      "services": ["versioned envelopes", "host start", "player update", "interaction request", "full sync", "lobby event"]
     },
     {
       "name": "maze-snapshot-bootstrap-kit",
-      "services": ["deterministic maze", "cell lookup", "cube spawns", "anomaly sequence and slots"]
+      "services": ["deterministic seed", "maze", "cube spawns", "anomaly sequence", "active room", "player entities", "initial snapshot"]
     },
     {
       "name": "first-person-corridor-player-kit",
-      "services": ["pointer lock", "input", "movement", "collision", "camera", "prediction"]
+      "services": ["pointer lock", "input", "movement", "collision", "camera", "prediction", "player updates"]
     },
     {
       "name": "corridor-interaction-domain-kit",
@@ -65,7 +80,7 @@
     },
     {
       "name": "ordered-anomaly-sequence-kit",
-      "services": ["ordered validation", "completion", "victory", "rollback"]
+      "services": ["ordered validation", "rollback", "completion", "victory"]
     },
     {
       "name": "ooze-trail-domain-kit",
@@ -73,60 +88,68 @@
     },
     {
       "name": "corridor-authoritative-publication-kit",
-      "services": ["snapshot tick", "full sync", "broadcast", "cadence counters", "publication reasons"]
+      "services": ["snapshot tick", "full sync", "broadcast", "publication reasons", "cadence counters"]
     },
     {
       "name": "corridor-render-world-kit",
-      "services": ["Three.js world", "maze", "cubes", "players", "anomaly", "ooze", "scene dressing"]
+      "services": ["Three.js world", "maze", "cubes", "players", "anomaly", "ooze", "scene dressing", "post-processing"]
     },
     {
       "name": "corridor-minimap-kit",
-      "services": ["minimap projection", "player markers", "object markers"]
+      "services": ["maze projection", "player markers", "cube markers", "anomaly markers"]
     },
     {
       "name": "runtime-debug-frame-kit",
-      "services": ["bounded frames", "bounded events", "browser export", "overlay preferences"]
+      "services": ["bounded frames", "bounded events", "overlay preferences", "JSON-safe browser export"]
     }
   ],
   "plannedKits": [
     {
-      "name": "protocol-envelope-preflight-kit",
-      "services": ["version validation", "room agreement", "payload shape checks", "typed reject reasons"]
+      "name": "lobby-readiness-command-kit",
+      "services": ["command ids", "desired ready value", "actor identity", "room identity", "roster revision", "preflight"]
     },
     {
-      "name": "authority-source-identity-kit",
-      "services": ["host sender validation", "room authority", "game identity", "seed continuity", "authority epoch"]
+      "name": "lobby-readiness-authority-kit",
+      "services": ["host-only mutation", "membership validation", "connection validation", "idempotency", "typed result"]
     },
     {
-      "name": "snapshot-acceptance-policy-kit",
-      "services": ["monotonic tick comparison", "stale rejection", "duplicate classification", "conflicting duplicate detection", "recovery reset policy"]
+      "name": "lobby-roster-snapshot-kit",
+      "services": ["roster revision", "stable fingerprint", "participant classification", "ready counts", "connection counts"]
     },
     {
-      "name": "snapshot-acceptance-ledger-kit",
-      "services": ["last accepted record", "accepted fingerprint", "bounded rejection rows", "acceptance counters"]
+      "name": "lobby-start-admission-policy-kit",
+      "services": ["host authorization", "phase validation", "capacity", "readiness", "connection", "placeholder rejection", "typed start result"]
     },
     {
-      "name": "snapshot-projection-transaction-kit",
-      "services": ["atomic room/lobby/runtime/UI commit", "victory regression guard", "projection result"]
+      "name": "lobby-phase-transition-kit",
+      "services": ["lobby-to-starting", "starting-to-active", "duplicate-start guard", "bootstrap rollback", "sealed admitted roster"]
     },
     {
-      "name": "runtime-debug-snapshot-projection-kit",
-      "services": ["candidate and previous ticks", "source identity", "accept/reject reason", "commit status", "JSON-safe export"]
+      "name": "lobby-result-ledger-kit",
+      "services": ["bounded ready rows", "bounded start rows", "accepted/rejected/no-change status", "stable reasons", "before/after fingerprints"]
     },
     {
-      "name": "snapshot-acceptance-fixture-kit",
-      "services": ["monotonic rows", "stale and out-of-order rows", "duplicate rows", "wrong-source rows", "recovery rows", "DOM-free replay"]
+      "name": "lobby-debug-projection-kit",
+      "services": ["authoritative roster", "revision", "phase", "pending command", "last result", "JSON-safe export"]
+    },
+    {
+      "name": "lobby-admission-fixture-kit",
+      "services": ["DOM-free replay", "ready replication", "invalid admission rows", "duplicate start", "bootstrap rollback", "roster parity"]
+    },
+    {
+      "name": "legacy-lobby-readiness-compatibility-kit",
+      "services": ["client-ready translation", "client-action translation", "TRY_INTERACT translation", "additive rollout"]
+    },
+    {
+      "name": "snapshot-acceptance-companion-kit",
+      "services": ["authoritative SYNC preflight", "monotonic acceptance", "atomic projection", "stale replay rejection"]
     },
     {
       "name": "request-identity-and-ack-companion-kit",
-      "services": ["request ids", "pending ledger", "authoritative acknowledgements", "accepted snapshot tick correlation", "no-publish acknowledgements"]
-    },
-    {
-      "name": "legacy-protocol-compatibility-kit",
-      "services": ["version-1 valid snapshot compatibility", "additive rollout", "final-state parity"]
+      "services": ["request ids", "pending ledger", "terminal acknowledgements", "no-publish results"]
     }
   ],
-  "currentBlocker": "GameShell accepts every inbound SYNC and runtimeStore replaces the authoritative snapshot without validating protocol version, host source, room, game identity, seed, authoritativeTick consistency, monotonic order, duplicate delivery, or recovery epoch. Stale or replayed snapshots can rewind gameplay and UI state.",
+  "currentBlocker": "Lobby readiness is local presentation state rather than host authority. The host receives no ready command, Start run has no readiness or roster admission policy, and createInitialGameState can bootstrap unready, disconnected, stale, or placeholder roster rows into active player entities.",
   "validation": {
     "runtimeSourceChanged": false,
     "branchCreated": false,
@@ -137,6 +160,6 @@
     "npmRunHarnessHorrorCorridor": "not-run",
     "npmRunValidateLivePlayerDev": "not-run",
     "browserSmoke": "not-run",
-    "snapshotAcceptanceFixture": "not-run; script does not exist"
+    "lobbyAdmissionFixture": "not-run; script does not exist"
   }
 }
