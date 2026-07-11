@@ -1,30 +1,30 @@
 # HorrorCorridor Validation
 
-**Updated:** `2026-07-11T16-38-10-04-00`
+**Updated:** `2026-07-11T18-11-21-04-00`
 
 ## Scope
 
-Documentation-only audit of client movement update cadence, host packet admission, authoritative state mutation, ooze advancement timing, snapshot tick/publication, broadcast fanout, cadence diagnostics and rendered-frame correlation.
+Documentation-only audit of authoritative snapshot construction, SYNC envelope construction, JSON serialization, host fanout, per-peer send admission, delivery results, payload budgeting, backpressure, slow-peer isolation and rendered-frame correlation.
 
-The preceding active-run disconnect audit remains retained and unchanged.
+The preceding host cadence, disconnect, movement, snapshot-acceptance, interaction, outcome and pause audits remain retained.
 
 ## Plan ledger
 
-**Goal:** distinguish source-backed cadence behavior from unimplemented fixed-step, queue, publication-budget, backpressure and multi-peer proof.
+**Goal:** distinguish source-backed publication and transport behavior from unimplemented payload-budget, per-peer-result, backpressure and slow-peer proof.
 
 - [x] Compare the full Publish inventory and central ledger.
 - [x] Exclude `TheCavalryOfRome`.
-- [x] Detect the newer repo-local `TheOpenAbove` audit and select only the next stable repository.
-- [x] Read current HorrorCorridor root `.agent` state and retained disconnect/movement/snapshot audits.
-- [x] Read `GameCanvas.tsx`, `networkRules.ts`, `syncSnapshot.ts`, `createHost.ts` and `package.json`.
-- [x] Confirm client movement messages carry a sequence.
-- [x] Confirm host movement application ignores that sequence.
-- [x] Confirm every received movement update immediately publishes a full snapshot.
-- [x] Confirm publication resets the timestamp used to admit ooze advancement.
-- [x] Confirm snapshot tick increments per publication.
-- [x] Confirm broadcast sent counts are returned but discarded.
-- [x] Identify interaction loop, domains, implemented kits and services.
-- [x] Define cadence, starvation, flood, delivery and frame fixture gates.
+- [x] Avoid overlapping the newer repo-local `TheOpenAbove` grass-culling audit.
+- [x] Read current HorrorCorridor root `.agent` state.
+- [x] Read `GameCanvas.tsx`, `syncSnapshot.ts`, `serializers.ts`, `createHost.ts` and `peerTypes.ts`.
+- [x] Confirm local publication builds a complete replicated snapshot.
+- [x] Confirm outbound SYNC construction builds the complete snapshot again.
+- [x] Confirm the full envelope is serialized with `JSON.stringify()`.
+- [x] Confirm host send checks only `connection.open` before `connection.send()`.
+- [x] Confirm broadcast returns only an aggregate sent count.
+- [x] Confirm the publication caller does not retain that result.
+- [x] Identify the interaction loop, domains, implemented kits and services.
+- [x] Define payload, delivery, backpressure, isolation and frame fixture gates.
 - [x] Change no runtime source, dependency, script or workflow.
 - [x] Create no branch or pull request.
 - [x] Push documentation directly to `main`.
@@ -33,51 +33,33 @@ The preceding active-run disconnect audit remains retained and unchanged.
 ## Source-backed behavior
 
 ```txt
-client:
-  increments networkUpdateSequence
-  writes payload.input.sequence
-  sends absolute pose and velocity
+GameCanvas.publishAuthoritativeState:
+  increments tick
+  builds a complete ReplicatedGameSnapshot
+  stores the local snapshot
+  calls createFullSyncMessage with GameState
 
-host PLAYER_UPDATE callback:
-  does not consume payload.input.sequence
-  applies playerId and absolute pose immediately
-  synchronizes held cubes
-  calls publishAuthoritativeState immediately
+createFullSyncMessage:
+  rebuilds the complete ReplicatedGameSnapshot
+  clones room again
+  carries authoritativeTick and reason
 
-publishAuthoritativeState:
-  increments currentGameState.tick
-  builds a full replicated snapshot
-  broadcasts when host transport is active
-  writes frameCadence.lastNetworkTickAtMs
+serializeProtocolMessage:
+  JSON.stringify(message)
 
-host RAF:
-  advances ooze only when recordedAtMs - lastNetworkTickAtMs reaches NETWORK_TICK_RATE
+createHost.sendMessage:
+  rejects only when connection.open is false
+  calls connection.send(serialized message)
+  returns boolean
 
-transport:
-  broadcast returns number of sends
-  publication caller does not retain or classify the result
+createHost.broadcast:
+  iterates every connection
+  counts successful boolean results
+  returns aggregate sent number
+
+GameCanvas publisher:
+  does not capture the returned sent count
 ```
-
-## Proven clock alias
-
-```txt
-lastNetworkTickAtMs is used for:
-  client outbound update cadence
-  host publication age
-  host periodic ooze/system admission
-  debug network age
-```
-
-This proves a source-level starvation path:
-
-```txt
-continuous client updates
-  -> continuous host publications
-  -> repeated shared timestamp resets
-  -> periodic ooze branch can remain inadmissible
-```
-
-It does not prove the exact browser traffic rate or practical duration of starvation under every environment. That requires executable fixtures.
 
 ## Existing package commands
 
@@ -92,52 +74,51 @@ npm run validate:live-player:dev
 npm run review:object-kit
 ```
 
-These commands were not run because this connector pass did not provide a checked-out browser runtime. Existing broad harnesses do not replace focused cadence, flood, starvation, delivery and frame-correlation fixtures.
+These commands were not run because this connector pass did not provide a checked-out runtime. Existing broad harnesses do not replace focused payload, partial-delivery, exception, backpressure and slow-peer fixtures.
 
 ## Required pure fixtures
 
 ```txt
-fixture:player-update-sequence-admission
-fixture:movement-input-queue
-fixture:latest-input-coalescing
-fixture:fixed-simulation-clock
-fixture:authoritative-system-step
-fixture:snapshot-publication-cadence
+fixture:snapshot-single-build
+fixture:snapshot-payload-fingerprint
+fixture:snapshot-payload-byte-budget
+fixture:snapshot-full-delta-policy
+fixture:peer-send-admission
 fixture:per-peer-delivery-result
 fixture:transport-backpressure-policy
+fixture:snapshot-delivery-retry
+fixture:slow-peer-isolation
 ```
 
 ## Required host and browser fixtures
 
 ```txt
-fixture:host-cadence-baseline
-fixture:host-cadence-one-client
-fixture:host-cadence-multi-client
-fixture:host-cadence-burst-coalescing
-fixture:host-cadence-duplicate-reorder
-fixture:host-cadence-flood-budget
-fixture:host-cadence-ooze-starvation
-fixture:snapshot-publication-budget
-fixture:partial-delivery-result
-fixture:cadence-frame-correlation
-browser host plus normal and flood clients
+fixture:delivery-intended-peer-set
+fixture:delivery-all-open-peers
+fixture:delivery-closed-peer
+fixture:delivery-send-exception
+fixture:delivery-partial-success
+fixture:delivery-backpressured-peer
+fixture:delivery-slow-peer-isolation
+fixture:delivery-retry-coalescing-budget
+fixture:delivery-publication-frame-correlation
+browser host plus healthy, closed, failing and slow peers
+Pages host plus slow-peer fanout smoke
 ```
 
 ## Required matrix
 
 ```txt
-no clients -> expected fixed-step and ooze-step count
-one normal client -> same fixed-step and ooze-step count
-multiple normal clients -> same fixed-step and ooze-step count
-burst inputs -> deterministic latest admitted input per step
-duplicate sequence -> duplicate result, no extra mutation
-older sequence -> stale result, no queue insertion
-future gap -> configured typed result
-flood peer -> bounded accepted rate, queue and publications
-slow peer -> isolated delivery/backpressure result
-continuous updates -> ooze continues advancing
-committed step -> snapshot revision -> world/minimap/HUD/debug frame receipt
-retired actor -> queue retired and future input rejected
+one publication -> one canonical payload build
+same state revision -> same payload fingerprint
+payload over budget -> typed rejection or alternate policy
+all healthy peers -> one sent row per intended peer
+closed peer -> closed/skipped row, healthy peers still sent
+send exception -> failed row, remaining peers still attempted
+slow peer -> backpressured row and healthy-peer isolation
+partial success -> committed result with complete row set
+newer publication -> stale queued payload coalesced or superseded
+accepted delivery -> client snapshot -> first visible frame correlation
 ```
 
 ## Change-state validation
@@ -164,22 +145,24 @@ npm run smoke:protokits
 npm run harness:horror-corridor
 npm run visual:match
 npm run validate:live-player
-browser multi-peer smoke
-Pages smoke
+browser slow-peer smoke
+Pages slow-peer smoke
 ```
 
 ## Runtime proof status
 
 ```txt
-input sequence admission fixture: unavailable
-fixed simulation fixture: unavailable
-ooze starvation fixture: unavailable
-publication budget fixture: unavailable
-backpressure/delivery fixture: unavailable
-cadence frame-correlation fixture: unavailable
-browser flood smoke: not run
+single-payload-build fixture: unavailable
+payload-byte-budget fixture: unavailable
+payload-fingerprint fixture: unavailable
+per-peer delivery fixture: unavailable
+send-exception fixture: unavailable
+backpressure fixture: unavailable
+slow-peer isolation fixture: unavailable
+delivery/frame-correlation fixture: unavailable
+browser slow-peer smoke: not run
 ```
 
 ## Completion boundary
 
-Do not claim host cadence, movement integrity, ooze timing, publication bounds, transport backpressure or frame correlation correctness until executable fixtures prove that peer count and packet rate cannot alter authoritative step frequency or suppress gameplay systems.
+Do not claim payload bounds, delivery completeness, partial-success handling, transport backpressure, slow-peer isolation or delivery-to-frame correlation until executable fixtures prove those properties.
