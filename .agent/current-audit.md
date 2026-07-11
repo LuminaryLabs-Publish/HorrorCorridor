@@ -2,22 +2,24 @@
 
 **Repository:** `LuminaryLabs-Publish/HorrorCorridor`
 
-**Updated:** `2026-07-11T01-01-32-04-00`
+**Updated:** `2026-07-11T01-10-28-04-00`
 
 ## Status
 
 ```txt
-status: run-exit-commit-session-epoch-transport-quarantine-planned
+status: run-exit-commit-session-epoch-message-admission-planned
 runtime source changed: no
 branch: main
 root .agent state: refreshed
 central ledger sync: complete
-central change log: internal-change-log/2026-07-11T01-01-32-04-00-horror-corridor-run-exit-commit-transport-quarantine.md
+central change log: internal-change-log/2026-07-11T01-10-28-04-00-horror-corridor-run-exit-session-epoch-admission.md
 ```
 
 ## Selection
 
-No eligible repository was new, absent from the central ledger, missing root `.agent` state, or otherwise undocumented. `HorrorCorridor` was the oldest eligible documented fallback. `TheCavalryOfRome` remained excluded.
+The full accessible `LuminaryLabs-Publish` inventory contains ten repositories. `TheCavalryOfRome` remained excluded. All nine eligible repositories were centrally tracked and had root `.agent` state.
+
+`HorrorCorridor` was selected because its repo-local `2026-07-11T01-01-32-04-00` audit was newer than its `2026-07-10T23-30-13-04-00` central ledger entry. This made it the highest-priority central catch-up and also the oldest eligible central-ledger record.
 
 ## Interaction loop
 
@@ -25,16 +27,15 @@ No eligible repository was new, absent from the central ledger, missing root `.a
 enter solo, host, or client PLAYING state
   -> GameCanvas initializes local runtime ownership
   -> host/solo mutates and publishes authoritative state
-  -> client predicts and sends gameplay commands
-  -> victory or pause menu exposes restart/return controls
-  -> returnToLobby resets UI and readiness only
-  -> GameCanvas unmount cleanup stops local frame/render/input ownership
-  -> active/ending room and authoritative snapshot remain stored
-  -> PeerJS/BroadcastChannel transport remains connected
-  -> GameShell transport handler remains active
-  -> START_GAME/SYNC/LOBBY_EVENT are accepted without run-session admission
-  -> late old-run SYNC can replace lobby projection
-  -> re-entry creates a new bootstrap without monotonic epoch fencing
+  -> client predicts and sends player/interact messages
+  -> pause-return or completion-restart calls returnToLobby
+  -> UI and readiness change locally
+  -> GameCanvas unmount stops local frame/render/input resources
+  -> room phase and authoritative snapshot remain active or ending
+  -> transport and GameShell message handling remain live
+  -> START_GAME, SYNC, and LOBBY_EVENT are admitted without run-session identity
+  -> SYNC directly projects PLAYING, PAUSED, or COMPLETED
+  -> stale old-run traffic can overwrite lobby projection or cross into re-entry
 ```
 
 ## Domains in use
@@ -42,22 +43,22 @@ enter solo, host, or client PLAYING state
 ```txt
 application shell and screen routing
 UI overlay, pause, completion, and game-screen projection
-session mode, peer identity, room, roster, and connection state
-runtime snapshot, local pose, view angles, input flags, and readiness
+session mode, peer identity, room, roster, readiness, and connection state
+runtime snapshot, local pose, view angles, input flags, and runtime readiness
 lobby presentation and controls
 PeerJS host/client transport and BroadcastChannel bridge
-peer event bus and transport status projection
-versioned protocol envelopes and serialization
-seeded maze, cube, anomaly, room, and player bootstrap
+peer event bus and connection-status projection
+versioned protocol envelopes and message construction
+seeded maze, cube, anomaly, room, roster, and player bootstrap
 room phase and replicated app/game state
 pointer lock, keyboard, mouse, blur, and input lifecycle
-movement, collision, camera, walk shake, and prediction
+movement, maze collision, camera, walk shake, and local prediction
 client player-update publication and host consumption
 interaction, cube carry, placement, removal, rollback, and victory
 ooze cadence, decay, spawn, spacing, and capacity
 authoritative snapshot construction and publication
 client snapshot replay and local pose projection
-Three.js scene, maze world, terrain, props, lights, cubes, players, ooze, and dressing
+Three.js scene, terrain, maze, props, lights, cubes, players, ooze, and dressing
 animation loop, resize, canvas, and frame ownership
 post-processing composer and bloom
 minimap and HUD projection
@@ -65,10 +66,10 @@ runtime debug frames and events
 resource disposal and component cleanup
 build, lint, harness, visual, object-kit, and live-player validation
 planned run-session identity and epoch authority
-planned run-exit command/result authority
-planned lifecycle publication and projection commit
-planned transport quarantine and stale callback admission
-planned snapshot archive/reset and re-entry bootstrap
+planned run-exit command/result and atomic commit authority
+planned lifecycle publication and projection convergence
+planned transport callback generation and stale-message admission
+planned snapshot archive/reset and clean re-entry
 planned pause/resume and input-suspension authority
 ```
 
@@ -80,11 +81,11 @@ corridor-application-shell-kit
 corridor-session-domain-kit
   session mode, peer identity, room, roster, connection status, session reset
 runtime-store-snapshot-kit
-  authoritative snapshot, local pose, view angles, input flags, runtime readiness, runtime reset
+  authoritative snapshot, local pose, view angles, input flags, readiness, runtime reset
 ui-pause-projection-kit
-  local pause flag, pause reason, pause overlay, PLAYING/PAUSED local projection
+  local pause flag, pause reason, pause overlay, PLAYING/PAUSED projection
 lobby-screen-presentation-kit
-  room metadata, roster projection, ready badges, primary/secondary controls, connection status
+  room metadata, roster projection, ready badges, controls, connection status
 peer-host-transport-kit
   host peer, connection registry, broadcast, targeted send, disconnect, destroy
 peer-client-transport-kit
@@ -129,50 +130,45 @@ package-validation-kit
 
 ```txt
 GameShell.returnToLobby resets UI and readiness but does not change room.phase
-GameShell.returnToLobby does not clear/archive authoritativeSnapshot
-GameShell.returnToLobby intentionally leaves transport connected
-GameShell.handleTransportEvent accepts START_GAME, SYNC, and LOBBY_EVENT without exit/epoch preflight
+returnToLobby does not clear or archive authoritativeSnapshot
+returnToLobby intentionally preserves transport
+GameCanvas local cleanup and GameShell transport admission are separate lifecycles
+GameShell accepts START_GAME, SYNC, and LOBBY_EVENT without phase/epoch preflight
 SYNC directly selects COMPLETED, PAUSED, or PLAYING from snapshot.gameState
-GameCanvas cleanup stops RAF, unsubscribes its transport listener, removes browser listeners, and disposes render resources
-GameCanvas cleanup leaves networking readiness true
-GameCanvas authoritative publication forces room.phase active
-RoomState, ReplicatedGameSnapshot, and NetworkEnvelope have no runSessionId or sessionEpoch
+RoomState has roomId and phase but no runSessionId or sessionEpoch
+ReplicatedGameSnapshot has gameId but no sessionEpoch
+NetworkEnvelope has roomId and optional requestId but no gameId/runSessionId/sessionEpoch
 transport destroy is available for title exit but returns no typed teardown result
 no terminal lifecycle publication exists for lobby return, restart, client leave, host close, or room close
-no transport quarantine blocks callbacks captured before an accepted exit
-no fixture:session-lifecycle command exists
+no callback-generation fence rejects events captured before an accepted exit
+no fixture:session-lifecycle or fixture:session-message-admission command exists
 ```
 
 ## Main finding
 
-HorrorCorridor has a renderer/component teardown path, but no session transaction that commits exit across gameplay state, room phase, snapshot ownership, transport admission, peer projection, and re-entry identity. The highest-risk gap is not raw disposal. It is the interval after local cleanup while old transport callbacks remain admissible.
+HorrorCorridor has a renderer/component teardown path but no authority transaction that closes a run across gameplay state, room phase, snapshot ownership, peer publication, transport admission, and re-entry identity. The key defect is not simply undisposed resources. It is that old message callbacks remain valid after local teardown and can overwrite the first lobby or next-run projection.
 
 ## Current next safe ledge
 
 ```txt
-HorrorCorridor Run Exit Commit + Session Epoch Transport Quarantine Fixture Gate
-```
-
-## Dependent ledge
-
-```txt
-HorrorCorridor Pause/Resume Authority + Input Suspension Convergence Fixture Gate
+HorrorCorridor Run Exit Commit + Session Epoch Message Admission Fixture Gate
 ```
 
 ## Required dependency order
 
 ```txt
 lobby readiness/start admission authority
-  -> sealed roster and initial runSessionId/sessionEpoch
+  -> sealed roster and initial run identity
   -> typed run-exit command/result
-  -> freeze gameplay and transport command admission
-  -> authoritative lifecycle publication
-  -> UI/runtime/snapshot exit commit
-  -> transport preserve/destroy policy
-  -> old-epoch callback quarantine
+  -> freeze gameplay and active-message admission
+  -> authoritative terminal lifecycle publication
+  -> atomic UI/room/snapshot/readiness commit
+  -> transport preserve-or-destroy policy
+  -> monotonic session epoch and callback generation
+  -> stale/duplicate message rejection
   -> exactly-once teardown result
-  -> fresh re-entry bootstrap and epoch increment
-  -> JSON-safe lifecycle ledger
+  -> clean re-entry with incremented epoch
+  -> JSON-safe lifecycle and admission ledgers
   -> DOM-free session lifecycle fixture
   -> browser solo/host/client re-entry smoke
   -> pause/resume authority
@@ -186,6 +182,7 @@ branch created: no
 pull request created: no
 existing checks run: no
 session lifecycle fixture: unavailable
+session message-admission fixture: unavailable
 transport quarantine fixture: unavailable
 repo-local docs pushed to main: yes
 central ledger updated: yes
