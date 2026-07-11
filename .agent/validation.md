@@ -19,7 +19,7 @@
 - [x] Change no runtime source, script, dependency or deployment configuration.
 - [x] Create no branch or pull request.
 - [x] Push documentation directly to `main`.
-- [ ] Central ledger synchronization and internal change log are pending current-run synchronization.
+- [x] Synchronize the central ledger and internal change log on `main`.
 
 ## Documentation-only result
 
@@ -33,8 +33,8 @@ deployment changed: no
 branch created: no
 pull request created: no
 repo-local docs pushed to main: yes
-central ledger synchronization: pending current-run synchronization
-central internal change log: pending current-run synchronization
+central ledger synchronized on main: yes
+central internal change log added on main: yes
 ```
 
 ## Source inspection performed
