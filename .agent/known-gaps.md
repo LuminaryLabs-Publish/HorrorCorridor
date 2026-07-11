@@ -2,145 +2,139 @@
 
 **Repository:** `LuminaryLabs-Publish/HorrorCorridor`
 
-**Updated:** `2026-07-11T01-10-28-04-00`
+**Updated:** `2026-07-11T03-08-43-04-00`
 
 ## Selection state
 
 ```txt
-full accessible LuminaryLabs-Publish list compared with central ledger
-all nine eligible non-Cavalry repos tracked
-root .agent state present for every eligible repo
-HorrorCorridor repo-local audit newer than central ledger entry
+complete accessible LuminaryLabs-Publish list compared with central ledger
+all nine eligible non-Cavalry repositories tracked
+root .agent state present for every eligible repository
+TheOpenAbove had a newer repo-local audit than its prior central timestamp
+HorrorCorridor selected as the oldest current eligible root audit
 TheCavalryOfRome excluded
-HorrorCorridor selected for central catch-up and oldest-ledger priority
 ```
 
-## Run-exit authority gaps
+## Host movement admission gaps
 
 ```txt
-returnToLobby changes local UI/readiness only
-no RunExitCommand or RunExitResult exists
-no exit request id, actor, role, scope, reason, or authority source exists
-room.phase remains active or ending
-authoritative snapshot remains active
-completion state has no archive/reset policy
-host/client lifecycle state is not published
-solo restart routes through lobby presentation rather than a session transaction
-client leave, host lobby return, host room close, and title exit are not distinct authority operations
+PLAYER_UPDATE carries both input and a final client pose
+host ignores input.sequence during movement mutation
+host ignores moveForward, moveStrafe, lookYaw and interact for movement authority
+host does not verify senderId owns payload.playerId
+host does not validate room, run, phase or callback generation inside GameCanvas consumption
+host does not reject stale, duplicate or regressing update sequences
+host does not calculate elapsed-time movement budget
+host does not validate maximum displacement, velocity or acceleration
+host does not resolve the submitted path against maze collision
+host does not re-simulate remote movement from admitted input
+applyNetworkPlayerUpdate copies position, rotationY, pitch and velocity verbatim
+malformed or impossible client pose can become the next authoritative snapshot
+no PlayerUpdateAdmissionResult or AuthoritativePoseResult exists
 ```
 
-## Session identity and admission gaps
+## Client reconciliation gaps
 
 ```txt
-no runSessionId exists
-no monotonic sessionEpoch exists
-RoomState has roomId and phase but no run identity
-ReplicatedGameSnapshot has gameId but no sessionEpoch
-NetworkEnvelope has roomId and optional requestId but no gameId/runSessionId/sessionEpoch
-START_GAME, PLAYER_UPDATE, TRY_INTERACT, SYNC, and LOBBY_EVENT have no epoch fence
-GameShell accepts START_GAME and SYNC without current phase/epoch preflight
-late old-run SYNC can restore PLAYING, PAUSED, or COMPLETED after lobby return
-late active commands can cross into the next bootstrap
-no duplicate/stale lifecycle or gameplay-message ledger exists
+active client simulation always advances poseRef locally
+latest authoritative snapshot is used for world rendering and carry state
+latest host player pose is not applied while the client remains PLAYING
+host pose is copied only in the snapshot-replay branch when simulation is not advancing
+no acknowledged client sequence is returned in snapshots
+no prediction history or unacknowledged-input replay exists
+no correction delta, threshold or correction reason exists
+no snap-versus-smooth policy exists
+no correction revision or reconciliation result exists
+no proof that host corrections converge during active play
 ```
 
-## Transport callback gaps
+## Identity and ordering gaps
 
 ```txt
-lobby return preserves transport without changing its admission generation
-GameShell transport callback remains live after GameCanvas unmount
-GameCanvas listener cleanup does not close shell-level message admission
-transport destroy returns no typed result
-no callback lease, generation, or run identity exists
-no terminal lifecycle acknowledgement is sent before room close/title exit
-no explicit preserve-versus-destroy policy result exists
-no proof that disconnect/destroy is exactly once
+NetworkEnvelope lacks complete runSessionId/sessionEpoch identity
+PLAYER_UPDATE requestId is optional and not used for movement idempotency
+payload.playerId is trusted independently of senderId and connection identity
+networkUpdateSequence starts locally at zero but has no host-side ledger
+snapshot tick does not acknowledge the last accepted player-update sequence
+transport reconnection has no movement-sequence reset contract
+old callbacks can still cross the separately documented run-exit boundary
 ```
 
-## Runtime commit gaps
+## Render and debug gaps
 
 ```txt
-GameCanvas cleanup disposes local RAF/listeners/world/composer/renderer
-cleanup is not correlated with a RunExitResult
-cleanup leaves networking readiness true for lobby return
-snapshot archive/reset is outside cleanup and absent from returnToLobby
-UI, room phase, snapshot, readiness, transport policy, and teardown do not commit atomically
-active authoritative publication can continue to express room.phase active
-no first-lobby-frame acknowledgement references the terminal result
+rendering can show a local predicted pose that differs from the host player row
+runtime debug frame records local pose and snapshot local player separately
+no computed correction delta or divergence classification is emitted
+no frame identifies the accepted update sequence that produced the rendered host pose
+no movement admission or reconciliation ledger is exposed through runtime debug
+minimap uses localPosition for the local marker and snapshot rows for other players, hiding divergence
 ```
 
-## Dependent pause gaps
+## Existing higher-order lifecycle gaps retained
 
 ```txt
-pause remains local presentation state
-host remote gameplay consumption can continue during local pause
-client pause can be overwritten by active SYNC
-input flags are not atomically suspended
-pause authority must reuse runSessionId/sessionEpoch and stale-message admission
+lobby readiness/start admission is not host authoritative
+run exit lacks atomic room/UI/runtime/snapshot/transport commit
+no runSessionId or monotonic sessionEpoch exists
+stale START_GAME, SYNC, LOBBY_EVENT, PLAYER_UPDATE and TRY_INTERACT admission is not fenced
+pause remains local presentation state rather than a converged authority result
+snapshot acceptance still needs source, tick, duplicate and projection preflight
 ```
 
 ## Missing source files
 
 ```txt
-HorrorCorridor-V1/src/features/session/domain/runSessionTypes.ts
-HorrorCorridor-V1/src/features/session/domain/runSessionIdentity.ts
-HorrorCorridor-V1/src/features/session/domain/runExitReducer.ts
-HorrorCorridor-V1/src/features/session/domain/runExitPolicy.ts
-HorrorCorridor-V1/src/features/session/domain/sessionMessageAdmission.ts
-HorrorCorridor-V1/src/features/session/domain/transportCallbackLease.ts
-HorrorCorridor-V1/src/features/session/domain/snapshotArchive.ts
-HorrorCorridor-V1/src/features/session/domain/runtimeTeardownResult.ts
-HorrorCorridor-V1/src/features/session/domain/sessionLifecycleLedger.ts
-HorrorCorridor-V1/src/features/debug/domain/sessionLifecycleDebugProjection.ts
-HorrorCorridor-V1/scripts/horror-corridor-session-lifecycle-fixture.mjs
-HorrorCorridor-V1/scripts/horror-corridor-session-message-admission-fixture.mjs
+HorrorCorridor-V1/src/features/player/domain/playerUpdateCommand.ts
+HorrorCorridor-V1/src/features/player/domain/connectionPlayerIdentity.ts
+HorrorCorridor-V1/src/features/player/domain/playerUpdateSequenceAdmission.ts
+HorrorCorridor-V1/src/features/player/domain/hostMovementBudget.ts
+HorrorCorridor-V1/src/features/player/domain/hostMovementSimulation.ts
+HorrorCorridor-V1/src/features/player/domain/authoritativePoseResult.ts
+HorrorCorridor-V1/src/features/player/domain/clientPredictionHistory.ts
+HorrorCorridor-V1/src/features/player/domain/clientPoseReconciliation.ts
+HorrorCorridor-V1/src/features/player/domain/correctionSmoothingPolicy.ts
+HorrorCorridor-V1/src/features/debug/domain/movementAuthorityDebugProjection.ts
+HorrorCorridor-V1/scripts/horror-corridor-movement-authority-fixture.mjs
+HorrorCorridor-V1/scripts/horror-corridor-client-reconciliation-fixture.mjs
 ```
 
-## Validation gaps
+## Missing validation commands
 
 ```txt
-package.json has no fixture:session-lifecycle script
-package.json has no fixture:session-message-admission script
-no DOM-free solo/host/client exit replay
-no transport preserve/destroy policy proof
-no late callback-generation proof
-no old-epoch START_GAME/SYNC/LOBBY_EVENT rejection proof
-no old-epoch PLAYER_UPDATE/TRY_INTERACT rejection proof
-no duplicate exit replay proof
-no exactly-once cleanup proof
-no clean re-entry epoch proof
-no first-lobby-frame/result correlation proof
+npm run fixture:movement-authority
+npm run fixture:client-reconciliation
 ```
 
 ## Planned candidate kits
 
 ```txt
-run-session-identity-kit
-run-exit-command-kit
-run-exit-authority-kit
-run-exit-commit-kit
-session-message-admission-kit
-transport-callback-lease-kit
-lifecycle-publication-kit
-runtime-teardown-result-kit
-snapshot-archive-kit
-run-exit-debug-projection-kit
-run-exit-fixture-kit
-session-message-admission-fixture-kit
+player-update-command-kit
+connection-player-identity-kit
+player-update-sequence-admission-kit
+host-movement-budget-kit
+host-maze-collision-authority-kit
+host-movement-simulation-kit
+authoritative-pose-result-kit
+movement-admission-ledger-kit
+client-prediction-history-kit
+client-pose-reconciliation-kit
+correction-smoothing-policy-kit
+movement-debug-projection-kit
+movement-authority-fixture-kit
+client-reconciliation-fixture-kit
 ```
 
 ## Ordered boundaries
 
 ```txt
-lobby readiness/start admission
-  -> stable initial run identity
-  -> run-exit command/result authority
-  -> lifecycle publication and atomic projection commit
-  -> transport preserve/destroy policy
-  -> callback-generation and old-epoch rejection
-  -> exactly-once teardown and snapshot archive/reset
-  -> clean re-entry
-  -> pause/resume authority
+lobby start admission
+  -> run identity and epoch
+  -> snapshot/message acceptance
+  -> host movement admission
+  -> authoritative pose result and sequence acknowledgement
+  -> active client reconciliation
+  -> pause/input suspension convergence
 ```
 
 ## Deferred work
@@ -150,12 +144,10 @@ PeerJS extraction
 renderer extraction
 minimap extraction
 post-processing extraction
-route restructuring
+host migration
 new maze content
 scene-dressing expansion
 visual object-kit expansion
-network cadence retuning
-gameplay balance changes
-pause menu redesign
-host migration
+network cadence retuning before correctness fixtures
+movement feel retuning before authority fixtures
 ```
