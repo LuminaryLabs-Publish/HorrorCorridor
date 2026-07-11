@@ -1,92 +1,93 @@
 # HorrorCorridor Known Gaps
 
-**Updated:** `2026-07-11T09-29-07-04-00`
+**Updated:** `2026-07-11T11-39-11-04-00`
 
 ## Queue-head identity gaps
 
-- Lobby members do not distinguish real peers from reserved slots.
-- Peer, member and player identities are not canonically bound.
-- Transport events expose real connection identity, but gameplay dispatch trusts message claims.
-- Room, run-session, epoch, request and sequence admission remain incomplete.
+- Lobby members do not yet distinguish every real peer, gameplay player and reserved slot through one canonical binding.
+- Transport connection identity and protocol sender identity are not fully converged.
+- Room, roster, run-session, epoch, request and sequence admission remain incomplete.
 
-## Runtime readiness gaps
+## Lobby start transaction gaps
 
-- `RuntimeReadiness` contains only four booleans.
+- The lobby primary action is always enabled.
+- Host start does not require connected transport state.
+- Host start does not enforce an all-required-members-ready policy.
+- Client primary action is labeled `Enter run` but toggles readiness.
+- There is no typed start command, command ID or semantic start result.
+- Start has no in-progress lock or cancellation policy.
+- Room and roster revisions are not captured or sealed.
+- The roster has no start-time fingerprint.
+- Loading yields through frames and timers while roster and connection stores remain mutable.
+- `startPlay()` does not revalidate role, room, transport, roster or readiness after loading.
+- Bootstrap uses callback-captured `room` and `lobbyPlayers` values that can be stale.
+- Reserved or disconnected rows can become gameplay players unless an earlier audit gate excludes them.
+- The host commits active room, snapshot, UI and readiness before network publication.
+- Host broadcast recipient counts are returned but ignored.
+- START_GAME and initial SYNC do not share a mandatory start transaction ID.
+- Start messages carry no run-session ID or session epoch.
+- START_GAME alone leaves a client in a lobby/active-room split state.
+- SYNC alone can enter PLAYING without correlated START_GAME admission.
+- Clients do not acknowledge accepted or rejected start commits.
+- The host has no retry, timeout, quorum or partial-start policy.
+- Duplicate and conflicting start payloads have no explicit result policy.
+- Late prior-run start messages cannot be rejected by epoch.
+
+## Render and runtime consequences
+
+- Host `GameCanvas` can mount before any client publication succeeds.
+- A client can mount from an uncorrelated SYNC.
+- The first gameplay frame has no start transaction, run session, epoch or roster fingerprint.
+- Runtime readiness can be marked true before start publication or provider proof.
+- Debug output cannot prove which start transaction produced a frame.
+
+## Existing readiness gaps
+
+- `RuntimeReadiness` remains four unconditional booleans.
 - Readiness has no session ID, runtime generation, revision, provider identity or resource proof.
-- `GameShell` can mark simulation, rendering and input ready before `GameCanvas` initializes their providers.
-- Inbound SYNC marks all four capabilities ready from protocol receipt alone.
-- Host/client lobby entry marks networking ready before a connected transport proof exists.
-- `patchReadiness()` accepts every write without expected revision or generation.
-- `resetRuntime()` can be followed by a late `GameCanvas` cleanup patch.
-- `GameCanvas` cleanup always writes `networking: true`.
-- Solo cleanup can therefore report networking ready despite no transport.
-- An old mount can patch a replacement runtime generation.
-- Partial initialization failure has no typed failure, rollback or lease revocation result.
-- Readiness transitions are not journaled or correlated to resources.
-
-## Concrete stale-write gap
-
-```txt
-returnToStart
-  -> destroy transport
-  -> resetRuntime readiness = all false
-  -> GameCanvas unmount cleanup
-  -> readiness.networking = true
-```
-
-## Render and input consequences
-
-- Rendering can be reported ready before renderer, world, composer, canvas and RAF exist.
-- Input can be reported ready before listeners are installed.
-- A received snapshot can report rendering/input ready even if provider initialization fails.
-- Debug output cannot identify which provider or frame proves readiness.
-- Cleanup cannot prove that listeners, RAF and render resources belong to the same generation it revokes.
-
-## Network consequence
-
-- Networking readiness is not derived from transport role and status.
-- Solo and disconnected states can be mislabeled ready.
-- Return-to-lobby retains networking without a transport proof row.
-- Stale cleanup can reassert networking after transport destruction.
+- Shell and inbound SYNC can mark providers ready before initialization.
+- `resetRuntime()` can be followed by a late cleanup patch from an old mount.
+- Cleanup can report networking ready after transport destruction or in solo mode.
 
 ## Dependent authority gaps
 
-- Lobby readiness and start requests are not routed through host actor admission.
 - Run exit does not commit one session epoch transition.
 - Snapshot acceptance lacks duplicate, stale and conflict policy.
-- Remote movement lacks speed, collision and temporal validation.
+- Remote movement lacks complete speed, collision and temporal validation.
 - Active clients do not reconcile predicted pose to host pose.
-- Pause and resume remain local projection rather than replicated authority.
+- Pause and resume remain primarily local projection rather than replicated authority.
 
 ## Validation gap
 
 Current package commands do not prove:
 
 ```txt
-provider-owned readiness
-runtime generation fencing
-stale cleanup rejection
-solo networking correctness
-render first-frame readiness
-input listener readiness
-partial initialization rollback
-idempotent cleanup
-strict-mode mount/unmount/remount safety
-readiness journal and proof projection
+start admission policy
+sealed roster parity
+roster mutation during loading
+connection loss during loading
+correlated START_GAME/SYNC handling
+partial delivery and reorder handling
+per-peer acknowledgement
+retry and dedupe
+stale prior-epoch rejection
+host publication rollback or degraded policy
+first-frame start correlation
+provider-owned readiness and generation fencing
 ```
 
 ## Required guarantees
 
 ```txt
-requested capability does not equal ready capability
-one provider owns each ready capability
-ready capability carries resource proof
-reset advances runtime generation
-old generation writes are rejected
-solo networking remains false
-return-to-title ends with all capabilities revoked
-return-to-lobby networking requires a live transport lease
-failed setup rolls back partial leases
-cleanup is idempotent
-final readiness exactly matches live resources
+one admitted host actor starts
+one sealed roster feeds bootstrap
+loading-time changes invalidate stale plans
+one transaction binds all initial messages
+one run session and epoch bind room snapshot runtime and frame
+partial messages do not commit gameplay
+host records per-peer publication and acknowledgement
+clients commit exactly once
+retries are idempotent
+old epochs are rejected before mutation
+first frame proves the accepted start identity
 ```
