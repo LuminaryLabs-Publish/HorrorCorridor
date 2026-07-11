@@ -2,30 +2,32 @@
 
 **Repository:** `LuminaryLabs-Publish/HorrorCorridor`
 
-**Updated:** `2026-07-11T01-01-32-04-00`
+**Updated:** `2026-07-11T01-10-28-04-00`
 
 ## Current safe ledge
 
 ```txt
-HorrorCorridor Run Exit Commit + Session Epoch Transport Quarantine Fixture Gate
+HorrorCorridor Run Exit Commit + Session Epoch Message Admission Fixture Gate
 ```
 
 ## Selection result
 
-The complete accessible `LuminaryLabs-Publish` inventory was compared against the central repo ledger and root `.agent` state. All nine eligible non-Cavalry repositories were tracked and documented. `HorrorCorridor` had the oldest current review timestamp and was the only product repository changed. `TheCavalryOfRome` remained excluded.
+The complete accessible `LuminaryLabs-Publish` inventory was compared with the central ledger and root `.agent` state. All nine eligible non-Cavalry repositories are tracked and have root audit state. `HorrorCorridor` was prioritized because its repo-local `2026-07-11T01-01-32-04-00` run-exit audit was newer than the central ledger entry at `2026-07-10T23-30-13-04-00`; it was also the oldest eligible central-ledger entry. `TheCavalryOfRome` remained excluded.
 
 ```txt
-HorrorCorridor       selected / 2026-07-10T23-30-13-04-00
-PhantomCommand       tracked  / 2026-07-10T23-40-35-04-00
-ZombieOrchard        tracked  / 2026-07-10T23-50-53-04-00
-TheUnmappedHouse     tracked  / 2026-07-11T00-00-26-04-00
-MyCozyIsland         tracked  / 2026-07-11T00-10-28-04-00
-AetherVale           tracked  / 2026-07-11T00-18-24-04-00
-IntoTheMeadow        tracked  / 2026-07-11T00-30-48-04-00
-PrehistoricRush      tracked  / 2026-07-11T00-39-25-04-00
-TheOpenAbove         tracked  / 2026-07-11T00-49-45-04-00
-TheCavalryOfRome     excluded by rule
+AetherVale
+HorrorCorridor        selected / central catch-up required
+IntoTheMeadow
+MyCozyIsland
+PhantomCommand
+PrehistoricRush
+TheOpenAbove
+TheUnmappedHouse
+ZombieOrchard
+TheCavalryOfRome      excluded by rule
 ```
+
+Only `LuminaryLabs-Publish/HorrorCorridor` was changed in the product organization.
 
 ## Read first
 
@@ -35,53 +37,46 @@ TheCavalryOfRome     excluded by rule
 .agent/known-gaps.md
 .agent/validation.md
 .agent/kit-registry.json
-.agent/trackers/2026-07-11T01-01-32-04-00/project-breakdown.md
-.agent/turn-ledger/2026-07-11T01-01-32-04-00.md
-.agent/architecture-audit/2026-07-11T01-01-32-04-00-run-exit-commit-dsk-map.md
-.agent/render-audit/2026-07-11T01-01-32-04-00-post-exit-frame-projection-gap.md
-.agent/gameplay-audit/2026-07-11T01-01-32-04-00-lobby-return-stale-sync-reentry-loop.md
-.agent/interaction-audit/2026-07-11T01-01-32-04-00-exit-command-transport-callback-map.md
-.agent/session-authority-audit/2026-07-11T01-01-32-04-00-epoch-transport-quarantine-contract.md
-.agent/deploy-audit/2026-07-11T01-01-32-04-00-run-exit-epoch-fixture-gate.md
+.agent/trackers/2026-07-11T01-10-28-04-00/project-breakdown.md
+.agent/turn-ledger/2026-07-11T01-10-28-04-00.md
+.agent/architecture-audit/2026-07-11T01-10-28-04-00-run-exit-session-epoch-admission-dsk-map.md
+.agent/render-audit/2026-07-11T01-10-28-04-00-post-exit-frame-transport-admission-gap.md
+.agent/gameplay-audit/2026-07-11T01-10-28-04-00-return-late-sync-reentry-loop.md
+.agent/interaction-audit/2026-07-11T01-10-28-04-00-exit-command-message-admission-map.md
+.agent/session-authority-audit/2026-07-11T01-10-28-04-00-run-identity-exit-quarantine-contract.md
+.agent/deploy-audit/2026-07-11T01-10-28-04-00-session-epoch-message-fixture-gate.md
 ```
 
 ## Current interaction loop
 
 ```txt
 solo, host, or client enters PLAYING
-  -> GameCanvas owns simulation, input, transport consumption, publication, rendering, minimap, and debug
-  -> pause-return or victory-restart calls GameShell.returnToLobby()
-  -> local UI changes to a lobby and GameCanvas unmounts
-  -> local RAF, listeners, world, composer, renderer, and canvas are disposed
-  -> room phase and authoritative snapshot remain active or ending
-  -> transport remains connected by design
-  -> GameShell transport callbacks remain subscribed
-  -> late START_GAME or SYNC is accepted without run/session epoch admission
-  -> SYNC can project the local client back to PLAYING or COMPLETED
-  -> a new start bootstraps another run without quarantining old-run traffic
+  -> GameCanvas owns local simulation, input, networking adapters, rendering, minimap, and debug
+  -> pause-return or completion-restart calls GameShell.returnToLobby()
+  -> local UI and readiness move to lobby state
+  -> GameCanvas unmount cleanup stops local RAF, listeners, world, composer, renderer, and canvas ownership
+  -> RoomState and authoritativeSnapshot remain active or ending
+  -> PeerJS/BroadcastChannel transport remains connected
+  -> GameShell transport callback remains subscribed
+  -> START_GAME, SYNC, and LOBBY_EVENT have no run-session epoch admission
+  -> late SYNC can project the local client back to PLAYING, PAUSED, or COMPLETED
+  -> a later bootstrap has no monotonic epoch fence against old traffic
 ```
 
 ## Main finding
 
-The route has local component cleanup, but no authoritative **run-exit commit**. Lobby return does not produce a typed command/result, does not publish a terminal lifecycle state, does not advance a session epoch, does not archive/clear the active snapshot, and does not quarantine late transport callbacks.
+The route has component cleanup but no authoritative run-exit transaction. `returnToLobby()` changes presentation and readiness without committing room phase, snapshot policy, run identity, transport generation, or a typed terminal result. Protocol envelopes contain `roomId` and optional `requestId`, but no `runSessionId` or `sessionEpoch`, while shell-level handlers continue accepting old `START_GAME`, `SYNC`, and `LOBBY_EVENT` messages after local teardown.
 
-```txt
-returnToLobby changes presentation/readiness only
-GameCanvas cleanup disposes local render/input ownership
-transport and GameShell message handling remain live
-START_GAME and SYNC have no epoch field
-GameShell accepts those messages without phase/epoch preflight
-old-run traffic can cross into lobby or the next bootstrap
-```
+The highest-risk interval is therefore after local cleanup and before a fresh run: stale callbacks remain admissible and can overwrite the first lobby or re-entry frame.
 
 ## Ordered safe ledges
 
 ```txt
 1. Lobby Readiness Authority + Start Admission Fixture Gate
-2. Run Exit Commit + Session Epoch Transport Quarantine Fixture Gate
+2. Run Exit Commit + Session Epoch Message Admission Fixture Gate
 3. Pause/Resume Authority + Input Suspension Convergence Fixture Gate
 ```
 
 ## Validation state
 
-Documentation only. Runtime source, package scripts, dependencies, routes, rendering behavior, networking behavior, and deployment configuration did not change. No branch or pull request was created. Repo-local and central documentation were pushed directly to `main`.
+Documentation only. Runtime source, package scripts, dependencies, routes, rendering behavior, networking behavior, and deployment configuration were not changed. No branch or pull request was created. Repo-local and central documentation were pushed directly to `main`.
