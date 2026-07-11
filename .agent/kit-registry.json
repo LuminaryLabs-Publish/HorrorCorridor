@@ -1,11 +1,32 @@
 {
-  "schemaVersion": 57,
-  "generatedAt": "2026-07-11T03-18-44-04-00",
+  "schemaVersion": 58,
+  "generatedAt": "2026-07-11T05-28-29-04-00",
   "repository": "LuminaryLabs-Publish/HorrorCorridor",
-  "status": "lobby-start-transaction-authority-planned",
-  "selectedBecause": "HorrorCorridor had a newer repo-local audit than the central ledger reflected, making it a recently documented but centrally unsynchronized eligible repository",
-  "currentNextSlice": "HorrorCorridor Lobby Start Transaction Authority + Correlated START_GAME/SYNC Fixture Gate",
+  "branch": "main",
+  "status": "lobby-roster-identity-peer-binding-planned",
+  "selectedBecause": "All eligible Publish repositories were already tracked; TheOpenAbove had a fresh 2026-07-11T05-25-29-04-00 audit, leaving HorrorCorridor as the oldest stable eligible repo-local audit.",
+  "latestTracker": ".agent/trackers/2026-07-11T05-28-29-04-00/project-breakdown.md",
+  "latestTurnLedger": ".agent/turn-ledger/2026-07-11T05-28-29-04-00.md",
+  "latestAudits": {
+    "architecture": ".agent/architecture-audit/2026-07-11T05-28-29-04-00-lobby-roster-identity-dsk-map.md",
+    "render": ".agent/render-audit/2026-07-11T05-28-29-04-00-placeholder-player-projection-gap.md",
+    "gameplay": ".agent/gameplay-audit/2026-07-11T05-28-29-04-00-placeholder-bootstrap-player-loop.md",
+    "interaction": ".agent/interaction-audit/2026-07-11T05-28-29-04-00-add-guest-ready-roster-command-map.md",
+    "rosterAuthority": ".agent/roster-authority-audit/2026-07-11T05-28-29-04-00-peer-placeholder-binding-contract.md",
+    "protocol": ".agent/protocol-audit/2026-07-11T05-28-29-04-00-roster-revision-membership-correlation.md",
+    "deploy": ".agent/deploy-audit/2026-07-11T05-28-29-04-00-roster-admission-fixture-gate.md"
+  },
+  "selection": {
+    "inventoryCount": 10,
+    "eligibleCount": 9,
+    "excluded": [
+      "LuminaryLabs-Publish/TheCavalryOfRome"
+    ],
+    "onlyPublishRepositoryChanged": "LuminaryLabs-Publish/HorrorCorridor"
+  },
+  "currentNextSlice": "Lobby Roster Identity and Peer Binding + Placeholder Admission Fixture Gate",
   "dependencyOrder": [
+    "lobby-roster-identity-and-peer-binding",
     "lobby-ready-command-and-host-admission",
     "roster-revision-and-fingerprint",
     "start-request-admission",
@@ -18,26 +39,25 @@
     "pause-resume-authority"
   ],
   "interactionLoop": [
-    "client-ready-toggle-mutates-local-store-only",
-    "host-start-checks-mode-and-room-only",
-    "loading-runs-without-starting-phase-guard",
-    "bootstrap-consumes-unsealed-host-roster",
-    "host-commits-playing-locally",
-    "host-broadcasts-start-game",
-    "host-broadcasts-initial-sync",
-    "client-start-game-updates-room-only",
-    "client-sync-enters-playing-independently"
+    "host-adds-connected-looking-placeholder",
+    "placeholder-has-no-peer-binding-or-slot-kind",
+    "real-peer-open-creates-second-roster-row",
+    "peer-close-removes-only-real-peer-row",
+    "host-start-passes-live-roster-to-bootstrap",
+    "bootstrap-maps-every-row-to-active-player",
+    "placeholder-reaches-snapshot-world-minimap-and-debug"
   ],
   "domains": [
     "application shell and screen routing",
     "UI overlay pause completion and settings projection",
     "session mode peer identity room roster readiness and connection state",
+    "lobby member identity peer binding and reserved-slot policy",
     "lobby presentation ready controls and start controls",
     "PeerJS host/client transport and BroadcastChannel bridge",
     "peer event bus and connection-status projection",
     "versioned protocol envelopes and message construction",
-    "lobby command admission roster revision and start transaction authority",
-    "START_GAME and initial SYNC correlation",
+    "roster command admission revision and fingerprint authority",
+    "lobby start transaction and START_GAME/SYNC correlation",
     "seeded maze cube anomaly room roster and player bootstrap",
     "room phase and replicated app/game state",
     "pointer lock keyboard mouse blur and input lifecycle",
@@ -82,29 +102,36 @@
     {"name":"runtime-resource-cleanup-kit","services":["RAF stop","transport unsubscribe","observer disconnect","listener removal","world/composer/renderer disposal","canvas removal"]},
     {"name":"package-validation-kit","services":["build","lint","ProtoKit smoke","harness","visual match","object-kit review","live-player validation"]}
   ],
-  "plannedKits": [
-    {"name":"lobby-ready-command-kit","services":["actor identity","desired ready state","room id","roster revision","request id"]},
-    {"name":"lobby-ready-admission-kit","services":["membership check","connection check","sender binding","stale revision rejection","idempotent result"]},
-    {"name":"lobby-roster-revision-kit","services":["monotonic roster revision","stable roster fingerprint","sealed admitted roster"]},
-    {"name":"start-run-request-kit","services":["host identity","room id","expected phase","expected roster revision","request id"]},
-    {"name":"start-run-admission-kit","services":["host authority","phase check","participant policy","readiness policy","placeholder rejection"]},
-    {"name":"start-transaction-kit","services":["startTransactionId","starting phase","bootstrap staging","commit or rollback"]},
-    {"name":"start-sync-correlation-kit","services":["shared transaction id","shared roster fingerprint","shared run session id","START_GAME/SYNC correlation"]},
-    {"name":"lobby-command-result-kit","services":["accepted","rejected","no-change","stable reason","before/after revision"]},
-    {"name":"lobby-authority-ledger-kit","services":["bounded command/result rows","roster revisions","start attempts","rejection counters"]},
-    {"name":"lobby-start-fixture-kit","services":["ready propagation matrix","duplicate start matrix","bootstrap rollback","message ordering matrix"]}
+  "plannedRosterKits": [
+    {"name":"lobby-member-kind-kit","services":["host-local peer and reserved-slot canonical records"]},
+    {"name":"lobby-peer-binding-kit","services":["unique peer member and player binding"]},
+    {"name":"lobby-slot-reservation-kit","services":["reserve release and inspect lobby-only slots"]},
+    {"name":"lobby-member-admission-kit","services":["actor room connection revision and semantic admission"]},
+    {"name":"lobby-member-claim-kit","services":["atomic peer claim of a reserved slot"]},
+    {"name":"lobby-member-removal-kit","services":["disconnect remove and release policy"]},
+    {"name":"lobby-roster-revision-kit","services":["monotonic semantic roster revision"]},
+    {"name":"lobby-roster-fingerprint-kit","services":["stable canonical roster fingerprint"]},
+    {"name":"bootstrap-roster-filter-kit","services":["admitted immutable roster and rejected-member results"]},
+    {"name":"lobby-roster-projection-kit","services":["detached lobby render and debug observations"]},
+    {"name":"lobby-roster-authority-ledger-kit","services":["bounded command result revision and rejection rows"]},
+    {"name":"lobby-roster-fixture-kit","services":["placeholder claim duplicate disconnect ordering and bootstrap matrices"]}
   ],
-  "currentBlocker": "Readiness is client-local and run startup is split across uncorrelated START_GAME and initial SYNC messages. There is no sealed roster, start transaction, shared fingerprint, atomic client admission or rollback.",
+  "currentBlocker": "Synthetic guest rows are marked connected without peer ownership, real peers create duplicate rows, and bootstrap promotes every roster row into an active replicated player.",
   "validation": {
     "runtimeSourceChanged": false,
+    "packageScriptsChanged": false,
+    "dependenciesChanged": false,
+    "networkBehaviorChanged": false,
+    "renderingChanged": false,
+    "deploymentChanged": false,
     "branchCreated": false,
     "pullRequestCreated": false,
     "npmRunBuild": "not-run",
     "npmRunLint": "not-run",
-    "lobbyReadyFixture": "not-run; script does not exist",
-    "lobbyStartTransactionFixture": "not-run; script does not exist",
-    "startMessageOrderingFixture": "not-run; script does not exist",
-    "startRollbackFixture": "not-run; script does not exist",
-    "browserHostClientStartSmoke": "not-run"
+    "rosterIdentityFixture": "unavailable",
+    "placeholderAdmissionFixture": "unavailable",
+    "peerSlotClaimFixture": "unavailable",
+    "rosterProtocolOrderingFixture": "unavailable",
+    "browserHostClientRosterSmoke": "not-run"
   }
 }
