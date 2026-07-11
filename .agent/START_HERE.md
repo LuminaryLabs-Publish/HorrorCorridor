@@ -4,56 +4,66 @@
 
 **Branch:** `main`
 
-**Updated:** `2026-07-11T16-21-09-04-00`
+**Updated:** `2026-07-11T16-38-10-04-00`
 
 ## Summary
 
 HorrorCorridor is a cooperative first-person procedural maze with solo, host and client sessions, PeerJS and BroadcastChannel transport, replicated snapshots, cube interactions, ordered anomaly completion, ooze pressure, Three.js rendering, bloom, minimap, HUD and bounded debug readback.
 
-The current audit isolates active-run disconnect authority. A host-side connection-close event removes a player only from the lobby/session store and broadcasts a lobby event. The authoritative `GameCanvas` closure retains the player in `currentGameState`, continues including that player in snapshots and ooze pressure input, and can retain a cube owned by that disconnected player indefinitely.
+The current audit isolates a host cadence defect. Every remote `PLAYER_UPDATE` immediately mutates the authoritative pose, increments the snapshot tick, broadcasts a full snapshot and resets `lastNetworkTickAtMs`. The host frame loop uses that same timestamp to decide when to advance ooze, so sustained client traffic can keep publishing snapshots while starving an authoritative gameplay system.
+
+The preceding active-run disconnect audit remains valid and retained: a disconnected actor can persist in live gameplay state, ooze inputs and held-cube ownership. Network cadence authority must consume the same canonical actor, membership, run and epoch identities rather than creating a parallel peer model.
 
 ## Current ledge
 
 ```txt
-HorrorCorridor Active-Run Disconnect Authority
-+ Player Retirement, Held-Cube Recovery and Replicated Convergence Fixture Gate
+HorrorCorridor Host Network Cadence Authority
++ Input Queue / Fixed Simulation / Bounded Snapshot Publication Fixture Gate
 ```
 
 ## Plan ledger
 
-**Goal:** make connection loss during an active run one host-authoritative transaction that retires or suspends the exact actor, resolves owned gameplay state, publishes one correlated snapshot and supports an explicit reconnect policy.
+**Goal:** separate player-update arrival, fixed authoritative simulation and snapshot publication so client traffic cannot control gameplay timing, snapshot tick meaning or host fanout.
 
-- [x] Compare all ten accessible `LuminaryLabs-Publish` repositories with central tracking.
+- [x] Compare all ten accessible Publish repositories with central tracking.
 - [x] Exclude `TheCavalryOfRome`.
-- [x] Confirm all nine eligible repositories have central ledger and root `.agent` state.
-- [x] Avoid the actively changing `TheOpenAbove` documentation window.
-- [x] Select only `HorrorCorridor` as the next stable oldest eligible repository.
-- [x] Trace peer connection-close, session roster removal, live GameState ownership, held-cube synchronization, ooze input and snapshot publication.
-- [x] Identify the interaction loop, all domains, all implemented kits and their services.
-- [x] Record the lobby/game roster split and ghost-player path.
-- [x] Define disconnect admission, actor retirement, owned-state recovery, reconnect and convergence kits.
-- [x] Add timestamped architecture and system audits.
+- [x] Confirm all nine eligible repositories have central ledger and root `.agent` coverage.
+- [x] Detect a newer repo-local audit in nominal-oldest `TheOpenAbove`.
+- [x] Select only `HorrorCorridor` as the oldest stable eligible fallback.
+- [x] Trace client sequence generation and update cadence.
+- [x] Trace host packet application, snapshot publication and broadcast fanout.
+- [x] Trace the shared timestamp into ooze advancement admission.
+- [x] Identify the full interaction loop, domains, implemented kits and services.
+- [x] Add timestamped cadence-focused architecture and system audits.
+- [x] Preserve the active-run disconnect audit as a retained prerequisite.
 - [x] Refresh required root `.agent` documents.
+- [x] Change documentation only.
 - [x] Push directly to `main`; create no branch or pull request.
-- [x] Synchronize the central ledger and internal change log.
-- [ ] Runtime implementation and executable disconnect fixtures remain future work.
+- [ ] Runtime implementation and executable cadence/flood fixtures remain future work.
 
 ## Read first
 
 ```txt
-.agent/trackers/2026-07-11T16-21-09-04-00/project-breakdown.md
-.agent/turn-ledger/2026-07-11T16-21-09-04-00.md
+.agent/trackers/2026-07-11T16-38-10-04-00/project-breakdown.md
+.agent/turn-ledger/2026-07-11T16-38-10-04-00.md
 .agent/current-audit.md
 .agent/known-gaps.md
 .agent/next-steps.md
 .agent/validation.md
 .agent/kit-registry.json
-.agent/architecture-audit/2026-07-11T16-21-09-04-00-active-run-disconnect-authority-dsk-map.md
-.agent/render-audit/2026-07-11T16-21-09-04-00-ghost-player-held-cube-projection-gap.md
-.agent/gameplay-audit/2026-07-11T16-21-09-04-00-connection-close-ghost-actor-loop.md
-.agent/interaction-audit/2026-07-11T16-21-09-04-00-disconnect-reconnect-command-admission-map.md
+.agent/architecture-audit/2026-07-11T16-38-10-04-00-host-network-cadence-authority-dsk-map.md
+.agent/render-audit/2026-07-11T16-38-10-04-00-simulation-publication-frame-correlation-gap.md
+.agent/gameplay-audit/2026-07-11T16-38-10-04-00-client-update-ooze-starvation-loop.md
+.agent/interaction-audit/2026-07-11T16-38-10-04-00-player-update-queue-admission-map.md
+.agent/network-cadence-audit/2026-07-11T16-38-10-04-00-input-simulation-publication-clock-contract.md
+.agent/deploy-audit/2026-07-11T16-38-10-04-00-host-cadence-flood-fixture-gate.md
+```
+
+Retained prerequisite audit:
+
+```txt
+.agent/trackers/2026-07-11T16-21-09-04-00/project-breakdown.md
 .agent/disconnect-authority-audit/2026-07-11T16-21-09-04-00-player-retirement-owned-state-contract.md
-.agent/deploy-audit/2026-07-11T16-21-09-04-00-active-run-disconnect-fixture-gate.md
 ```
 
 ## Product interaction loop
@@ -61,50 +71,75 @@ HorrorCorridor Active-Run Disconnect Authority
 ```txt
 title
   -> solo, host or client admission
-  -> lobby and deterministic bootstrap
-  -> first-person movement and interaction
-  -> host mutation and snapshot publication
-  -> world, minimap, HUD and terminal projection
-
-active client connection closes
-  -> host transport emits peer/connection-close
-  -> GameShell removes lobby/session row
-  -> GameShell broadcasts LOBBY_EVENT
-  -> GameCanvas currentGameState is unchanged
-  -> authoritative snapshots keep the disconnected player
-  -> ooze continues sampling the ghost position
-  -> held cube remains owned and follows the retained ghost player
+  -> lobby roster, readiness and deterministic start
+  -> first-person input and client prediction
+  -> client PLAYER_UPDATE stream
+  -> host movement application
+  -> held-cube and ooze gameplay systems
+  -> authoritative snapshot publication
+  -> client snapshot acceptance/replay
+  -> world, minimap, HUD, completion and debug projection
 ```
 
-## Main finding
+## Current cadence loop
 
 ```txt
-sessionStore roster: disconnected player removed
-GameState.room.players: unchanged
-GameState.players: unchanged
-held cube ownership: unchanged
-ooze playerPositions: still includes disconnected player
-replicated snapshot: still includes disconnected player and cube owner
-reconnect identity/claim policy: absent
-player retirement result: absent
+client
+  -> generate monotonic input.sequence
+  -> send PLAYER_UPDATE when local network timer elapses
+
+host message callback
+  -> ignore input.sequence for application
+  -> apply absolute client pose immediately
+  -> publish full snapshot immediately
+  -> snapshot tick += 1
+  -> broadcast to every client
+  -> lastNetworkTickAtMs = now
+
+host RAF
+  -> only advance ooze when now - lastNetworkTickAtMs reaches threshold
 ```
 
-`syncHeldCubesToPlayers()` also leaves a held cube unchanged when its owner is missing, so simply deleting a player later would still create an orphaned held cube unless retirement owns cube recovery.
+## Concrete starvation case
+
+```txt
+client updates arrive before each host threshold expires
+  -> every packet causes publication
+  -> every publication resets lastNetworkTickAtMs
+  -> ooze branch never reaches its threshold
+  -> snapshots and ticks continue advancing
+  -> ooze remains unchanged
+```
+
+## Main architecture split
+
+```txt
+input arrival clock
+  per-peer sequence and queue admission
+
+fixed simulation clock
+  movement, collision, held cubes, ooze and objective systems
+
+snapshot publication clock
+  bounded dirty-state dissemination and per-peer delivery results
+
+presentation frame clock
+  world/minimap/HUD/debug acknowledgement of one committed revision
+```
 
 ## Required authority flow
 
 ```txt
-PeerConnectionCloseObservation
-  -> bind transport connection to admitted actor/run/epoch
-  -> classify transient disconnect, timeout, leave or kick
-  -> create DisconnectCommand and monotonic membership revision
-  -> suspend or retire actor under explicit policy
-  -> drop, return or reserve every owned cube
-  -> update GameState players and room roster atomically
-  -> remove actor from ooze and interaction authority
-  -> publish DisconnectResult-linked snapshot
-  -> world/minimap/HUD acknowledge the same revision
-  -> admit or reject reconnect claim
+PLAYER_UPDATE
+  -> connection/actor/room/run/epoch admission
+  -> monotonic per-player sequence admission
+  -> bounded queue or deterministic coalescing
+  -> fixed-step input selection
+  -> movement/collision and all scheduled systems advance
+  -> committed simulation revision
+  -> bounded snapshot publication plan
+  -> per-peer delivery result
+  -> accepted snapshot and first-frame acknowledgement
 ```
 
 ## Ordered safe ledges
@@ -119,8 +154,9 @@ PeerConnectionCloseObservation
 5a. Interaction Target Intent and Cube/Slot Claim Authority
 5b. Active-Run Disconnect and Reconnect Authority
 5c. Terminal Outcome Authority
-6. Host Movement Admission and Client Reconciliation
+6. Host Network Cadence and Fixed Simulation Authority
+6a. Host Movement Admission and Client Reconciliation
 7. Pause/Resume Authority
 ```
 
-Documentation only. Runtime, network, rendering and deployment behavior are unchanged.
+Documentation only. Runtime implementation and executable cadence, flood, starvation and frame-correlation fixtures remain future work.
