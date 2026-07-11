@@ -42,6 +42,7 @@ npm run fixture:pause-convergence
 [done] implemented kit and service inventory
 [done] package command inventory from current audit state
 [done] repo-local documentation update on main
+[done] central ledger and internal change-log synchronization
 ```
 
 ## Required host movement validation
@@ -109,7 +110,8 @@ existing tests run: no
 movement authority fixture: unavailable
 client reconciliation fixture: unavailable
 repo-local documentation pushed to main: yes
-central ledger synchronization: pending until this run completes
+central ledger synchronized on main: yes
+central internal change log added on main: yes
 ```
 
 ## Completion rule
