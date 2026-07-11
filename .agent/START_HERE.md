@@ -1,66 +1,63 @@
 # HorrorCorridor START HERE
 
-**Repository:** `LuminaryLabs-Publish/HorrorCorridor`
-
-**Branch:** `main`
-
-**Updated:** `2026-07-11T18-11-21-04-00`
+**Repository:** `LuminaryLabs-Publish/HorrorCorridor`  
+**Branch:** `main`  
+**Updated:** `2026-07-11T19-38-14-04-00`
 
 ## Summary
 
-HorrorCorridor is a cooperative first-person procedural maze with solo, host and client sessions, PeerJS and BroadcastChannel transport, replicated snapshots, cube interactions, ordered anomaly completion, ooze pressure, Three.js rendering, bloom, minimap, HUD and bounded debug readback.
+HorrorCorridor is a cooperative first-person procedural maze with solo, host and client sessions, PeerJS and BroadcastChannel transport, authoritative snapshots, cube interactions, ordered anomaly completion, ooze pressure, Three.js rendering, bloom, minimap, HUD and bounded debug readback.
 
-The current audit isolates the publication-to-delivery boundary. Every remote `PLAYER_UPDATE` can trigger a complete authoritative snapshot. The host builds one full snapshot for local state, rebuilds the full snapshot again inside the SYNC envelope, serializes the complete maze/player/cube/anomaly/ooze payload, then attempts to send that string to every open connection.
-
-The transport exposes only an aggregate sent count. It does not expose payload bytes, pending buffered bytes, send duration, exceptions, per-peer success/failure, queue depth, backpressure, coalescing, retry or slow-peer isolation. The publication caller discards even the aggregate count.
+The current audit isolates authoritative randomness. Maze generation is seeded, but authoritative ooze spawn and decay fall back to ambient `Math.random()`. The host does not retain a random-stream identity, draw sequence or checkpoint in `GameState` or `ReplicatedGameSnapshot`, so replay, restore, host migration and deterministic fixtures cannot reproduce the same ooze evolution from the same run seed and input history.
 
 ## Current ledge
 
 ```txt
-HorrorCorridor Snapshot Delivery and Backpressure Authority
-+ Payload Budget / Per-Peer Result / Slow-Peer Isolation Fixture Gate
+HorrorCorridor Authoritative Randomness and Replay Authority
++ Seeded Ooze Stream / RNG Checkpoint / Replay Parity Fixture Gate
 ```
 
 ## Plan ledger
 
-**Goal:** turn each committed snapshot publication into one bounded payload plan and an observable per-peer delivery transaction so full-state fanout cannot grow silently or let one slow connection destabilize the host.
+**Goal:** make every gameplay-affecting random draw a deterministic, identified and checkpointed part of the authoritative simulation so the same run seed, accepted inputs and simulation steps reproduce the same ooze state.
 
 - [x] Compare all ten accessible Publish repositories with central tracking.
 - [x] Exclude `TheCavalryOfRome`.
 - [x] Confirm all nine eligible repositories have central ledger and root `.agent` coverage.
-- [x] Detect a newer repo-local grass-culling audit in nominal-oldest `TheOpenAbove` and avoid overlapping it.
-- [x] Select only `HorrorCorridor` as the oldest stable eligible fallback.
-- [x] Trace full snapshot construction, SYNC construction, JSON serialization and host fanout.
-- [x] Trace the host transport contract and per-connection send behavior.
-- [x] Identify the complete interaction loop, domains, implemented kits and services.
+- [x] Select only `HorrorCorridor` as the oldest eligible repository.
+- [x] Trace seeded maze generation and authoritative ooze random draws.
+- [x] Confirm the host calls ooze advancement without an injected RNG.
+- [x] Confirm the replicated snapshot carries ooze output but no RNG stream state.
+- [x] Identify the interaction loop, domains, implemented kits and services.
 - [x] Add timestamped architecture and system audits.
 - [x] Refresh required root `.agent` documents.
 - [x] Change documentation only.
 - [x] Push directly to `main`; create no branch or pull request.
-- [ ] Runtime implementation and executable delivery/backpressure fixtures remain future work.
+- [ ] Runtime implementation and executable deterministic replay fixtures remain future work.
 
 ## Read first
 
 ```txt
-.agent/trackers/2026-07-11T18-11-21-04-00/project-breakdown.md
-.agent/turn-ledger/2026-07-11T18-11-21-04-00.md
+.agent/trackers/2026-07-11T19-38-14-04-00/project-breakdown.md
+.agent/turn-ledger/2026-07-11T19-38-14-04-00.md
 .agent/current-audit.md
 .agent/known-gaps.md
 .agent/next-steps.md
 .agent/validation.md
 .agent/kit-registry.json
-.agent/architecture-audit/2026-07-11T18-11-21-04-00-snapshot-delivery-backpressure-dsk-map.md
-.agent/render-audit/2026-07-11T18-11-21-04-00-publication-delivery-frame-proof-gap.md
-.agent/gameplay-audit/2026-07-11T18-11-21-04-00-full-sync-fanout-slow-peer-loop.md
-.agent/interaction-audit/2026-07-11T18-11-21-04-00-publication-plan-delivery-result-map.md
-.agent/transport-audit/2026-07-11T18-11-21-04-00-payload-budget-backpressure-contract.md
-.agent/deploy-audit/2026-07-11T18-11-21-04-00-snapshot-delivery-backpressure-fixture-gate.md
+.agent/architecture-audit/2026-07-11T19-38-14-04-00-authoritative-randomness-replay-dsk-map.md
+.agent/render-audit/2026-07-11T19-38-14-04-00-ooze-rng-state-frame-provenance-gap.md
+.agent/gameplay-audit/2026-07-11T19-38-14-04-00-unseeded-ooze-replay-divergence-loop.md
+.agent/interaction-audit/2026-07-11T19-38-14-04-00-random-draw-step-admission-map.md
+.agent/randomness-audit/2026-07-11T19-38-14-04-00-seeded-stream-checkpoint-contract.md
+.agent/deploy-audit/2026-07-11T19-38-14-04-00-deterministic-ooze-replay-fixture-gate.md
 ```
 
 Retained prerequisite audits:
 
 ```txt
 .agent/network-cadence-audit/2026-07-11T16-38-10-04-00-input-simulation-publication-clock-contract.md
+.agent/transport-audit/2026-07-11T18-11-21-04-00-payload-budget-backpressure-contract.md
 .agent/disconnect-authority-audit/2026-07-11T16-21-09-04-00-player-retirement-owned-state-contract.md
 .agent/movement-authority-audit/2026-07-11T03-08-43-04-00-player-update-admission-correction-contract.md
 .agent/pause-authority-audit/2026-07-10T23-30-13-04-00-host-client-pause-resume-contract.md
@@ -70,45 +67,43 @@ Retained prerequisite audits:
 
 ```txt
 title and mode selection
-  -> lobby identity, readiness and deterministic start
-  -> first-person input and client prediction
-  -> client PLAYER_UPDATE stream
-  -> host movement and gameplay mutation
-  -> authoritative snapshot construction
-  -> full SYNC envelope construction and JSON serialization
-  -> host fanout to every open peer
-  -> client snapshot admission and replay
+  -> lobby identity, readiness and start
+  -> seeded maze bootstrap
+  -> first-person input and local prediction
+  -> host fixed simulation and gameplay mutation
+  -> ooze decay/spawn random draws
+  -> authoritative snapshot publication and delivery
+  -> client snapshot acceptance
   -> world, minimap, HUD, completion and debug projection
 ```
 
-## Current publication and delivery loop
+## Current randomness split
 
 ```txt
-publishAuthoritativeState
-  -> increment state tick
-  -> buildReplicatedSnapshot for local runtime state
-  -> createFullSyncMessage from GameState
-       -> buildReplicatedSnapshot again
-       -> clone room again
-  -> JSON.stringify complete SYNC envelope
-  -> for every connection
-       -> check only connection.open
-       -> connection.send(serialized payload)
-       -> increment aggregate sent count
-  -> discard aggregate sent count
+maze bootstrap
+  -> hash run seed
+  -> createSeededMazeRng(seed)
+  -> deterministic maze, cube locations and target sequence
+
+ooze simulation
+  -> advanceOozeTrail(state, input)
+  -> resolveRng(input.rng)
+  -> input.rng missing in GameCanvas
+  -> Math.random()
+  -> untracked decay survival, height and rotation draws
 ```
 
 ## Main architecture split
 
 ```txt
-committed state revision
-  -> snapshot publication intent
-  -> canonical payload construction
-  -> byte/fingerprint budget admission
-  -> per-peer send admission and backpressure policy
-  -> per-peer delivery results
-  -> retry, coalesce, isolate or disconnect policy
-  -> accepted snapshot and first-visible-frame acknowledgement
+run seed and session epoch
+  -> named deterministic random streams
+  -> simulation-step draw budget
+  -> typed random draw receipts
+  -> committed RNG checkpoint
+  -> snapshot/save/replay checkpoint
+  -> restored host or replay continuation
+  -> frame carrying simulation and RNG revisions
 ```
 
 ## Ordered safe ledges
@@ -126,7 +121,8 @@ committed state revision
 6. Host Network Cadence and Fixed Simulation Authority
 6a. Host Movement Admission and Client Reconciliation
 6b. Snapshot Delivery and Backpressure Authority
+6c. Authoritative Randomness and Replay Authority
 7. Pause/Resume Authority
 ```
 
-Documentation only. Runtime implementation and executable payload-budget, partial-delivery, backpressure, slow-peer and frame-correlation fixtures remain future work.
+Documentation only. Runtime implementation and executable seeded-stream, checkpoint, replay, host-migration and frame-parity fixtures remain future work.
