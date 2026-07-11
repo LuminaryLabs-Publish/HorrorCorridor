@@ -1,6 +1,6 @@
 # HorrorCorridor Known Gaps
 
-**Updated:** `2026-07-11T16-38-10-04-00`
+**Updated:** `2026-07-11T18-11-21-04-00`
 
 ## Primary ordered gaps
 
@@ -16,158 +16,123 @@
 9. monotonic terminal outcome authority
 10. host network cadence and fixed simulation authority
 11. host movement admission and client reconciliation
-12. replicated pause/resume convergence
+12. snapshot delivery, payload budgeting and backpressure authority
+13. replicated pause/resume convergence
 ```
 
-## Host network cadence gaps
+## Snapshot construction gaps
 
 ```txt
-client generates payload.input.sequence but host does not admit or compare it
-no per-peer or per-player last-accepted input sequence
-no duplicate, stale, gap or future-sequence result
-no bounded per-player movement input queue
-no deterministic input coalescing policy
-no fixed authoritative simulation-step identity
-remote PLAYER_UPDATE applies absolute pose immediately
-remote PLAYER_UPDATE triggers immediate full-snapshot publication
-snapshot tick increments per publication rather than one documented simulation policy
-lastNetworkTickAtMs aliases client send, host publication and ooze timing
-continuous remote updates can postpone ooze advancement
-peer count can increase publication/tick rate and reduce quiet intervals
-no bounded snapshot publication policy independent of arrivals
-broadcast returns only a sent count and caller discards it
-no per-peer delivery, failure or backpressure result
-no pending-byte, slow-peer or publication queue limits
-cadence diagnostics are aggregate rather than per peer and stage
-no simulation-revision to snapshot to first-frame receipt
+publishAuthoritativeState builds a complete local replicated snapshot
+createFullSyncMessage rebuilds the complete replicated snapshot
+room state is cloned again into the SYNC payload
+maze, players, cubes, anomaly and ooze are copied for every publication
+no canonical one-build payload result
+no payload schema revision beyond protocol version
+no payload fingerprint
+no serialized byte count
+no maximum snapshot byte budget
+no full-versus-delta selection policy
+no dirty-field or dirty-entity set
 ```
 
-## Concrete starvation and amplification risks
+## Delivery and backpressure gaps
 
 ```txt
-starvation:
-  remote update -> immediate publish -> shared timestamp reset -> ooze branch postponed
-
-fanout:
-  P clients * U updates/s -> approximately P * U full snapshots/s
-  each snapshot sent to P peers -> approximately P * P * U peer sends/s
-
-tick ambiguity:
-  publication tick advances for packet-triggered partial state changes
-  no fixed-step sequence proves which authoritative systems advanced
+HostTransportAdapter.broadcast returns only an integer
+HostTransportAdapter.sendTo returns only a boolean
+send admission checks only connection.open
+connection.send is not wrapped in a typed attempt result
+no intended peer set is captured
+no sent/skipped/closed/failed/timed-out/backpressured rows
+no pending buffered bytes observation
+no send queue depth or oldest-age observation
+no send duration or delivery-lag observation
+no retry, coalesce, drop or timeout policy
+no slow-peer isolation policy
+no per-peer publication sequence baseline
+no connection-specific payload budget
+no exception classification or partial-success commit
+publication caller discards the aggregate sent count
+BroadcastChannel path increments sent without delivery acknowledgement
 ```
 
-## Active-run disconnect gaps
+## Cadence amplification interaction
 
 ```txt
-connectionId is not bound to canonical gameplay actor identity
-connection-close mutates only session/lobby state
-GameCanvas currentGameState is not subscribed to roster removal
-no active membership revision
-no suspended/disconnected/retired gameplay-player state
-no disconnect command or result
-no grace-period or timeout policy
-no explicit leave/kick distinction
-no reconnect claim or token
-no stale or duplicate close rejection
-retired/disconnected player input queues do not exist to retire
+remote PLAYER_UPDATE
+  -> direct state mutation
+  -> full local snapshot clone
+  -> full outbound snapshot clone
+  -> complete JSON serialization
+  -> all-peer fanout
+
+P clients * U update-triggered publications/s
+  -> approximately P * U full payload builds/s
+  -> approximately P * P * U peer send attempts/s
 ```
 
-## Owned-state recovery gaps
+## Frame-correlation gaps
 
 ```txt
-held cube ownership survives disconnect
-no drop/return/reserve/transfer policy
-syncHeldCubesToPlayers leaves cubes unchanged when owner is missing
-no orphaned-owner invariant check
-no cube recovery result
-no interaction-claim release result
-no anomaly-slot policy for disconnected ownership
+no publication ID distinct from snapshot tick
+no canonical payload fingerprint in debug state
+no per-peer delivery completion revision
+no accepted-client acknowledgement tied to a delivery row
+no first visible frame tied to publication and payload identity
+world, minimap, HUD and debug cannot prove which delivered payload they consumed
 ```
 
-## Simulation and publication gaps
+## Retained cadence gaps
 
 ```txt
-disconnected players remain in GameState.players
-disconnected positions remain ooze inputs
-GameState.room.players can diverge from sessionStore.room.players
-buildReplicatedSnapshot republishes ghost players
-world and minimap can continue projecting ghosts
-no disconnect-result-linked snapshot revision
-no first post-disconnect frame acknowledgement
-
-periodic systems do not share one explicit fixed-step sequence
-input arrival and publication can alter system admission
-no committed state revision before snapshot construction
-no event-versus-cadence publication classification
-no per-peer intended/sent/skipped/failed delivery set
+client input sequence is generated but not admitted by host
+no bounded per-player input queue or deterministic coalescing
+remote movement directly triggers publication
+lastNetworkTickAtMs aliases send, publication and ooze timing
+continuous traffic can postpone ooze advancement
+snapshot tick represents publication count rather than stable simulation steps
 ```
 
-## Reconnect gaps
+## Retained disconnect gaps
 
 ```txt
-new connection open is treated as lobby join/upsert
-no suspended actor identity to reclaim
-no previous connection lineage
-no run/epoch/revision claim
-no ownership restoration policy
-no duplicate live connection policy
-no reconnect success or rejection result
-no reconnect input-sequence baseline policy
+connection close mutates session/lobby state but not live GameState
+retired/disconnected actors can remain in players, ooze inputs and snapshots
+held cube ownership can reference a missing actor
+no suspension, grace, retirement or reconnect claim result
 ```
 
-## Required network cadence fixtures
+## Required snapshot-delivery fixtures
 
 ```txt
-fixture:host-cadence-baseline
-fixture:host-cadence-one-client
-fixture:host-cadence-multi-client
-fixture:host-cadence-burst-coalescing
-fixture:host-cadence-duplicate-reorder
-fixture:host-cadence-flood-budget
-fixture:host-cadence-ooze-starvation
-fixture:snapshot-publication-budget
-fixture:partial-delivery-result
-fixture:cadence-frame-correlation
-fixture:browser-multi-peer-cadence-flood
-```
-
-## Retained disconnect fixtures
-
-```txt
-fixture:disconnect-actor-binding
-fixture:disconnect-active-player-retirement
-fixture:disconnect-held-cube-recovery
-fixture:disconnect-no-orphan-owner
-fixture:disconnect-ooze-input-removal
-fixture:disconnect-snapshot-convergence
-fixture:disconnect-duplicate-close
-fixture:disconnect-late-close
-fixture:disconnect-cross-epoch-close
-fixture:disconnect-grace-timeout
-fixture:reconnect-suspended-actor
-fixture:reconnect-wrong-actor
-fixture:reconnect-duplicate-live-connection
-fixture:disconnect-first-frame
-fixture:browser-active-disconnect
-fixture:pages-active-disconnect
+fixture:snapshot-single-build
+fixture:snapshot-payload-fingerprint
+fixture:snapshot-payload-byte-budget
+fixture:snapshot-full-delta-policy
+fixture:delivery-intended-peer-set
+fixture:delivery-all-open-peers
+fixture:delivery-closed-peer
+fixture:delivery-send-exception
+fixture:delivery-partial-success
+fixture:delivery-backpressured-peer
+fixture:delivery-slow-peer-isolation
+fixture:delivery-retry-coalescing-budget
+fixture:delivery-publication-frame-correlation
+fixture:browser-slow-peer-fanout
+fixture:pages-slow-peer-fanout
 ```
 
 ## Required guarantees
 
 ```txt
-session and gameplay membership cannot diverge silently
-one connection close affects only its bound actor and run epoch
-all actor-owned mutable state has an explicit recovery result
-no cube references a missing owner
-retired actor is absent from input queues, simulation, interaction, snapshot and render inputs
-reconnect cannot create a duplicate player or steal another actor
-
-packet frequency cannot control fixed simulation frequency
-packet frequency cannot suppress ooze or future periodic systems
-one admitted input per player is selected at each fixed step
-stale, duplicate and cross-epoch updates reject before queue insertion
-input queues, simulation catch-up and publication work are bounded
-one noisy or slow peer cannot multiply or block global work without limit
-snapshot and rendered-frame evidence cite one committed simulation revision
+one publication creates one canonical payload
+payload size and fingerprint are known before send admission
+publication cannot exceed configured byte, peer or time budgets silently
+every intended peer receives one typed result row
+one slow or failing peer cannot block healthy peers
+partial success is committed and observable
+retries and queued payloads remain bounded
+stale payloads can be coalesced or superseded deterministically
+delivery and rendered-frame evidence cite one committed state revision
 ```
