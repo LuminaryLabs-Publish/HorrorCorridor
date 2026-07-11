@@ -2,7 +2,7 @@
 
 **Repository:** `LuminaryLabs-Publish/HorrorCorridor`
 
-**Updated:** `2026-07-10T18-31-21-04-00`
+**Updated:** `2026-07-10T20-08-46-04-00`
 
 ## Available commands
 
@@ -22,7 +22,7 @@ npm run validate:live-player:dev
 ## Missing required command
 
 ```txt
-npm run fixture:snapshot-acceptance
+npm run fixture:lobby-admission
 ```
 
 ## Evidence sampled
@@ -30,10 +30,14 @@ npm run fixture:snapshot-acceptance
 ```txt
 [done] full accessible LuminaryLabs-Publish inventory
 [done] central ledger ordering and root .agent state
-[done] GameShell inbound SYNC consumer
-[done] runtimeStore authoritative snapshot setter
-[done] FullSync payload and ProtocolEnvelope fields
-[done] GameCanvas authoritative publication and snapshot reference path
+[done] GameShell lobby entry, readiness toggle, membership, and start orchestration
+[done] LobbyScreen labels, ready badges, and control projection
+[done] sessionStore room and roster mutations
+[done] protocol message types and constructors
+[done] shared legacy readiness message types
+[done] networkRules toggle-ready no-op path
+[done] createInitialGameState roster-to-active-player bootstrap
+[done] GameCanvas active-game request routing
 [done] package scripts
 [done] repo-local documentation update on main
 [done] central ledger and internal change-log synchronization
@@ -42,35 +46,42 @@ npm run fixture:snapshot-acceptance
 ## Required implementation validation
 
 ```txt
-valid initial snapshot acceptance
-monotonic higher-tick acceptance
-duplicate idempotency
-conflicting duplicate rejection
-stale and out-of-order rejection
-protocol-version rejection
-wrong-host and wrong-room rejection
-authoritativeTick / snapshot.tick mismatch rejection
-gameId and seed continuity
-reconnect/recovery epoch reset
-victory cannot rewind to playing
-cube, ooze, anomaly, player, room, and UI parity
-runtime-debug accepted/rejected projection
-legacy version-1 valid snapshot compatibility
+canonical readiness command accepted
+ready and unready replicate to host and clients
+same-value readiness is idempotent
+wrong-room and unknown-actor readiness rejects
+stale roster revision rejects
+connected/readiness policy is deterministic
+solo host start accepts
+ready multiplayer start accepts
+unready multiplayer start rejects
+disconnected participant start rejects
+placeholder participant start rejects
+capacity overflow rejects
+double start accepts once
+starting phase prevents duplicate bootstrap
+bootstrap failure rolls back without runtime publication
+rejected start emits no START_GAME or initial SYNC
+admitted roster fingerprint equals active snapshot roster fingerprint
+legacy readiness messages translate without divergent state
+lobby result/debug rows remain JSON-safe
 ```
 
 ## Validation order for the next source pass
 
 ```txt
-1. npm run fixture:snapshot-acceptance
+1. npm run fixture:lobby-admission
 2. npm run lint
 3. npm run smoke:protokits
 4. npm run harness:horror-corridor
-5. npm run validate:live-player:dev
-6. npm run review:object-kit
-7. browser solo smoke
-8. browser host/client smoke
-9. delayed-message and reconnect smoke
-10. runtime-debug export inspection
+5. npm run build
+6. npm run validate:live-player:dev
+7. npm run review:object-kit
+8. browser solo lobby/start smoke
+9. browser host/client readiness smoke
+10. browser blocked-start reason smoke
+11. browser accepted-start roster parity smoke
+12. runtime-debug lobby export inspection
 ```
 
 ## Pass status
@@ -80,11 +91,13 @@ runtime source changed: no
 package scripts changed: no
 dependencies changed: no
 routes changed: no
+rendering changed: no
+network behavior changed: no
 deployment changed: no
 branch created: no
 pull request created: no
 existing tests run: no
-snapshot acceptance fixture: unavailable
+lobby admission fixture: unavailable
 repo-local documentation pushed to main: yes
 central ledger updated: yes
 central internal change-log added: yes
