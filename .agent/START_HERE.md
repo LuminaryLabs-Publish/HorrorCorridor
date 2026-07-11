@@ -2,81 +2,92 @@
 
 **Repository:** `LuminaryLabs-Publish/HorrorCorridor`
 
-**Updated:** `2026-07-11T01-10-28-04-00`
+**Updated:** `2026-07-11T03-08-43-04-00`
 
-## Current safe ledge
+## Summary
 
-```txt
-HorrorCorridor Run Exit Commit + Session Epoch Message Admission Fixture Gate
-```
+`HorrorCorridor` is a cooperative first-person maze with solo, host and client modes, client-side prediction, host snapshot publication, cube interactions, an ordered anomaly objective, ooze pressure, Three.js rendering and PeerJS transport.
+
+This documentation pass isolates a movement-authority defect: clients send both input and a completed pose, the host copies that pose directly into authoritative state, and an actively playing client never reconciles its local pose back to the host snapshot. The route therefore has neither host-owned movement validation nor active client correction.
+
+## Plan ledger
+
+**Goal:** preserve the current playable route while making remote movement identity, sequence admission, collision validation, authoritative pose results and active client reconciliation explicit and fixture-backed.
+
+- [x] Compare all ten accessible `LuminaryLabs-Publish` repositories with the central ledger and root `.agent` state.
+- [x] Exclude `TheCavalryOfRome`.
+- [x] Select only `HorrorCorridor` as the oldest currently aligned eligible repository after the newer `TheOpenAbove` audit.
+- [x] Re-read `GameCanvas`, network rules, protocol message construction, current audits and kit registry.
+- [x] Identify the interaction loop, active domains, implemented kits and kit services.
+- [x] Trace client pose prediction, `PLAYER_UPDATE`, host consumption, snapshot publication and client replay.
+- [x] Record the missing sender/player binding, sequence admission, movement budget, collision authority and reconciliation path.
+- [x] Add timestamped architecture, render, gameplay, interaction, movement-authority and deployment audits.
+- [x] Change no runtime source and create no branch or pull request.
+- [x] Push documentation directly to `main`.
 
 ## Selection result
 
-The complete accessible `LuminaryLabs-Publish` inventory was compared with the central ledger and root `.agent` state. All nine eligible non-Cavalry repositories are tracked and have root audit state. `HorrorCorridor` was prioritized because its repo-local `2026-07-11T01-01-32-04-00` run-exit audit was newer than the central ledger entry at `2026-07-10T23-30-13-04-00`; it was also the oldest eligible central-ledger entry. `TheCavalryOfRome` remained excluded.
+The accessible Publish inventory contains ten repositories:
 
 ```txt
 AetherVale
-HorrorCorridor        selected / central catch-up required
+HorrorCorridor        selected / oldest current eligible root audit
 IntoTheMeadow
 MyCozyIsland
 PhantomCommand
 PrehistoricRush
-TheOpenAbove
+TheCavalryOfRome      excluded by rule
+TheOpenAbove          newer repo-local audit at 2026-07-11T03-01-38-04-00
 TheUnmappedHouse
 ZombieOrchard
-TheCavalryOfRome      excluded by rule
 ```
 
-Only `LuminaryLabs-Publish/HorrorCorridor` was changed in the product organization.
-
-## Read first
-
-```txt
-.agent/current-audit.md
-.agent/next-steps.md
-.agent/known-gaps.md
-.agent/validation.md
-.agent/kit-registry.json
-.agent/trackers/2026-07-11T01-10-28-04-00/project-breakdown.md
-.agent/turn-ledger/2026-07-11T01-10-28-04-00.md
-.agent/architecture-audit/2026-07-11T01-10-28-04-00-run-exit-session-epoch-admission-dsk-map.md
-.agent/render-audit/2026-07-11T01-10-28-04-00-post-exit-frame-transport-admission-gap.md
-.agent/gameplay-audit/2026-07-11T01-10-28-04-00-return-late-sync-reentry-loop.md
-.agent/interaction-audit/2026-07-11T01-10-28-04-00-exit-command-message-admission-map.md
-.agent/session-authority-audit/2026-07-11T01-10-28-04-00-run-identity-exit-quarantine-contract.md
-.agent/deploy-audit/2026-07-11T01-10-28-04-00-session-epoch-message-fixture-gate.md
-```
+All nine eligible repositories are centrally tracked and have root `.agent` state. `HorrorCorridor` was the oldest current eligible root audit at `2026-07-11T01-10-28-04-00` after accounting for the newer `TheOpenAbove` repo-local audit.
 
 ## Current interaction loop
 
 ```txt
-solo, host, or client enters PLAYING
-  -> GameCanvas owns local simulation, input, networking adapters, rendering, minimap, and debug
-  -> pause-return or completion-restart calls GameShell.returnToLobby()
-  -> local UI and readiness move to lobby state
-  -> GameCanvas unmount cleanup stops local RAF, listeners, world, composer, renderer, and canvas ownership
-  -> RoomState and authoritativeSnapshot remain active or ending
-  -> PeerJS/BroadcastChannel transport remains connected
-  -> GameShell transport callback remains subscribed
-  -> START_GAME, SYNC, and LOBBY_EVENT have no run-session epoch admission
-  -> late SYNC can project the local client back to PLAYING, PAUSED, or COMPLETED
-  -> a later bootstrap has no monotonic epoch fence against old traffic
+client browser input
+  -> local movement and maze collision prediction
+  -> PLAYER_UPDATE contains input sequence plus completed pose
+  -> host GameCanvas receives the message
+  -> host copies payload.playerId pose directly into GameState
+  -> host publishes a new authoritative snapshot
+  -> client stores and renders the snapshot
+  -> while PLAYING, client advances its own pose again
+  -> client uses the snapshot for world rendering and carry state only
+  -> authoritative local-player pose is applied only outside active client simulation
 ```
 
 ## Main finding
 
-The route has component cleanup but no authoritative run-exit transaction. `returnToLobby()` changes presentation and readiness without committing room phase, snapshot policy, run identity, transport generation, or a typed terminal result. Protocol envelopes contain `roomId` and optional `requestId`, but no `runSessionId` or `sessionEpoch`, while shell-level handlers continue accepting old `START_GAME`, `SYNC`, and `LOBBY_EVENT` messages after local teardown.
+```txt
+host authority: asserted by publication, not enforced during movement admission
+client reconciliation: absent while PLAYING
+```
 
-The highest-risk interval is therefore after local cleanup and before a fresh run: stale callbacks remain admissible and can overwrite the first lobby or re-entry frame.
+The message includes an input sequence, but the host does not consume it. The host also does not bind `senderId` to `payload.playerId`, validate elapsed time, displacement, speed, velocity, collision, phase or run identity before mutation. `applyNetworkPlayerUpdate()` replaces the selected player's pose verbatim.
+
+The active client branch never applies the host player pose to `poseRef`. Host correction is only copied during the non-simulating snapshot-replay branch. A malformed, stale or impossible client pose can therefore become authoritative, while a legitimate host correction cannot converge during normal play.
 
 ## Ordered safe ledges
 
 ```txt
-1. Lobby Readiness Authority + Start Admission Fixture Gate
-2. Run Exit Commit + Session Epoch Message Admission Fixture Gate
-3. Pause/Resume Authority + Input Suspension Convergence Fixture Gate
+1. HorrorCorridor Lobby Readiness Authority + Start Admission Fixture Gate
+2. HorrorCorridor Run Exit Commit + Session Epoch Message Admission Fixture Gate
+3. HorrorCorridor Snapshot Acceptance Authority + Projection Transaction Fixture Gate
+4. HorrorCorridor Host Movement Admission + Client Reconciliation Fixture Gate
+5. HorrorCorridor Pause/Resume Authority + Input Suspension Convergence Fixture Gate
 ```
 
-## Validation state
+## Read next
 
-Documentation only. Runtime source, package scripts, dependencies, routes, rendering behavior, networking behavior, and deployment configuration were not changed. No branch or pull request was created. Repo-local and central documentation were pushed directly to `main`.
+```txt
+.agent/current-audit.md
+.agent/known-gaps.md
+.agent/next-steps.md
+.agent/validation.md
+.agent/kit-registry.json
+.agent/architecture-audit/2026-07-11T03-08-43-04-00-host-movement-reconciliation-dsk-map.md
+.agent/movement-authority-audit/2026-07-11T03-08-43-04-00-player-update-admission-correction-contract.md
+```
