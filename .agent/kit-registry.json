@@ -1,86 +1,133 @@
 {
-  "schemaVersion": 51,
-  "generatedAt": "2026-07-10T20-08-46-04-00",
+  "schemaVersion": 52,
+  "generatedAt": "2026-07-10T21-39-22-04-00",
   "repository": "LuminaryLabs-Publish/HorrorCorridor",
-  "status": "lobby-readiness-authority-start-admission-fixture-gate-planned",
+  "status": "run-exit-authority-session-epoch-reentry-fixture-gate-planned",
   "selectedBecause": "oldest eligible documented fallback after full accessible LuminaryLabs-Publish inventory, central ledger, and root .agent comparison; TheCavalryOfRome excluded",
   "sourceRoots": [
     "HorrorCorridor-V1/src/components/game",
     "HorrorCorridor-V1/src/components/menus",
+    "HorrorCorridor-V1/src/components/hud",
     "HorrorCorridor-V1/src/features/game-state",
+    "HorrorCorridor-V1/src/features/player",
+    "HorrorCorridor-V1/src/features/maze",
     "HorrorCorridor-V1/src/features/networking",
     "HorrorCorridor-V1/src/features/debug",
     "HorrorCorridor-V1/src/features/render",
     "HorrorCorridor-V1/src/types",
     "HorrorCorridor-V1/scripts"
   ],
-  "currentNextSlice": "HorrorCorridor Lobby Readiness Authority + Start Admission Fixture Gate",
+  "currentNextSlice": "HorrorCorridor Run Exit Authority + Session Epoch Re-entry Fixture Gate",
+  "dependencyOrder": [
+    "lobby-readiness-and-start-admission-authority",
+    "sealed-roster-and-initial-session-identity",
+    "run-exit-command-result-authority",
+    "authoritative-phase-and-store-transaction",
+    "runtime-teardown-result",
+    "session-epoch-increment",
+    "stale-message-admission",
+    "reentry-fixture-and-browser-smoke"
+  ],
   "interactionLoop": [
-    "menu-and-session-selection",
-    "host-room-or-client-join",
-    "peer-membership-projection",
-    "lobby-roster-and-ready-badges",
-    "client-local-ready-toggle",
-    "missing-host-ready-command",
-    "host-unconditional-start",
-    "roster-to-active-player-bootstrap",
-    "start-game-and-initial-sync-publication",
-    "first-person-corridor-runtime"
+    "solo-host-or-client-run-entry",
+    "active-gamecanvas-runtime",
+    "pause-or-victory",
+    "local-return-to-lobby-callback",
+    "gamecanvas-render-resource-cleanup",
+    "room-phase-and-snapshot-retained",
+    "missing-authoritative-exit-publication",
+    "peer-phase-divergence",
+    "stale-message-reentry-risk",
+    "broken-solo-client-lobby-routing"
   ],
   "domains": [
-    "application shell and session lifecycle",
+    "application shell and screen routing",
+    "session mode, identity, room, roster, and connection state",
+    "runtime snapshot, pose, input, and readiness projection",
     "lobby presentation and controls",
-    "session room and roster projection",
-    "PeerJS host/client transport",
-    "protocol envelopes and message construction",
-    "lobby membership and connection-state tracking",
-    "partial readiness vocabulary and local readiness presentation",
-    "inline host start orchestration",
+    "PeerJS host transport",
+    "PeerJS client transport",
+    "BroadcastChannel local transport bridge",
+    "peer event bus and status projection",
+    "versioned protocol envelopes and serialization",
     "seeded maze, cube, anomaly, room, and player bootstrap",
-    "first-person input, movement, collision, camera, and prediction",
-    "interaction, network, ooze, and victory rules",
-    "authoritative active-game publication",
-    "Three.js world, post-processing, minimap, HUD, and scene dressing",
-    "runtime debug frame and event storage",
-    "build, lint, harness, visual, and live-player validation",
-    "planned lobby command, readiness authority, roster fingerprint, start admission, phase transaction, result ledger, debug projection, compatibility, and fixture domains"
+    "room phase and game-screen state",
+    "pointer lock and keyboard/mouse input",
+    "movement, collision, camera, and prediction",
+    "host player-update consumption",
+    "cube interaction and carried-object synchronization",
+    "ordered anomaly completion and rollback",
+    "ooze cadence, decay, spawn, spacing, and capacity",
+    "authoritative snapshot construction and publication",
+    "client snapshot replay",
+    "Three.js world, terrain, props, lights, cubes, players, ooze, and scene dressing",
+    "animation loop, resize, and canvas ownership",
+    "post-processing composer and bloom",
+    "minimap and HUD projection",
+    "runtime debug frames and events",
+    "resource disposal and component cleanup",
+    "build, lint, harness, visual, object-kit, and live-player validation",
+    "planned lobby entry authority",
+    "planned run-exit authority",
+    "planned session epoch and stale-message admission",
+    "planned teardown ledger and lifecycle fixture"
   ],
   "implementedKits": [
     {
+      "name": "corridor-application-shell-kit",
+      "services": ["screen routing", "menu orchestration", "run entry", "pause", "completion", "local exit callbacks"]
+    },
+    {
       "name": "corridor-session-domain-kit",
-      "services": ["mode selection", "peer identity", "room identity", "session entry", "lifecycle reset"]
+      "services": ["session mode", "peer identity", "room", "roster", "connection status", "session reset"]
+    },
+    {
+      "name": "runtime-store-snapshot-kit",
+      "services": ["authoritative snapshot", "local pose", "view angles", "input flags", "runtime readiness", "runtime reset"]
     },
     {
       "name": "lobby-screen-presentation-kit",
-      "services": ["room metadata", "roster projection", "ready badges", "lobby controls", "connection status"]
+      "services": ["room metadata", "roster projection", "ready badges", "primary and secondary controls", "connection status"]
     },
     {
-      "name": "session-store-room-projection-kit",
-      "services": ["room storage", "roster storage", "player upsert", "player removal", "session reset"]
+      "name": "peer-host-transport-kit",
+      "services": ["host peer", "connection registry", "broadcast", "targeted send", "disconnect", "destroy"]
     },
     {
-      "name": "peer-room-sync-domain-kit",
-      "services": ["host/client transport", "connection events", "send", "broadcast", "generic protocol delivery"]
+      "name": "peer-client-transport-kit",
+      "services": ["host connection", "send", "local bridge", "status", "destroy"]
+    },
+    {
+      "name": "peer-event-bus-kit",
+      "services": ["typed transport events", "subscription", "unsubscribe", "clear"]
     },
     {
       "name": "protocol-message-construction-kit",
-      "services": ["versioned envelopes", "host start", "player update", "interaction request", "full sync", "lobby event"]
+      "services": ["versioned envelopes", "START_GAME", "PLAYER_UPDATE", "TRY_INTERACT", "SYNC", "LOBBY_EVENT"]
     },
     {
       "name": "maze-snapshot-bootstrap-kit",
-      "services": ["deterministic seed", "maze", "cube spawns", "anomaly sequence", "active room", "player entities", "initial snapshot"]
+      "services": ["deterministic seed", "maze", "cubes", "anomaly", "active room", "players", "initial snapshot"]
     },
     {
-      "name": "first-person-corridor-player-kit",
-      "services": ["pointer lock", "input", "movement", "collision", "camera", "prediction", "player updates"]
+      "name": "first-person-input-kit",
+      "services": ["keyboard state", "pointer lock", "look accumulation", "input snapshots"]
+    },
+    {
+      "name": "movement-collision-camera-kit",
+      "services": ["movement integration", "maze collision", "eye position", "walk shake", "camera projection"]
+    },
+    {
+      "name": "network-player-update-kit",
+      "services": ["client update send", "host update consume", "pose projection", "network cadence"]
     },
     {
       "name": "corridor-interaction-domain-kit",
-      "services": ["pickup", "drop", "place", "remove", "carried cube synchronization"]
+      "services": ["pickup", "drop", "place", "remove", "held-cube synchronization"]
     },
     {
       "name": "ordered-anomaly-sequence-kit",
-      "services": ["ordered validation", "rollback", "completion", "victory"]
+      "services": ["ordered validation", "rollback", "ending phase", "victory"]
     },
     {
       "name": "ooze-trail-domain-kit",
@@ -88,11 +135,19 @@
     },
     {
       "name": "corridor-authoritative-publication-kit",
-      "services": ["snapshot tick", "full sync", "broadcast", "publication reasons", "cadence counters"]
+      "services": ["snapshot tick", "full sync", "broadcast", "publication reason", "cadence accounting"]
+    },
+    {
+      "name": "corridor-animation-loop-kit",
+      "services": ["RAF start", "RAF stop", "delta calculation", "idempotent running state"]
     },
     {
       "name": "corridor-render-world-kit",
-      "services": ["Three.js world", "maze", "cubes", "players", "anomaly", "ooze", "scene dressing", "post-processing"]
+      "services": ["terrain", "maze", "cubes", "players", "anomaly", "ooze", "props", "lights", "attach", "update", "dispose"]
+    },
+    {
+      "name": "corridor-post-processing-kit",
+      "services": ["composer", "bloom", "output", "resize", "render", "dispose"]
     },
     {
       "name": "corridor-minimap-kit",
@@ -101,44 +156,64 @@
     {
       "name": "runtime-debug-frame-kit",
       "services": ["bounded frames", "bounded events", "overlay preferences", "JSON-safe browser export"]
+    },
+    {
+      "name": "runtime-resource-cleanup-kit",
+      "services": ["RAF stop", "transport unsubscribe", "ResizeObserver disconnect", "listener removal", "world disposal", "composer disposal", "renderer disposal", "canvas removal"]
+    },
+    {
+      "name": "package-validation-kit",
+      "services": ["build", "lint", "ProtoKit smoke", "harness", "visual match", "object-kit review", "live-player validation"]
     }
   ],
   "plannedKits": [
+    {
+      "name": "run-session-identity-kit",
+      "services": ["run session id", "monotonic session epoch", "room and game correlation", "stable fingerprint"]
+    },
+    {
+      "name": "run-exit-command-kit",
+      "services": ["request id", "actor", "role", "room", "game", "epoch", "desired destination", "reason"]
+    },
+    {
+      "name": "run-exit-authority-kit",
+      "services": ["host-only multiplayer transition", "solo authority", "phase validation", "idempotency", "typed result"]
+    },
+    {
+      "name": "session-phase-transaction-kit",
+      "services": ["active-to-ending", "active-to-lobby", "ending-to-lobby", "room and UI atomic commit", "rollback"]
+    },
+    {
+      "name": "session-state-publication-kit",
+      "services": ["authoritative lifecycle broadcast", "lobby reset", "epoch publication", "peer convergence"]
+    },
+    {
+      "name": "runtime-teardown-result-kit",
+      "services": ["resource ledger", "exactly-once disposal", "no-change replay", "teardown fingerprint"]
+    },
+    {
+      "name": "session-message-admission-kit",
+      "services": ["protocol version", "room", "game", "epoch", "sender", "phase", "stale-message rejection"]
+    },
+    {
+      "name": "session-lifecycle-ledger-kit",
+      "services": ["bounded command rows", "bounded result rows", "phase pairs", "epoch pairs", "teardown rows"]
+    },
+    {
+      "name": "session-lifecycle-debug-projection-kit",
+      "services": ["current phase", "session epoch", "pending exit", "last result", "stale counts", "teardown result", "JSON-safe export"]
+    },
+    {
+      "name": "session-lifecycle-fixture-kit",
+      "services": ["DOM-free replay", "solo restart", "host/client convergence", "transport preserve/destroy", "exact teardown", "stale message rows"]
+    },
     {
       "name": "lobby-readiness-command-kit",
       "services": ["command ids", "desired ready value", "actor identity", "room identity", "roster revision", "preflight"]
     },
     {
-      "name": "lobby-readiness-authority-kit",
-      "services": ["host-only mutation", "membership validation", "connection validation", "idempotency", "typed result"]
-    },
-    {
-      "name": "lobby-roster-snapshot-kit",
-      "services": ["roster revision", "stable fingerprint", "participant classification", "ready counts", "connection counts"]
-    },
-    {
       "name": "lobby-start-admission-policy-kit",
-      "services": ["host authorization", "phase validation", "capacity", "readiness", "connection", "placeholder rejection", "typed start result"]
-    },
-    {
-      "name": "lobby-phase-transition-kit",
-      "services": ["lobby-to-starting", "starting-to-active", "duplicate-start guard", "bootstrap rollback", "sealed admitted roster"]
-    },
-    {
-      "name": "lobby-result-ledger-kit",
-      "services": ["bounded ready rows", "bounded start rows", "accepted/rejected/no-change status", "stable reasons", "before/after fingerprints"]
-    },
-    {
-      "name": "lobby-debug-projection-kit",
-      "services": ["authoritative roster", "revision", "phase", "pending command", "last result", "JSON-safe export"]
-    },
-    {
-      "name": "lobby-admission-fixture-kit",
-      "services": ["DOM-free replay", "ready replication", "invalid admission rows", "duplicate start", "bootstrap rollback", "roster parity"]
-    },
-    {
-      "name": "legacy-lobby-readiness-compatibility-kit",
-      "services": ["client-ready translation", "client-action translation", "TRY_INTERACT translation", "additive rollout"]
+      "services": ["host authorization", "phase validation", "capacity", "readiness", "connection", "placeholder rejection", "typed result"]
     },
     {
       "name": "snapshot-acceptance-companion-kit",
@@ -149,7 +224,7 @@
       "services": ["request ids", "pending ledger", "terminal acknowledgements", "no-publish results"]
     }
   ],
-  "currentBlocker": "Lobby readiness is local presentation state rather than host authority. The host receives no ready command, Start run has no readiness or roster admission policy, and createInitialGameState can bootstrap unready, disconnected, stale, or placeholder roster rows into active player entities.",
+  "currentBlocker": "GameCanvas cleans up render resources when it unmounts, but GameShell.returnToLobby is only a local UI change. Room phase and authoritative snapshot remain active or ending, transport stays connected without an authoritative lifecycle publication, solo routes to LOBBY_CLIENT, and active messages have no session epoch to prevent old traffic from entering a later run.",
   "validation": {
     "runtimeSourceChanged": false,
     "branchCreated": false,
@@ -160,6 +235,6 @@
     "npmRunHarnessHorrorCorridor": "not-run",
     "npmRunValidateLivePlayerDev": "not-run",
     "browserSmoke": "not-run",
-    "lobbyAdmissionFixture": "not-run; script does not exist"
+    "sessionLifecycleFixture": "not-run; script does not exist"
   }
 }
