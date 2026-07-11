@@ -11,8 +11,8 @@ status: lobby-start-transaction-correlation-authority-planned
 runtime source changed: no
 branch: main
 root .agent state: refreshed
-central ledger sync: pending current-run synchronization
-central change log: pending current-run synchronization
+central ledger sync: complete
+central change log: internal-change-log/2026-07-11T11-39-11-04-00-horror-corridor-lobby-start-transaction.md
 ```
 
 ## Product interaction loop
@@ -37,7 +37,7 @@ LobbyScreen primary click
   -> no disabled state or typed command
   -> host checks only mode and non-null room
   -> loading yields across frames and timers
-  -> room/roster/connection can change
+  -> room, roster and connection can change
   -> no revision revalidation
   -> bootstrap uses captured room and lobbyPlayers
   -> host commits locally before publication
@@ -54,7 +54,7 @@ UI loading pause completion and settings projection
 session mode peer identity room roster connection and reset
 lobby member identity peer binding reserved slots and readiness
 lobby start command admission roster seal and bootstrap planning
-start transaction run session epoch commit publication ack and retry
+start transaction run session epoch commit publication acknowledgement and retry
 runtime readiness provider ownership and generation fencing
 PeerJS host/client transport and BroadcastChannel bridge
 connection registry event bus and transport actor binding
@@ -85,7 +85,7 @@ RAF resize canvas resources debug cleanup validation and deployment
 - **first-person-input-kit:** keyboard state, pointer lock, look accumulation and input snapshot.
 - **movement-collision-camera-kit:** movement, maze collision, eye position, walk shake and camera.
 - **network-player-update-kit:** client send, host consume, pose projection and cadence.
-- **corridor-interaction-domain-kit:** pickup, drop, place, remove and held-cube sync.
+- **corridor-interaction-domain-kit:** pickup, drop, place, remove and held-cube synchronization.
 - **ordered-anomaly-sequence-kit:** ordered validation, rollback and victory.
 - **ooze-trail-domain-kit:** cadence, decay, spawn, spacing and capacity.
 - **corridor-authoritative-publication-kit:** snapshot tick, clone, SYNC, broadcast and reason.
@@ -111,7 +111,7 @@ startPlay does not revalidate after loading
 bootstrap consumes captured room and lobbyPlayers values
 host room/snapshot/UI/readiness commit occurs before broadcasts
 broadcast recipient counts are discarded
-START_GAME and SYNC use no mandatory shared request/transaction identity
+START_GAME and SYNC use no mandatory shared transaction identity
 START_GAME alone does not enter PLAYING
 SYNC alone enters PLAYING without correlated START_GAME admission
 client acknowledgement, retry and duplicate policy are absent
@@ -155,12 +155,12 @@ loading-time mutations invalidate the start plan
 one startTransactionId binds publication and acknowledgement
 one runSessionId and epoch bind all initial messages and frames
 START_GAME or SYNC alone cannot commit gameplay
-host records zero/partial/full publication results
+host records zero, partial or full publication results
 clients commit exactly once and acknowledge semantically
 retries preserve transaction identity
 duplicates return no-change
 old-epoch start messages are rejected before store mutation
-first frame proves accepted start/run/epoch identity
+first frame proves accepted start, run and epoch identity
 ```
 
 ## Ordered safe ledges
