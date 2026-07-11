@@ -11,7 +11,8 @@ status: host-movement-admission-client-reconciliation-planned
 runtime source changed: no
 branch: main
 root .agent state: refreshed
-central ledger sync: pending until this run completes
+central ledger sync: complete
+central change log: internal-change-log/2026-07-11T03-08-43-04-00-horror-corridor-host-movement-client-reconciliation.md
 ```
 
 ## Selection
@@ -233,5 +234,6 @@ existing checks run: no
 movement authority fixture: unavailable
 client reconciliation fixture: unavailable
 repo-local docs pushed to main: yes
-central ledger sync: pending until this run completes
+central ledger synchronized on main: yes
+central internal change log added on main: yes
 ```
