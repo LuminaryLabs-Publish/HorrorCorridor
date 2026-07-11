@@ -10,7 +10,8 @@ status: authoritative-randomness-replay-authority-audited
 runtime source changed: no
 branch: main
 root .agent state: refreshed
-central ledger sync: pending until central commit
+central ledger sync: complete
+central change log: internal-change-log/2026-07-11T19-38-14-04-00-horror-corridor-authoritative-randomness-replay.md
 ```
 
 ## Summary
