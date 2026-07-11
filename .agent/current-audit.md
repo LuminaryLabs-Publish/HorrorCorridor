@@ -2,147 +2,150 @@
 
 **Repository:** `LuminaryLabs-Publish/HorrorCorridor`
 
-**Updated:** `2026-07-11T05-28-29-04-00`
+**Updated:** `2026-07-11T07-30-40-04-00`
 
 ## Status
 
 ```txt
-status: lobby-roster-identity-peer-binding-planned
+status: transport-actor-binding-message-admission-planned
 runtime source changed: no
 branch: main
 root .agent state: refreshed
-central ledger sync: complete
-central change log: internal-change-log/2026-07-11T05-28-29-04-00-horror-corridor-roster-identity-peer-binding.md
+central ledger sync: pending current-run synchronization
 ```
 
-## Product and interaction loop
+## Product interaction loop
 
 ```txt
 title
   -> solo, host or client lobby
-  -> room and roster projection
-  -> host may add synthetic guest rows
-  -> client ready mutation remains local
-  -> peer open/close mutates roster by exact peer id
-  -> start passes the live roster into deterministic bootstrap
-  -> every roster row becomes a gameplay player
-  -> START_GAME and initial SYNC publish separately
-  -> movement, cube interaction, anomaly objective and ooze pressure
-  -> world, minimap, HUD and debug projection
+  -> deterministic room and maze bootstrap
+  -> GameCanvas initializes input, transport listener, simulation and rendering
+  -> client predicts movement and sends PLAYER_UPDATE
+  -> client sends TRY_INTERACT for cube/anomaly actions
+  -> host consumes inbound peer messages
+  -> host mutates gameplay state
+  -> host publishes authoritative SYNC
+  -> clients replay snapshots
+  -> world, minimap, HUD and debug project the state
 ```
 
-## Roster-identity loop
+## Actor-identity loop
 
 ```txt
-Add guest
-  -> makePlayer(random guest-player id, non-host, unready)
-  -> default connectionState=connected
-  -> no peer binding or reserved-slot marker
-
-peer connection open
-  -> exact remotePeerId lookup misses the placeholder
-  -> creates a second guest row for the real peer
-
-start run
-  -> createInitialGameState(players: lobbyPlayers)
-  -> every row becomes an active player
-  -> placeholder reaches snapshot, avatar and minimap projection
+transport event identifies remotePeerId + connectionId
+  -> protocol envelope claims senderId + roomId
+  -> payload claims playerId
+  -> structural decoder checks field shapes
+  -> host dispatch checks message type only
+  -> payload.playerId selects movement or interaction actor
+  -> host publishes the resulting state
 ```
 
 ## Domains in use
 
 ```txt
 application shell and screen routing
-UI overlay, pause, completion and settings projection
-session mode, peer identity, room, roster, readiness and connection state
-lobby member identity, peer binding and reserved-slot policy
-lobby presentation, ready controls and start controls
-PeerJS host/client transport and BroadcastChannel bridge
-peer event bus and connection-status projection
-versioned protocol envelopes and message construction
-roster command admission, revision and fingerprint authority
-lobby start transaction and START_GAME/SYNC correlation
-seeded maze, cube, anomaly, room, roster and player bootstrap
-room phase and replicated app/game state
-pointer lock, keyboard, mouse, blur and input lifecycle
-movement, collision, camera, client prediction and player updates
-cube interaction, ordered anomaly completion and ooze pressure
-authoritative snapshot publication and client replay
-Three.js world, player avatars, minimap, HUD and bloom
-runtime debug, resource cleanup, package validation and deployment
+UI overlay pause completion and settings projection
+session mode peer identity room roster readiness and connection state
+lobby member identity peer binding slot reservation and bootstrap admission
+lobby readiness and start transaction
+PeerJS host/client transport
+BroadcastChannel local transport bridge
+peer event bus and connection registry
+transport connection identity and actor binding
+versioned protocol envelopes serializers and message construction
+inbound room session actor request and sequence admission
+seeded maze room player cube anomaly and ooze bootstrap
+replicated app room and gameplay state
+pointer lock keyboard mouse blur and input lifecycle
+movement integration collision camera and client prediction
+host movement and interaction command application
+cube pickup drop placement removal and held-cube synchronization
+ordered anomaly validation rollback and victory
+ooze cadence decay spawn spacing and capacity
+authoritative snapshot construction publication and replay
+Three.js world player avatar minimap HUD bloom and completion projection
+animation loop resize canvas and frame ownership
+runtime debug observation and JSON-safe export
+resource cleanup validation and Next.js deployment
 ```
 
 ## Implemented kits and services
 
-- **corridor-application-shell-kit**: routing, run entry, pause, completion and exits.
-- **corridor-session-domain-kit**: session mode, peer identity, room, roster, status and reset.
-- **runtime-store-snapshot-kit**: snapshot, local pose, input/readiness and reset.
-- **ui-pause-projection-kit**: pause state and overlay projection.
-- **lobby-screen-presentation-kit**: room metadata, roster rows, ready badges and actions.
-- **peer-host-transport-kit**: host peer, connections, broadcast, send and destroy.
-- **peer-client-transport-kit**: host connection, send, bridge, status and destroy.
-- **peer-event-bus-kit**: transport events, subscriptions and cleanup.
-- **protocol-message-construction-kit**: versioned START_GAME, PLAYER_UPDATE, TRY_INTERACT, SYNC and LOBBY_EVENT envelopes.
-- **maze-snapshot-bootstrap-kit**: deterministic maze, players, cubes, anomaly, room and snapshot.
-- **first-person-input-kit**: keyboard, pointer lock, look and input snapshots.
-- **movement-collision-camera-kit**: movement, collision, eye position, shake and camera.
-- **network-player-update-kit**: client send, host consume, pose projection and cadence.
-- **corridor-interaction-domain-kit**: pickup, drop, place, remove and held-cube sync.
-- **ordered-anomaly-sequence-kit**: ordered validation, rollback and victory.
-- **ooze-trail-domain-kit**: cadence, decay, spawn, spacing and capacity.
-- **corridor-authoritative-publication-kit**: snapshot ticks, full sync and reasons.
-- **corridor-animation-loop-kit**: RAF lifecycle and delta calculation.
-- **corridor-render-world-kit**: world, player avatars, updates and disposal.
-- **corridor-post-processing-kit**: composer, bloom, output, resize and disposal.
-- **corridor-minimap-kit**: maze, player, cube and anomaly markers.
-- **runtime-debug-frame-kit**: bounded frames/events and JSON-safe export.
-- **runtime-resource-cleanup-kit**: transport, listeners, world, renderer and canvas cleanup.
-- **package-validation-kit**: build, lint, ProtoKit, harness, visual and live-player checks.
+- **corridor-application-shell-kit:** routing, solo/host/client entry, loading, pause, completion and exit.
+- **corridor-session-domain-kit:** session mode, peer identity, room, roster, connection status and reset.
+- **runtime-store-snapshot-kit:** snapshot, local pose, view angles, input flags, readiness and reset.
+- **ui-pause-projection-kit:** pause state, reason and overlay projection.
+- **lobby-screen-presentation-kit:** room metadata, roster, readiness badges and controls.
+- **peer-host-transport-kit:** host peer, connection registry, broadcast, targeted send, bridge and destroy.
+- **peer-client-transport-kit:** host connection, send, bridge, status, disconnect and destroy.
+- **peer-event-bus-kit:** typed transport events, subscriptions and cleanup.
+- **protocol-message-construction-kit:** START_GAME, PLAYER_UPDATE, TRY_INTERACT, SYNC and LOBBY_EVENT envelopes.
+- **protocol-serialization-kit:** JSON encoding, structural decoding and version/shape checks.
+- **maze-snapshot-bootstrap-kit:** deterministic maze, players, cubes, anomaly, room and snapshot.
+- **first-person-input-kit:** keyboard state, pointer lock, look accumulation and input snapshots.
+- **movement-collision-camera-kit:** movement, collision, eye position, shake and camera.
+- **network-player-update-kit:** client update send, host update consume, pose projection and cadence.
+- **corridor-interaction-domain-kit:** pickup, drop, place, remove and held-cube synchronization.
+- **ordered-anomaly-sequence-kit:** ordered validation, rollback and victory.
+- **ooze-trail-domain-kit:** cadence, decay, spawn, spacing and capacity.
+- **corridor-authoritative-publication-kit:** snapshot tick, cloning, SYNC broadcast and reasons.
+- **corridor-animation-loop-kit:** RAF lifecycle and delta calculation.
+- **corridor-render-world-kit:** terrain, maze, cubes, players, anomaly, ooze, props, lights and disposal.
+- **corridor-post-processing-kit:** composer, bloom, output, resize, render and disposal.
+- **corridor-minimap-kit:** maze, player, cube and anomaly markers.
+- **runtime-debug-frame-kit:** bounded frames/events, overlay preferences and JSON-safe export.
+- **runtime-resource-cleanup-kit:** RAF, subscription, observer, listener, world, composer, renderer and canvas cleanup.
+- **package-validation-kit:** build, lint, ProtoKit, harness, visual, object-kit and live-player checks.
 
 ## Source findings
 
 ```txt
-LobbyPlayer has no member kind, peerId, slotId or bootstrap-admission field
-makePlayer defaults connectionState to connected
-Add guest creates guest-player-* rows with no transport owner
-real peer arrival creates another row instead of claiming a placeholder
-peer close removes only the exact real-peer row
-sessionStore has no roster revision, fingerprint or mutation result
-startPlay passes mutable lobbyPlayers directly to bootstrap
-bootstrap maps every row into an active gameplay player
-render consumers cannot identify placeholder players
+PeerTransportEvent includes remotePeerId and connectionId
+ProtocolEnvelope independently includes senderId and roomId
+PLAYER_UPDATE and TRY_INTERACT independently include payload.playerId
+serializer validation is structural rather than actor-semantic
+host GameCanvas ignores remotePeerId connectionId senderId roomId requestId and sequence
+applyNetworkPlayerUpdate changes any existing player selected by payload.playerId
+applyNetworkInteractionRequest acts for any supplied playerId
+accepted mutations are immediately published as authoritative snapshots
+rejected actor claims have no typed result or bounded ledger row
 ```
 
 ## Main finding
 
-The roster being sealed is semantically ambiguous. A connected-looking placeholder can survive beside a real peer and enter gameplay as an unowned player identity. Member identity and peer binding therefore need an authority boundary before the existing lobby-start transaction gate.
+Transport provenance is available but discarded before host command admission. The host cannot prove that the sending connection owns the envelope sender or payload player identity.
+
+A stale, drifting or crafted message can therefore target another player, move held cubes or perform an interaction under another identity, after which normal SYNC publication and render projection make the result appear authoritative.
 
 ## Candidate kits
 
 ```txt
-lobby-member-kind-kit
-lobby-peer-binding-kit
-lobby-slot-reservation-kit
-lobby-member-admission-kit
-lobby-member-claim-kit
-lobby-member-removal-kit
-lobby-roster-revision-kit
-lobby-roster-fingerprint-kit
-bootstrap-roster-filter-kit
-lobby-roster-projection-kit
-lobby-roster-authority-ledger-kit
-lobby-roster-fixture-kit
+transport-connection-identity-kit
+peer-player-binding-kit
+inbound-envelope-preflight-kit
+room-session-admission-kit
+actor-claim-resolution-kit
+sender-payload-consistency-kit
+connection-sequence-ledger-kit
+request-deduplication-kit
+message-admission-result-kit
+host-command-dispatch-kit
+rejected-message-observation-kit
+transport-identity-fixture-kit
 ```
 
 ## Ordered safe ledges
 
 ```txt
 1. Lobby Roster Identity and Peer Binding + Placeholder Admission Fixture Gate
-2. Lobby Start Transaction Authority + Correlated START_GAME/SYNC Fixture Gate
-3. Run Exit Commit + Session Epoch Message Admission Fixture Gate
-4. Snapshot Acceptance Authority + Projection Transaction Fixture Gate
-5. Host Movement Admission + Client Reconciliation Fixture Gate
-6. Pause/Resume Authority + Input Suspension Convergence Fixture Gate
+2. Transport Actor Binding + Sender/Payload Admission Fixture Gate
+3. Lobby Start Transaction Authority + Correlated START_GAME/SYNC Fixture Gate
+4. Run Exit Commit + Session Epoch Message Admission Fixture Gate
+5. Snapshot Acceptance Authority + Projection Transaction Fixture Gate
+6. Host Movement Admission + Client Reconciliation Fixture Gate
+7. Pause/Resume Authority + Input Suspension Convergence Fixture Gate
 ```
 
 Documentation only. This pass changed no runtime source, dependency, package script, network behavior, rendering or deployment configuration.
