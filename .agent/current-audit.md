@@ -2,17 +2,17 @@
 
 **Repository:** `LuminaryLabs-Publish/HorrorCorridor`
 
-**Updated:** `2026-07-11T13-20-45-04-00`
+**Updated:** `2026-07-11T15-01-33-04-00`
 
 ## Status
 
 ```txt
-status: terminal-outcome-victory-failure-convergence-authority-audited
+status: interaction-target-intent-cube-slot-claim-authority-audited
 runtime source changed: no
 branch: main
 root .agent state: refreshed
-central ledger sync: complete
-central change log: internal-change-log/2026-07-11T13-20-45-04-00-horror-corridor-terminal-outcome-authority.md
+central ledger sync: pending current-run synchronization
+central change log: pending current-run synchronization
 ```
 
 ## Product interaction loop
@@ -21,32 +21,30 @@ central change log: internal-change-log/2026-07-11T13-20-45-04-00-horror-corrido
 title
   -> solo, host or client admission
   -> lobby start and deterministic bootstrap
-  -> input, movement, interaction and authoritative simulation
-  -> ordered anomaly or pressure evaluation
-  -> terminal outcome candidate
-  -> host/solo commit and snapshot publication
-  -> client outcome admission
-  -> completion and terminal-frame projection
-  -> restart to lobby or exit to title
+  -> first-person movement and local interaction input
+  -> action inferred from local pose and snapshot
+  -> TRY_INTERACT request to host or local authoritative apply
+  -> cube or anomaly-slot mutation
+  -> held-cube synchronization
+  -> ordered sequence and terminal evaluation
+  -> authoritative snapshot publication
+  -> world, minimap, HUD and completion projection
 ```
 
-## Terminal outcome loop
+## Interaction target loop
 
 ```txt
-correct final cube placement
-  -> ordered sequence validation
-  -> gameState = victory
-  -> room.phase = ending
-  -> authoritative SYNC publication
-  -> local/client COMPLETED projection
-
-failure-capable type or UI
-  -> no gameplay defeat predicate
-  -> no authoritative failure transition
-
-incoming failure snapshot
-  -> generic shell fallback
-  -> PLAYING projection
+client presses interact
+  -> local code decides pickup, drop, place or remove
+  -> protocol builder supports cubeId, slotId and targetCellId
+  -> caller supplies none of those target identities
+  -> host receives action and payload playerId
+  -> pickup selects nearest eligible cube
+  -> place selects first empty anomaly slot
+  -> remove selects last occupied anomaly slot
+  -> host mutates or silently returns unchanged state
+  -> host publishes a full snapshot without a typed interaction result
+  -> client infers what happened from later state
 ```
 
 ## Domains in use
@@ -58,16 +56,16 @@ session mode peer identity room roster connection readiness and reset
 lobby identity actor binding start admission and bootstrap
 run session epoch exit and runtime readiness
 PeerJS host/client transport and BroadcastChannel bridge
-protocol construction serialization correlation and admission
+protocol construction serialization request correlation and admission
 seeded maze player cube anomaly and ooze bootstrap
 replicated snapshot publication acceptance and replay
 pointer lock keyboard mouse and input lifecycle
 movement collision camera prediction and host admission
-cube interaction held-cube synchronization and ordered anomaly
-victory and room-ending evaluation
-ooze spawn decay spacing capacity and level
-terminal policy evaluation admission latch result publication client convergence and acknowledgement
-Three.js world post-processing minimap HUD completion and terminal-frame projection
+interaction action inference target observation cube claims and slot claims
+cube pickup drop place remove held ownership and position synchronization
+ordered anomaly validation victory and terminal outcome handling
+ooze spawn decay spacing capacity and pressure
+Three.js world post-processing minimap HUD and interaction-frame projection
 RAF resize resources debug cleanup validation and deployment
 ```
 
@@ -83,13 +81,13 @@ RAF resize resources debug cleanup validation and deployment
 - **peer-host-transport-kit:** host peer, connection registry, broadcast, targeted send, local bridge and destroy.
 - **peer-client-transport-kit:** host connection, send, local bridge, status, disconnect and destroy.
 - **peer-event-bus-kit:** typed events, subscribe, unsubscribe and clear.
-- **protocol-message-construction-kit:** START_GAME, PLAYER_UPDATE, TRY_INTERACT, SYNC and LOBBY_EVENT envelopes.
+- **protocol-message-construction-kit:** START_GAME, PLAYER_UPDATE, TRY_INTERACT, SYNC and LOBBY_EVENT envelopes, including optional interaction target fields.
 - **protocol-serialization-kit:** JSON encode/decode, version checks and structural shape admission.
 - **maze-snapshot-bootstrap-kit:** deterministic seed, maze, players, cubes, anomaly, room and initial snapshot.
 - **first-person-input-kit:** keyboard state, pointer lock, look accumulation and input snapshot.
 - **movement-collision-camera-kit:** movement, maze collision, eye position, walk shake and camera.
 - **network-player-update-kit:** client send, host consume, pose projection and cadence.
-- **corridor-interaction-domain-kit:** pickup, drop, place, remove and held-cube synchronization.
+- **corridor-interaction-domain-kit:** action inference, pickup, drop, place, remove, implicit target resolution and held-cube synchronization.
 - **ordered-anomaly-sequence-kit:** exact-order evaluation, slot state, victory and current reversible fallback.
 - **ooze-trail-domain-kit:** spawn, decay, random variation, spacing, capacity and ooze-level projection.
 - **snapshot-outcome-routing-kit:** inbound snapshot to victory, paused or generic playing UI projection.
@@ -105,57 +103,79 @@ RAF resize resources debug cleanup validation and deployment
 ## Source findings
 
 ```txt
-GameScreenState includes failure
-UiCompletionState includes failure
-CompleteScreen supports failure presentation
-validateOrderedSequenceCompletion can produce victory
-victory changes room phase to ending
-victory can revert to playing if later evaluation is incomplete
-ooze rules have no defeat threshold or failure transition
-commitVictory has no failure counterpart
-GameShell SYNC handles victory and paused explicitly
-all other states, including failure, are routed to PLAYING
-terminal outcome has no ID, revision, run session or epoch
-terminal publication has no acknowledgement or first-frame proof
+createInteractionRequestMessage supports cubeId, slotId and targetCellId
+sendInteractionRequest supplies only senderId, roomId, playerId and action
+local applyInteraction also omits explicit cubeId and slotId
+pickup without cubeId selects the nearest currently eligible cube
+place without slotId selects the first currently empty slot
+remove without slotId selects the currently last occupied slot
+remote host path publishes after every request, including unchanged state
+local host path returns immediately when state is unchanged
+interaction mutations return only GameState identity, not a typed result
+requestId is optional and no interaction request ID is generated here
+no observed snapshot tick, cube revision, slot revision or ownership revision is admitted
 ```
 
 ## Main finding
 
-The product exposes a two-outcome contract but implements only a partial victory authority. Failure is representable and renderable but unreachable from gameplay, and replicated failure is misclassified as active play. Victory is also not terminally latched, so a later incomplete sequence evaluation can reopen the run.
+The protocol can carry explicit target identities, but the active caller does not use them. The host therefore resolves a fresh target when the request arrives instead of validating the target the player actually observed. Under contention, delay, duplicate delivery or reorder, an interaction can affect a different cube or slot rather than reject stale intent.
+
+## Target-substitution cases
+
+```txt
+pickup contention
+  two clients observe cube A as nearest
+  request A claims cube A
+  request B arrives without cubeId
+  host may claim cube B for client B
+
+place contention
+  two clients observe slot 0 as first empty
+  request A fills slot 0
+  request B arrives without slotId
+  host may fill slot 1
+
+remove contention
+  two clients observe slot 2 as last occupied
+  request A removes slot 2
+  request B arrives without slotId
+  host may remove slot 1
+```
 
 ## Candidate kits
 
 ```txt
-terminal-outcome-policy-kit
-outcome-evaluation-input-kit
-victory-predicate-kit
-defeat-predicate-kit
-terminal-outcome-admission-kit
-terminal-outcome-latch-kit
-terminal-outcome-result-kit
-terminal-room-phase-kit
-terminal-publication-kit
-terminal-client-admission-kit
-terminal-ui-projection-kit
-terminal-frame-correlation-kit
-terminal-outcome-acknowledgement-kit
-terminal-outcome-journal-kit
-terminal-outcome-fixture-kit
+interaction-command-envelope-kit
+interaction-target-observation-kit
+cube-target-claim-kit
+anomaly-slot-claim-kit
+interaction-admission-kit
+interaction-preflight-kit
+interaction-transaction-kit
+interaction-result-kit
+interaction-idempotency-kit
+interaction-conflict-kit
+held-cube-ownership-revision-kit
+interaction-publication-kit
+interaction-client-acknowledgement-kit
+interaction-frame-correlation-kit
+interaction-journal-kit
+interaction-target-fixture-kit
 ```
 
 ## Required guarantees
 
 ```txt
-one versioned policy defines victory and failure
-only authoritative host or solo authority commits outcomes
-one run session and epoch accepts at most one terminal result
-terminal outcome is monotonic
-victory and failure share one result and publication contract
-client routing handles failure explicitly
-late playing snapshots cannot reopen terminal state
-terminal publication exposes per-peer results
-clients acknowledge admitted outcome and first terminal frame
-restart and title exit consume the committed terminal result
+every interaction has command, actor, run, epoch and observed snapshot identity
+pickup names one cube or explicitly requests deterministic nearest-target resolution
+place and remove name one anomaly slot
+host validates the named target against the observed revision
+stale or conflicting claims reject without substituting another target
+duplicate commands return the original result without a second mutation
+accepted and rejected commands return typed reasons and before/after revisions
+snapshot publication correlates to the interaction result
+client HUD, world and minimap acknowledge the same accepted result
+held ownership has a monotonic revision and exactly one owner
 ```
 
 ## Ordered safe ledges
@@ -167,7 +187,8 @@ restart and title exit consume the committed terminal result
 4. Run Exit Commit and Session Epoch
 4a. Runtime Readiness Lease and Generation Fencing
 5. Snapshot Acceptance Authority
-5a. Terminal Outcome Authority and Victory/Failure Convergence
+5a. Interaction Target Intent and Cube/Slot Claim Authority
+5b. Terminal Outcome Authority and Victory/Failure Convergence
 6. Host Movement Admission and Client Reconciliation
 7. Pause/Resume Authority
 ```
