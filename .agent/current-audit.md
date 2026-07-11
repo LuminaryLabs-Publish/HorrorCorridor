@@ -11,7 +11,8 @@ status: transport-actor-binding-message-admission-planned
 runtime source changed: no
 branch: main
 root .agent state: refreshed
-central ledger sync: pending current-run synchronization
+central ledger sync: complete
+central change log: internal-change-log/2026-07-11T07-30-40-04-00-horror-corridor-transport-actor-binding.md
 ```
 
 ## Product interaction loop
