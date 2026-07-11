@@ -2,74 +2,76 @@
 
 **Repository:** `LuminaryLabs-Publish/HorrorCorridor`
 
-**Updated:** `2026-07-11T01-10-28-04-00`
+**Updated:** `2026-07-11T03-08-43-04-00`
 
 ## Status
 
 ```txt
-status: run-exit-commit-session-epoch-message-admission-planned
+status: host-movement-admission-client-reconciliation-planned
 runtime source changed: no
 branch: main
 root .agent state: refreshed
-central ledger sync: complete
-central change log: internal-change-log/2026-07-11T01-10-28-04-00-horror-corridor-run-exit-session-epoch-admission.md
+central ledger sync: pending until this run completes
 ```
 
 ## Selection
 
-The full accessible `LuminaryLabs-Publish` inventory contains ten repositories. `TheCavalryOfRome` remained excluded. All nine eligible repositories were centrally tracked and had root `.agent` state.
+The full accessible `LuminaryLabs-Publish` inventory contains ten repositories. `TheCavalryOfRome` remained excluded. All nine eligible repositories are centrally tracked and have root `.agent` state.
 
-`HorrorCorridor` was selected because its repo-local `2026-07-11T01-01-32-04-00` audit was newer than its `2026-07-10T23-30-13-04-00` central ledger entry. This made it the highest-priority central catch-up and also the oldest eligible central-ledger record.
+`TheOpenAbove` received a newer repo-local terrain audit at `2026-07-11T03-01-38-04-00`, so its previous central timestamp was not used as the fallback signal. `HorrorCorridor` was the oldest current eligible root audit at `2026-07-11T01-10-28-04-00` and was the only Publish repository changed in this run.
 
-## Interaction loop
+## Product and interaction loop
 
 ```txt
-enter solo, host, or client PLAYING state
-  -> GameCanvas initializes local runtime ownership
-  -> host/solo mutates and publishes authoritative state
-  -> client predicts and sends player/interact messages
-  -> pause-return or completion-restart calls returnToLobby
-  -> UI and readiness change locally
-  -> GameCanvas unmount stops local frame/render/input resources
-  -> room phase and authoritative snapshot remain active or ending
-  -> transport and GameShell message handling remain live
-  -> START_GAME, SYNC, and LOBBY_EVENT are admitted without run-session identity
-  -> SYNC directly projects PLAYING, PAUSED, or COMPLETED
-  -> stale old-run traffic can overwrite lobby projection or cross into re-entry
+menu or lobby
+  -> solo, host or client run bootstrap
+  -> deterministic maze, players, cubes, anomaly and ooze snapshot
+  -> GameCanvas creates input, movement, transport, render and debug adapters
+  -> local browser input advances a predicted pose
+  -> client sends PLAYER_UPDATE with input sequence plus completed pose
+  -> host consumes the message and mutates the selected player pose
+  -> host publishes SYNC with a new authoritative snapshot tick
+  -> client GameShell stores the snapshot
+  -> active client GameCanvas renders that snapshot but continues from local poseRef
+  -> only paused/completed snapshot replay copies host pose into poseRef
+  -> cube interaction and ordered anomaly completion continue beside movement
+  -> return/restart enters the previously documented run-exit lifecycle gap
 ```
 
 ## Domains in use
 
 ```txt
 application shell and screen routing
-UI overlay, pause, completion, and game-screen projection
-session mode, peer identity, room, roster, readiness, and connection state
-runtime snapshot, local pose, view angles, input flags, and runtime readiness
+UI overlay, pause, completion and settings projection
+session mode, peer identity, room, roster, readiness and connection state
+runtime snapshot, local pose, view angles, input flags and readiness
 lobby presentation and controls
 PeerJS host/client transport and BroadcastChannel bridge
 peer event bus and connection-status projection
 versioned protocol envelopes and message construction
-seeded maze, cube, anomaly, room, roster, and player bootstrap
+seeded maze, cube, anomaly, room, roster and player bootstrap
 room phase and replicated app/game state
-pointer lock, keyboard, mouse, blur, and input lifecycle
-movement, maze collision, camera, walk shake, and local prediction
-client player-update publication and host consumption
-interaction, cube carry, placement, removal, rollback, and victory
-ooze cadence, decay, spawn, spacing, and capacity
+pointer lock, keyboard, mouse, blur and input lifecycle
+local movement integration, maze collision, camera and walk shake
+client prediction and player-update publication
+host remote-player update consumption
+remote sender/player identity and update sequence admission
+movement budget, velocity and collision validation
+host authoritative pose result and snapshot publication
+client authoritative pose reconciliation and correction smoothing
+interaction, cube carry, placement, removal, rollback and victory
+ooze cadence, decay, spawn, spacing and capacity
 authoritative snapshot construction and publication
 client snapshot replay and local pose projection
-Three.js scene, terrain, maze, props, lights, cubes, players, ooze, and dressing
-animation loop, resize, canvas, and frame ownership
+Three.js scene, terrain, maze, props, lights, cubes, players, ooze and dressing
+animation loop, resize, canvas and frame ownership
 post-processing composer and bloom
 minimap and HUD projection
 runtime debug frames and events
 resource disposal and component cleanup
-build, lint, harness, visual, object-kit, and live-player validation
-planned run-session identity and epoch authority
-planned run-exit command/result and atomic commit authority
-planned lifecycle publication and projection convergence
-planned transport callback generation and stale-message admission
-planned snapshot archive/reset and clean re-entry
+build, lint, harness, visual, object-kit and live-player validation
+planned lobby start admission, run-session identity, run exit and message epoch authority
+planned host movement admission and active client reconciliation
 planned pause/resume and input-suspension authority
 ```
 
@@ -77,114 +79,159 @@ planned pause/resume and input-suspension authority
 
 ```txt
 corridor-application-shell-kit
-  screen routing, menu orchestration, run entry, local pause/resume, completion, exit callbacks
+  screen routing, menu orchestration, run entry, local pause/resume, completion and exit callbacks
+
 corridor-session-domain-kit
-  session mode, peer identity, room, roster, connection status, session reset
+  session mode, peer identity, room, roster, connection status and session reset
+
 runtime-store-snapshot-kit
-  authoritative snapshot, local pose, view angles, input flags, readiness, runtime reset
+  authoritative snapshot, local pose, view angles, input flags, runtime readiness and runtime reset
+
 ui-pause-projection-kit
-  local pause flag, pause reason, pause overlay, PLAYING/PAUSED projection
+  local pause flag, pause reason, pause overlay and PLAYING/PAUSED projection
+
 lobby-screen-presentation-kit
-  room metadata, roster projection, ready badges, controls, connection status
+  room metadata, roster projection, ready badges, controls and connection status
+
 peer-host-transport-kit
-  host peer, connection registry, broadcast, targeted send, disconnect, destroy
+  host peer, connection registry, broadcast, targeted send, disconnect and destroy
+
 peer-client-transport-kit
-  host connection, send, local bridge, status, disconnect, destroy
+  host connection, send, local bridge, status, disconnect and destroy
+
 peer-event-bus-kit
-  typed transport events, subscribe, unsubscribe, clear
+  typed transport events, subscribe, unsubscribe and clear
+
 protocol-message-construction-kit
-  versioned envelopes, START_GAME, PLAYER_UPDATE, TRY_INTERACT, SYNC, LOBBY_EVENT
+  versioned START_GAME, PLAYER_UPDATE, TRY_INTERACT, SYNC and LOBBY_EVENT envelopes
+
 maze-snapshot-bootstrap-kit
-  deterministic seed, maze, cubes, anomaly, active room, players, initial snapshot
+  deterministic seed, maze, cubes, anomaly, active room, players and initial snapshot
+
 first-person-input-kit
-  keyboard state, pointer lock, look accumulation, input snapshots
+  keyboard state, pointer lock, look accumulation and input snapshots
+
 movement-collision-camera-kit
-  movement integration, maze collision, eye position, walk shake, camera projection
+  movement integration, local maze collision, eye position, walk shake and camera projection
+
 network-player-update-kit
-  client update send, host update consume, pose projection, network cadence
+  client update send, host update consume, pose projection and network cadence
+
 corridor-interaction-domain-kit
-  pickup, drop, place, remove, held-cube synchronization
+  pickup, drop, place, remove and held-cube synchronization
+
 ordered-anomaly-sequence-kit
-  ordered validation, rollback, ending phase, victory
+  ordered validation, rollback, ending phase and victory
+
 ooze-trail-domain-kit
-  cadence, decay, spawn, spacing guard, capacity guard
+  cadence, decay, spawn, spacing guard and capacity guard
+
 corridor-authoritative-publication-kit
-  snapshot tick, full sync, broadcast, publication reason, cadence accounting
+  snapshot tick, full sync, broadcast, publication reason and cadence accounting
+
 corridor-animation-loop-kit
-  RAF start, RAF stop, delta calculation, idempotent running state
+  RAF start, RAF stop, delta calculation and idempotent running state
+
 corridor-render-world-kit
-  terrain, maze, cubes, players, anomaly, ooze, props, lights, attach, update, dispose
+  terrain, maze, cubes, players, anomaly, ooze, props, lights, attach, update and dispose
+
 corridor-post-processing-kit
-  composer, bloom, output, resize, render, dispose
+  composer, bloom, output, resize, render and dispose
+
 corridor-minimap-kit
-  maze projection, player markers, cube markers, anomaly markers
+  maze projection, player markers, cube markers and anomaly markers
+
 runtime-debug-frame-kit
-  bounded frames, bounded events, overlay preferences, JSON-safe browser export
+  bounded frames, bounded events, overlay preferences and JSON-safe browser export
+
 runtime-resource-cleanup-kit
-  RAF stop, transport unsubscribe, observer disconnect, listener removal, world/composer/renderer disposal, canvas removal
+  RAF stop, transport unsubscribe, observer disconnect, listener removal, world/composer/renderer disposal and canvas removal
+
 package-validation-kit
-  build, lint, ProtoKit smoke, harness, visual match, object-kit review, live-player validation
+  build, lint, ProtoKit smoke, harness, visual match, object-kit review and live-player validation
 ```
 
 ## Source findings
 
 ```txt
-GameShell.returnToLobby resets UI and readiness but does not change room.phase
-returnToLobby does not clear or archive authoritativeSnapshot
-returnToLobby intentionally preserves transport
-GameCanvas local cleanup and GameShell transport admission are separate lifecycles
-GameShell accepts START_GAME, SYNC, and LOBBY_EVENT without phase/epoch preflight
-SYNC directly selects COMPLETED, PAUSED, or PLAYING from snapshot.gameState
-RoomState has roomId and phase but no runSessionId or sessionEpoch
-ReplicatedGameSnapshot has gameId but no sessionEpoch
-NetworkEnvelope has roomId and optional requestId but no gameId/runSessionId/sessionEpoch
-transport destroy is available for title exit but returns no typed teardown result
-no terminal lifecycle publication exists for lobby return, restart, client leave, host close, or room close
-no callback-generation fence rejects events captured before an accepted exit
-no fixture:session-lifecycle or fixture:session-message-admission command exists
+PLAYER_UPDATE includes input.sequence, movement input and a completed client pose
+host GameCanvas ignores input.sequence and all input fields during movement mutation
+host uses payload.playerId without proving senderId owns that player
+applyNetworkPlayerUpdate replaces position, rotationY, pitch and velocity verbatim
+host does not re-simulate movement from input
+host does not validate elapsed time, displacement, velocity, collision or room phase
+host publishes the copied pose as authoritative immediately
+active client simulation advances poseRef locally every frame
+active client uses authoritative snapshot for rendering and carry state, not pose correction
+host pose is copied into poseRef only in snapshot-replay when simulation is not advancing
+no prediction history, acknowledgement sequence, correction delta or smoothing policy exists
+no typed PlayerUpdateAdmissionResult or ReconciliationResult exists
+no movement authority fixture or client correction fixture exists
 ```
 
 ## Main finding
 
-HorrorCorridor has a renderer/component teardown path but no authority transaction that closes a run across gameplay state, room phase, snapshot ownership, peer publication, transport admission, and re-entry identity. The key defect is not simply undisposed resources. It is that old message callbacks remain valid after local teardown and can overwrite the first lobby or next-run projection.
+The route labels the host snapshot authoritative, but remote movement is still client-authoritative in practice. The client sends a final pose, the host trusts and republishes it, and the active client never converges back to the host pose. This creates one combined integrity gap covering impersonation, stale or duplicate updates, impossible displacement, wall traversal, speed/velocity abuse and correction failure.
 
-## Current next safe ledge
+## Required movement boundary
 
 ```txt
-HorrorCorridor Run Exit Commit + Session Epoch Message Admission Fixture Gate
+client input sample + sequence
+  -> connection/player identity preflight
+  -> run/room/phase admission
+  -> monotonic update-sequence policy
+  -> host movement budget and collision authority
+  -> typed authoritative pose result
+  -> snapshot publication with acknowledged client sequence
+  -> client prediction-history lookup
+  -> correction delta classification
+  -> snap, smooth or no-change reconciliation
+  -> JSON-safe movement and correction ledgers
 ```
 
-## Required dependency order
+## Candidate kits
 
 ```txt
-lobby readiness/start admission authority
-  -> sealed roster and initial run identity
-  -> typed run-exit command/result
-  -> freeze gameplay and active-message admission
-  -> authoritative terminal lifecycle publication
-  -> atomic UI/room/snapshot/readiness commit
-  -> transport preserve-or-destroy policy
-  -> monotonic session epoch and callback generation
-  -> stale/duplicate message rejection
-  -> exactly-once teardown result
-  -> clean re-entry with incremented epoch
-  -> JSON-safe lifecycle and admission ledgers
-  -> DOM-free session lifecycle fixture
-  -> browser solo/host/client re-entry smoke
-  -> pause/resume authority
+player-update-command-kit
+connection-player-identity-kit
+player-update-sequence-admission-kit
+host-movement-budget-kit
+host-maze-collision-authority-kit
+host-movement-simulation-kit
+authoritative-pose-result-kit
+movement-admission-ledger-kit
+client-prediction-history-kit
+client-pose-reconciliation-kit
+correction-smoothing-policy-kit
+movement-debug-projection-kit
+movement-authority-fixture-kit
+client-reconciliation-fixture-kit
+```
+
+## Ordered safe ledges
+
+```txt
+1. Lobby Readiness Authority + Start Admission Fixture Gate
+2. Run Exit Commit + Session Epoch Message Admission Fixture Gate
+3. Snapshot Acceptance Authority + Projection Transaction Fixture Gate
+4. Host Movement Admission + Client Reconciliation Fixture Gate
+5. Pause/Resume Authority + Input Suspension Convergence Fixture Gate
 ```
 
 ## Validation
 
 ```txt
 runtime source changed: no
+package scripts changed: no
+dependencies changed: no
+rendering changed: no
+network behavior changed: no
+deployment changed: no
 branch created: no
 pull request created: no
 existing checks run: no
-session lifecycle fixture: unavailable
-session message-admission fixture: unavailable
-transport quarantine fixture: unavailable
+movement authority fixture: unavailable
+client reconciliation fixture: unavailable
 repo-local docs pushed to main: yes
-central ledger updated: yes
-central change log added: yes
+central ledger sync: pending until this run completes
 ```
