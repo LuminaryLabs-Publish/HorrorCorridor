@@ -1,25 +1,23 @@
 # HorrorCorridor Validation
 
-**Updated:** `2026-07-12T16-39-35-04-00`
+**Updated:** `2026-07-12T18-31-01-04-00`
 
 ## Summary
 
-Source inspection proves that host-class messages reach client store mutations without contextual source, room or generation admission. It does not prove that an exploit occurred in a deployed session, and it does not prove rejection behavior because the required authority and fixtures do not exist.
+Source inspection confirms that a four-character random join code is committed to room and lobby state before the requested PeerJS host identity is proven. This pass does not prove that a collision occurred in production and does not prove recovery behavior because reservation, retry and collision fixtures do not exist.
 
 ## Plan ledger
 
-**Goal:** record exactly what the documentation audit proves and withhold trusted-host and production-multiplayer claims until adversarial fixtures pass.
+**Goal:** record exactly what the documentation audit proves and withhold joinability and collision-safety claims until executable fixtures pass.
 
 - [x] Compare the full Publish inventory and central ledger.
 - [x] Verify root `.agent` state for all nine eligible repositories.
-- [x] Select HorrorCorridor from newer repo-local audit state.
-- [x] Inspect transport events, protocol messages, serializers and client consumers.
-- [x] Trace `START_GAME`, `SYNC` and `LOBBY_EVENT` into state and presentation.
+- [x] Select HorrorCorridor as the oldest synchronized eligible repository.
+- [x] Inspect `GameShell.tsx` host setup and `createHost.ts` transport identity lifecycle.
 - [x] Preserve the 29-kit and service census.
-- [x] Add the fresh timestamped reconciliation family.
+- [x] Add the timestamped room-identity audit family.
 - [x] Refresh root documentation and machine registry.
-- [x] Synchronize central tracking.
-- [ ] Run protocol, adapter and browser adversarial fixtures after implementation exists.
+- [ ] Run deterministic collision and browser parity fixtures after implementation exists.
 
 ## Change scope
 
@@ -43,28 +41,23 @@ complete LuminaryLabs-Publish repository inventory
 central Publish repo ledger state
 all eligible root .agent entrypoints
 HorrorCorridor root audit state
-HorrorCorridor-V1/src/features/networking/peer/peerEvents.ts
-HorrorCorridor-V1/src/features/networking/protocol/messageTypes.ts
-HorrorCorridor-V1/src/features/networking/protocol/serializers.ts
 HorrorCorridor-V1/src/components/game/GameShell.tsx
-HorrorCorridor-V1/src/components/menus/LobbyScreen.tsx
+HorrorCorridor-V1/src/features/networking/peer/createHost.ts
+HorrorCorridor-V1/package.json
 ```
 
 ## Confirmed by inspection
 
 ```txt
-peer/message includes remotePeerId and connectionId
-protocol envelopes include senderId and roomId
-serializer validates version and structural payload shape
-serializer does not bind senderId to remotePeerId
-serializer does not validate current host or active room
-GameShell processes START_GAME by message type alone
-GameShell processes SYNC by message type alone
-GameShell processes LOBBY_EVENT by message type alone
-host-class messages can replace room, roster, snapshot, route, status and readiness
-no current connection-generation or session-epoch check exists
-no typed wrong-source, wrong-room, stale or duplicate result exists
-no first authoritative-message visible-frame acknowledgement exists
+makeJoinCode uses Math.random and returns four base-36 characters
+host uses join code as requested PeerJS peer ID
+room and lobby UI are committed before peer/open
+BroadcastChannel name is derived from the same join code
+peer error is generic and has no collision-specific result
+GameShell has no room-identity allocation failure branch
+no candidate reservation or bounded retry generation exists
+no canonical roomId/joinCode/peerId manifest exists
+no first accepted-hosting frame acknowledgement exists
 ```
 
 ## Documentation checks
@@ -77,7 +70,7 @@ architecture audit: yes
 render audit: yes
 gameplay audit: yes
 interaction audit: yes
-protocol-authority audit: yes
+room-identity audit: yes
 deploy audit: yes
 kit registry refreshed: yes
 central ledger update: current run
@@ -91,32 +84,26 @@ npm install
 npm run build
 npm run lint
 browser launch
-same-origin multiplayer smoke
-PeerJS multiplayer smoke
-forged START_GAME injection
-forged SYNC injection
-wrong-room LOBBY_EVENT injection
-stale predecessor message injection
-duplicate message injection
+PeerJS host-ID collision
+unavailable-ID retry
+late predecessor open/error
+local-bridge versus PeerJS identity parity
 GitHub Pages smoke
 ```
 
 ## Missing executable fixtures
 
 ```txt
-current-host message acceptance
-non-host forged START_GAME rejection
-non-host forged SYNC rejection
-sender-to-peer mismatch rejection
-wrong-room host-message rejection
-stale connection-generation rejection
-duplicate message result
-older authority-revision rejection
-local-bridge and PeerJS parity
-first authoritative-message visible frame
-source, production build and Pages parity
+first candidate acceptance
+collision then retry acceptance
+retry exhaustion
+superseded attempt quarantine
+partial resource cleanup
+manifest fingerprint parity
+first accepted-hosting visible frame
+source, production build and deployed parity
 ```
 
 ## Claims intentionally withheld
 
-No claim is made for trusted host authority, source authentication, wrong-room isolation, stale-message quarantine, duplicate suppression, reconnect message safety or authoritative visible-frame provenance until the authority and fixtures exist and pass.
+No claim is made for globally joinable rooms, collision avoidance, retry correctness, identity rollback, local/PeerJS parity or visible hosting provenance until the authority and fixtures exist and pass.
