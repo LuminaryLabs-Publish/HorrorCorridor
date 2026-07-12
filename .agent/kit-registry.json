@@ -1,25 +1,26 @@
 {
-  "schemaVersion": 82,
-  "generatedAt": "2026-07-12T18-31-01-04-00",
+  "schemaVersion": 83,
+  "generatedAt": "2026-07-12T18-38-51-04-00",
   "repository": "LuminaryLabs-Publish/HorrorCorridor",
   "branch": "main",
-  "status": "room-join-code-allocation-authority-audited",
-  "selectedBecause": "All nine eligible Publish repositories were centrally tracked, synchronized and had root .agent state. HorrorCorridor had the oldest eligible timestamp after excluding TheCavalryOfRome.",
-  "latestTracker": ".agent/trackers/2026-07-12T18-31-01-04-00/project-breakdown.md",
-  "latestTurnLedger": ".agent/turn-ledger/2026-07-12T18-31-01-04-00.md",
+  "status": "room-join-code-allocation-central-reconciled",
+  "selectedBecause": "All nine eligible Publish repositories were centrally tracked and had root .agent state. HorrorCorridor was selected because its room-identity audit completed through add973ebd44067648d75f7b5eab157559b3acdc1 after the prior central ledger write.",
+  "latestTracker": ".agent/trackers/2026-07-12T18-38-51-04-00/project-breakdown.md",
+  "latestTurnLedger": ".agent/turn-ledger/2026-07-12T18-38-51-04-00.md",
   "latestAudits": {
-    "architecture": ".agent/architecture-audit/2026-07-12T18-31-01-04-00-room-join-code-allocation-dsk-map.md",
-    "render": ".agent/render-audit/2026-07-12T18-31-01-04-00-advertised-room-host-ownership-gap.md",
-    "gameplay": ".agent/gameplay-audit/2026-07-12T18-31-01-04-00-join-code-collision-hosting-loop.md",
-    "interaction": ".agent/interaction-audit/2026-07-12T18-31-01-04-00-host-room-identity-admission-map.md",
-    "roomIdentity": ".agent/room-identity-audit/2026-07-12T18-31-01-04-00-reservation-ownership-retry-contract.md",
-    "deploy": ".agent/deploy-audit/2026-07-12T18-31-01-04-00-room-identity-collision-fixture-gate.md"
+    "architecture": ".agent/architecture-audit/2026-07-12T18-38-51-04-00-room-identity-central-reconciliation-dsk-map.md",
+    "render": ".agent/render-audit/2026-07-12T18-38-51-04-00-accepted-room-identity-visible-frame-gap.md",
+    "gameplay": ".agent/gameplay-audit/2026-07-12T18-38-51-04-00-advertised-unowned-room-reconciliation-loop.md",
+    "interaction": ".agent/interaction-audit/2026-07-12T18-38-51-04-00-host-identity-command-result-reconciliation-map.md",
+    "roomIdentity": ".agent/room-identity-audit/2026-07-12T18-38-51-04-00-manifest-reservation-retry-reconciliation-contract.md",
+    "deploy": ".agent/deploy-audit/2026-07-12T18-38-51-04-00-room-identity-fixture-central-gate.md"
   },
   "retainedDetailedAudit": {
-    "timestamp": "2026-07-12T16-39-35-04-00",
-    "status": "authoritative-message-source-admission-central-reconciled",
-    "tracker": ".agent/trackers/2026-07-12T16-39-35-04-00/project-breakdown.md",
-    "system": ".agent/protocol-authority-audit/2026-07-12T16-39-35-04-00-sender-peer-room-generation-reconciliation-contract.md"
+    "timestamp": "2026-07-12T18-31-01-04-00",
+    "status": "room-join-code-allocation-authority-audited",
+    "repoLocalCompletionHead": "add973ebd44067648d75f7b5eab157559b3acdc1",
+    "tracker": ".agent/trackers/2026-07-12T18-31-01-04-00/project-breakdown.md",
+    "system": ".agent/room-identity-audit/2026-07-12T18-31-01-04-00-reservation-ownership-retry-contract.md"
   },
   "selection": {
     "inventoryCount": 10,
@@ -27,12 +28,12 @@
     "newEligibleCount": 0,
     "centralLedgerMissingCount": 0,
     "rootUndocumentedCount": 0,
-    "unsynchronizedRootCount": 0,
+    "repoLocalCompletionNewerThanCentralCount": 1,
     "excluded": ["LuminaryLabs-Publish/TheCavalryOfRome"],
     "selectedRepository": "LuminaryLabs-Publish/HorrorCorridor",
-    "reason": "Oldest synchronized eligible timestamp at 2026-07-12T16-39-35-04-00.",
-    "ledgerOrder": [
-      "HorrorCorridor:2026-07-12T16-39-35-04-00:selected",
+    "reason": "Room-identity documentation completed after the prior central write and required exact-head reconciliation.",
+    "repoLocalCompletionHead": "add973ebd44067648d75f7b5eab157559b3acdc1",
+    "ledgerOrderAtSelection": [
       "ZombieOrchard:2026-07-12T16-51-47-04-00",
       "MyCozyIsland:2026-07-12T17-10-31-04-00",
       "TheUnmappedHouse:2026-07-12T17-20-42-04-00",
@@ -40,7 +41,8 @@
       "TheOpenAbove:2026-07-12T17-41-25-04-00",
       "IntoTheMeadow:2026-07-12T17-58-43-04-00",
       "PhantomCommand:2026-07-12T18-11-53-04-00",
-      "PrehistoricRush:2026-07-12T18-18-59-04-00"
+      "PrehistoricRush:2026-07-12T18-18-59-04-00",
+      "HorrorCorridor:repo-local-completion-newer-than-central:selected"
     ]
   },
   "implementedKitCount": 29,
@@ -77,11 +79,11 @@
   },
   "interactionLoop": [
     "generate roomId joinCode hostPlayerId and requested hostPeerId",
-    "commit room peer identity lobby screen overlay and readiness",
+    "commit session room roster lobby UI and optimistic networking readiness",
     "create PeerJS host with peerId equal to joinCode",
     "create same-code BroadcastChannel",
     "receive peer open or generic peer error without identity allocation result",
-    "allow lobby and later gameplay to consume the advertised identity"
+    "allow lobby readiness loading start protocol and rendering to consume the advertised identity"
   ],
   "domainsInUse": [
     "application shell and screen routing",
@@ -117,6 +119,7 @@
     "boundedRetryGenerationExists": false,
     "partialIdentityRollbackExists": false,
     "canonicalIdentityManifestExists": false,
+    "lateIdentityEventFenceExists": false,
     "firstHostingFrameAckExists": false
   },
   "plannedParentDomain": "corridor-room-join-code-allocation-authority-domain",
@@ -136,11 +139,15 @@
     "identity-error-classification-kit",
     "local-bridge-identity-binding-kit",
     "peerjs-identity-binding-kit",
+    "identity-commit-kit",
+    "identity-rollback-kit",
+    "stale-identity-event-rejection-kit",
     "identity-observation-kit",
     "identity-journal-kit",
     "first-hosting-state-frame-ack-kit",
     "join-code-collision-fixture-kit",
     "peer-id-unavailable-fixture-kit",
+    "retry-exhaustion-fixture-kit",
     "mode-parity-fixture-kit"
   ],
   "validation": {
@@ -157,6 +164,7 @@
     "browserMultiplayerSmokeRun": false,
     "collisionFixtureAvailable": false,
     "retryFixtureAvailable": false,
+    "rollbackFixtureAvailable": false,
     "modeParityFixtureAvailable": false,
     "visibleHostingFrameFixtureAvailable": false
   }
