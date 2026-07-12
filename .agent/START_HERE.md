@@ -2,59 +2,61 @@
 
 **Repository:** `LuminaryLabs-Publish/HorrorCorridor`  
 **Branch:** `main`  
-**Updated:** `2026-07-11T23-18-16-04-00`
+**Updated:** `2026-07-12T01-08-06-04-00`
 
 ## Summary
 
-HorrorCorridor is a cooperative first-person procedural maze with solo, host and client sessions, PeerJS and BroadcastChannel transport, authoritative snapshots, cube interactions, ooze pressure, Three.js rendering, bloom, minimap, HUD and bounded debug readback.
+HorrorCorridor is a cooperative first-person procedural maze with solo, host and client sessions, PeerJS and BroadcastChannel transport, authoritative snapshots, cube interactions, ooze pressure, Three.js rendering, bloom, minimap, HUD and runtime debug readback.
 
-The current audit isolates render-surface authority. The main 3D surface caps device scale at 1, while the minimap uses uncapped browser DPR. ResizeObserver and window-resize callbacks directly mutate renderer, composer, bloom and camera state without one surface policy, revision, commit result or visible-frame receipt. Zero-area observations silently return while readiness and simulation can remain active.
+The current audit isolates debug-observability authority. A public runtime can enable full-state capture through query parameters, persisted localStorage flags, the backquote key or an unguarded `window.__HORROR_CORRIDOR_DEBUG__` API. Captured and visible data includes room/player identity, local pose and input, every cube ID/color/state/owner/position, the ordered anomaly solution, slot state, cadence and recent events.
 
 ## Current ledge
 
 ```txt
-HorrorCorridor Render Surface Resolution and Frame Correlation Authority
-+ Zero-Area / DPR Parity / Resize-Storm Fixture Gate
+HorrorCorridor Debug Observability Capability Authority
++ Production Disable / Redaction / Session Revocation / Export Fixture Gate
 ```
 
 ## Plan ledger
 
-**Goal:** make every visible frame cite one committed surface revision derived from a named quality policy and shared renderer, post-processing, camera and minimap transaction.
+**Goal:** preserve useful developer and QA diagnostics while ensuring public players cannot silently activate privileged state capture, reveal puzzle state, persist debug access across runs or export data outside an admitted runtime/session capability.
 
 - [x] Compare all ten accessible Publish repositories with central tracking.
 - [x] Exclude `TheCavalryOfRome`.
-- [x] Confirm all nine eligible repositories have central ledger and root `.agent` coverage.
+- [x] Confirm all nine eligible repositories have central-ledger and root `.agent` coverage.
 - [x] Select only `HorrorCorridor` as the oldest eligible repository.
-- [x] Trace startup sizing, ResizeObserver, window resize, renderer, composer, bloom, camera, minimap and debug-frame readback.
-- [x] Identify the interaction loop, domains, implemented kits and offered services.
-- [x] Define surface policy, identity, revision, admission, commit and frame-correlation contracts.
+- [x] Trace query, localStorage, keyboard and window-API debug activation.
+- [x] Trace frame/event capture, ring-buffer retention, overlay rendering and export.
+- [x] Identify the interaction loop, domains, all 29 implemented kits and offered services.
+- [x] Define capability, classification, redaction, retention, export and revocation contracts.
 - [x] Add timestamped architecture and system audits.
-- [x] Refresh required root `.agent` documents.
+- [x] Refresh required root `.agent` documents and registry.
 - [x] Change documentation only.
 - [x] Push directly to `main`; create no branch or pull request.
-- [ ] Runtime implementation and executable browser fixtures remain future work.
+- [ ] Runtime implementation and executable browser/deployment fixtures remain future work.
 
 ## Read first
 
 ```txt
-.agent/trackers/2026-07-11T23-18-16-04-00/project-breakdown.md
-.agent/turn-ledger/2026-07-11T23-18-16-04-00.md
+.agent/trackers/2026-07-12T01-08-06-04-00/project-breakdown.md
+.agent/turn-ledger/2026-07-12T01-08-06-04-00.md
 .agent/current-audit.md
 .agent/known-gaps.md
 .agent/next-steps.md
 .agent/validation.md
 .agent/kit-registry.json
-.agent/architecture-audit/2026-07-11T23-18-16-04-00-render-surface-authority-dsk-map.md
-.agent/render-audit/2026-07-11T23-18-16-04-00-main-minimap-surface-parity-gap.md
-.agent/gameplay-audit/2026-07-11T23-18-16-04-00-zero-area-hidden-simulation-loop.md
-.agent/interaction-audit/2026-07-11T23-18-16-04-00-resize-observation-commit-map.md
-.agent/render-surface-audit/2026-07-11T23-18-16-04-00-resolution-revision-frame-contract.md
-.agent/deploy-audit/2026-07-11T23-18-16-04-00-render-surface-fixture-gate.md
+.agent/architecture-audit/2026-07-12T01-08-06-04-00-debug-observability-authority-dsk-map.md
+.agent/render-audit/2026-07-12T01-08-06-04-00-privileged-debug-overlay-frame-gap.md
+.agent/gameplay-audit/2026-07-12T01-08-06-04-00-debug-activation-puzzle-disclosure-loop.md
+.agent/interaction-audit/2026-07-12T01-08-06-04-00-debug-command-capability-result-map.md
+.agent/debug-observability-audit/2026-07-12T01-08-06-04-00-capability-redaction-revocation-contract.md
+.agent/deploy-audit/2026-07-12T01-08-06-04-00-production-debug-capability-fixture-gate.md
 ```
 
 Retained prerequisite audits:
 
 ```txt
+.agent/render-surface-audit/2026-07-11T23-18-16-04-00-resolution-revision-frame-contract.md
 .agent/startup-authority-audit/2026-07-11T21-21-12-04-00-acquisition-ledger-first-frame-contract.md
 .agent/randomness-audit/2026-07-11T19-38-14-04-00-seeded-stream-checkpoint-contract.md
 .agent/transport-audit/2026-07-11T18-11-21-04-00-payload-budget-backpressure-contract.md
@@ -68,47 +70,49 @@ Retained prerequisite audits:
 
 ```txt
 mode selection and lobby
-  -> loading and snapshot bootstrap
-  -> GameCanvas startup
-  -> renderer, scene, camera, post and world acquisition
-  -> CSS size and device scale observation
-  -> renderer/composer/bloom/camera sizing
-  -> RAF simulation and rendering
-  -> minimap independently samples DPR and sizes its canvas
-  -> world, minimap, HUD and debug projection
+  -> snapshot bootstrap and GameCanvas startup
+  -> initialize runtime debug from query and persisted preferences
+  -> attach public window debug API
+  -> keyboard/query/window API can enable privileged capture
+  -> each enabled RAF clones frame, cube, anomaly, cadence and scene state
+  -> bounded frame/event buffers update
+  -> overlay renders privileged state or caller exports the full buffers
+  -> enabled/overlay preferences persist into later sessions
 ```
 
-## Current surface split
+## Current activation surface
 
 ```txt
-main 3D canvas:
-  pixelRatio = min(window.devicePixelRatio, 1)
-  size = mount.clientWidth x mount.clientHeight
+query:
+  ?debug=1|true|frames|verbose
+  ?debugFrames=1|true|frames|verbose
 
-minimap:
-  pixelRatio = window.devicePixelRatio
-  size = 168 x 168 CSS pixels
+persistent browser state:
+  horror-corridor:runtime-debug
+  horror-corridor:runtime-debug-overlay
 
-resize ingress:
-  ResizeObserver callback
-  window resize callback
-  startup onResize call
+keyboard:
+  Backquote enables debug and toggles the overlay
+
+window API:
+  enable / disable / showOverlay / hideOverlay / clear
+  getLatestFrame / getFrames / getEvents / extractState
 ```
 
-There is no shared product pixel budget, surface ID, surface revision, resize command, coalescing rule, requested/actual size readback, zero-area result or frame correlation.
+There is no build-mode gate, capability token, actor/role admission, session lease, data classification, redaction profile, export authorization, automatic revocation or production-safe projection.
 
 ## Required architecture
 
 ```txt
-ResizeSurfaceCommand
-  -> validate runtime generation and mount
-  -> sample CSS size and device scale once
-  -> apply named quality and pixel budget policy
-  -> create one surface plan and revision
-  -> commit renderer, post-processing, camera and minimap adapters
-  -> read back actual physical sizes
-  -> publish one SurfaceCommitResult
-  -> require following frames and captures to cite the revision
+DebugActivationCommand
+  -> validate build channel, runtime generation, session and actor role
+  -> resolve an explicit debug capability tier
+  -> create a revocable session lease
+  -> apply a named data-classification and redaction profile
+  -> capture only admitted frame/event fields within byte/count budgets
+  -> render or export through typed results
+  -> revoke on stop, session replacement, role loss or production policy change
+  -> prove public production defaults expose no privileged game-state surface
 ```
 
 ## Ordered safe ledges
@@ -121,6 +125,7 @@ ResizeSurfaceCommand
 4a. Runtime Startup Acquisition and Rollback Authority
 4b. Runtime Readiness Lease and Generation Fencing
 4c. Render Surface Resolution and Frame Correlation Authority
+4d. Debug Observability Capability and Redaction Authority
 5. Snapshot Acceptance Authority
 5a. Interaction Target Intent and Cube/Slot Claim Authority
 5b. Active-Run Disconnect and Reconnect Authority
