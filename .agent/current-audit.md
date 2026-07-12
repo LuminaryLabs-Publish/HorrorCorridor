@@ -1,12 +1,12 @@
 # HorrorCorridor Current Audit
 
 **Repository:** `LuminaryLabs-Publish/HorrorCorridor`  
-**Updated:** `2026-07-12T12-21-38-04-00`
+**Updated:** `2026-07-12T14-22-01-04-00`
 
 ## Status
 
 ```txt
-status: transport-mode-reachability-authority-audited
+status: data-channel-open-roster-admission-authority-audited
 runtime source changed: no
 branch: main
 root .agent state: refreshed
@@ -17,24 +17,24 @@ central ledger sync: current run
 
 The repository retains a 29-kit browser runtime spanning application routing, session and lobby state, PeerJS transport, a same-origin BroadcastChannel bridge, deterministic maze bootstrap, movement, interactions, ooze, authoritative snapshots, Three.js rendering, bloom, minimap, diagnostics and cleanup.
 
-The current implementation boundary is transport-mode selection. Both host and client create a `BroadcastChannel` whenever the browser exposes that API. Its existence disables the PeerJS connection path rather than adding a local fallback. The client then reports `connected` immediately after posting a local bridge packet, with no host acknowledgement or delivery proof.
+The current implementation boundary is data-channel-open and roster admission. In the PeerJS host connection handler, a `DataConnection` candidate is inserted into the live connection map before it is open. After installing callbacks, the host invokes the guarded connection-open emitter unconditionally. `GameShell` then treats the resulting event as authoritative connected membership, updates `lobbyPlayers` and `room.players`, and publishes a player-joined lobby message. If `connection.open` is false, that publication can reach zero clients. The guard has already been consumed, so the later real open callback does not repeat admission or publication.
 
 ## Plan ledger
 
-**Goal:** make transport capability, policy, reachability, fallback and visible multiplayer proof explicit and revisioned.
+**Goal:** make connection candidates, open evidence, actor binding, lobby membership, start eligibility and visible roster proof explicit and monotonic.
 
 - [x] Compare the complete Publish inventory and central ledger.
 - [x] Exclude `TheCavalryOfRome`.
-- [x] Confirm all nine eligible repositories have central-ledger and root `.agent` coverage.
+- [x] Verify all nine eligible root `.agent` entrypoints.
 - [x] Select only `HorrorCorridor` under the oldest eligible rule.
 - [x] Read current root `.agent` state and recent commits.
-- [x] Read `GameShell.tsx`, `createHost.ts` and `createClient.ts`.
-- [x] Trace local bridge and PeerJS mode branches.
+- [x] Read `createHost.ts`, `createClient.ts`, `peerTypes.ts`, `peerEvents.ts`, `GameShell.tsx`, `sessionStore.ts`, `LobbyScreen.tsx` and `package.json`.
+- [x] Trace candidate creation, open callbacks, session mutation, lobby rendering and run bootstrap.
 - [x] Identify the interaction loop, domains, 29 kits and services.
-- [x] Define transport-mode authority and fixtures.
+- [x] Define data-channel roster-admission authority and fixtures.
 - [x] Refresh root and central documentation on `main`.
 - [x] Create no branch or pull request.
-- [ ] Runtime implementation and executable transport fixtures remain future work.
+- [ ] Runtime implementation and executable admission fixtures remain future work.
 
 ## Selection state
 
@@ -45,7 +45,7 @@ new eligible repositories: 0
 central-ledger-missing eligible repositories: 0
 root-.agent-missing eligible repositories: 0
 selected repository: LuminaryLabs-Publish/HorrorCorridor
-selection reason: oldest eligible synchronized central entry at 2026-07-12T09-48-15-04-00
+selection reason: oldest eligible central entry at 2026-07-12T12-21-38-04-00
 excluded repository: LuminaryLabs-Publish/TheCavalryOfRome
 ```
 
@@ -55,23 +55,35 @@ excluded repository: LuminaryLabs-Publish/TheCavalryOfRome
 browser route
   -> choose solo, host or client
 
-host
-  -> create room, join code and PeerJS host
-  -> create BroadcastChannel when available
-  -> skip PeerJS connection listener when local bridge exists
-  -> receive and publish through local bridge only
+host transport
+  -> create PeerJS host and optional local bridge
+  -> receive DataConnection candidate
+  -> insert candidate into live connection map
+  -> install open/data/close/error callbacks
+  -> emit peer/connection-open even if connection.open is false
 
-client
-  -> create PeerJS client
-  -> create BroadcastChannel when available
-  -> skip peer.connect when local bridge exists
-  -> post client-connect
-  -> report connected immediately
+host lobby
+  -> GameShell receives connection-open
+  -> find or create guest LobbyPlayer
+  -> mark guest connectionState connected
+  -> update lobbyPlayers and room.players
+  -> broadcast player-joined room state
+  -> send can fail because channel is not open
+
+true channel open
+  -> PeerJS open callback fires later
+  -> connectionOpenEmitted guard already true
+  -> no second admission or lobby publication
+
+host start
+  -> Start run remains enabled without admitted-channel or all-ready proof
+  -> bootstrap consumes current lobbyPlayers
+  -> START_GAME and SYNC send only to open connections
+  -> host can enter a run with a ghost participant
 
 run
-  -> transport events update lobby/session state
-  -> host publishes START_GAME and SYNC
   -> accepted snapshots drive input, simulation, rendering, HUD and minimap
+  -> no roster-admission revision or visible-frame receipt exists
 ```
 
 ## Domains in use
@@ -86,8 +98,10 @@ runtime startup, readiness, frame lifecycle, failure containment and cleanup
 browser clocks, cadence, simulation time and clock generations
 transport capability observation and mode selection
 BroadcastChannel local bridge
-PeerJS signalling and data-channel transport
-connection handshake, reachability, fallback and retirement
+PeerJS signalling and DataConnection transport
+connection candidate, open, error, close and retirement
+connection-to-actor binding and lobby-member admission
+room-roster revision, fingerprint and start eligibility
 protocol envelopes, serialization, request and sequence admission
 seeded maze topology, cube placement, target sequence and random streams
 snapshot construction, publication, acceptance, delivery and backpressure
@@ -134,125 +148,160 @@ runtime-resource-cleanup-kit           loop, subscriptions, listeners, observers
 package-validation-kit                 build, lint, harness, visual and live-player checks
 ```
 
-## Transport-mode findings
+## Data-channel admission findings
 
-### Host
+### Premature event
 
 ```txt
-PeerJS object created: yes
-BroadcastChannel created when API exists: yes
-PeerJS connection listener installed with local bridge: no
-broadcast/sendTo use local bridge with local bridge: yes
+connection inserted into map: yes
+open listener installed: yes
+connection.open checked: yes
+connection-open emitter then called unconditionally: yes
+actual channel open required for event: no
 ```
 
-### Client
+### Session effect
 
 ```txt
-PeerJS object created: yes
-BroadcastChannel created when API and host ID exist: yes
-peer.connect used with local bridge: no
-host acknowledgement required before connected: no
-status set connected after packet post: yes
+host connection-open adds lobby member: yes
+member marked connected: yes
+room.players updated: yes
+lobby publication attempted: yes
+publication result checked or rolled back: no
+roster revision or fingerprint: no
 ```
 
-### Failure paths
+### True-open suppression
 
 ```txt
-cross-device or cross-origin client
-  -> local bridge selected
-  -> packet cannot reach host
-  -> no PeerJS fallback
-  -> client still reports connected
+one-shot connectionOpenEmitted set by premature event: yes
+later actual open invokes same guard: yes
+second admission/publication occurs: no
+```
 
-client starts before same-origin host listener
-  -> client-connect packet is dropped
-  -> no replay or timeout
-  -> client remains connected locally
+### Error and close
+
+```txt
+close removes transport map record: yes
+close event removes roster member through GameShell: yes
+error removes transport map record: no
+error removes roster member: no
+error can be terminal without close policy: unspecified
+```
+
+### Start
+
+```txt
+host Start run button always available: yes
+all-ready requirement: no
+all-remote-channels-admitted requirement: no
+bootstrap uses current lobbyPlayers: yes
+broadcast skips unopened connections: yes
+```
+
+## Concrete failure paths
+
+```txt
+never-open connection
+  -> guest already visible and stored
+  -> player-joined broadcast can reach zero clients
+  -> no typed rejection removes guest
+
+error without close
+  -> connection remains in map
+  -> guest remains connected in roster
+
+host start during opening
+  -> bootstrap contains guest
+  -> START_GAME and SYNC skip guest connection
+  -> host run and client route diverge
 ```
 
 ## Missing authority
 
 ```txt
-transport capability result
-explicit mode policy
-transport mode ID and revision
-connection attempt ID and generation
-host-presence handshake
-acknowledged reachability result
-fallback plan and switch result
-path retirement result
-delivery result per protocol message
-transport mode in lobby/runtime state
-first visible remote-player frame receipt
+connection candidate identity
+connection generation
+data-channel open observation
+open admission result
+remote identity claim
+connection-to-actor binding result
+lobby-member admission command/result
+roster revision and fingerprint
+atomic room membership commit
+lobby publication delivery result
+start eligibility result
+error-only terminal retirement
+ghost-member reconciliation
+first visible lobby-roster frame acknowledgement
 ```
 
 ## Required parent domain
 
 ```txt
-corridor-transport-mode-reachability-authority-domain
+corridor-data-channel-roster-admission-authority-domain
 ```
 
 ## Candidate kits
 
 ```txt
-transport-capability-observation-kit
-transport-mode-policy-kit
-transport-mode-id-kit
-transport-mode-revision-kit
-transport-path-candidate-kit
-local-bridge-adapter-kit
-peerjs-data-channel-adapter-kit
-transport-path-admission-kit
-host-presence-handshake-kit
-connection-attempt-id-kit
-connection-attempt-generation-kit
-connection-acknowledgement-kit
-reachability-result-kit
-transport-fallback-plan-kit
-transport-switch-result-kit
-transport-path-retirement-kit
-transport-delivery-result-kit
-transport-status-projection-kit
-transport-mode-observation-kit
-transport-mode-journal-kit
-first-remote-player-frame-ack-kit
-same-tab-local-bridge-fixture-kit
-cross-tab-local-bridge-fixture-kit
-cross-origin-peerjs-fixture-kit
-cross-device-peerjs-fixture-kit
-absent-host-false-connected-fixture-kit
-late-host-listener-fixture-kit
-transport-fallback-fixture-kit
+connection-candidate-id-kit
+connection-generation-kit
+data-channel-state-kit
+data-channel-open-observation-kit
+connection-open-admission-kit
+connection-open-result-kit
+actor-identity-claim-kit
+connection-actor-binding-kit
+lobby-member-admission-kit
+lobby-member-admission-result-kit
+roster-revision-kit
+roster-fingerprint-kit
+room-membership-commit-kit
+lobby-broadcast-result-kit
+start-eligibility-kit
+connection-error-retirement-kit
+connection-close-retirement-kit
+ghost-member-reconciliation-kit
+connection-observation-kit
+connection-journal-kit
+first-lobby-roster-frame-ack-kit
+premature-peerjs-open-fixture-kit
+never-open-connection-fixture-kit
+open-after-delay-fixture-kit
+error-without-close-fixture-kit
+start-with-unadmitted-peer-fixture-kit
 ```
 
 ## Required flow
 
 ```txt
-ConnectSessionCommand
-  -> observe capabilities
-  -> choose explicit preferred and fallback modes
-  -> allocate attempt and transport generation
-  -> prepare detached candidates
-  -> perform acknowledged handshake
-  -> admit one path and retire others
-  -> publish typed connection/delivery results
-  -> bind lobby and protocol state to transport revision
-  -> acknowledge first visible remote-player frame
+AdmitLobbyMemberCommand
+  -> allocate candidate identity and generation
+  -> observe actual channel-open state
+  -> validate current session and transport generations
+  -> validate remote identity claim
+  -> bind connection to actor/member
+  -> derive candidate roster revision and fingerprint
+  -> atomically commit room and lobbyPlayers
+  -> publish typed admission and lobby-delivery results
+  -> evaluate sealed start eligibility
+  -> acknowledge first visible lobby frame
 ```
 
 ## Current audit family
 
 ```txt
-.agent/trackers/2026-07-12T12-21-38-04-00/project-breakdown.md
-.agent/turn-ledger/2026-07-12T12-21-38-04-00.md
-.agent/architecture-audit/2026-07-12T12-21-38-04-00-transport-mode-reachability-dsk-map.md
-.agent/render-audit/2026-07-12T12-21-38-04-00-connected-status-visible-session-gap.md
-.agent/gameplay-audit/2026-07-12T12-21-38-04-00-local-bridge-replaces-network-loop.md
-.agent/interaction-audit/2026-07-12T12-21-38-04-00-connect-attempt-path-admission-map.md
-.agent/transport-mode-audit/2026-07-12T12-21-38-04-00-capability-policy-handshake-fallback-contract.md
-.agent/deploy-audit/2026-07-12T12-21-38-04-00-multiplayer-transport-matrix-gate.md
+.agent/trackers/2026-07-12T14-22-01-04-00/project-breakdown.md
+.agent/turn-ledger/2026-07-12T14-22-01-04-00.md
+.agent/architecture-audit/2026-07-12T14-22-01-04-00-data-channel-roster-admission-dsk-map.md
+.agent/render-audit/2026-07-12T14-22-01-04-00-premature-roster-visible-lobby-gap.md
+.agent/gameplay-audit/2026-07-12T14-22-01-04-00-ghost-member-start-bootstrap-loop.md
+.agent/interaction-audit/2026-07-12T14-22-01-04-00-connection-open-member-admission-map.md
+.agent/connection-admission-audit/2026-07-12T14-22-01-04-00-channel-open-binding-roster-contract.md
+.agent/deploy-audit/2026-07-12T14-22-01-04-00-peerjs-admission-fixture-gate.md
 ```
 
 ## Validation boundary
 
-Documentation only. Runtime, networking, gameplay, rendering, package scripts, dependencies and deployment were not changed. No browser, cross-origin, cross-device or fallback fixtures were run.
+Documentation only. Runtime, networking, gameplay, rendering, package scripts, dependencies and deployment were not changed. No browser, delayed-open, never-open, error-only, ghost-member or visible-roster fixture was run.
