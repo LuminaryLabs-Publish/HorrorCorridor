@@ -1,19 +1,24 @@
 # HorrorCorridor Validation
 
-**Updated:** `2026-07-12T14-30-36-04-00`
+**Updated:** `2026-07-12T16-29-56-04-00`
+
+## Summary
+
+Source inspection proves that host-class messages reach client store mutations without contextual source, room or generation admission. It does not prove that an exploit has occurred in a deployed session, and it does not prove rejection behavior because the required authority and fixtures do not exist.
 
 ## Plan ledger
 
-**Goal:** record exactly what source inspection proves and withhold retirement, recovery and reliable-multiplayer claims until executable transport-error fixtures pass.
+**Goal:** record exactly what the documentation audit proves and withhold trusted-host and production-multiplayer claims until adversarial fixtures pass.
 
 - [x] Compare the full Publish inventory and central ledger.
 - [x] Verify root `.agent` state for all nine eligible repositories.
-- [x] Select HorrorCorridor from newer repo-local audit state.
-- [x] Inspect PeerJS host/client adapters, event contracts, session store, lobby UI and start bootstrap.
-- [x] Trace peer-level and connection-level errors through retained transport and roster state.
+- [x] Select HorrorCorridor as the oldest eligible repository.
+- [x] Inspect transport events, protocol messages, serializers and `GameShell` consumers.
+- [x] Trace `START_GAME`, `SYNC` and `LOBBY_EVENT` into client state and presentation.
+- [x] Preserve the 29-kit and service census.
 - [x] Refresh required root and timestamped documentation.
 - [x] Update central tracking.
-- [ ] Run browser and deterministic error-order fixtures after implementation exists.
+- [ ] Run protocol, adapter and browser adversarial fixtures after implementation exists.
 
 ## Change scope
 
@@ -37,34 +42,30 @@ complete LuminaryLabs-Publish repository inventory
 all nine central Publish repo ledgers
 all nine eligible root .agent/START_HERE.md files
 HorrorCorridor root audit state
-HorrorCorridor-V1/src/features/networking/peer/createHost.ts
-HorrorCorridor-V1/src/features/networking/peer/createClient.ts
-HorrorCorridor-V1/src/features/networking/peer/peerTypes.ts
 HorrorCorridor-V1/src/features/networking/peer/peerEvents.ts
+HorrorCorridor-V1/src/features/networking/protocol/messageTypes.ts
+HorrorCorridor-V1/src/features/networking/protocol/serializers.ts
 HorrorCorridor-V1/src/components/game/GameShell.tsx
-HorrorCorridor-V1/src/features/game-state/store/sessionStore.ts
 HorrorCorridor-V1/src/components/menus/LobbyScreen.tsx
 ```
 
 ## Confirmed by inspection
 
 ```txt
-peer-level and DataConnection-level errors share peer/error
-peer/error has no error scope
-peer/error has no remotePeerId
-peer/error has no connectionId or generation
-peer/error has no terminal/retryable classification
-host connection error leaves the connection map record
-host connection error does not emit connection-close
-client connection error leaves activeConnection installed
-client error callbacks remain attached
-GameShell has no peer/error retirement branch
-room and lobbyPlayers are not reconciled from error-only paths
-host Start run remains available
-bootstrap consumes current lobbyPlayers
-late predecessor events have no generation fence
-no typed retirement, supersession or roster-reconciliation result exists
-no first visible error-state frame acknowledgement exists
+peer/message includes remotePeerId and connectionId
+protocol envelopes include senderId and roomId
+serializer validates version and structural payload shape
+serializer does not bind senderId to remotePeerId
+serializer does not validate current host or active room
+GameShell processes START_GAME by message type alone
+GameShell processes SYNC by message type alone
+GameShell processes LOBBY_EVENT by message type alone
+START_GAME can replace room, roster, host identity and status
+SYNC can replace room, roster, authoritative snapshot, route and readiness
+LOBBY_EVENT can replace room, roster and status
+no current connection-generation or session-epoch check exists
+no typed wrong-source, wrong-room, stale or duplicate result exists
+no first authoritative-message visible-frame acknowledgement exists
 ```
 
 ## Documentation checks
@@ -77,7 +78,7 @@ architecture audit: yes
 render audit: yes
 gameplay audit: yes
 interaction audit: yes
-transport-error audit: yes
+protocol-authority audit: yes
 deploy audit: yes
 kit registry refreshed: yes
 central ledger update: current run
@@ -92,30 +93,31 @@ npm run build
 npm run lint
 browser launch
 same-origin multiplayer smoke
-PeerJS error injection
-error-without-close smoke
-replacement connection smoke
-late callback smoke
-host/client visible roster smoke
+PeerJS multiplayer smoke
+forged START_GAME injection
+forged SYNC injection
+wrong-room LOBBY_EVENT injection
+stale predecessor message injection
+duplicate message injection
 GitHub Pages smoke
 ```
 
 ## Missing executable fixtures
 
 ```txt
-host connection error without close
-client connection error without close
-error then close
-error then late open
-peer signalling versus connection error
-replacement then predecessor close
-start while retirement pending
-error during loading
-error during active gameplay
-first visible error-state frame
-first shared gameplay frame after retirement
+current-host message acceptance
+non-host forged START_GAME rejection
+non-host forged SYNC rejection
+sender-to-peer mismatch rejection
+wrong-room host-message rejection
+stale connection-generation rejection
+duplicate message result
+older authority-revision rejection
+local-bridge and PeerJS parity
+first authoritative-message visible frame
+source, dist and Pages parity
 ```
 
 ## Claims intentionally withheld
 
-No claim is made for scoped transport errors, exactly-once retirement, safe reconnect, stale-callback rejection, truthful roster reconciliation, error-safe start admission, reliable initial delivery or visible multiplayer recovery until the authority and fixtures exist and pass.
+No claim is made for trusted host authority, source authentication, wrong-room isolation, stale-message quarantine, duplicate suppression, reconnect message safety or authoritative visible-frame provenance until the authority and fixtures exist and pass.
