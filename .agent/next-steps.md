@@ -1,10 +1,10 @@
 # HorrorCorridor Next Steps
 
-**Updated:** `2026-07-11T19-38-14-04-00`
+**Updated:** `2026-07-11T21-21-12-04-00`
 
 ## Plan ledger
 
-**Goal:** preserve identity, lifecycle, fixed-simulation, movement and delivery prerequisites, then make gameplay randomness deterministic, checkpointed, replayable and frame-correlated.
+**Goal:** preserve identity and run-lifecycle prerequisites, then make runtime startup atomic, rollback-safe, retryable and proven by its first committed frame before later simulation authorities rely on readiness.
 
 ### Gate 1: roster identity and peer binding
 
@@ -24,11 +24,29 @@
 - [ ] Create run/session identity and epoch.
 - [ ] Correlate START_GAME, initial SYNC and acknowledgements.
 
-### Gate 4: run lifecycle and readiness
+### Gate 4: run lifecycle
 
 - [ ] Define exit, restart and stale-message quarantine.
-- [ ] Lease runtime providers and fence generations.
 - [ ] Retire disconnected actors and owned state transactionally.
+
+### Gate 4a: runtime startup acquisition and rollback
+
+- [ ] Replace procedural startup with a `StartRuntime` transaction.
+- [ ] Keep readiness false while startup is preparing.
+- [ ] Record renderer, scene, camera, post, world, canvas, observer, listener and RAF acquisitions.
+- [ ] Move initialized state to the successful commit boundary.
+- [ ] Roll back partial acquisitions in reverse dependency order.
+- [ ] Return typed failure, rollback and unresolved-lease results.
+- [ ] Fence callbacks with runtime generation and transaction identity.
+- [ ] Commit rendering/input readiness only after the first successful frame.
+- [ ] Admit retry only after a zero-live-lease baseline is proven.
+- [ ] Add failure-injection, idempotent rollback and clean-retry fixtures.
+
+### Gate 4b: runtime readiness and generation fencing
+
+- [ ] Lease simulation, rendering, networking and input providers.
+- [ ] Revoke readiness on stop, replacement or failure.
+- [ ] Correlate provider revisions with session/run/runtime generation.
 
 ### Gate 5: state acceptance and gameplay commands
 
@@ -45,15 +63,10 @@
 ### Gate 6c: authoritative randomness and replay
 
 - [ ] Derive a named ooze stream from run seed and session epoch.
-- [ ] Version the deterministic PRNG algorithm.
 - [ ] Remove gameplay fallback to ambient `Math.random()`.
-- [ ] Admit random draws by simulation step and expected draw index.
 - [ ] Commit gameplay mutation and RNG checkpoint atomically.
-- [ ] Project stream ID, algorithm version, state and draw index into snapshot/save/replay data.
-- [ ] Restore or transfer the stream during reconnect recovery and host migration.
-- [ ] Add bounded random-draw journal and clone-safe observation.
-- [ ] Correlate visible ooze frames with simulation and RNG checkpoint revisions.
-- [ ] Add deterministic replay, checkpoint roundtrip and migration continuation fixtures.
+- [ ] Project and restore versioned stream state.
+- [ ] Add deterministic replay and migration continuation fixtures.
 
 ### Gate 7: pause/resume convergence
 
@@ -63,4 +76,4 @@
 
 ## Completion boundary
 
-Do not claim deterministic replay, restore or host-migration correctness until the same seed, command history and fixed-step sequence reproduce byte-equivalent ooze snapshots and matching frame evidence.
+Do not claim startup readiness, rollback safety or clean retry until failures injected after each acquisition step produce zero leaked mandatory leases and a later start commits one correlated first frame.
