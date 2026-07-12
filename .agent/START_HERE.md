@@ -2,55 +2,56 @@
 
 **Repository:** `LuminaryLabs-Publish/HorrorCorridor`  
 **Branch:** `main`  
-**Updated:** `2026-07-12T01-08-06-04-00`
+**Updated:** `2026-07-12T02-49-19-04-00`
 
 ## Summary
 
 HorrorCorridor is a cooperative first-person procedural maze with solo, host and client sessions, PeerJS and BroadcastChannel transport, authoritative snapshots, cube interactions, ooze pressure, Three.js rendering, bloom, minimap, HUD and runtime debug readback.
 
-The current audit isolates debug-observability authority. A public runtime can enable full-state capture through query parameters, persisted localStorage flags, the backquote key or an unguarded `window.__HORROR_CORRIDOR_DEBUG__` API. Captured and visible data includes room/player identity, local pose and input, every cube ID/color/state/owner/position, the ordered anomaly solution, slot state, cadence and recent events.
+The current audit isolates active-gameplay presentation reachability. The minimap renderer is implemented and called every RAF, but the `PLAYING` branch of `HUDOverlay` does not mount the minimap canvas. The canvas is mounted only by the `COMPLETED` branch, so the minimap becomes reachable after gameplay has ended.
 
 ## Current ledge
 
 ```txt
-HorrorCorridor Debug Observability Capability Authority
-+ Production Disable / Redaction / Session Revocation / Export Fixture Gate
+HorrorCorridor Active Gameplay Presentation Authority
++ HUD/Minimap Surface Lease and Consumer Fixture Gate
 ```
 
 ## Plan ledger
 
-**Goal:** preserve useful developer and QA diagnostics while ensuring public players cannot silently activate privileged state capture, reveal puzzle state, persist debug access across runs or export data outside an admitted runtime/session capability.
+**Goal:** make the active HUD and minimap explicit consumers of one presentation frame so missing, stale, skipped and successful projections are observable and screen transitions cannot silently remove required gameplay surfaces.
 
 - [x] Compare all ten accessible Publish repositories with central tracking.
 - [x] Exclude `TheCavalryOfRome`.
 - [x] Confirm all nine eligible repositories have central-ledger and root `.agent` coverage.
 - [x] Select only `HorrorCorridor` as the oldest eligible repository.
-- [x] Trace query, localStorage, keyboard and window-API debug activation.
-- [x] Trace frame/event capture, ring-buffer retention, overlay rendering and export.
+- [x] Trace `GameShell`, `HUDOverlay`, `GameCanvas` and `Minimap`.
 - [x] Identify the interaction loop, domains, all 29 implemented kits and offered services.
-- [x] Define capability, classification, redaction, retention, export and revocation contracts.
+- [x] Confirm the PLAYING branch omits the minimap canvas.
+- [x] Confirm the RAF silently no-ops when the canvas is absent.
+- [x] Define presentation policy, surface leases, consumer results and frame acknowledgements.
 - [x] Add timestamped architecture and system audits.
 - [x] Refresh required root `.agent` documents and registry.
 - [x] Change documentation only.
 - [x] Push directly to `main`; create no branch or pull request.
-- [ ] Runtime implementation and executable browser/deployment fixtures remain future work.
+- [ ] Runtime implementation and executable browser fixtures remain future work.
 
 ## Read first
 
 ```txt
-.agent/trackers/2026-07-12T01-08-06-04-00/project-breakdown.md
-.agent/turn-ledger/2026-07-12T01-08-06-04-00.md
+.agent/trackers/2026-07-12T02-49-19-04-00/project-breakdown.md
+.agent/turn-ledger/2026-07-12T02-49-19-04-00.md
 .agent/current-audit.md
 .agent/known-gaps.md
 .agent/next-steps.md
 .agent/validation.md
 .agent/kit-registry.json
-.agent/architecture-audit/2026-07-12T01-08-06-04-00-debug-observability-authority-dsk-map.md
-.agent/render-audit/2026-07-12T01-08-06-04-00-privileged-debug-overlay-frame-gap.md
-.agent/gameplay-audit/2026-07-12T01-08-06-04-00-debug-activation-puzzle-disclosure-loop.md
-.agent/interaction-audit/2026-07-12T01-08-06-04-00-debug-command-capability-result-map.md
-.agent/debug-observability-audit/2026-07-12T01-08-06-04-00-capability-redaction-revocation-contract.md
-.agent/deploy-audit/2026-07-12T01-08-06-04-00-production-debug-capability-fixture-gate.md
+.agent/architecture-audit/2026-07-12T02-49-19-04-00-active-gameplay-presentation-dsk-map.md
+.agent/render-audit/2026-07-12T02-49-19-04-00-missing-minimap-consumer-frame-gap.md
+.agent/gameplay-audit/2026-07-12T02-49-19-04-00-playing-completed-hud-reachability-loop.md
+.agent/interaction-audit/2026-07-12T02-49-19-04-00-presentation-consumer-admission-map.md
+.agent/hud-minimap-audit/2026-07-12T02-49-19-04-00-active-play-surface-lease-contract.md
+.agent/deploy-audit/2026-07-12T02-49-19-04-00-active-hud-minimap-fixture-gate.md
 ```
 
 Retained prerequisite audits:
@@ -64,55 +65,51 @@ Retained prerequisite audits:
 .agent/disconnect-authority-audit/2026-07-11T16-21-09-04-00-player-retirement-owned-state-contract.md
 .agent/movement-authority-audit/2026-07-11T03-08-43-04-00-player-update-admission-correction-contract.md
 .agent/pause-authority-audit/2026-07-10T23-30-13-04-00-host-client-pause-resume-contract.md
+.agent/debug-observability-audit/2026-07-12T01-08-06-04-00-capability-redaction-revocation-contract.md
 ```
 
 ## Product interaction loop
 
 ```txt
-mode selection and lobby
-  -> snapshot bootstrap and GameCanvas startup
-  -> initialize runtime debug from query and persisted preferences
-  -> attach public window debug API
-  -> keyboard/query/window API can enable privileged capture
-  -> each enabled RAF clones frame, cube, anomaly, cadence and scene state
-  -> bounded frame/event buffers update
-  -> overlay renders privileged state or caller exports the full buffers
-  -> enabled/overlay preferences persist into later sessions
+GameShell enters PLAYING
+  -> GameCanvas begins simulation and RAF rendering
+  -> HUDOverlay evaluates PLAYING
+  -> mounts SettingsOverlay and FrameDebugPanel only
+  -> does not mount Minimap
+  -> GameCanvas queries runtime-minimap each RAF
+  -> query returns null
+  -> drawMinimapFrame exits silently
+  -> world/post-processing continue rendering
+  -> victory changes screen to COMPLETED
+  -> completed HUD branch mounts Minimap
+  -> minimap becomes reachable after the run ends
 ```
 
-## Current activation surface
+## Source-backed finding
 
 ```txt
-query:
-  ?debug=1|true|frames|verbose
-  ?debugFrames=1|true|frames|verbose
-
-persistent browser state:
-  horror-corridor:runtime-debug
-  horror-corridor:runtime-debug-overlay
-
-keyboard:
-  Backquote enables debug and toggles the overlay
-
-window API:
-  enable / disable / showOverlay / hideOverlay / clear
-  getLatestFrame / getFrames / getEvents / extractState
+implemented minimap renderer: yes
+PLAYING minimap mount: no
+COMPLETED minimap mount: yes
+per-frame minimap draw attempt: yes
+missing canvas handling: silent return
+consumer admission result: absent
+surface lease/revision: absent
+active minimap frame receipt: absent
 ```
-
-There is no build-mode gate, capability token, actor/role admission, session lease, data classification, redaction profile, export authorization, automatic revocation or production-safe projection.
 
 ## Required architecture
 
 ```txt
-DebugActivationCommand
-  -> validate build channel, runtime generation, session and actor role
-  -> resolve an explicit debug capability tier
-  -> create a revocable session lease
-  -> apply a named data-classification and redaction profile
-  -> capture only admitted frame/event fields within byte/count budgets
-  -> render or export through typed results
-  -> revoke on stop, session replacement, role loss or production policy change
-  -> prove public production defaults expose no privileged game-state surface
+PresentationFramePlan
+  -> admit screen and gameplay phase
+  -> resolve required consumers
+  -> acquire HUD/minimap surface leases
+  -> project world, HUD, minimap and debug from one frame identity
+  -> return typed consumer results
+  -> require mandatory acknowledgements
+  -> commit one visible presentation receipt
+  -> journal unavailable, skipped, stale and failed consumers
 ```
 
 ## Ordered safe ledges
@@ -125,7 +122,8 @@ DebugActivationCommand
 4a. Runtime Startup Acquisition and Rollback Authority
 4b. Runtime Readiness Lease and Generation Fencing
 4c. Render Surface Resolution and Frame Correlation Authority
-4d. Debug Observability Capability and Redaction Authority
+4d. Active Gameplay Presentation and HUD/Minimap Reachability Authority
+4e. Debug Observability Capability and Redaction Authority
 5. Snapshot Acceptance Authority
 5a. Interaction Target Intent and Cube/Slot Claim Authority
 5b. Active-Run Disconnect and Reconnect Authority
