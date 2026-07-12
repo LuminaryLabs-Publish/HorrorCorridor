@@ -1,10 +1,16 @@
 # HorrorCorridor Next Steps
 
-**Updated:** `2026-07-12T09-38-46-04-00`
+**Updated:** `2026-07-12T09-48-15-04-00`
 
 ## Plan ledger
 
-**Goal:** preserve existing authority prerequisites, then make route-to-run loading a cancellable single-flight transaction before strengthening runtime startup and gameplay authority.
+**Goal:** preserve the ordered authority prerequisites, implement cancellable loading as a single-flight transaction, then strengthen runtime startup and gameplay authority.
+
+### Documentation reconciliation
+
+- [x] Align `START_HERE.md`, `current-audit.md` and `.agent/kit-registry.json` with the loading-transition generation boundary.
+- [x] Add a new timestamped tracker, turn ledger and audit family.
+- [x] Synchronize the central repo ledger and internal change log in the current run.
 
 ### Gate 1: roster identity and peer binding
 
@@ -74,4 +80,4 @@
 
 ## Completion boundary
 
-Do not claim safe run startup until overlapping or cancelled loads cannot commit, lobby inputs are sealed, all live stores change under one transaction, transport start messages are exactly once, and the first visible world frame cites the committed loading and run generation.
+Do not claim safe run startup until overlapping or cancelled loads cannot commit, lobby inputs are sealed, all live stores change under one transaction, transport start messages are exactly once, retained world resources match the committed run generation and the first visible frame cites that generation.
