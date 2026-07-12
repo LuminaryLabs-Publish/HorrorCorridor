@@ -1,28 +1,29 @@
 # HorrorCorridor Validation
 
-**Updated:** `2026-07-12T09-48-15-04-00`
+**Updated:** `2026-07-12T12-21-38-04-00`
 
 ## Plan ledger
 
-**Goal:** record exactly what this documentation reconciliation proves and withhold all runtime safety claims that require executable fixtures.
+**Goal:** record exactly what source inspection proves and withhold runtime multiplayer claims until executable transport fixtures pass.
 
-- [x] Inspect the full Publish inventory and central ledger state.
-- [x] Inspect the current repo-local `.agent` routing and registry.
-- [x] Inspect the loading sequence and post-await commit paths.
-- [x] Inspect one-time world initialization from the first snapshot.
-- [x] Refresh required root documentation and timestamped audits.
-- [x] Prepare central ledger and internal change-log synchronization.
-- [ ] Run runtime, browser, multiplayer and deployment checks after implementation exists.
+- [x] Compare the full Publish inventory and central ledger.
+- [x] Verify root `.agent` state for all eligible repositories.
+- [x] Inspect current HorrorCorridor audit routing and recent commits.
+- [x] Inspect `GameShell.tsx`, `createHost.ts` and `createClient.ts`.
+- [x] Trace BroadcastChannel and PeerJS mode branches.
+- [x] Refresh required root and timestamped documentation.
+- [x] Update central tracking.
+- [ ] Run browser and cross-device fixtures after implementation exists.
 
 ## Change scope
 
 ```txt
 runtime source changed: no
+network behavior changed: no
+gameplay behavior changed: no
+render behavior changed: no
 package scripts changed: no
 dependencies changed: no
-network behavior changed: no
-input or movement behavior changed: no
-render behavior changed: no
 deployment changed: no
 branch created: no
 pull request created: no
@@ -33,24 +34,25 @@ documentation changed: yes
 
 ```txt
 complete LuminaryLabs-Publish repository inventory
-central Publish repo ledger comparison
-HorrorCorridor current root .agent routing and retained gaps
+central Publish repo ledgers
+root START_HERE state for all nine eligible repositories
 HorrorCorridor recent main commits
 HorrorCorridor-V1/src/components/game/GameShell.tsx
-HorrorCorridor-V1/src/components/game/GameCanvas.tsx
+HorrorCorridor-V1/src/features/networking/peer/createHost.ts
+HorrorCorridor-V1/src/features/networking/peer/createClient.ts
+HorrorCorridor-V1/package.json
 ```
 
 ## Confirmed by inspection
 
 ```txt
-runLoadingSteps changes route then crosses five RAF and timeout pairs
-enterSoloRun commits session, runtime and UI state after the async wait
-host startPlay commits state and broadcasts after the async wait
-host startPlay retains room, roster, identity and connection values across the wait
-component cleanup destroys transport but does not cancel in-flight loading functions
-GameCanvas initializes retained world resources only once from the first snapshot
-no loading command ID, generation, cancellation token or stale-result rejection exists
-central ledger was older than the current repo-local loading-transition audit
+host creates a BroadcastChannel whenever the API exists
+host installs PeerJS connection handling only when no local bridge exists
+client creates a BroadcastChannel whenever the API and host ID exist
+client calls peer.connect only when no local bridge exists
+client local-bridge connect posts a packet and immediately sets connected
+no host acknowledgement, timeout or fallback is required
+local bridge and PeerJS mode/revision are absent from session state
 ```
 
 ## Documentation checks
@@ -63,9 +65,9 @@ architecture audit: yes
 render audit: yes
 gameplay audit: yes
 interaction audit: yes
-central-sync audit: yes
+transport-mode audit: yes
 deploy audit: yes
-kit registry JSON structure reviewed: yes
+kit registry refreshed: yes
 central ledger update: current run
 central internal change log: current run
 ```
@@ -76,28 +78,27 @@ central internal change log: current run
 npm install
 npm run build
 npm run lint
-npm run test:protokits
-npm run test:harness
 browser launch
-multiplayer launch
+same-origin tab multiplayer smoke
+cross-origin multiplayer smoke
+cross-device multiplayer smoke
 GitHub Pages smoke
 ```
 
 ## Missing executable fixtures
 
 ```txt
-overlapping solo start fixture
-overlapping host start fixture
-route exit during load fixture
-component unmount during load fixture
-lobby membership or readiness change during load fixture
-transport replacement during load fixture
-duplicate START_GAME and SYNC fixture
-candidate bootstrap rollback fixture
-world and snapshot generation parity fixture
-first visible run-frame acknowledgement fixture
+client-without-host fixture
+client-before-host-listener fixture
+same-origin local bridge fixture
+separate-browser-profile PeerJS fixture
+cross-origin PeerJS fixture
+cross-device PeerJS fixture
+transport fallback fixture
+duplicate-delivery fixture
+first remote-player frame acknowledgement fixture
 ```
 
 ## Claims intentionally withheld
 
-No claim is made for loading cancellation, exactly-once start, stale-result rejection, atomic run commit, lobby-input sealing, duplicate-broadcast prevention, world/snapshot parity or first-frame provenance until executable fixtures exist and pass.
+No claim is made for working cross-origin or cross-device multiplayer, truthful connected status, acknowledged reachability, deterministic fallback, duplicate-safe path switching or visible remote-player parity until executable fixtures exist and pass.
