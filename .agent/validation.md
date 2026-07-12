@@ -1,10 +1,10 @@
 # HorrorCorridor Validation
 
-**Updated:** `2026-07-12T16-29-56-04-00`
+**Updated:** `2026-07-12T16-39-35-04-00`
 
 ## Summary
 
-Source inspection proves that host-class messages reach client store mutations without contextual source, room or generation admission. It does not prove that an exploit has occurred in a deployed session, and it does not prove rejection behavior because the required authority and fixtures do not exist.
+Source inspection proves that host-class messages reach client store mutations without contextual source, room or generation admission. It does not prove that an exploit occurred in a deployed session, and it does not prove rejection behavior because the required authority and fixtures do not exist.
 
 ## Plan ledger
 
@@ -12,12 +12,13 @@ Source inspection proves that host-class messages reach client store mutations w
 
 - [x] Compare the full Publish inventory and central ledger.
 - [x] Verify root `.agent` state for all nine eligible repositories.
-- [x] Select HorrorCorridor as the oldest eligible repository.
-- [x] Inspect transport events, protocol messages, serializers and `GameShell` consumers.
-- [x] Trace `START_GAME`, `SYNC` and `LOBBY_EVENT` into client state and presentation.
+- [x] Select HorrorCorridor from newer repo-local audit state.
+- [x] Inspect transport events, protocol messages, serializers and client consumers.
+- [x] Trace `START_GAME`, `SYNC` and `LOBBY_EVENT` into state and presentation.
 - [x] Preserve the 29-kit and service census.
-- [x] Refresh required root and timestamped documentation.
-- [x] Update central tracking.
+- [x] Add the fresh timestamped reconciliation family.
+- [x] Refresh root documentation and machine registry.
+- [x] Synchronize central tracking.
 - [ ] Run protocol, adapter and browser adversarial fixtures after implementation exists.
 
 ## Change scope
@@ -39,8 +40,8 @@ documentation changed: yes
 
 ```txt
 complete LuminaryLabs-Publish repository inventory
-all nine central Publish repo ledgers
-all nine eligible root .agent/START_HERE.md files
+central Publish repo ledger state
+all eligible root .agent entrypoints
 HorrorCorridor root audit state
 HorrorCorridor-V1/src/features/networking/peer/peerEvents.ts
 HorrorCorridor-V1/src/features/networking/protocol/messageTypes.ts
@@ -60,9 +61,7 @@ serializer does not validate current host or active room
 GameShell processes START_GAME by message type alone
 GameShell processes SYNC by message type alone
 GameShell processes LOBBY_EVENT by message type alone
-START_GAME can replace room, roster, host identity and status
-SYNC can replace room, roster, authoritative snapshot, route and readiness
-LOBBY_EVENT can replace room, roster and status
+host-class messages can replace room, roster, snapshot, route, status and readiness
 no current connection-generation or session-epoch check exists
 no typed wrong-source, wrong-room, stale or duplicate result exists
 no first authoritative-message visible-frame acknowledgement exists
@@ -115,7 +114,7 @@ duplicate message result
 older authority-revision rejection
 local-bridge and PeerJS parity
 first authoritative-message visible frame
-source, dist and Pages parity
+source, production build and Pages parity
 ```
 
 ## Claims intentionally withheld
