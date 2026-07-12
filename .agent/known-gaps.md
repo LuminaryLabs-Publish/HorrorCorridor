@@ -1,14 +1,18 @@
 # HorrorCorridor Known Gaps
 
-**Updated:** `2026-07-12T14-30-36-04-00`
+**Updated:** `2026-07-12T16-29-56-04-00`
+
+## Summary
+
+The newest documented gap is authoritative message-source admission. Structural protocol validation currently precedes direct client state mutation, but no boundary proves that a host-class message came from the current admitted host connection, belongs to the active room or cites the current session and authority generation.
 
 ## Plan ledger
 
-**Goal:** preserve the ordered runtime authority gaps while elevating scoped transport-error retirement and stale-event quarantine directly after channel admission.
+**Goal:** preserve the ordered multiplayer authority gaps while placing host-message source admission between connection/actor binding and client-authoritative state commit.
 
-- [x] Preserve prior identity, transport-mode, connection-admission, loading, lifecycle, clock, snapshot, movement, rendering and debug findings.
-- [x] Add explicit error-scope, terminality, retirement, replacement and late-callback findings.
-- [ ] Implement and prove complete transport and session reconciliation.
+- [x] Preserve prior identity, transport-mode, channel-admission, error-retirement, loading, lifecycle, clock, snapshot, movement, rendering and debug findings.
+- [x] Add explicit sender, peer, room, session, generation and authority-revision gaps.
+- [ ] Implement and prove complete message-source admission.
 
 ## Primary ordered gaps
 
@@ -19,132 +23,122 @@
 4. scoped transport-error classification and exactly-once retirement
 5. late connection-event quarantine and replacement supersession
 6. connection-to-actor binding and atomic roster membership
-7. sealed lobby start transaction and correlated initial SYNC
-8. loading transition generation, cancellation and atomic commit
-9. run exit, session epoch and late-message quarantine
-10. runtime startup acquisition, rollback and clean retry
-11. runtime readiness leases and generation fencing
-12. render-surface resolution, revision and frame correlation
-13. active gameplay presentation and consumer acknowledgement
-14. debug-observability capability, redaction and revocation
-15. focus, visibility and held-control retirement
-16. runtime frame-failure containment and cold restart
-17. canonical runtime clock and temporal provenance
-18. snapshot acceptance ordering and monotonic revision
-19. explicit interaction targets and cube/slot claims
-20. active-run disconnect and reconnect claims
-21. monotonic terminal outcome authority
-22. host cadence and fixed simulation authority
-23. host movement admission and client reconciliation
-24. snapshot payload budgeting and backpressure
-25. authoritative randomness, checkpoint and replay
-26. replicated pause/resume convergence
+7. authoritative host-message source, room and generation admission
+8. sealed lobby start transaction and correlated initial SYNC
+9. loading transition generation, cancellation and atomic commit
+10. run exit, session epoch and late-message quarantine
+11. runtime startup acquisition, rollback and clean retry
+12. runtime readiness leases and generation fencing
+13. render-surface resolution, revision and frame correlation
+14. active gameplay presentation and consumer acknowledgement
+15. debug-observability capability, redaction and revocation
+16. focus, visibility and held-control retirement
+17. runtime frame-failure containment and cold restart
+18. canonical runtime clock and temporal provenance
+19. snapshot acceptance ordering and monotonic revision
+20. explicit interaction targets and cube/slot claims
+21. active-run disconnect and reconnect claims
+22. monotonic terminal outcome authority
+23. host cadence and fixed simulation authority
+24. host movement admission and client reconciliation
+25. snapshot payload budgeting and backpressure
+26. authoritative randomness, checkpoint and replay
+27. replicated pause/resume convergence
 ```
 
-## Current transport-error gap
+## Current message-source gap
 
 ```txt
-peer and DataConnection errors use one peer/error event shape
-peer/error has no scope
-peer/error has no remotePeerId
-peer/error has no connectionId or generation
-peer/error has no terminal or retryable classification
-host error handler leaves connection in map
-client error handler leaves activeConnection installed
-GameShell performs no error-specific reconciliation
-callbacks remain attached after error
-replacement has no predecessor supersession result
-late events are not generation-fenced
-room and roster can remain stale
-visible player rows have no disconnected/error state
+peer/message carries remotePeerId: yes
+peer/message carries connectionId: yes
+protocol envelope carries senderId and roomId: yes
+structural shape validation: yes
+host-only message classification: implicit by consumer branch
+remote peer compared with current host: no
+senderId compared with host player: no
+connection generation compared: no
+session epoch compared: no
+active room compared: no
+payload room compared with envelope room: no
+authority revision compared: no
+duplicate authoritative message result: no
+zero-mutation rejection result: no
+first authoritative-message frame acknowledgement: no
 ```
 
 ## Failure paths
 
-### Host error without close
+### Forged START_GAME
 
 ```txt
-DataConnection emits error
-  -> peer/error published
-  -> no connection record removed
-  -> no connection-close event published
-  -> GameShell does not remove or mark guest
-  -> Start run can consume unreachable participant
+non-host source emits shape-valid START_GAME
+  -> GameShell accepts message type
+  -> room and lobbyPlayers replaced
+  -> host identity updated from payload
+  -> connection status becomes connected
 ```
 
-### Client error without close
+### Forged SYNC
 
 ```txt
-DataConnection emits error
-  -> currentStatus becomes error
-  -> activeConnection remains installed
-  -> room and players remain visible
-  -> reconnect can create replacement
-  -> predecessor callbacks remain live
+non-host source emits shape-valid SYNC
+  -> room and roster replaced
+  -> authoritative snapshot replaced
+  -> payload gameState selects playing, paused or victory
+  -> readiness becomes true
 ```
 
-### Late predecessor open
+### Wrong-room lobby replacement
 
 ```txt
-terminal error observed
-  -> predecessor not retired
-  -> predecessor later emits open
-  -> no generation comparison
-  -> stale connection can report connected again
+shape-valid LOBBY_EVENT cites another room
+  -> no active-room admission
+  -> client room and visible players replaced
 ```
 
-### Late predecessor close after replacement
+### Late predecessor message
 
 ```txt
-replacement becomes active
-  -> old connection later emits close
-  -> close event has no connection generation
-  -> current route/status or membership can be changed by predecessor
-```
-
-### Ghost-member start
-
-```txt
-host retains errored guest
-  -> lobby still projects guest
-  -> Start run remains enabled
-  -> bootstrap creates guest actor
-  -> initial messages cannot reach failed channel
+client reconnects to successor connection
+  -> predecessor later emits SYNC or LOBBY_EVENT
+  -> event has no connection-generation fence
+  -> successor session can adopt predecessor state
 ```
 
 ## Missing authority
 
 ```txt
-transport error ID
-error scope and source
-peer/connection/local-bridge classification
-error-to-connection binding
-connection and reconnect-attempt generations
-terminality and retryability policy
-exactly-once retirement command/result
-handler-detachment receipt
-late-event quarantine
-connection supersession result
-roster reconciliation command/result
-truthful disconnected/error projection
-start-eligibility recomputation
-first visible error-state frame acknowledgement
+authoritative message ID and class
+current host capability
+message-source binding
+sender-to-peer consistency
+host-peer consistency
+connection-generation admission
+session epoch admission
+room identity consistency
+authority revision and monotonic ordering
+duplicate authoritative message result
+wrong-source and wrong-room rejection result
+bounded authority observations and journal
+first authoritative-message visible-frame acknowledgement
 ```
 
 ## Consequences
 
 ```txt
-failed connections can remain owned indefinitely
-visible roster can overstate reachable participants
-host and client session state can diverge
-retry can overlap predecessor callbacks
-stale events can mutate successor state
-bootstrap can include unreachable actors
-initial run delivery can omit retained participants
-reconnect can collide with stale identity and slot ownership
-diagnostics cannot prove complete retirement
+shape-valid data can be mistaken for trusted authority
+non-host peers can potentially replace client state
+wrong-room state can cross session boundaries
+predecessor connections can mutate successor sessions
+lobby and gameplay presentation cannot prove host provenance
+client readiness can be enabled by an unadmitted source
+victory, pause or active-play projection can be source-untrusted
 ```
 
 ## Retained gaps
 
-All preceding transport-mode, connection-open, lobby readiness, loading-transition, canonical-clock, frame-failure, input-lifecycle, active-presentation, debug, render-surface, startup, runtime-readiness, randomness, snapshot-delivery, cadence, movement, disconnect, interaction, outcome, snapshot-acceptance, lobby, exit and pause findings remain open.
+All preceding transport-error, transport-mode, connection-open, lobby readiness, loading-transition, canonical-clock, frame-failure, input-lifecycle, active-presentation, debug, render-surface, startup, runtime-readiness, randomness, snapshot-delivery, cadence, movement, disconnect, interaction, outcome, snapshot-acceptance, lobby, exit and pause findings remain open.
+
+## Do not claim
+
+Do not claim authenticated host state, wrong-room isolation, stale-message quarantine, duplicate suppression or authoritative visible frames until source admission and adversarial fixtures pass on `main`.
