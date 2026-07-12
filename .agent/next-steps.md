@@ -1,10 +1,10 @@
 # HorrorCorridor Next Steps
 
-**Updated:** `2026-07-12T01-08-06-04-00`
+**Updated:** `2026-07-12T02-49-19-04-00`
 
 ## Plan ledger
 
-**Goal:** preserve identity, startup, lifecycle and surface prerequisites, then separate public-safe telemetry from privileged QA diagnostics before any release claims rely on the current browser debug surface.
+**Goal:** preserve identity, startup, lifecycle and render-surface prerequisites, then make every active gameplay presentation consumer reachable and frame-correlated before diagnostics or deployment claims rely on the current UI composition.
 
 ### Gate 1: roster identity and peer binding
 
@@ -37,7 +37,6 @@
 - [ ] Roll back partial acquisitions in reverse dependency order.
 - [ ] Fence callbacks with runtime generation and transaction identity.
 - [ ] Commit rendering/input readiness only after the first successful frame.
-- [ ] Add failure-injection, idempotent rollback and clean-retry fixtures.
 
 ### Gate 4b: runtime readiness and generation fencing
 
@@ -47,26 +46,33 @@
 
 ### Gate 4c: render surface resolution and frame correlation
 
-- [ ] Define a named surface policy with DPR limits, maximum physical pixels and zero-area behavior.
+- [ ] Define named surface policy with DPR and physical-pixel limits.
 - [ ] Convert startup, ResizeObserver, window resize and DPR changes into sequenced surface commands.
-- [ ] Commit renderer, composer, bloom, camera and minimap from one plan.
-- [ ] Read back actual physical sizes and publish a monotonic surface revision.
-- [ ] Require rendering readiness, visible frames, captures and debug records to cite the revision.
-- [ ] Add zero-area, DPR parity, resize-storm and stop/restart fixtures.
+- [ ] Commit renderer, composer, bloom, camera and minimap sizing from one plan.
+- [ ] Publish monotonic surface revision and actual dimensions.
 
-### Gate 4d: debug observability capability and redaction
+### Gate 4d: active gameplay presentation and HUD/minimap reachability
 
-- [ ] Define build channels: public production, QA preview and local development.
-- [ ] Define player-safe, QA and developer capability tiers.
-- [ ] Replace ambient query, Backquote, localStorage and window-API enablement with `DebugActivationCommand` admission.
-- [ ] Bind every capability to actor identity, role, runtime generation and session epoch.
-- [ ] Issue a revocable lease with explicit expiry and reason.
-- [ ] Classify every captured frame/event field.
-- [ ] Create a public-safe redaction profile that excludes puzzle order, cube coordinates, owner IDs and room/player identifiers.
-- [ ] Gate privileged overlay and export surfaces behind the admitted lease.
-- [ ] Return typed activation, export and revocation results.
-- [ ] Clear privileged buffers and persisted flags on revocation, stop and session replacement.
-- [ ] Add production-disable, tier-redaction, localStorage-restart, session-revocation and export-budget fixtures.
+- [ ] Define PLAYING, PAUSED and COMPLETED consumer policies.
+- [ ] Mount the active HUD shell during `PLAYING`.
+- [ ] Mount `Minimap` during `PLAYING` when required by policy.
+- [ ] Replace `document.getElementById` discovery with an explicit minimap surface ref/lease.
+- [ ] Bind HUD and minimap leases to runtime generation and screen revision.
+- [ ] Create one immutable `PresentationFramePlan` per RAF.
+- [ ] Return accepted, skipped, unavailable, stale and failed consumer results.
+- [ ] Require world, post-processing, HUD and policy-required minimap acknowledgements.
+- [ ] Commit one visible presentation frame receipt.
+- [ ] Revoke stale surface leases on screen transition and teardown.
+- [ ] Add active-play mount, pause/resume, completion-transition and frame-correlation fixtures.
+
+### Gate 4e: debug observability capability and redaction
+
+- [ ] Define public, QA and development build channels and capability tiers.
+- [ ] Replace ambient query, Backquote, localStorage and window-API elevation with admitted commands.
+- [ ] Bind capability to actor, role, runtime generation and session epoch.
+- [ ] Apply field classification, redaction, retention and export policy.
+- [ ] Require debug projection to consume committed presentation frames.
+- [ ] Revoke leases and clear privileged buffers on stop or replacement.
 
 ### Gate 5: state acceptance and gameplay commands
 
@@ -82,7 +88,7 @@
 
 ### Gate 6c: authoritative randomness and replay
 
-- [ ] Derive a named ooze stream from run seed and session epoch.
+- [ ] Derive named random streams from run seed and session epoch.
 - [ ] Remove gameplay fallback to ambient `Math.random()`.
 - [ ] Commit gameplay mutation and RNG checkpoint atomically.
 - [ ] Add deterministic replay and migration continuation fixtures.
@@ -95,4 +101,4 @@
 
 ## Completion boundary
 
-Do not claim production-safe diagnostics until public builds reject privileged activation by default, player-safe exports are redacted, privileged leases revoke across session/runtime replacement, and browser fixtures prove the overlay/window API cannot disclose puzzle-solving state without an explicitly admitted QA or developer capability.
+Do not claim the active presentation surface complete until `PLAYING` mounts every mandatory consumer, missing surfaces produce typed failures, world/HUD/minimap results cite one frame identity, and browser fixtures prove the minimap is usable before terminal completion.
