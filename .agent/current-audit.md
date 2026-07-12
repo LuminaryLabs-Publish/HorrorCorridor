@@ -1,39 +1,31 @@
 # HorrorCorridor Current Audit
 
 **Repository:** `LuminaryLabs-Publish/HorrorCorridor`  
-**Updated:** `2026-07-12T14-30-36-04-00`
-
-## Status
-
-```txt
-status: transport-error-retirement-authority-audited
-runtime source changed: no
-branch: main
-root .agent state: refreshed
-central ledger sync: current run
-```
+**Updated:** `2026-07-12T16-29-56-04-00`  
+**Branch:** `main`  
+**Status:** `authoritative-message-source-admission-authority-audited`
 
 ## Summary
 
 The repository retains a 29-kit browser runtime spanning application routing, session and lobby state, PeerJS transport, a same-origin BroadcastChannel bridge, deterministic maze bootstrap, movement, interactions, ooze, authoritative snapshots, Three.js rendering, bloom, minimap, diagnostics and cleanup.
 
-The current boundary is transport-error retirement. `peer/error` is used for both peer-level and DataConnection-level failures but contains no error scope, remote peer, connection ID, connection generation, terminality or retryability. Host connection errors leave failed connections in the map. Client connection errors leave `activeConnection` installed. `GameShell` has no error-specific retirement branch, so room and roster state can remain authoritative after the underlying channel fails.
+The current boundary is authoritative message-source admission. `peer/message` contains `remotePeerId`, `connectionId` and a decoded protocol message. The protocol envelope contains `senderId`, `roomId`, timestamp and payload. The serializer validates version and structural shape. `GameShell` then accepts `START_GAME`, `SYNC` and `LOBBY_EVENT` by message type alone and replaces client room, roster, snapshot, route, status and readiness without validating the current host peer, sender binding, active room, connection generation, session epoch or authority revision.
 
 ## Plan ledger
 
-**Goal:** make every transport failure scoped, generation-bound, classifiable and reducible to one exactly-once retirement or recovery result with atomic session reconciliation and visible proof.
+**Goal:** make every host-class message source-bound, room-bound, generation-bound, monotonic and reducible to one typed admission result before client state or presentation can change.
 
 - [x] Compare the complete Publish inventory and central ledger.
 - [x] Exclude `TheCavalryOfRome`.
 - [x] Verify all nine eligible root `.agent` entrypoints.
-- [x] Select only `HorrorCorridor` because repo-local audit state was newer than central tracking.
-- [x] Read current root `.agent` state and transport/session source.
-- [x] Trace peer-level and connection-level errors through adapters and GameShell.
-- [x] Identify the interaction loop, domains, 29 kits and services.
-- [x] Define transport-error retirement authority and fixtures.
-- [x] Refresh root and central documentation on `main`.
+- [x] Select only `HorrorCorridor` as the oldest eligible central-ledger entry.
+- [x] Read current root audit state, transport events, protocol message types, serializers and client consumers.
+- [x] Trace host-class messages into room, roster, snapshot, route and readiness mutations.
+- [x] Identify the interaction loop, domains, all 29 kits and services.
+- [x] Define message-source admission authority and fixtures.
+- [x] Refresh root documentation and registry on `main`.
 - [x] Create no branch or pull request.
-- [ ] Runtime implementation and executable retirement fixtures remain future work.
+- [ ] Runtime implementation and executable adversarial fixtures remain future work.
 
 ## Selection state
 
@@ -43,39 +35,36 @@ eligible non-Cavalry repositories: 9
 new eligible repositories: 0
 central-ledger-missing eligible repositories: 0
 root-.agent-missing eligible repositories: 0
+unsynchronized root audit state: 0
 selected repository: LuminaryLabs-Publish/HorrorCorridor
-selection reason: repo-local 2026-07-12T14-22-01-04-00 audit was newer than central 2026-07-12T12-21-38-04-00 tracking
+selection reason: oldest eligible central timestamp, 2026-07-12T14-30-36-04-00
 excluded repository: LuminaryLabs-Publish/TheCavalryOfRome
 ```
 
-## Product interaction loop
+## Complete interaction loop
 
 ```txt
 browser route
   -> choose solo, host or client
 
 transport setup
-  -> host creates PeerJS connection map or local bridge
-  -> client creates active PeerJS connection or local bridge
-  -> event bus publishes status, open, close, message and error
+  -> host or client creates PeerJS or local-bridge transport
+  -> admitted connection emits peer/message
+  -> event carries remotePeerId and connectionId
 
-connection error
-  -> DataConnection emits error
-  -> adapter emits peer/error without connection identity or generation
-  -> host leaves connection in map
-  -> client leaves activeConnection installed
-  -> GameShell ignores peer/error as a retirement transition
+protocol decode
+  -> validate protocol version and structural payload shape
+  -> decoded message carries senderId, roomId, timestamp and payload
 
-session and visible effect
-  -> room and lobbyPlayers remain unchanged
-  -> guest can remain visible as waiting or connected
-  -> Start run remains available
-  -> bootstrap can consume unreachable participant
+client authoritative-message consumption
+  -> GameShell checks only message.type
+  -> START_GAME replaces room, players, host identity and connection status
+  -> SYNC replaces room, players, authoritative snapshot, route and readiness
+  -> LOBBY_EVENT replaces room, players and status
 
-replacement or late event
-  -> retry can install another connection
-  -> predecessor callbacks remain live
-  -> no generation fence rejects late open, close, data or error
+presentation
+  -> LobbyScreen, HUDOverlay and GameCanvas consume successor stores
+  -> visible state has no accepted-source or authority-revision receipt
 ```
 
 ## Domains in use
@@ -95,7 +84,9 @@ connection candidate, open, error, close, supersession and retirement
 transport-error identity, scope, classification and policy
 connection-to-actor binding and lobby-member reconciliation
 room-roster revision, fingerprint and start eligibility
-protocol envelopes, serialization, request and sequence admission
+protocol envelopes, serialization, structural validation and sequencing
+authoritative message class, source identity, host capability and room admission
+session epoch, connection generation and authority revision
 seeded maze topology, cube placement, target sequence and random streams
 snapshot construction, publication, acceptance, delivery and backpressure
 keyboard, mouse, pointer lock, focus, visibility and input lifecycle
@@ -121,7 +112,7 @@ peer-host-transport-kit                PeerJS host, local bridge, connection map
 peer-client-transport-kit              PeerJS client, local bridge, connect, send, status, disconnect and destroy
 peer-event-bus-kit                     typed transport events, subscription and cleanup
 protocol-message-construction-kit      START_GAME, PLAYER_UPDATE, TRY_INTERACT, SYNC and LOBBY_EVENT
-protocol-serialization-kit             encode, decode, version and shape validation
+protocol-serialization-kit             encode, decode, version and structural shape validation
 maze-snapshot-bootstrap-kit            seed, maze, players, cubes, anomaly and initial snapshot
 seeded-maze-rng-kit                    topology, placement and target sequence
 first-person-input-kit                 keyboard, pointer lock, look and snapshots
@@ -141,180 +132,142 @@ runtime-resource-cleanup-kit           loop, subscriptions, listeners, observers
 package-validation-kit                 build, lint, harness, visual and live-player checks
 ```
 
-## Transport-error findings
+## Source-backed findings
 
-### Event contract
+### Transport event source evidence
 
 ```txt
-peer-level and connection-level errors share peer/error: yes
-error scope field: no
-remotePeerId field: no
-connectionId field: no
-connection generation field: no
-terminal/retryable classification: no
-error ID or idempotency key: no
+peer/message includes remotePeerId: yes
+peer/message includes connectionId: yes
+peer/message includes role: yes
+peer/message includes decoded message: yes
+connection generation included: no
+session epoch included: no
+transport revision included: no
 ```
 
-### Host behavior
+### Protocol structural evidence
 
 ```txt
-connection error emits peer/error: yes
-connection map record removed: no
-connection closed by error handler: no
-connection-close event emitted: no
-connection handlers detached: no
-roster member reconciled: no
+envelope includes senderId: yes
+envelope includes roomId: yes
+envelope includes timestampMs: yes
+optional requestId: yes
+serializer checks protocol version and payload shape: yes
+serializer checks sender-to-peer binding: no
+serializer checks active room: no
+serializer checks current host authority: no
 ```
 
-### Client behavior
+### Client consumer admission
 
 ```txt
-connection error sets currentStatus=error: yes
-peer/error emitted: yes
-peer/status error emitted: yes
-activeConnection cleared: no
-connection handlers detached: no
-room or roster policy applied: no
-replacement generation allocated: no
-```
-
-### Consumer behavior
-
-```txt
-GameShell handles peer/status: yes
-GameShell handles peer/connection-open: yes
-GameShell handles peer/connection-close: yes
-GameShell handles peer/message: yes
-GameShell handles peer/error: no
-```
-
-### Late events and replacement
-
-```txt
-failed predecessor can later emit open: yes
-failed predecessor can later emit close: yes
-failed predecessor can later emit data: implementation callbacks remain attached
-stale generation check: no
-replacement supersession result: no
-exactly-once retirement: no
+START_GAME checks event.remotePeerId against expected host: no
+START_GAME checks message.senderId against host player: no
+START_GAME checks active room: no
+SYNC checks current host source: no
+SYNC checks connection generation: no
+SYNC checks session epoch: no
+LOBBY_EVENT checks host source or active room: no
+authority revision is monotonic: no
+duplicate host message result exists: no
+wrong-source rejection performs typed zero-mutation result: no
+first authoritative-message visible-frame acknowledgement exists: no
 ```
 
 ## Concrete failure paths
 
 ```txt
-host error without close
-  -> connection remains in map
-  -> guest remains in room and lobbyPlayers
-  -> Start run can include unreachable actor
-  -> initial broadcast skips failed channel
+non-host forged START_GAME
+  -> client replaces room and players
+  -> client changes host peer identity
+  -> client reports connected
 
-client error without close
-  -> activeConnection remains owned
-  -> status changes to error
-  -> room and players remain visible
-  -> retry can install replacement without retiring predecessor
+non-host forged SYNC
+  -> client replaces authoritative snapshot
+  -> attacker-selected gameState can route client to playing, paused or victory
+  -> readiness becomes true
 
-late predecessor callback
-  -> failed connection emits open or close later
-  -> event carries no generation fence
-  -> newer connection or roster state can be mutated by stale callback
-```
+wrong-room LOBBY_EVENT
+  -> client replaces active room and visible roster
 
-## Missing authority
-
-```txt
-transport error identity
-error scope and source classification
-peer/connection/local-bridge distinction
-connection and reconnect-attempt generations
-error-to-connection binding
-terminality and retry policy
-exactly-once retirement command/result
-handler detachment receipt
-late-event quarantine
-connection supersession result
-roster reconciliation command/result
-truthful status projection
-start-eligibility recomputation
-bounded failure observations and journal
-first visible error-state frame acknowledgement
+late predecessor message after reconnect
+  -> connection generation is not compared
+  -> stale predecessor can mutate successor session
 ```
 
 ## Required parent domain
 
 ```txt
-corridor-transport-error-retirement-authority-domain
+corridor-authoritative-message-source-admission-authority-domain
 ```
 
 ## Candidate kits
 
 ```txt
-transport-error-id-kit
-transport-error-scope-kit
-transport-error-classification-kit
+authoritative-message-class-kit
+authoritative-message-id-kit
+message-source-identity-kit
+message-source-binding-kit
+host-authority-capability-kit
+message-room-binding-kit
+session-epoch-kit
+transport-mode-revision-kit
 connection-generation-kit
-connection-error-binding-kit
-connection-terminal-policy-kit
-connection-retirement-command-kit
-connection-retirement-admission-kit
-connection-retirement-result-kit
-connection-handler-detachment-kit
-late-connection-event-quarantine-kit
-peer-signalling-recovery-kit
-client-reconnect-attempt-kit
-connection-supersession-kit
-roster-reconciliation-command-kit
-roster-reconciliation-result-kit
-session-status-projection-kit
-transport-failure-observation-kit
-transport-failure-journal-kit
-first-error-state-frame-ack-kit
-host-error-without-close-fixture-kit
-client-error-without-close-fixture-kit
-peer-vs-connection-error-fixture-kit
-late-open-after-error-fixture-kit
-replacement-connection-stale-close-fixture-kit
-start-after-error-fixture-kit
+sender-peer-consistency-kit
+host-peer-consistency-kit
+room-consistency-kit
+host-message-admission-kit
+stale-authority-message-rejection-kit
+duplicate-authority-message-kit
+message-authority-result-kit
+authority-observation-kit
+authority-journal-kit
+first-authoritative-message-frame-ack-kit
+forged-start-game-fixture-kit
+forged-sync-fixture-kit
+wrong-room-lobby-event-fixture-kit
+sender-peer-mismatch-fixture-kit
+stale-host-generation-fixture-kit
+duplicate-authority-message-fixture-kit
 ```
 
-## Required flow
+## Required transaction
 
 ```txt
-TransportErrorEnvelope
-  -> allocate error ID and bind session/transport revisions
-  -> classify peer, connection or local-bridge scope
-  -> bind remote peer, connection ID and connection generation
-  -> classify terminal, retryable, stale, duplicate or rejected
+PeerMessageEnvelope
+  -> classify host-only or client-originating message authority
+  -> bind current session epoch and transport revision
+  -> bind current connection ID and generation
+  -> validate remote peer against admitted host peer
+  -> validate senderId against admitted host player
+  -> validate envelope and payload room identity
+  -> validate monotonic authority revision and duplicate identity
+  -> publish Accepted, Rejected, Stale or Duplicate result
 
-terminal connection
-  -> detach callbacks
-  -> close exactly once
-  -> remove host-map or client-active ownership
-  -> retire connection generation
-  -> reconcile actor binding, room and lobbyPlayers atomically
-  -> recompute start eligibility
-  -> publish typed retirement and roster results
-  -> acknowledge first visible error-state frame
+Accepted
+  -> commit one room/roster/snapshot transition
+  -> publish successor fingerprint
+  -> acknowledge first visible frame citing message and authority revision
 
-retryable signalling failure
-  -> preserve admitted data channels only under explicit policy
-  -> allocate reconnect attempt generation
-  -> reject late predecessor attempt events
+Rejected, Stale or Duplicate
+  -> zero state mutation
+  -> publish bounded reason observation
 ```
 
 ## Current audit family
 
 ```txt
-.agent/trackers/2026-07-12T14-30-36-04-00/project-breakdown.md
-.agent/turn-ledger/2026-07-12T14-30-36-04-00.md
-.agent/architecture-audit/2026-07-12T14-30-36-04-00-transport-error-retirement-dsk-map.md
-.agent/render-audit/2026-07-12T14-30-36-04-00-errored-connection-visible-roster-gap.md
-.agent/gameplay-audit/2026-07-12T14-30-36-04-00-error-without-close-ghost-participant-loop.md
-.agent/interaction-audit/2026-07-12T14-30-36-04-00-peer-error-retirement-map.md
-.agent/transport-error-audit/2026-07-12T14-30-36-04-00-scope-generation-retirement-contract.md
-.agent/deploy-audit/2026-07-12T14-30-36-04-00-transport-error-retirement-fixture-gate.md
+.agent/trackers/2026-07-12T16-29-56-04-00/project-breakdown.md
+.agent/turn-ledger/2026-07-12T16-29-56-04-00.md
+.agent/architecture-audit/2026-07-12T16-29-56-04-00-authoritative-message-source-admission-dsk-map.md
+.agent/render-audit/2026-07-12T16-29-56-04-00-untrusted-host-message-visible-state-gap.md
+.agent/gameplay-audit/2026-07-12T16-29-56-04-00-forged-sync-client-state-replacement-loop.md
+.agent/interaction-audit/2026-07-12T16-29-56-04-00-host-message-source-admission-map.md
+.agent/protocol-authority-audit/2026-07-12T16-29-56-04-00-sender-peer-room-authority-contract.md
+.agent/deploy-audit/2026-07-12T16-29-56-04-00-authoritative-message-source-fixture-gate.md
 ```
 
 ## Validation boundary
 
-Documentation only. Runtime, networking, gameplay, rendering, package scripts, dependencies and deployment were not changed. No browser, error-without-close, replacement, stale-callback, roster-reconciliation or visible-frame fixture was run.
+Documentation only. Runtime, networking, gameplay, rendering, package scripts, dependencies and deployment were not changed. No forged-message, wrong-room, stale-generation, duplicate-message or visible-frame fixture was run.
