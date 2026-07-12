@@ -1,14 +1,14 @@
 # HorrorCorridor Known Gaps
 
-**Updated:** `2026-07-12T14-22-01-04-00`
+**Updated:** `2026-07-12T14-30-36-04-00`
 
 ## Plan ledger
 
-**Goal:** preserve the ordered runtime authority gaps while elevating data-channel-open and roster admission ahead of higher-level lobby, start and multiplayer correctness claims.
+**Goal:** preserve the ordered runtime authority gaps while elevating scoped transport-error retirement and stale-event quarantine directly after channel admission.
 
-- [x] Preserve prior identity, transport-mode, loading, lifecycle, clock, snapshot, movement, rendering and debug findings.
-- [x] Add explicit connection-candidate, open-admission and ghost-member findings.
-- [ ] Implement and prove connection admission, roster revision and sealed start eligibility.
+- [x] Preserve prior identity, transport-mode, connection-admission, loading, lifecycle, clock, snapshot, movement, rendering and debug findings.
+- [x] Add explicit error-scope, terminality, retirement, replacement and late-callback findings.
+- [ ] Implement and prove complete transport and session reconciliation.
 
 ## Primary ordered gaps
 
@@ -16,120 +16,135 @@
 1. canonical lobby member, peer and gameplay-player identity
 2. explicit transport mode, reachability handshake and fallback
 3. actual data-channel-open admission and connection generation
-4. connection-to-actor binding and atomic roster membership
-5. sealed lobby start transaction and correlated initial SYNC
-6. loading transition generation, cancellation and atomic commit
-7. run exit, session epoch and late-message quarantine
-8. runtime startup acquisition, rollback and clean retry
-9. runtime readiness leases and generation fencing
-10. render-surface resolution, revision and frame correlation
-11. active gameplay presentation and consumer acknowledgement
-12. debug-observability capability, redaction and revocation
-13. focus, visibility and held-control retirement
-14. runtime frame-failure containment and cold restart
-15. canonical runtime clock and temporal provenance
-16. snapshot acceptance ordering and monotonic revision
-17. explicit interaction targets and cube/slot claims
-18. active-run disconnect and reconnect claims
-19. monotonic terminal outcome authority
-20. host cadence and fixed simulation authority
-21. host movement admission and client reconciliation
-22. snapshot payload budgeting and backpressure
-23. authoritative randomness, checkpoint and replay
-24. replicated pause/resume convergence
+4. scoped transport-error classification and exactly-once retirement
+5. late connection-event quarantine and replacement supersession
+6. connection-to-actor binding and atomic roster membership
+7. sealed lobby start transaction and correlated initial SYNC
+8. loading transition generation, cancellation and atomic commit
+9. run exit, session epoch and late-message quarantine
+10. runtime startup acquisition, rollback and clean retry
+11. runtime readiness leases and generation fencing
+12. render-surface resolution, revision and frame correlation
+13. active gameplay presentation and consumer acknowledgement
+14. debug-observability capability, redaction and revocation
+15. focus, visibility and held-control retirement
+16. runtime frame-failure containment and cold restart
+17. canonical runtime clock and temporal provenance
+18. snapshot acceptance ordering and monotonic revision
+19. explicit interaction targets and cube/slot claims
+20. active-run disconnect and reconnect claims
+21. monotonic terminal outcome authority
+22. host cadence and fixed simulation authority
+23. host movement admission and client reconciliation
+24. snapshot payload budgeting and backpressure
+25. authoritative randomness, checkpoint and replay
+26. replicated pause/resume convergence
 ```
 
-## Current connection-admission gap
+## Current transport-error gap
 
 ```txt
-host stores connection candidate before channel open
-host emits connection-open unconditionally
-connection-open event has no actual-open evidence
-GameShell marks guest connected and mutates room roster
-lobby publication can send to zero open channels
-true later open callback is suppressed by one-shot guard
-error does not remove transport map entry or roster member
-start bootstrap can consume ghost member
-visible lobby has no roster revision or frame receipt
+peer and DataConnection errors use one peer/error event shape
+peer/error has no scope
+peer/error has no remotePeerId
+peer/error has no connectionId or generation
+peer/error has no terminal or retryable classification
+host error handler leaves connection in map
+client error handler leaves activeConnection installed
+GameShell performs no error-specific reconciliation
+callbacks remain attached after error
+replacement has no predecessor supersession result
+late events are not generation-fenced
+room and roster can remain stale
+visible player rows have no disconnected/error state
 ```
 
 ## Failure paths
 
-### Never-open candidate
+### Host error without close
 
 ```txt
-PeerJS connection callback arrives
-  -> connection.open is false
-  -> connection-open event still emitted
-  -> guest added as connected
-  -> actual open never occurs
-  -> guest remains in room
-```
-
-### Delayed true open
-
-```txt
-premature event sets connectionOpenEmitted
-  -> guest added before channel usable
-  -> actual open callback fires later
-  -> guard returns
-  -> no authoritative true-open admission or lobby republish
-```
-
-### Error without close
-
-```txt
-connection emits error
+DataConnection emits error
   -> peer/error published
-  -> connection map record remains
-  -> GameShell does not remove guest
-  -> connected roster can remain stale
+  -> no connection record removed
+  -> no connection-close event published
+  -> GameShell does not remove or mark guest
+  -> Start run can consume unreachable participant
+```
+
+### Client error without close
+
+```txt
+DataConnection emits error
+  -> currentStatus becomes error
+  -> activeConnection remains installed
+  -> room and players remain visible
+  -> reconnect can create replacement
+  -> predecessor callbacks remain live
+```
+
+### Late predecessor open
+
+```txt
+terminal error observed
+  -> predecessor not retired
+  -> predecessor later emits open
+  -> no generation comparison
+  -> stale connection can report connected again
+```
+
+### Late predecessor close after replacement
+
+```txt
+replacement becomes active
+  -> old connection later emits close
+  -> close event has no connection generation
+  -> current route/status or membership can be changed by predecessor
 ```
 
 ### Ghost-member start
 
 ```txt
-host clicks Start run
-  -> no admitted-channel or all-ready gate
-  -> bootstrap uses current lobbyPlayers
-  -> ghost participant enters snapshot
-  -> START_GAME and SYNC skip unopened connection
-  -> host and client routes diverge
+host retains errored guest
+  -> lobby still projects guest
+  -> Start run remains enabled
+  -> bootstrap creates guest actor
+  -> initial messages cannot reach failed channel
 ```
 
 ## Missing authority
 
 ```txt
-connection candidate ID
-connection generation
-data-channel state model
-actual-open observation
-open admission result
-identity claim and actor binding
-lobby-member admission command/result
-roster revision and fingerprint
-atomic room membership commit
-lobby publication delivery result
-start eligibility result
-error-only terminal retirement
-ghost-member reconciliation
-first visible lobby-roster frame acknowledgement
-first shared gameplay-frame roster acknowledgement
+transport error ID
+error scope and source
+peer/connection/local-bridge classification
+error-to-connection binding
+connection and reconnect-attempt generations
+terminality and retryability policy
+exactly-once retirement command/result
+handler-detachment receipt
+late-event quarantine
+connection supersession result
+roster reconciliation command/result
+truthful disconnected/error projection
+start-eligibility recomputation
+first visible error-state frame acknowledgement
 ```
 
 ## Consequences
 
 ```txt
-visible player count can overstate reachable members
-host and client room states can diverge
-true channel-open transition can be lost
-never-open and error-only candidates can create ghost members
-host can start with participants who never receive the run
-snapshot, minimap and outcomes can include unreachable actors
-reconnect can collide with stale member and slot ownership
-diagnostics cannot prove which roster revision was shared
+failed connections can remain owned indefinitely
+visible roster can overstate reachable participants
+host and client session state can diverge
+retry can overlap predecessor callbacks
+stale events can mutate successor state
+bootstrap can include unreachable actors
+initial run delivery can omit retained participants
+reconnect can collide with stale identity and slot ownership
+diagnostics cannot prove complete retirement
 ```
 
 ## Retained gaps
 
-All preceding transport-mode, loading-transition, canonical-clock, frame-failure, input-lifecycle, active-presentation, debug, render-surface, startup, readiness, randomness, snapshot-delivery, cadence, movement, disconnect, interaction, outcome, snapshot-acceptance, lobby, exit and pause findings remain open.
+All preceding transport-mode, connection-open, lobby readiness, loading-transition, canonical-clock, frame-failure, input-lifecycle, active-presentation, debug, render-surface, startup, runtime-readiness, randomness, snapshot-delivery, cadence, movement, disconnect, interaction, outcome, snapshot-acceptance, lobby, exit and pause findings remain open.
