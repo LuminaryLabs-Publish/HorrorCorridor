@@ -1,92 +1,102 @@
 # HorrorCorridor Next Steps
 
-**Updated:** `2026-07-12T14-22-01-04-00`
+**Updated:** `2026-07-12T14-30-36-04-00`
 
 ## Plan ledger
 
-**Goal:** establish canonical identity and transport mode first, then make actual data-channel open evidence the only path into connected roster membership and run bootstrap.
+**Goal:** establish canonical identity and admitted channels first, then make every terminal transport error produce one complete retirement, roster reconciliation and stale-event quarantine transaction before start or reconnect can proceed.
 
 ### Documentation
 
-- [x] Add the data-channel roster-admission audit family.
+- [x] Add the transport-error retirement audit family.
+- [x] Preserve the complete 29-kit inventory and domain map.
 - [x] Refresh root docs and machine registry.
-- [x] Update central ledger and internal change log.
+- [x] Synchronize central ledger and internal change log.
 
 ### Gate 1: canonical identity
 
 - [ ] Define canonical member, peer, player, actor, room and slot identities.
 - [ ] Separate transport peer IDs from gameplay player IDs.
-- [ ] Add monotonic session epoch, roster revision and roster fingerprint.
-- [ ] Bind every active transport connection to one admitted actor.
+- [ ] Add monotonic session epoch, transport revision, roster revision and fingerprint.
+- [ ] Bind every active connection generation to one admitted actor.
 
-### Gate 2: explicit transport mode
+### Gate 2: explicit transport mode and reachability
 
 - [ ] Implement named `local-bridge` and `peerjs` modes.
 - [ ] Choose preferred and fallback paths from policy, not API existence.
-- [ ] Record transport mode ID and monotonic revision.
-- [ ] Require acknowledged reachability before any connection candidate can advance.
+- [ ] Record transport mode ID and revision.
+- [ ] Require acknowledged reachability before connection admission.
 
-### Gate 3: connection candidates
+### Gate 3: connection candidates and actual open
 
-- [ ] Add connection candidate ID and generation.
-- [ ] Keep candidates outside the authoritative room roster.
-- [ ] Track `created`, `opening`, `open-observed`, `rejected`, `errored`, `closed`, `superseded` and `retired` states.
+- [ ] Add candidate ID and connection generation.
+- [ ] Keep opening candidates outside the authoritative room roster.
+- [ ] Remove unconditional host `emitConnectionOpen()` behavior.
+- [ ] Admit membership only from actual open evidence.
 - [ ] Add timeout, cancellation and stale-generation rejection.
 
-### Gate 4: actual channel-open admission
+### Gate 4: transport error envelope
 
-- [ ] Remove unconditional host `emitConnectionOpen()` behavior.
-- [ ] Emit open observation only from actual `DataConnection.open` evidence.
-- [ ] Return typed accepted, rejected, stale, duplicate and failed admission results.
-- [ ] Make error terminal even when no close event follows.
-- [ ] Ensure duplicate open callbacks produce one admission only.
+- [ ] Give every error a stable ID.
+- [ ] Distinguish `peer-signalling`, `peer-terminal`, `connection`, `local-bridge` and `codec-or-message` scopes.
+- [ ] Include remote peer, connection ID and connection generation when applicable.
+- [ ] Include session epoch, transport mode/revision and reconnect-attempt generation.
+- [ ] Return typed terminal, retryable, stale, duplicate and rejected classifications.
 
-### Gate 5: actor binding and roster commit
+### Gate 5: exactly-once connection retirement
 
-- [ ] Validate remote identity claim before membership.
-- [ ] Commit connection-to-actor binding and room membership atomically.
-- [ ] Increment roster revision exactly once per accepted mutation.
-- [ ] Publish roster fingerprint and predecessor revision.
-- [ ] Preserve predecessor room state on failure.
+- [ ] Admit one revisioned retirement command for a terminal connection error.
+- [ ] Detach all predecessor callbacks.
+- [ ] Remove host map or client active ownership before replacement.
+- [ ] Close the connection exactly once.
+- [ ] Treat later close as a duplicate retirement.
+- [ ] Reject late open, message and error callbacks from the retired generation.
 
-### Gate 6: lobby publication and visible proof
+### Gate 6: roster and session reconciliation
 
-- [ ] Return delivery results for player-joined and player-left publications.
-- [ ] Do not project `connected` from candidate creation or packet submission.
-- [ ] Distinguish connecting candidates from admitted connected members.
-- [ ] Add first visible lobby-roster frame acknowledgement.
-- [ ] Include roster and connection generations in debug frames.
+- [ ] Choose explicit `remove`, `disconnected-slot` or bounded `grace-period` policy.
+- [ ] Reconcile connection binding, room and `lobbyPlayers` atomically.
+- [ ] Increment roster revision and fingerprint exactly once.
+- [ ] Project truthful player and connection state.
+- [ ] Recompute sealed start eligibility after retirement.
 
-### Gate 7: start eligibility
+### Gate 7: peer signalling recovery
 
-- [ ] Seal one roster revision before run bootstrap.
-- [ ] Require an active admitted binding for every remote participant.
-- [ ] Define and enforce an all-ready policy.
-- [ ] Prevent placeholder guests from becoming gameplay actors unless a bot policy explicitly admits them.
+- [ ] Separate signalling loss from data-channel terminality.
+- [ ] Preserve admitted data channels only under explicit policy.
+- [ ] Allocate reconnect-attempt generations.
+- [ ] Supersede prior attempts atomically.
+- [ ] Reject predecessor attempt callbacks.
+
+### Gate 8: lobby publication and visible proof
+
+- [ ] Publish typed player-disconnected or player-left delivery results.
+- [ ] Include error, retirement and roster revisions in debug observations.
+- [ ] Add first visible error-state lobby frame acknowledgement.
+- [ ] Ensure errored members are not projected as connected or start-eligible.
+
+### Gate 9: sealed start
+
+- [ ] Seal one roster revision before bootstrap.
+- [ ] Require an admitted active binding for every remote participant.
+- [ ] Reject start while any connection retirement is pending.
+- [ ] Enforce all-ready policy.
 - [ ] Require initial START_GAME and SYNC delivery/acknowledgement policy.
 - [ ] Correlate the first shared gameplay frame with the sealed roster revision.
 
-### Gate 8: disconnect and reconnect
+### Gate 10: fixture matrix
 
-- [ ] Retire candidate-only connections without mutating the roster.
-- [ ] Apply one named remove-or-disconnect policy after admitted connection loss.
-- [ ] Reconcile error-only terminal paths.
-- [ ] Replace active bindings atomically on reconnect.
-- [ ] Reject late events from retired connection generations.
-
-### Gate 9: fixture matrix
-
-- [ ] PeerJS candidate with `open=false` fixture.
-- [ ] Delayed-open fixture.
-- [ ] Never-open timeout fixture.
-- [ ] Error-without-close fixture.
-- [ ] Close-before-open fixture.
-- [ ] Duplicate-open fixture.
-- [ ] Start-during-opening fixture.
-- [ ] Start-after-roster-seal fixture.
-- [ ] Host/client visible roster parity fixture.
-- [ ] First shared gameplay-frame roster fixture.
+- [ ] Host connection error with no close.
+- [ ] Client connection error with no close.
+- [ ] Error followed by close.
+- [ ] Error followed by late open.
+- [ ] Peer signalling error with admitted channels.
+- [ ] Peer terminal error with multiple channels.
+- [ ] Replacement connection followed by predecessor close.
+- [ ] Start while retirement is pending.
+- [ ] Error during loading and active gameplay.
+- [ ] Visible roster and first shared-frame parity.
 
 ## Completion boundary
 
-Do not claim a shared lobby or working multiplayer until actual data-channel open evidence gates membership, ghost members cannot enter bootstrap, errors always reconcile candidate and roster state, start uses a sealed eligible roster, host/client projections agree on one roster revision and the first visible gameplay frame cites that revision.
+Do not claim reliable multiplayer, reconnect safety or truthful lobby membership until transport errors are scoped and generation-bound, terminal connections retire exactly once, late callbacks cannot mutate successors, session/roster reconciliation is atomic, start uses a sealed eligible roster and browser fixtures prove the visible result.
