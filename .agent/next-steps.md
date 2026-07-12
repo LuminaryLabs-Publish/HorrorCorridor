@@ -1,102 +1,94 @@
 # HorrorCorridor Next Steps
 
-**Updated:** `2026-07-12T14-30-36-04-00`
+**Updated:** `2026-07-12T16-29-56-04-00`
+
+## Summary
+
+Establish canonical connection and actor identity first, then put a source-admission gate between structural protocol decoding and every host-authoritative client mutation. A decoded message must not be trusted merely because its type and payload are valid.
 
 ## Plan ledger
 
-**Goal:** establish canonical identity and admitted channels first, then make every terminal transport error produce one complete retirement, roster reconciliation and stale-event quarantine transaction before start or reconnect can proceed.
+**Goal:** require current host peer, host player, room, session and connection-generation proof before `START_GAME`, `SYNC` or `LOBBY_EVENT` changes client state.
 
 ### Documentation
 
-- [x] Add the transport-error retirement audit family.
+- [x] Add the authoritative message-source admission audit family.
 - [x] Preserve the complete 29-kit inventory and domain map.
 - [x] Refresh root docs and machine registry.
 - [x] Synchronize central ledger and internal change log.
 
-### Gate 1: canonical identity
+### Gate 1: canonical identity and transport ownership
 
 - [ ] Define canonical member, peer, player, actor, room and slot identities.
 - [ ] Separate transport peer IDs from gameplay player IDs.
-- [ ] Add monotonic session epoch, transport revision, roster revision and fingerprint.
-- [ ] Bind every active connection generation to one admitted actor.
+- [ ] Add monotonic session epoch, transport revision and connection generation.
+- [ ] Bind every admitted connection generation to one actor and role.
 
-### Gate 2: explicit transport mode and reachability
+### Gate 2: explicit transport and connection admission
 
 - [ ] Implement named `local-bridge` and `peerjs` modes.
-- [ ] Choose preferred and fallback paths from policy, not API existence.
-- [ ] Record transport mode ID and revision.
-- [ ] Require acknowledged reachability before connection admission.
+- [ ] Require acknowledged reachability and actual channel-open evidence.
+- [ ] Keep candidates outside authoritative membership until admitted.
+- [ ] Retire terminal generations exactly once and quarantine late callbacks.
 
-### Gate 3: connection candidates and actual open
+### Gate 3: message authority classification
 
-- [ ] Add candidate ID and connection generation.
-- [ ] Keep opening candidates outside the authoritative room roster.
-- [ ] Remove unconditional host `emitConnectionOpen()` behavior.
-- [ ] Admit membership only from actual open evidence.
-- [ ] Add timeout, cancellation and stale-generation rejection.
+- [ ] Classify `START_GAME`, `SYNC` and `LOBBY_EVENT` as host-only.
+- [ ] Classify `PLAYER_UPDATE` and `TRY_INTERACT` as actor-bound client requests.
+- [ ] Give every authoritative message a stable message ID.
+- [ ] Add an authority revision or equivalent monotonic host-state revision.
 
-### Gate 4: transport error envelope
+### Gate 4: source and room admission
 
-- [ ] Give every error a stable ID.
-- [ ] Distinguish `peer-signalling`, `peer-terminal`, `connection`, `local-bridge` and `codec-or-message` scopes.
-- [ ] Include remote peer, connection ID and connection generation when applicable.
-- [ ] Include session epoch, transport mode/revision and reconnect-attempt generation.
-- [ ] Return typed terminal, retryable, stale, duplicate and rejected classifications.
+- [ ] Compare `event.remotePeerId` with the admitted host peer.
+- [ ] Compare `message.senderId` with the admitted host player.
+- [ ] Compare `event.connectionId` and generation with current host ownership.
+- [ ] Compare envelope `roomId`, payload room and active room.
+- [ ] Compare session epoch, transport revision and authority revision.
+- [ ] Return typed Accepted, Rejected, Stale and Duplicate results.
+- [ ] Require rejected results to perform zero store mutation.
 
-### Gate 5: exactly-once connection retirement
+### Gate 5: state commit and observation
 
-- [ ] Admit one revisioned retirement command for a terminal connection error.
-- [ ] Detach all predecessor callbacks.
-- [ ] Remove host map or client active ownership before replacement.
-- [ ] Close the connection exactly once.
-- [ ] Treat later close as a duplicate retirement.
-- [ ] Reject late open, message and error callbacks from the retired generation.
+- [ ] Dispatch accepted messages through typed state commands.
+- [ ] Commit room, roster, snapshot, route and readiness under one result revision.
+- [ ] Record predecessor and successor fingerprints.
+- [ ] Add bounded authority observations and journals.
+- [ ] Avoid storing unbounded snapshots in the journal.
 
-### Gate 6: roster and session reconciliation
+### Gate 6: visible proof
 
-- [ ] Choose explicit `remove`, `disconnected-slot` or bounded `grace-period` policy.
-- [ ] Reconcile connection binding, room and `lobbyPlayers` atomically.
-- [ ] Increment roster revision and fingerprint exactly once.
-- [ ] Project truthful player and connection state.
-- [ ] Recompute sealed start eligibility after retirement.
+- [ ] Add message ID and authority revision to committed presentation state.
+- [ ] Acknowledge the first lobby or gameplay frame produced by the accepted message.
+- [ ] Reject presentation acknowledgement if source revisions changed before render.
+- [ ] Keep wrong-source, wrong-room and stale-message frames invisible.
 
-### Gate 7: peer signalling recovery
+### Gate 7: fixture matrix
 
-- [ ] Separate signalling loss from data-channel terminality.
-- [ ] Preserve admitted data channels only under explicit policy.
-- [ ] Allocate reconnect-attempt generations.
-- [ ] Supersede prior attempts atomically.
-- [ ] Reject predecessor attempt callbacks.
+- [ ] Valid current-host `START_GAME`, `SYNC` and `LOBBY_EVENT`.
+- [ ] Non-host forged host-class messages.
+- [ ] Sender-to-peer mismatch.
+- [ ] Wrong envelope room and payload room.
+- [ ] Stale predecessor message after reconnect.
+- [ ] Duplicate message ID.
+- [ ] Older authority revision.
+- [ ] Local-bridge and PeerJS parity.
+- [ ] Source, production build and Pages parity.
+- [ ] First authoritative-message visible-frame receipt.
 
-### Gate 8: lobby publication and visible proof
+## Dependency order
 
-- [ ] Publish typed player-disconnected or player-left delivery results.
-- [ ] Include error, retirement and roster revisions in debug observations.
-- [ ] Add first visible error-state lobby frame acknowledgement.
-- [ ] Ensure errored members are not projected as connected or start-eligible.
-
-### Gate 9: sealed start
-
-- [ ] Seal one roster revision before bootstrap.
-- [ ] Require an admitted active binding for every remote participant.
-- [ ] Reject start while any connection retirement is pending.
-- [ ] Enforce all-ready policy.
-- [ ] Require initial START_GAME and SYNC delivery/acknowledgement policy.
-- [ ] Correlate the first shared gameplay frame with the sealed roster revision.
-
-### Gate 10: fixture matrix
-
-- [ ] Host connection error with no close.
-- [ ] Client connection error with no close.
-- [ ] Error followed by close.
-- [ ] Error followed by late open.
-- [ ] Peer signalling error with admitted channels.
-- [ ] Peer terminal error with multiple channels.
-- [ ] Replacement connection followed by predecessor close.
-- [ ] Start while retirement is pending.
-- [ ] Error during loading and active gameplay.
-- [ ] Visible roster and first shared-frame parity.
+```txt
+canonical identities
+  -> transport mode and reachability
+  -> channel-open admission
+  -> connection error retirement
+  -> actor binding
+  -> authoritative message-source admission
+  -> snapshot and lobby state ordering
+  -> sealed start and shared visible-frame proof
+```
 
 ## Completion boundary
 
-Do not claim reliable multiplayer, reconnect safety or truthful lobby membership until transport errors are scoped and generation-bound, terminal connections retire exactly once, late callbacks cannot mutate successors, session/roster reconciliation is atomic, start uses a sealed eligible roster and browser fixtures prove the visible result.
+Do not claim trusted host authority, wrong-room isolation, reconnect message safety or authoritative visible state until source admission is implemented and the adversarial fixture matrix passes on `main`.
