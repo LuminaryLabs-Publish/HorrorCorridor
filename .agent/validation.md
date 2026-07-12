@@ -1,55 +1,48 @@
 # HorrorCorridor Validation
 
-**Updated:** `2026-07-12T05-59-28-04-00`
+**Updated:** `2026-07-12T07-41-06-04-00`
 
 ## Scope
 
-Documentation-only audit of recurring frame admission, successor RAF scheduling, host/client mutation ordering, authoritative publication, runtime-store projection, world/minimap/debug/post-processing stages, last-known-good retention, quarantine, disposal and cold restart.
-
-The preceding presentation, render-surface, startup, readiness, input-retirement, randomness, snapshot-delivery, cadence, disconnect, movement, snapshot-acceptance, interaction, outcome, lobby, exit, pause and debug-observability audits remain retained.
+Documentation-only audit of browser time sources, network/UI cadence, authoritative snapshot timestamps, room timestamps, completion timing, ooze decay, pause/reset policy and simulation/render clock provenance.
 
 ## Plan ledger
 
-**Goal:** prove that any frame-stage fault produces one typed terminal result, no successor mutation, a coherent retained frame, revoked readiness, observable cleanup and a new-generation restart acknowledgement.
+**Goal:** prove that wall-clock adjustments cannot change gameplay and that every simulation, snapshot and visible frame cites one monotonic clock revision and simulation step.
 
 - [x] Compare the full Publish inventory and central ledger.
 - [x] Exclude `TheCavalryOfRome`.
 - [x] Select only `HorrorCorridor`.
 - [x] Read current root `.agent` state.
-- [x] Read `GameCanvas.tsx` and `animationLoop.ts`.
-- [x] Confirm successor RAF scheduling occurs after `onFrame`.
-- [x] Confirm exceptions leave the loop marked running.
-- [x] Confirm host publication can precede visible render success.
-- [x] Confirm client movement transmission can precede visible render success.
-- [x] Confirm world, minimap and debug stages precede post-processing.
-- [x] Confirm no frame failure boundary, quarantine or automatic cleanup exists.
-- [x] Confirm readiness remains unchanged by frame failure.
+- [x] Read `GameCanvas.tsx`, `animationLoop.ts` and `oozeRules.ts`.
+- [x] Confirm RAF timestamps drive frame delta and visual elapsed time.
+- [x] Confirm `Date.now()` drives cadence, snapshot, room, completion and ooze timing.
+- [x] Confirm no clock identity, revision or discontinuity result exists.
+- [x] Confirm snapshots contain wall timestamps but no authoritative simulation time.
 - [x] Reconcile all 29 implemented kits and services.
-- [x] Define frame-stage result, quarantine, cleanup and restart fixture gates.
+- [x] Define clock, pause/reset, snapshot and render fixture gates.
 - [x] Update required docs and timestamped audits.
-- [ ] Implement and run frame-failure fixtures.
+- [ ] Implement and run clock fixtures.
 
 ## Source-backed checks
 
 ```txt
-animation-loop running guard: yes
-successor RAF scheduled before onFrame: no
-successor RAF scheduled after onFrame: yes
-frame callback wrapped in try/catch: no
-running set false on thrown frame: no
-host pose/game mutation before render: yes
-host snapshot/store publication before render: yes
-host broadcast before render: yes
-client prediction before render: yes
-client update send before render: possible
-runtime store projection before render: yes
-camera/world update before post-processing: yes
-minimap draw before post-processing: yes
-debug capture before post-processing: yes
-automatic cleanup on frame failure: no
-readiness revocation on frame failure: no
-fatal overlay on frame failure: no
-cold restart authority: no
+RAF timestamp used for delta: yes
+RAF timestamp used for camera/world elapsed: yes
+Date.now wrapper present in GameCanvas: yes
+Date.now used for network cadence: yes
+Date.now used for UI cadence: yes
+Date.now used for room.updatedAt: yes
+Date.now used for snapshot.timestampMs: yes
+Date.now used for completion.atMs: yes
+Date.now used for ooze advancement: yes
+ooze decay compares nowMs against lastOozeDecayTime: yes
+runtime clock ID/revision: absent
+clock regression/jump classification: absent
+simulationTimeMs in snapshot: absent
+pause/resume clock generation: absent
+reset clock generation: absent
+render-to-clock receipt: absent
 ```
 
 ## Existing package commands
@@ -65,32 +58,24 @@ npm run validate:live-player:dev
 npm run review:object-kit
 ```
 
-These commands were not run because runtime source and package configuration were unchanged. Source inspection is sufficient to establish the missing frame-failure boundary. Executable proof remains required before claiming containment or recovery.
+These commands were not run because runtime source and package configuration were unchanged. Executable proof remains required.
 
 ## Required fixture gate
 
 ```txt
-controller throw terminalizes lifecycle
-no successor RAF executes after failure
-first failure is admitted exactly once
-later stages reject after failure admission
-later frames reject after quarantine
-host render fault records escaped snapshot and broadcast receipts
-client render fault records escaped movement-send receipt
-world fault preserves previous committed frame
-minimap fault cannot advance committed presentation revision
-post-processing fault retains last-known-good frame
-readiness is revoked
-held input and pointer lock are retired
-interaction, movement and transport mutation are fenced
-listeners and observers are removed or explicitly retained
-transport subscription is removed or read-only
-world, post-processing and renderer disposal return typed results
-repeated disposal is idempotent
-cold restart allocates a new runtime generation
-predecessor callbacks cannot mutate replacement state
-first replacement frame and readiness share one acknowledgement
-browser smoke exposes a bounded failure surface
+monotonic samples produce increasing clock revisions
+backward UTC adjustment has no gameplay effect
+forward UTC adjustment has no gameplay effect
+large monotonic delta obeys step and CPU budgets
+simulated, deferred and dropped time are reported
+pause freezes simulation time and RNG consumption
+resume creates a new generation without catch-up burst
+reset creates a new clock generation and rejects stale samples
+snapshot roundtrip preserves simulation step and elapsed time
+network/UI/ooze cadence share one clock revision
+camera/world/minimap/debug cite one render-time projection
+visible frame acknowledgement matches snapshot clock revision
+browser smoke can alter Date.now without altering gameplay cadence
 ```
 
 ## Change validation
@@ -107,12 +92,12 @@ deployment changed: no
 branch created: no
 pull request created: no
 existing checks run: no
-frame-controller fixture available: no
-stage-fault fixture available: no
-quarantine fixture available: no
-disposal fixture available: no
-cold-restart fixture available: no
-browser frame-failure smoke run: no
+clock regression fixture available: no
+clock forward-jump fixture available: no
+pause/resume clock fixture available: no
+snapshot clock fixture available: no
+render parity fixture available: no
+browser clock smoke run: no
 ```
 
-No runtime frame-failure containment, last-known-good-frame, cleanup-completeness or cold-restart safety claim is made until the required fixtures pass.
+No deterministic timing, clock-discontinuity safety, pause/reset continuity, snapshot temporal provenance or render/simulation parity claim is made until the required fixtures pass.
