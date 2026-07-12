@@ -1,10 +1,10 @@
 # HorrorCorridor Next Steps
 
-**Updated:** `2026-07-12T04-28-03-04-00`
+**Updated:** `2026-07-12T05-59-28-04-00`
 
 ## Plan ledger
 
-**Goal:** preserve identity, startup, lifecycle and presentation prerequisites, then ensure focus and visibility loss cannot leave gameplay controls active or publish stale movement.
+**Goal:** preserve identity, startup, readiness, presentation and input prerequisites, then make every recurring-frame failure terminate or recover the runtime through one observable and generation-safe transaction.
 
 ### Gate 1: roster identity and peer binding
 
@@ -71,17 +71,30 @@
 
 - [ ] Add a monotonic `inputRevision` and one active `controlLeaseId`.
 - [ ] Treat `blur`, `visibilitychange(hidden)`, `pagehide`, pointer-lock loss, pause, route exit and runtime stop as retirement commands.
-- [ ] Make retirement idempotent by runtime, run and input revision.
 - [ ] Atomically clear every held button, look delta and pointer-lock flag.
-- [ ] Update `runtimeStore.inputFlags` with the neutral snapshot before another simulation step.
-- [ ] Suspend movement and interaction admission while focus/control lease is invalid.
-- [ ] For clients, publish one sequenced zero-input update when transport and run identity are still valid.
-- [ ] Record prior axes, cause, revisions, publication result and final neutral state.
+- [ ] Publish a neutral runtime snapshot before another simulation step.
+- [ ] For clients, publish one bounded zero-input update when admitted.
 - [ ] Require a new focus-qualified physical keydown to create the next control lease.
-- [ ] Neutralize input during GameCanvas cleanup and route teardown.
-- [ ] Add non-pointer-lock blur, hidden-tab, pointer-lock loss, pause, route-exit and unmount fixtures.
-- [ ] Add client zero-input and host stale-movement rejection fixtures.
-- [ ] Add a browser smoke proving movement stops before the first post-focus-loss frame.
+
+### Gate 4g: runtime frame-failure containment
+
+- [ ] Add runtime frame IDs, stage IDs and immutable `FramePlan` records.
+- [ ] Make every simulation, publication, store, world, minimap, debug and post stage return a typed result.
+- [ ] Schedule the successor RAF only from a committed frame result.
+- [ ] Clear or terminalize the loop lifecycle when any stage fails.
+- [ ] Record escaped mutation and publication receipts.
+- [ ] Retain the previous committed snapshot and visible frame as last-known-good.
+- [ ] Admit only the first failure and cache duplicate failure reports.
+- [ ] Retire input and fence interaction, movement and transport mutation.
+- [ ] Revoke simulation, rendering and input readiness atomically.
+- [ ] Freeze the prior canvas or replace it with a bounded failure surface outside the damaged graph.
+- [ ] Dispose listeners, observers, transport subscriptions, world, post-processing and renderer in dependency order.
+- [ ] Make disposal idempotent and publish per-resource results.
+- [ ] Allow restart only after terminal cleanup or an explicit retained-frozen result.
+- [ ] Allocate a new runtime generation for restart.
+- [ ] Publish readiness only after the first replacement frame acknowledgement.
+- [ ] Add stage-fault fixtures for host, client, solo, paused and completed paths.
+- [ ] Add browser proof that no mutation occurs after quarantine.
 
 ### Gate 5: state acceptance and gameplay commands
 
@@ -111,4 +124,4 @@
 
 ## Completion boundary
 
-Do not claim browser input lifecycle safety until every focus/visibility/runtime loss path produces a neutral input result, a client cannot continue publishing stale movement, and browser fixtures prove that movement and interaction stop before the next admitted simulation frame.
+Do not claim runtime failure safety until every frame stage returns a typed result, no failed runtime can continue mutating state, the last-known-good frame remains coherent, cleanup is observable and idempotent, and a replacement generation proves its first visible frame before readiness returns.
