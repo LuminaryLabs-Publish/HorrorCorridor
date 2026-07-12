@@ -1,12 +1,12 @@
 # HorrorCorridor Current Audit
 
 **Repository:** `LuminaryLabs-Publish/HorrorCorridor`  
-**Updated:** `2026-07-12T02-49-19-04-00`
+**Updated:** `2026-07-12T04-28-03-04-00`
 
 ## Status
 
 ```txt
-status: active-gameplay-presentation-hud-minimap-authority-audited
+status: focus-loss-input-retirement-authority-audited
 runtime source changed: no
 branch: main
 root .agent state: refreshed
@@ -15,44 +15,48 @@ central ledger sync: pending until repo-local update completes
 
 ## Summary
 
-The active runtime owns a complete minimap drawing function, but the React HUD tree does not mount its canvas during `PLAYING`. `HUDOverlay` returns a minimal active branch containing only settings and debug surfaces. The minimap appears only in the `COMPLETED` branch.
+HorrorCorridor supports immediate keyboard movement without requiring pointer capture. `GameCanvas` records keydown state in a persistent `PlayerInputState`, clears individual controls on `keyup`, and resets the full state when pointer lock is lost.
 
-`GameCanvas` still searches for `runtime-minimap` every RAF and calls `drawMinimapFrame`. The missing canvas is accepted as a void no-op. There is no screen-policy result, surface lease, consumer admission result, projection acknowledgement or visible-frame receipt that can expose the missing required consumer.
+The browser `blur` handler only exits pointer lock when pointer lock is already active. When the player is using the advertised non-pointer-locked WASD path, focus loss does not reset controls, pause the screen or publish a neutral input state. A missed keyup can therefore leave movement latched across window focus loss, visibility loss or tab switching.
 
 ## Plan ledger
 
-**Goal:** define one active-gameplay presentation authority that owns screen policy, HUD/minimap surface leases, consumer admission, projection results and committed-frame proof.
+**Goal:** define one input-retirement authority that neutralizes held controls and network intent whenever the browser or runtime can no longer prove that the current physical input lease is valid.
 
 - [x] Compare the complete Publish inventory and central ledger.
 - [x] Exclude `TheCavalryOfRome`.
 - [x] Confirm all nine eligible repositories are tracked and have root `.agent` state.
 - [x] Select only `HorrorCorridor` as the oldest eligible repository.
-- [x] Read current root `.agent` state.
-- [x] Read `GameShell.tsx`, `GameCanvas.tsx`, `HUDOverlay.tsx` and `Minimap.tsx`.
-- [x] Confirm the active gameplay minimap mount is absent.
-- [x] Confirm the completed-state minimap mount is present.
-- [x] Confirm per-frame missing-canvas behavior is a silent no-op.
-- [x] Identify the interaction loop, domains, all 29 implemented kits and services.
-- [x] Define presentation policy, leases, consumer results and fixture contracts.
+- [x] Read current root `.agent` state and retained pause/movement audits.
+- [x] Read `GameShell.tsx`, `GameCanvas.tsx`, `PointerLockGate` use and `input.ts`.
+- [x] Confirm WASD movement is available before pointer lock.
+- [x] Confirm keydown sets held controls and keyup is the normal release path.
+- [x] Confirm pointer-lock loss resets the complete input state.
+- [x] Confirm blur without pointer lock performs no input retirement.
+- [x] Confirm no `visibilitychange` or `pagehide` retirement listener exists.
+- [x] Confirm simulation and client publication can consume the stale held state.
+- [x] Reconcile all 29 implemented kits and services.
+- [x] Define control leases, input revisions, retirement results and fixture contracts.
 - [x] Add timestamped architecture and system audits.
 - [x] Refresh root `.agent` state.
-- [ ] Runtime implementation and executable browser fixtures remain future work.
+- [ ] Runtime implementation and executable browser/network fixtures remain future work.
 
 ## Product interaction loop
 
 ```txt
-screen enters PLAYING
-  -> GameCanvas initializes Three.js world and RAF
-  -> HUDOverlay mounts no Minimap
-  -> each render frame updates camera and world
-  -> GameCanvas searches document for runtime-minimap
-  -> search returns null
-  -> minimap draw exits
-  -> debug capture occurs
-  -> post-processing renders world
-  -> terminal outcome sets screen to COMPLETED
-  -> HUDOverlay mounts Minimap
-  -> snapshot-replay frames can finally draw it
+GameShell enters PLAYING
+  -> GameCanvas initializes input, simulation, rendering and listeners
+  -> PointerLockGate permits immediate WASD movement
+  -> keydown W sets forward = true
+  -> browser loses focus before keyup
+  -> onBlur sees pointerLockedRef.current = false
+  -> no pointer-lock exit, no input reset and no pause occurs
+  -> keyup is delivered outside the page or omitted
+  -> animation loop still sees PLAYING
+  -> host/solo movement consumes forward = true
+  -> client prediction consumes forward = true
+  -> client cadence can publish the resulting pose
+  -> focus returns with stale held input still authoritative locally
 ```
 
 ## Domains in use
@@ -68,7 +72,8 @@ PeerJS host/client transport and BroadcastChannel local bridge
 protocol envelopes serialization request and sequence admission
 seeded maze topology cube placement target sequence and random streams
 replicated snapshot construction publication acceptance delivery and backpressure
-pointer lock keyboard mouse blur and input lifecycle
+keyboard mouse pointer lock focus visibility and input lifecycle
+held-control leases input revisions neutralization and retirement
 movement collision camera prediction and host admission
 interaction target cube/slot claims ordered anomaly and ooze pressure
 Three.js world renderer post-processing bloom and cleanup
@@ -118,85 +123,92 @@ package-validation-kit                 build, lint, harness, visual and live-pla
 ## Source findings
 
 ```txt
-HUDOverlay accepts only PLAYING or COMPLETED: yes
-PLAYING branch mounts Minimap: no
-PLAYING branch mounts SettingsOverlay: yes
-PLAYING branch mounts FrameDebugPanel: yes
-COMPLETED branch mounts Minimap: yes
-GameCanvas queries minimap canvas every RAF: yes
-canvas lookup mechanism: document.getElementById
-missing canvas handling: return without result
-active minimap visibility proof: absent
-surface lease/revision: absent
-consumer registry: absent
-screen-policy result: absent
-presentation frame ID: absent
-consumer acknowledgement barrier: absent
+PointerLockGate says WASD works immediately: yes
+keyboard movement requires pointer lock: no
+keydown stores held button state: yes
+keyup clears held button state: yes
+pointer-lock loss calls full input reset: yes
+blur handler always resets input: no
+blur handler pauses when pointer lock is absent: no
+visibilitychange listener: absent
+pagehide listener: absent
+focus/control lease identity: absent
+input revision: absent
+retirement command/result: absent
+client zero-input terminal publication: absent
+cleanup publishes neutral runtime input snapshot: absent
 ```
 
-## Main finding
+## Concrete failure path
 
 ```txt
-implemented service
-  -> corridor-minimap-kit can draw the active maze state
+initial state
+  pointerLocked = false
+  screen = PLAYING
+  forward = false
 
-composition
-  -> active HUD omits the canvas
+keydown W
+  forward = true
 
-runtime
-  -> draw is attempted against null every frame
-  -> failure is silent
+window blur before keyup
+  onBlur does nothing because pointerLocked = false
+  screen remains PLAYING
+  forward remains true
 
-terminal transition
-  -> completed HUD mounts the first usable minimap canvas
+keyup outside window
+  page receives no release event
+
+subsequent frames
+  host/solo stepLocalPose advances forward
+  client prediction advances forward
+  client PLAYER_UPDATE may publish movement-derived pose
+
+focus return
+  forward remains true until another reset path is reached
 ```
-
-This is a service-reachability and authority defect rather than a missing drawing implementation.
 
 ## Required parent domain
 
 ```txt
-corridor-active-gameplay-presentation-authority-domain
+corridor-focus-loss-input-retirement-authority-domain
 ```
 
 ## Candidate kits
 
 ```txt
-presentation-frame-id-kit
-presentation-frame-plan-kit
-active-gameplay-hud-policy-kit
-presentation-consumer-registry-kit
-hud-surface-lease-kit
-minimap-surface-lease-kit
-presentation-consumer-admission-kit
-world-projection-result-kit
-hud-projection-result-kit
-minimap-projection-result-kit
-debug-projection-result-kit
-presentation-consumer-ack-kit
-presentation-frame-commit-kit
-presentation-frame-journal-kit
-active-play-hud-reachability-fixture-kit
-minimap-mount-lifecycle-fixture-kit
-presentation-consumer-parity-fixture-kit
-browser-gameplay-hud-smoke-kit
+input-focus-state-kit
+input-control-lease-kit
+held-control-state-kit
+input-revision-kit
+focus-loss-event-adapter-kit
+visibility-loss-event-adapter-kit
+pagehide-input-adapter-kit
+pointer-lock-retirement-adapter-kit
+input-retirement-command-kit
+input-retirement-admission-kit
+input-neutralization-kit
+client-zero-input-publication-kit
+input-retirement-result-kit
+input-retirement-journal-kit
+stuck-input-fixture-kit
+focus-visibility-browser-smoke-kit
+client-zero-input-fixture-kit
+runtime-teardown-input-fixture-kit
 ```
 
 ## Required authority flow
 
 ```txt
-screen transition
-  -> resolve named consumer policy
-  -> mount/acquire required HUD surfaces
-  -> publish lease and surface revisions
-
-RAF
-  -> create immutable PresentationFramePlan
-  -> admit each required/optional consumer
-  -> project world, HUD, minimap and debug
-  -> return typed results
-  -> reject commit when mandatory consumers are unavailable
-  -> commit one visible frame receipt
+focus, visibility, pointer-lock, pause, route or runtime loss
+  -> create InputRetirementCommand with reason and expected revisions
+  -> reject stale runtime/run/input generations
+  -> suspend new gameplay input
+  -> neutralize buttons, look deltas and pointer state atomically
+  -> publish the neutral runtime input snapshot
+  -> optionally send one sequenced client zero-input update
+  -> retire the prior control lease
+  -> publish an idempotent InputRetirementResult
+  -> require a new focus-qualified keydown for the next lease
 ```
 
 ## Ordered safe ledges
@@ -211,6 +223,7 @@ RAF
 4c. Render Surface Resolution and Frame Correlation Authority
 4d. Active Gameplay Presentation and HUD/Minimap Reachability Authority
 4e. Debug Observability Capability and Redaction Authority
+4f. Focus, Visibility and Held-Control Retirement Authority
 5. Snapshot Acceptance Authority
 5a. Interaction Target Intent and Cube/Slot Claim Authority
 5b. Active-Run Disconnect and Reconnect Authority
