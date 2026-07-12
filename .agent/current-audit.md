@@ -1,12 +1,12 @@
 # HorrorCorridor Current Audit
 
 **Repository:** `LuminaryLabs-Publish/HorrorCorridor`  
-**Updated:** `2026-07-12T04-28-03-04-00`
+**Updated:** `2026-07-12T05-59-28-04-00`
 
 ## Status
 
 ```txt
-status: focus-loss-input-retirement-authority-audited
+status: runtime-frame-failure-containment-authority-audited
 runtime source changed: no
 branch: main
 root .agent state: refreshed
@@ -15,48 +15,65 @@ central ledger sync: pending until repo-local update completes
 
 ## Summary
 
-HorrorCorridor supports immediate keyboard movement without requiring pointer capture. `GameCanvas` records keydown state in a persistent `PlayerInputState`, clears individual controls on `keyup`, and resets the full state when pointer lock is lost.
+HorrorCorridor runs simulation, networking, runtime-store projection, Three.js world updates, minimap drawing, debug capture and post-processing inside one RAF callback. The loop schedules its successor only after that callback returns.
 
-The browser `blur` handler only exits pointer lock when pointer lock is already active. When the player is using the advertised non-pointer-locked WASD path, focus loss does not reset controls, pause the screen or publish a neutral input state. A missed keyup can therefore leave movement latched across window focus loss, visibility loss or tab switching.
+Any thrown frame stage therefore stops future frames while the controller remains marked running. Earlier side effects may already be committed, readiness remains true, input and network listeners remain live, resources remain allocated and no fatal surface or cleanup transaction runs.
 
 ## Plan ledger
 
-**Goal:** define one input-retirement authority that neutralizes held controls and network intent whenever the browser or runtime can no longer prove that the current physical input lease is valid.
+**Goal:** define one frame-failure containment authority that records exact stage progress, preserves the last-known-good frame, fences mutation, revokes readiness, disposes deterministically and admits only a new runtime generation.
 
 - [x] Compare the complete Publish inventory and central ledger.
 - [x] Exclude `TheCavalryOfRome`.
 - [x] Confirm all nine eligible repositories are tracked and have root `.agent` state.
 - [x] Select only `HorrorCorridor` as the oldest eligible repository.
-- [x] Read current root `.agent` state and retained pause/movement audits.
-- [x] Read `GameShell.tsx`, `GameCanvas.tsx`, `PointerLockGate` use and `input.ts`.
-- [x] Confirm WASD movement is available before pointer lock.
-- [x] Confirm keydown sets held controls and keyup is the normal release path.
-- [x] Confirm pointer-lock loss resets the complete input state.
-- [x] Confirm blur without pointer lock performs no input retirement.
-- [x] Confirm no `visibilitychange` or `pagehide` retirement listener exists.
-- [x] Confirm simulation and client publication can consume the stale held state.
+- [x] Read current root `.agent` state and retained startup, readiness, render, input and network audits.
+- [x] Read `GameCanvas.tsx` and `animationLoop.ts`.
+- [x] Confirm successor RAF scheduling occurs after `onFrame`.
+- [x] Confirm exceptions leave `running = true` without a pending successor.
+- [x] Confirm host snapshots can be published before render completion.
+- [x] Confirm client movement can be sent before render completion.
+- [x] Confirm cleanup is tied to effect teardown, not frame failure.
+- [x] Confirm readiness and mutation capabilities remain live after a dead frame.
 - [x] Reconcile all 29 implemented kits and services.
-- [x] Define control leases, input revisions, retirement results and fixture contracts.
+- [x] Define frame, stage, failure, quarantine, cleanup and cold-restart contracts.
 - [x] Add timestamped architecture and system audits.
 - [x] Refresh root `.agent` state.
-- [ ] Runtime implementation and executable browser/network fixtures remain future work.
+- [ ] Runtime implementation and executable fault-injection fixtures remain future work.
 
 ## Product interaction loop
 
 ```txt
-GameShell enters PLAYING
-  -> GameCanvas initializes input, simulation, rendering and listeners
-  -> PointerLockGate permits immediate WASD movement
-  -> keydown W sets forward = true
-  -> browser loses focus before keyup
-  -> onBlur sees pointerLockedRef.current = false
-  -> no pointer-lock exit, no input reset and no pause occurs
-  -> keyup is delivered outside the page or omitted
-  -> animation loop still sees PLAYING
-  -> host/solo movement consumes forward = true
-  -> client prediction consumes forward = true
-  -> client cadence can publish the resulting pose
-  -> focus returns with stale held input still authoritative locally
+createAnimationLoop.step(time)
+  -> return when running is false
+  -> calculate delta
+  -> call GameCanvas onFrame
+  -> schedule next RAF only after onFrame returns
+
+host/solo onFrame
+  -> read UI state
+  -> advance local pose and view
+  -> update player in authoritative game state
+  -> synchronize held cubes
+  -> optionally advance ooze
+  -> build authoritative snapshot
+  -> set runtime authoritative snapshot
+  -> broadcast SYNC to peers
+  -> update local runtime stores
+  -> synchronize camera
+  -> update Three.js world
+  -> draw minimap
+  -> append optional debug frame
+  -> post-process and submit visible frame
+
+client onFrame
+  -> advance predicted pose and view
+  -> optionally send PLAYER_UPDATE
+  -> synchronize carry state
+  -> update runtime stores
+  -> synchronize camera and world
+  -> draw minimap and debug
+  -> post-process and submit visible frame
 ```
 
 ## Domains in use
@@ -68,6 +85,7 @@ session mode peer identity room roster connection readiness and reset
 lobby identity actor binding readiness start and bootstrap
 runtime startup acquisition rollback retry and first-frame commit
 runtime readiness lifecycle exit disconnect and reconnect
+runtime frame admission stage execution failure quarantine disposal and restart gap
 PeerJS host/client transport and BroadcastChannel local bridge
 protocol envelopes serialization request and sequence admission
 seeded maze topology cube placement target sequence and random streams
@@ -79,12 +97,12 @@ interaction target cube/slot claims ordered anomaly and ooze pressure
 Three.js world renderer post-processing bloom and cleanup
 render-surface observation policy sizing revision and frame correlation
 active gameplay presentation policy and consumer admission
-HUD and minimap surface ownership, mount lifecycle and projection
-runtime debug capability, capture, overlay and export
+HUD and minimap surface ownership mount lifecycle and projection
+runtime debug capability capture overlay and export
 validation build and deployment
 ```
 
-## Implemented kits and services
+## Implemented kits and offered services
 
 The repository retains 29 source-backed kit responsibilities:
 
@@ -111,7 +129,7 @@ ordered-anomaly-sequence-kit           ordered validation, slots and victory eva
 ooze-trail-domain-kit                  spawn, decay, variation, spacing, capacity and pressure
 snapshot-outcome-routing-kit           snapshot-to-UI outcome projection
 corridor-authoritative-publication-kit tick, snapshot clone, SYNC construction and broadcast
-corridor-animation-loop-kit            RAF lifecycle, delta and running guard
+corridor-animation-loop-kit            RAF lifecycle, delta, running guard and successor scheduling
 corridor-render-world-kit              terrain, maze, objects, lights, update, attach and disposal
 corridor-post-processing-kit           composer, bloom, output, resize, render and disposal
 corridor-minimap-kit                   2D sizing, maze, players, cubes, ooze and heading
@@ -123,92 +141,126 @@ package-validation-kit                 build, lint, harness, visual and live-pla
 ## Source findings
 
 ```txt
-PointerLockGate says WASD works immediately: yes
-keyboard movement requires pointer lock: no
-keydown stores held button state: yes
-keyup clears held button state: yes
-pointer-lock loss calls full input reset: yes
-blur handler always resets input: no
-blur handler pauses when pointer lock is absent: no
-visibilitychange listener: absent
-pagehide listener: absent
-focus/control lease identity: absent
-input revision: absent
-retirement command/result: absent
-client zero-input terminal publication: absent
-cleanup publishes neutral runtime input snapshot: absent
+successor RAF scheduled before frame callback: no
+successor RAF scheduled after frame callback: yes
+frame-level catch: no
+stage-level result contract: no
+controller running flag cleared on throw: no
+host simulation mutates before render: yes
+host snapshot/store publication before render: yes
+host peer broadcast before render: yes
+client predicted pose before render: yes
+client PLAYER_UPDATE before render: possible
+runtime store sync before render: yes
+world update before post-processing: yes
+minimap update before post-processing: yes
+debug capture before post-processing: yes
+cleanup invoked automatically on frame failure: no
+readiness revoked automatically: no
+fatal UI projected automatically: no
+cold restart transaction: no
 ```
 
-## Concrete failure path
+## Concrete failure paths
+
+### Host render fault
 
 ```txt
-initial state
-  pointerLocked = false
-  screen = PLAYING
-  forward = false
+advance host pose
+  -> mutate authoritative game state
+  -> publish snapshot and broadcast
+  -> project runtime stores
+  -> world or post-processing throws
+  -> next RAF is never scheduled
+  -> peers can display a newer snapshot than host canvas
+  -> screen and readiness remain active
+  -> input and transport listeners remain live
+```
 
-keydown W
-  forward = true
+### Client render fault
 
-window blur before keyup
-  onBlur does nothing because pointerLocked = false
-  screen remains PLAYING
-  forward remains true
+```txt
+advance predicted pose
+  -> send PLAYER_UPDATE
+  -> project runtime stores
+  -> world or post-processing throws
+  -> host may accept movement
+  -> client canvas remains stale
+  -> client loop stops but transport and input remain reachable
+```
 
-keyup outside window
-  page receives no release event
+### Partial presentation fault
 
-subsequent frames
-  host/solo stepLocalPose advances forward
-  client prediction advances forward
-  client PLAYER_UPDATE may publish movement-derived pose
-
-focus return
-  forward remains true until another reset path is reached
+```txt
+world update succeeds
+  -> minimap draw succeeds
+  -> debug frame records current state
+  -> post-processing throws
+  -> minimap/debug may be current
+  -> main canvas remains previous or partial
+  -> no shared committed-frame acknowledgement exists
 ```
 
 ## Required parent domain
 
 ```txt
-corridor-focus-loss-input-retirement-authority-domain
+corridor-runtime-frame-failure-containment-authority-domain
 ```
 
-## Candidate kits
+## Candidate coordinating kits
 
 ```txt
-input-focus-state-kit
-input-control-lease-kit
-held-control-state-kit
-input-revision-kit
-focus-loss-event-adapter-kit
-visibility-loss-event-adapter-kit
-pagehide-input-adapter-kit
-pointer-lock-retirement-adapter-kit
-input-retirement-command-kit
-input-retirement-admission-kit
-input-neutralization-kit
-client-zero-input-publication-kit
-input-retirement-result-kit
-input-retirement-journal-kit
-stuck-input-fixture-kit
-focus-visibility-browser-smoke-kit
-client-zero-input-fixture-kit
-runtime-teardown-input-fixture-kit
+runtime-frame-id-kit
+frame-stage-id-kit
+frame-execution-plan-kit
+frame-stage-admission-kit
+frame-stage-result-kit
+frame-mutation-journal-kit
+frame-failure-id-kit
+frame-failure-classification-kit
+frame-failure-admission-kit
+runtime-failure-state-kit
+last-known-good-snapshot-kit
+last-known-good-visible-frame-kit
+frame-rollback-or-retire-policy-kit
+runtime-mutation-quarantine-kit
+input-capability-fence-kit
+transport-capability-fence-kit
+readiness-revocation-kit
+render-freeze-kit
+fatal-overlay-projection-kit
+resource-disposal-plan-kit
+resource-disposal-result-kit
+runtime-terminal-result-kit
+cold-restart-command-kit
+cold-restart-admission-kit
+cold-restart-result-kit
+first-replacement-frame-ack-kit
+frame-failure-observation-kit
+frame-failure-journal-kit
+frame-fault-injection-fixture-kit
+browser-frame-recovery-smoke-kit
 ```
 
 ## Required authority flow
 
 ```txt
-focus, visibility, pointer-lock, pause, route or runtime loss
-  -> create InputRetirementCommand with reason and expected revisions
-  -> reject stale runtime/run/input generations
-  -> suspend new gameplay input
-  -> neutralize buttons, look deltas and pointer state atomically
-  -> publish the neutral runtime input snapshot
-  -> optionally send one sequenced client zero-input update
-  -> retire the prior control lease
-  -> publish an idempotent InputRetirementResult
-  -> require a new focus-qualified keydown for the next lease
+admit immutable FramePlan
+  -> execute ordered stages with typed receipts
+  -> retain mutation and publication evidence
+  -> require mandatory world, minimap and post-processing acknowledgements
+  -> commit visible frame and schedule successor
+
+first stage failure
+  -> admit one FrameFailureResult
+  -> reject remaining stages and future frames
+  -> retain previous committed snapshot/frame identity
+  -> retire input and fence gameplay/network mutation
+  -> revoke readiness
+  -> freeze or replace damaged visual surfaces
+  -> dispose resources or publish retained-frozen policy
+  -> publish terminal observation
+  -> admit restart only into a new runtime generation
 ```
 
 ## Ordered safe ledges
@@ -224,6 +276,7 @@ focus, visibility, pointer-lock, pause, route or runtime loss
 4d. Active Gameplay Presentation and HUD/Minimap Reachability Authority
 4e. Debug Observability Capability and Redaction Authority
 4f. Focus, Visibility and Held-Control Retirement Authority
+4g. Runtime Frame-Failure Containment, Disposal and Cold Restart
 5. Snapshot Acceptance Authority
 5a. Interaction Target Intent and Cube/Slot Claim Authority
 5b. Active-Run Disconnect and Reconnect Authority
