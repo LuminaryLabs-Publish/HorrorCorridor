@@ -1,10 +1,10 @@
 # HorrorCorridor Next Steps
 
-**Updated:** `2026-07-11T23-18-16-04-00`
+**Updated:** `2026-07-12T01-08-06-04-00`
 
 ## Plan ledger
 
-**Goal:** preserve identity, startup and lifecycle prerequisites, then make surface sizing transactional and frame-correlated before later simulation and presentation claims rely on rendering readiness.
+**Goal:** preserve identity, startup, lifecycle and surface prerequisites, then separate public-safe telemetry from privileged QA diagnostics before any release claims rely on the current browser debug surface.
 
 ### Gate 1: roster identity and peer binding
 
@@ -34,12 +34,9 @@
 - [ ] Replace procedural startup with a `StartRuntime` transaction.
 - [ ] Keep readiness false while startup is preparing.
 - [ ] Record renderer, scene, camera, post, world, canvas, observer, listener and RAF acquisitions.
-- [ ] Move initialized state to the successful commit boundary.
 - [ ] Roll back partial acquisitions in reverse dependency order.
-- [ ] Return typed failure, rollback and unresolved-lease results.
 - [ ] Fence callbacks with runtime generation and transaction identity.
 - [ ] Commit rendering/input readiness only after the first successful frame.
-- [ ] Admit retry only after a zero-live-lease baseline is proven.
 - [ ] Add failure-injection, idempotent rollback and clean-retry fixtures.
 
 ### Gate 4b: runtime readiness and generation fencing
@@ -52,13 +49,24 @@
 
 - [ ] Define a named surface policy with DPR limits, maximum physical pixels and zero-area behavior.
 - [ ] Convert startup, ResizeObserver, window resize and DPR changes into sequenced surface commands.
-- [ ] Sample CSS size and device scale once per admitted observation.
-- [ ] Coalesce duplicate resize sources and reject stale observations.
 - [ ] Commit renderer, composer, bloom, camera and minimap from one plan.
-- [ ] Read back actual drawing-buffer and target sizes.
-- [ ] Publish monotonic surface identity and revision.
+- [ ] Read back actual physical sizes and publish a monotonic surface revision.
 - [ ] Require rendering readiness, visible frames, captures and debug records to cite the revision.
 - [ ] Add zero-area, DPR parity, resize-storm and stop/restart fixtures.
+
+### Gate 4d: debug observability capability and redaction
+
+- [ ] Define build channels: public production, QA preview and local development.
+- [ ] Define player-safe, QA and developer capability tiers.
+- [ ] Replace ambient query, Backquote, localStorage and window-API enablement with `DebugActivationCommand` admission.
+- [ ] Bind every capability to actor identity, role, runtime generation and session epoch.
+- [ ] Issue a revocable lease with explicit expiry and reason.
+- [ ] Classify every captured frame/event field.
+- [ ] Create a public-safe redaction profile that excludes puzzle order, cube coordinates, owner IDs and room/player identifiers.
+- [ ] Gate privileged overlay and export surfaces behind the admitted lease.
+- [ ] Return typed activation, export and revocation results.
+- [ ] Clear privileged buffers and persisted flags on revocation, stop and session replacement.
+- [ ] Add production-disable, tier-redaction, localStorage-restart, session-revocation and export-budget fixtures.
 
 ### Gate 5: state acceptance and gameplay commands
 
@@ -77,7 +85,6 @@
 - [ ] Derive a named ooze stream from run seed and session epoch.
 - [ ] Remove gameplay fallback to ambient `Math.random()`.
 - [ ] Commit gameplay mutation and RNG checkpoint atomically.
-- [ ] Project and restore versioned stream state.
 - [ ] Add deterministic replay and migration continuation fixtures.
 
 ### Gate 7: pause/resume convergence
@@ -88,4 +95,4 @@
 
 ## Completion boundary
 
-Do not claim responsive or current rendering until every accepted browser size/DPR transition yields one observable surface result and the first following frame cites that surface revision.
+Do not claim production-safe diagnostics until public builds reject privileged activation by default, player-safe exports are redacted, privileged leases revoke across session/runtime replacement, and browser fixtures prove the overlay/window API cannot disclose puzzle-solving state without an explicitly admitted QA or developer capability.
