@@ -2,111 +2,110 @@
 
 **Repository:** `LuminaryLabs-Publish/HorrorCorridor`  
 **Branch:** `main`  
-**Updated:** `2026-07-12T09-38-46-04-00`
+**Updated:** `2026-07-12T09-48-15-04-00`
 
 ## Summary
 
 HorrorCorridor is a cooperative first-person procedural maze with solo, host and client sessions, deterministic maze bootstrap, authoritative snapshots, cube/anomaly interactions, ooze pressure, Three.js rendering, bloom, minimap and runtime diagnostics.
 
-The current audit isolates asynchronous loading-transition authority. `runLoadingSteps()` yields across five animation-frame and timeout boundaries, while `enterSoloRun()` and host `startPlay()` retain mutable route, session, lobby and connection inputs and commit after the wait. No loading generation, single-flight guard, cancellation token, predecessor check or stale-result rejection protects those commits.
-
-## Current ledge
-
-```txt
-HorrorCorridor Loading Transition Generation Authority
-+ Single-Flight Admission, Cancellation, Sealed Bootstrap Inputs, Atomic Commit and First-Frame Proof
-```
+The current implementation boundary is asynchronous loading-transition authority. `runLoadingSteps()` crosses five animation-frame and timer pairs, then solo and host start paths commit session, runtime, UI and transport results without a loading generation, cancellation token, sealed predecessor revisions or atomic commit receipt. This turn reconciles that repo-local audit with central tracking; runtime behavior remains unchanged.
 
 ## Plan ledger
 
-**Goal:** ensure every solo or host start belongs to one admitted loading generation and cannot commit after cancellation, route replacement, unmount, lobby mutation or a newer start attempt.
+**Goal:** keep the loading-transition authority, root audit routing, machine registry and central ledger aligned while preserving the complete source-backed breakdown.
 
-- [x] Compare the complete Publish inventory with central tracking.
+- [x] Compare all ten accessible Publish repositories.
 - [x] Exclude `TheCavalryOfRome`.
-- [x] Confirm all nine eligible repositories have ledger and root `.agent` coverage.
-- [x] Select only `HorrorCorridor` as the oldest eligible synchronized repository.
-- [x] Read current root audit guidance and retained ledges.
-- [x] Trace `runLoadingSteps()`, `enterSoloRun()`, host `startPlay()`, menu callbacks and runtime initialization.
-- [x] Identify the interaction loop, domains, 29 implemented kits and offered services.
-- [x] Define loading admission, cancellation, sealed-input, candidate-bootstrap, atomic-commit and first-frame contracts.
-- [x] Add timestamped architecture and system audits.
-- [x] Refresh required root files and machine registry.
-- [x] Change documentation only.
-- [x] Push directly to `main`; create no branch or pull request.
+- [x] Confirm all nine eligible repositories have central-ledger and root `.agent` coverage.
+- [x] Select only `HorrorCorridor` because its repo-local audit was newer than central tracking.
+- [x] Verify loading steps, solo/host commit paths and one-time world initialization.
+- [x] Identify the interaction loop, all domains, 29 implemented kits and offered services.
+- [x] Add a new tracker, turn ledger and architecture/render/gameplay/interaction/central/deploy audit family.
+- [x] Refresh root human and machine-readable audit state.
+- [x] Prepare central ledger and internal change-log synchronization.
+- [x] Use `main` only; create no branch or pull request.
 - [ ] Runtime implementation and executable loading-race fixtures remain future work.
 
 ## Read first
 
 ```txt
-.agent/trackers/2026-07-12T09-38-46-04-00/project-breakdown.md
-.agent/turn-ledger/2026-07-12T09-38-46-04-00.md
+.agent/trackers/2026-07-12T09-48-15-04-00/project-breakdown.md
+.agent/turn-ledger/2026-07-12T09-48-15-04-00.md
 .agent/current-audit.md
 .agent/known-gaps.md
 .agent/next-steps.md
 .agent/validation.md
 .agent/kit-registry.json
-.agent/architecture-audit/2026-07-12T09-38-46-04-00-loading-transition-generation-dsk-map.md
-.agent/render-audit/2026-07-12T09-38-46-04-00-stale-bootstrap-world-snapshot-provenance-gap.md
-.agent/gameplay-audit/2026-07-12T09-38-46-04-00-overlapping-loading-stale-run-commit-loop.md
-.agent/interaction-audit/2026-07-12T09-38-46-04-00-start-cancel-commit-admission-map.md
-.agent/loading-transition-audit/2026-07-12T09-38-46-04-00-generation-cancellation-atomic-commit-contract.md
-.agent/deploy-audit/2026-07-12T09-38-46-04-00-loading-race-fixture-gate.md
+.agent/architecture-audit/2026-07-12T09-48-15-04-00-loading-transition-central-reconciliation-dsk-map.md
+.agent/render-audit/2026-07-12T09-48-15-04-00-world-snapshot-generation-ledger-gap.md
+.agent/gameplay-audit/2026-07-12T09-48-15-04-00-loading-race-source-reconciliation.md
+.agent/interaction-audit/2026-07-12T09-48-15-04-00-start-command-central-admission-map.md
+.agent/central-sync-audit/2026-07-12T09-48-15-04-00-repo-ledger-machine-registry-contract.md
+.agent/deploy-audit/2026-07-12T09-48-15-04-00-loading-fixture-central-gate.md
 ```
 
-Retain the preceding canonical-clock, frame-failure, input-lifecycle, active-presentation, debug, render-surface, startup, randomness, transport, cadence, movement, disconnect, interaction, outcome, snapshot, lobby, exit and pause audits.
+Retain the detailed loading-transition audit family at `2026-07-12T09-38-46-04-00` and all preceding canonical-clock, frame-failure, input-lifecycle, active-presentation, debug, render-surface, startup, randomness, transport, cadence, movement, disconnect, interaction, outcome, snapshot, lobby, exit and pause audits.
 
 ## Interaction loop
 
 ```txt
 solo or host Start action
   -> set route to LOADING
-  -> repeat five display steps
+  -> execute five display steps
        -> wait one requestAnimationFrame
-       -> wait one 90 ms timeout
-  -> read retained closure inputs
-  -> create room/run bootstrap
+       -> wait one 90 ms timer
+  -> reuse retained route/session/lobby/identity/connection values
+  -> create run bootstrap
   -> mutate session, runtime and UI stores
   -> host may broadcast START_GAME and initial SYNC
-  -> GameCanvas initializes once from the first available snapshot
-  -> build a retained Three.js world from that snapshot
-  -> render later snapshots through the retained world
+  -> GameCanvas initializes once from the first snapshot
+  -> retained world and later snapshots continue without generation parity proof
 ```
 
-## Source-backed finding
+## Current finding
 
 ```txt
+loading command ID: absent
 loading generation: absent
 single-flight admission: absent
-loading cancellation: absent
-timeout/RAF lease ownership: absent
-predecessor route/session validation: absent
-sealed lobby/readiness snapshot: absent
-stale-result rejection: absent
+cancellation or supersession: absent
+owned RAF/timer leases: absent
+sealed lobby/readiness inputs: absent
+route/session predecessor validation: absent
 candidate bootstrap validation: absent
-atomic run commit receipt: absent
-first visible run-frame acknowledgement: absent
+atomic multi-store commit: absent
+duplicate initial broadcast suppression: absent
+world/snapshot generation parity: absent
+first visible run-frame receipt: absent
 ```
 
-## Required architecture
+## Required parent domain
+
+```txt
+corridor-loading-transition-generation-authority-domain
+```
+
+## Required flow
 
 ```txt
 StartRunCommand
-  -> admit against route, session, room and predecessor loading revision
-  -> allocate one loading generation and cancellation token
+  -> validate route/session and predecessor revisions
+  -> allocate command ID, loading generation and cancellation token
+  -> enforce single-flight or typed supersession
   -> seal room, roster, readiness, identity and connection inputs
-  -> execute owned loading-step leases
-  -> build and validate a candidate bootstrap
-  -> reject cancelled, stale or superseded generations
-  -> atomically commit session, runtime, UI and transport outputs
-  -> initialize the world from the committed bootstrap generation
+  -> execute owned cancellable loading leases
+  -> build and validate a detached candidate bootstrap
+  -> re-check all predecessors before atomic commit
+  -> publish session, runtime, UI and transport results exactly once
+  -> build world resources from the committed run generation
   -> acknowledge the first visible frame with the same generation
 ```
 
-## Implemented kit census
+## Census
 
 ```txt
 source-backed kits: 29
 planned loading-transition kits: 26
 ```
 
-The complete kit/service map is in `.agent/current-audit.md` and `.agent/kit-registry.json`.
+The complete kit and service inventory is in `.agent/current-audit.md`, `.agent/kit-registry.json` and the current tracker.
