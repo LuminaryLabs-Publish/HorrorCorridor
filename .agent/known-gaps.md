@@ -1,6 +1,6 @@
 # HorrorCorridor Known Gaps
 
-**Updated:** `2026-07-12T05-59-28-04-00`
+**Updated:** `2026-07-12T07-41-06-04-00`
 
 ## Primary ordered gaps
 
@@ -16,140 +16,82 @@
 9. debug-observability capability, redaction and revocation
 10. focus, visibility and held-control retirement
 11. runtime frame-failure containment, disposal and cold restart
-12. snapshot acceptance ordering and monotonic revision
-13. explicit interaction targets and cube/slot claims
-14. active-run disconnect, player retirement and reconnect claims
-15. monotonic terminal outcome authority
-16. host network cadence and fixed simulation authority
-17. host movement admission and client reconciliation
-18. snapshot delivery, payload budgeting and backpressure authority
-19. authoritative randomness, checkpoint and replay authority
-20. replicated pause/resume convergence
+12. canonical runtime clock and temporal provenance
+13. snapshot acceptance ordering and monotonic revision
+14. explicit interaction targets and cube/slot claims
+15. active-run disconnect, player retirement and reconnect claims
+16. monotonic terminal outcome authority
+17. host network cadence and fixed simulation authority
+18. host movement admission and client reconciliation
+19. snapshot delivery, payload budgeting and backpressure authority
+20. authoritative randomness, checkpoint and replay authority
+21. replicated pause/resume convergence
 ```
 
-## Current runtime frame-failure gap
+## Current canonical-clock gap
 
 ```txt
-successor RAF scheduled after onFrame: yes
-frame-level exception boundary: absent
-stage result contract: absent
-loop lifecycle terminalization on throw: absent
-last-known-good frame authority: absent
-escaped mutation/publication receipts: absent
-mutation quarantine: absent
-readiness revocation: absent
-input and transport capability fences: absent
-fatal overlay outside damaged graph: absent
-ordered disposal on frame failure: absent
-cold restart generation transaction: absent
+RAF clock used for delta and visual elapsed time: yes
+Date.now used for gameplay/network cadence: yes
+Date.now used for snapshot and room timestamps: yes
+Date.now used for ooze decay eligibility: yes
+shared clock ID and revision: absent
+clock discontinuity result: absent
+monotonic simulation elapsed time: absent
+fixed-step sequence and bounded batch result: absent
+pause/resume clock policy: implicit
+reset clock generation: absent
+snapshot simulation-time projection: absent
+render-to-simulation clock receipt: absent
 ```
 
-## Concrete host failure path
+## Backward-jump path
 
 ```txt
-PLAYING host frame
-  -> advance local pose
-  -> mutate authoritative state
-  -> optionally advance ooze
-  -> publish snapshot to runtime store
-  -> broadcast SYNC to clients
-  -> update local runtime stores
-  -> world or post-processing throws
-  -> successor RAF is not scheduled
-  -> loop remains marked running
-  -> peers may display newer state than host canvas
-  -> readiness, input listeners and transport subscription remain live
+wall time moves behind last accepted cadence timestamp
+  -> network and UI age checks can become negative
+  -> authoritative publication can stall
+  -> ooze decay can stall
+  -> RAF movement and visuals continue
 ```
 
-## Concrete client failure path
+## Forward-jump path
 
 ```txt
-PLAYING client frame
-  -> advance predicted pose
-  -> send PLAYER_UPDATE when cadence allows
-  -> update local runtime stores
-  -> world or post-processing throws
-  -> host may accept movement
-  -> client canvas remains stale
-  -> successor RAF is not scheduled
-  -> local input and transport remain reachable
+wall time jumps ahead
+  -> cadence and decay become immediately eligible
+  -> snapshot timestamps jump
+  -> gameplay changes without a corresponding simulation-step explanation
 ```
 
-## Partial presentation combinations
+## Missing clock authority
 
 ```txt
-camera/world current + minimap prior + main canvas prior
-camera/world current + minimap current + main canvas prior
-runtime snapshot current + peers current + host canvas prior
-client movement accepted by host + client canvas prior
-current debug frame + prior visible canvas
-```
-
-## Missing frame authority
-
-```txt
-runtime frame ID
-frame stage ID
-immutable frame plan
-stage admission and typed result
-frame mutation journal
-failure ID and classification
-first-failure admission
-last-known-good snapshot and frame
-quarantine revision
-readiness revocation result
-input and transport fence result
-render freeze/failure surface result
-disposal plan and per-resource receipts
-terminal runtime result
-cold restart command/result
-first replacement frame acknowledgement
+runtime clock identity
+clock-state revision
+source identity and adapter
+sample command and result
+regression/jump/stall classification
+simulation-time state
+step sequence and work budget
+pause, resume and reset generations
+network/UI/ooze cadence projections
+snapshot clock projection
+render-time projection
+frame acknowledgement and bounded clock journal
 ```
 
 ## Consequences
 
 ```txt
-runtime can look active while no future frame executes
-host and clients can disagree about the latest committed state
-main canvas, minimap and debug observations can cite different implicit revisions
-input can continue mutating a dead presentation
-transport callbacks can continue mutating a quarantined-looking runtime
-resources remain allocated until unrelated React teardown
-loop.isRunning() can report true after the RAF chain is dead
-restart cannot prove predecessor callbacks and resources are retired
-current fixtures do not inject stage faults
-```
-
-## Retained focus-loss input gap
-
-```txt
-movement before pointer lock: supported
-blur reset while not pointer locked: absent
-visibility hidden retirement: absent
-pagehide retirement: absent
-control lease/input revision: absent
-client zero-input publication: absent
-```
-
-## Retained active-presentation gap
-
-```txt
-implemented minimap renderer: present
-active PLAYING minimap mount: absent
-COMPLETED minimap mount: present
-per-frame minimap lookup: present
-surface lease and consumer acknowledgement: absent
-```
-
-## Retained debug-observability gap
-
-```txt
-public query, localStorage, Backquote and window-API activation: present
-build-channel and role admission: absent
-data classification and redaction: absent
-automatic revocation: absent
+system clock maintenance can alter gameplay cadence
+same inputs can produce different timing outcomes
+snapshot restore depends on ambient wall time
+pause/resume can inherit unbounded elapsed wall time
+rendered motion and authoritative state can cite different temporal histories
+current diagnostics expose values but no clock provenance
 ```
 
 ## Retained gaps
 
-The preceding presentation, render-surface, startup, readiness, input-retirement, randomness, snapshot-delivery, network-cadence, movement, disconnect, interaction, outcome, snapshot-acceptance, lobby, exit, pause and debug-observability findings remain open. This audit adds frame-failure containment, cleanup and cold-restart authority and does not supersede them.
+The preceding frame-failure, input-lifecycle, active-presentation, debug, render-surface, startup, readiness, randomness, snapshot-delivery, cadence, movement, disconnect, interaction, outcome, snapshot-acceptance, lobby, exit and pause findings remain open. This audit adds canonical runtime-clock authority and does not supersede them.
