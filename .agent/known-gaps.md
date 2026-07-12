@@ -1,6 +1,6 @@
 # HorrorCorridor Known Gaps
 
-**Updated:** `2026-07-11T19-38-14-04-00`
+**Updated:** `2026-07-11T21-21-12-04-00`
 
 ## Primary ordered gaps
 
@@ -9,59 +9,64 @@
 2. transport actor binding and message admission
 3. sealed lobby start transaction and correlated initial SYNC
 4. run exit, session epoch and late-message quarantine
-5. runtime readiness leases and generation fencing
-6. snapshot acceptance ordering and monotonic revision
-7. explicit interaction targets and cube/slot claims
-8. active-run disconnect, player retirement and reconnect claims
-9. monotonic terminal outcome authority
-10. host network cadence and fixed simulation authority
-11. host movement admission and client reconciliation
-12. snapshot delivery, payload budgeting and backpressure authority
-13. authoritative randomness, checkpoint and replay authority
-14. replicated pause/resume convergence
+5. runtime startup acquisition, rollback and clean retry
+6. runtime readiness leases and generation fencing
+7. snapshot acceptance ordering and monotonic revision
+8. explicit interaction targets and cube/slot claims
+9. active-run disconnect, player retirement and reconnect claims
+10. monotonic terminal outcome authority
+11. host network cadence and fixed simulation authority
+12. host movement admission and client reconciliation
+13. snapshot delivery, payload budgeting and backpressure authority
+14. authoritative randomness, checkpoint and replay authority
+15. replicated pause/resume convergence
 ```
 
-## Current randomness gap
+## Current startup gap
 
 ```txt
-seeded maze topology: present
-seeded cube placement: present
-seeded target sequence: present
-seeded authoritative ooze stream: absent
+snapshot/store bootstrap: present
+cosmetic loading projection: present
+renderer/world/post construction: present
+normal successful unmount cleanup: present
+startup transaction: absent
+partial-acquisition rollback: absent
+first-frame readiness commit: absent
+clean retry contract: absent
 ```
 
-`advanceOozeTrail()` defaults to `Math.random()` when no RNG is supplied. The authoritative host supplies no RNG, so decay survival, ooze height and ooze rotation depend on ambient process state and call count.
+`GameShell` marks the runtime ready before `GameCanvas` exists. `GameCanvas.initializeRuntime()` sets `initialized = true` before fallible renderer, post-processing and world acquisition. The cleanup closure remains a no-op until setup completes.
 
-## Missing random authority
+## Missing startup authority
 
 ```txt
-run-scoped random seed derivation
-named stream identity
-PRNG algorithm version
-serializable stream state
-monotonic draw index
-simulation-step draw budget
-typed draw receipts
-atomic gameplay + RNG commit
-snapshot checkpoint projection
-save/replay checkpoint projection
-restore and migration admission
-bounded draw journal
-frame correlation
+start command and admission result
+session/run/epoch/runtime-generation correlation
+startup phase machine
+resource and callback acquisition ledger
+lease identity and dependency order
+partial-start failure result
+reverse-order rollback plan
+idempotent retirement receipts
+readiness commit after first frame
+stale callback rejection
+retry baseline and new generation
+bounded startup journal and observation
+failure injection and clean retry fixtures
 ```
 
 ## Consequences
 
 ```txt
-same seed/input history can produce different ooze evolution
-snapshot restore cannot prove the next random result
-host migration cannot continue the exact stream
-failed or duplicate steps can consume untracked draws
-timing/cadence changes can alter call count and future results
-debug captures cannot reconstruct why an ooze item survived or spawned
-fixtures cannot prove deterministic replay beyond the seeded maze
+readiness can report success before a renderer or frame exists
+partial GPU resources may survive a failed startup
+listeners or observers may survive if failure lands after installation
+initialized can remain true after failure and suppress retry
+a first-frame exception has no startup failure result
+normal cleanup and failed-start cleanup follow different ownership paths
+host/client UI cannot distinguish loading, partial, failed, rolled back or committed
 ```
 
-## Retained transport and lifecycle gaps
+## Retained gaps
 
-The prior snapshot-delivery, network-cadence, movement, disconnect, interaction, outcome, startup and pause findings remain open. This audit does not supersede them.
+The prior randomness, snapshot-delivery, network-cadence, movement, disconnect, interaction, outcome, snapshot-acceptance, lobby, exit and pause findings remain open. This audit does not supersede them.
