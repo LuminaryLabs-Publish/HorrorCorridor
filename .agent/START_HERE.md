@@ -2,76 +2,86 @@
 
 **Repository:** `LuminaryLabs-Publish/HorrorCorridor`  
 **Branch:** `main`  
-**Updated:** `2026-07-12T14-30-36-04-00`
+**Updated:** `2026-07-12T16-29-56-04-00`  
+**Status:** `authoritative-message-source-admission-authority-audited`
 
 ## Summary
 
 HorrorCorridor is a cooperative first-person procedural maze with solo, host and client routes, deterministic maze bootstrap, authoritative snapshots, cube/anomaly interactions, ooze pressure, Three.js rendering, bloom, minimap and diagnostics.
 
-The current audit isolates transport-error retirement. PeerJS peer-level and DataConnection-level failures share the same `peer/error` event shape. Connection errors carry no remote-peer, connection or generation identity. The host retains failed connections in its map, the client retains a failed `activeConnection`, and `GameShell` cannot reconcile authoritative roster or route state from the ambiguous error.
+The current audit isolates authoritative message-source admission. Client handling of `START_GAME`, `SYNC` and `LOBBY_EVENT` branches only on decoded message type. Although `peer/message` carries `remotePeerId` and `connectionId`, the consumer does not bind them to the current host, room, session epoch or connection generation before replacing room, roster, snapshot, route and readiness state.
 
 ## Plan ledger
 
-**Goal:** bind every transport error to an explicit scope and current generation, retire terminal connections exactly once, reconcile membership atomically, quarantine predecessor callbacks and prove the first visible error or recovered state.
+**Goal:** admit host-class messages only from the current host authority and prove the accepted source through the first matching visible frame.
 
 - [x] Compare all ten accessible Publish repositories.
 - [x] Exclude `TheCavalryOfRome`.
-- [x] Verify central-ledger and root `.agent` coverage for all nine eligible repositories.
-- [x] Select only `HorrorCorridor` because repo-local audit state was newer than central tracking.
-- [x] Identify the interaction loop, domains, all 29 implemented kits and offered services.
-- [x] Add the transport-error retirement audit family.
-- [x] Refresh root routing and machine registry.
-- [x] Push directly to `main`; create no branch or pull request.
-- [ ] Implement the authority and executable fixtures.
+- [x] Confirm all nine eligible repositories are centrally tracked and have root `.agent` state.
+- [x] Select only `HorrorCorridor` as the oldest eligible documented repository.
+- [x] Identify the complete interaction loop.
+- [x] Preserve all 29 implemented kits and their services.
+- [x] Identify all active domains.
+- [x] Trace host-class messages from transport event through visible state.
+- [x] Add architecture, render, gameplay, interaction, protocol-authority and deploy audits.
+- [x] Refresh required root documentation and machine registry.
+- [ ] Runtime implementation and adversarial fixtures remain future work.
 
-## Current authority boundary
-
-```txt
-corridor-transport-error-retirement-authority-domain
-```
-
-It coordinates:
-
-```txt
-error identity and scope
-peer-versus-connection classification
-connection and attempt generations
-terminal and retryable policy
-exactly-once connection retirement
-callback detachment
-late-event quarantine
-client reconnect and connection supersession
-actor, room and roster reconciliation
-truthful status and start eligibility
-bounded observations and journals
-first visible error-state frame acknowledgement
-```
-
-## Main source finding
-
-```txt
-DataConnection error
-  -> peer/error without connection identity
-  -> host map or client activeConnection remains owned
-  -> GameShell performs no retirement or roster reconciliation
-  -> errored participant can remain visible and eligible for bootstrap
-  -> late predecessor callbacks are not generation-fenced
-```
-
-## Read order
+## Read first
 
 1. `.agent/current-audit.md`
 2. `.agent/next-steps.md`
 3. `.agent/known-gaps.md`
 4. `.agent/validation.md`
-5. `.agent/trackers/2026-07-12T14-30-36-04-00/project-breakdown.md`
-6. `.agent/architecture-audit/2026-07-12T14-30-36-04-00-transport-error-retirement-dsk-map.md`
-7. `.agent/transport-error-audit/2026-07-12T14-30-36-04-00-scope-generation-retirement-contract.md`
-8. `.agent/interaction-audit/2026-07-12T14-30-36-04-00-peer-error-retirement-map.md`
-9. `.agent/gameplay-audit/2026-07-12T14-30-36-04-00-error-without-close-ghost-participant-loop.md`
-10. `.agent/render-audit/2026-07-12T14-30-36-04-00-errored-connection-visible-roster-gap.md`
-11. `.agent/deploy-audit/2026-07-12T14-30-36-04-00-transport-error-retirement-fixture-gate.md`
+5. `.agent/architecture-audit/2026-07-12T16-29-56-04-00-authoritative-message-source-admission-dsk-map.md`
+6. `.agent/protocol-authority-audit/2026-07-12T16-29-56-04-00-sender-peer-room-authority-contract.md`
+
+## Current authority boundary
+
+```txt
+corridor-authoritative-message-source-admission-authority-domain
+```
+
+```txt
+peer/message
+  -> structural decode
+  -> message authority classification
+  -> session, transport and connection-generation admission
+  -> remote-peer, sender and room consistency checks
+  -> typed Accepted, Rejected, Stale or Duplicate result
+  -> state commit only for Accepted
+  -> first matching visible-frame acknowledgement
+```
+
+## Main source finding
+
+```txt
+peer/message source evidence exists: yes
+serializer validates structure: yes
+current host peer checked before START_GAME: no
+current host peer checked before SYNC: no
+current host peer checked before LOBBY_EVENT: no
+connection generation checked: no
+active room checked: no
+session epoch checked: no
+message authority revision checked: no
+zero-mutation rejection result exists: no
+first authoritative-message frame acknowledgement exists: no
+```
+
+## Latest audit family
+
+```txt
+.agent/trackers/2026-07-12T16-29-56-04-00/project-breakdown.md
+.agent/turn-ledger/2026-07-12T16-29-56-04-00.md
+.agent/architecture-audit/2026-07-12T16-29-56-04-00-authoritative-message-source-admission-dsk-map.md
+.agent/render-audit/2026-07-12T16-29-56-04-00-untrusted-host-message-visible-state-gap.md
+.agent/gameplay-audit/2026-07-12T16-29-56-04-00-forged-sync-client-state-replacement-loop.md
+.agent/interaction-audit/2026-07-12T16-29-56-04-00-host-message-source-admission-map.md
+.agent/protocol-authority-audit/2026-07-12T16-29-56-04-00-sender-peer-room-authority-contract.md
+.agent/deploy-audit/2026-07-12T16-29-56-04-00-authoritative-message-source-fixture-gate.md
+```
 
 ## Validation boundary
 
-This pass changes documentation only. Runtime source, networking, gameplay, rendering, package scripts, dependencies and deployment are unchanged. No transport-error retirement or browser multiplayer fixture was run.
+Documentation only. No runtime, networking, gameplay, rendering, dependency, package-script or deployment behavior changed. No branch or pull request was created.
