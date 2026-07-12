@@ -2,107 +2,108 @@
 
 **Repository:** `LuminaryLabs-Publish/HorrorCorridor`  
 **Branch:** `main`  
-**Updated:** `2026-07-12T12-21-38-04-00`
+**Updated:** `2026-07-12T14-22-01-04-00`
 
 ## Summary
 
 HorrorCorridor is a cooperative first-person procedural maze with solo, host and client routes, deterministic maze bootstrap, authoritative snapshots, cube/anomaly interactions, ooze pressure, Three.js rendering, bloom, minimap and diagnostics.
 
-The current audit isolates transport-mode selection and reachability. In modern browsers the existence of `BroadcastChannel` automatically selects the local bridge, suppresses PeerJS connection paths and lets a client report `connected` without a host acknowledgement. This makes same-origin local testing look valid while cross-origin and cross-device multiplayer can remain unreachable.
+The current audit isolates data-channel-open and roster-admission authority. On the PeerJS host path, a new connection is inserted into the candidate map and `peer/connection-open` is emitted unconditionally even when `connection.open` is false. `GameShell` treats that event as proof of a connected guest, mutates the authoritative room roster and attempts a lobby broadcast. The broadcast can reach zero clients, and the one-shot event guard prevents the true later open callback from performing admission again.
 
 ## Plan ledger
 
-**Goal:** preserve the full repository breakdown while defining one explicit transport-mode authority from capability observation through acknowledged reachability, fallback, message delivery and first visible multiplayer proof.
+**Goal:** keep connection candidates detached from lobby and gameplay state until actual open evidence, current generations, identity binding and atomic roster commitment are proven.
 
 - [x] Compare all ten accessible Publish repositories.
 - [x] Exclude `TheCavalryOfRome`.
-- [x] Confirm all nine eligible repositories have central-ledger and root `.agent` coverage.
-- [x] Select only `HorrorCorridor` as the oldest eligible synchronized repository.
-- [x] Inspect host/client transport construction, connection, send, broadcast and status paths.
+- [x] Verify central-ledger and root `.agent` coverage for all nine eligible repositories.
+- [x] Select only `HorrorCorridor` as the oldest eligible central entry.
+- [x] Inspect PeerJS host/client adapters, event contracts, session mutations, lobby presentation and start bootstrap.
 - [x] Identify the interaction loop, all domains, 29 implemented kits and offered services.
-- [x] Add the transport-mode audit family and refresh root routing.
-- [x] Update central tracking on `main`.
+- [x] Add the data-channel roster-admission audit family.
+- [x] Refresh root routing and machine registry.
+- [x] Synchronize central tracking on `main`.
 - [x] Create no branch or pull request.
-- [ ] Runtime implementation and executable multiplayer fixtures remain future work.
+- [ ] Runtime implementation and executable admission fixtures remain future work.
 
 ## Read first
 
 ```txt
-.agent/trackers/2026-07-12T12-21-38-04-00/project-breakdown.md
-.agent/turn-ledger/2026-07-12T12-21-38-04-00.md
+.agent/trackers/2026-07-12T14-22-01-04-00/project-breakdown.md
+.agent/turn-ledger/2026-07-12T14-22-01-04-00.md
 .agent/current-audit.md
 .agent/known-gaps.md
 .agent/next-steps.md
 .agent/validation.md
 .agent/kit-registry.json
-.agent/architecture-audit/2026-07-12T12-21-38-04-00-transport-mode-reachability-dsk-map.md
-.agent/render-audit/2026-07-12T12-21-38-04-00-connected-status-visible-session-gap.md
-.agent/gameplay-audit/2026-07-12T12-21-38-04-00-local-bridge-replaces-network-loop.md
-.agent/interaction-audit/2026-07-12T12-21-38-04-00-connect-attempt-path-admission-map.md
-.agent/transport-mode-audit/2026-07-12T12-21-38-04-00-capability-policy-handshake-fallback-contract.md
-.agent/deploy-audit/2026-07-12T12-21-38-04-00-multiplayer-transport-matrix-gate.md
+.agent/architecture-audit/2026-07-12T14-22-01-04-00-data-channel-roster-admission-dsk-map.md
+.agent/render-audit/2026-07-12T14-22-01-04-00-premature-roster-visible-lobby-gap.md
+.agent/gameplay-audit/2026-07-12T14-22-01-04-00-ghost-member-start-bootstrap-loop.md
+.agent/interaction-audit/2026-07-12T14-22-01-04-00-connection-open-member-admission-map.md
+.agent/connection-admission-audit/2026-07-12T14-22-01-04-00-channel-open-binding-roster-contract.md
+.agent/deploy-audit/2026-07-12T14-22-01-04-00-peerjs-admission-fixture-gate.md
 ```
 
-Retain the loading-transition audit family at `2026-07-12T09-48-15-04-00` and all preceding identity, actor-binding, lobby-start, lifecycle, startup, readiness, render-surface, input, clock, snapshot, movement, interaction, outcome, randomness, delivery, pause and debug audits.
+Retain the transport-mode audit family at `2026-07-12T12-21-38-04-00` and all preceding identity, actor-binding, lobby-start, loading, lifecycle, startup, readiness, render-surface, input, clock, snapshot, movement, interaction, outcome, randomness, delivery, pause and debug audits.
 
 ## Interaction loop
 
 ```txt
-host route
-  -> create PeerJS host and optional BroadcastChannel
-  -> BroadcastChannel presence suppresses PeerJS connection listener
+host lobby
+  -> PeerJS connection candidate arrives
+  -> candidate is inserted into connection map
+  -> open/data/close/error handlers are installed
+  -> connection-open event is emitted immediately
+  -> GameShell admits connected guest into room roster
+  -> lobby broadcast can send to zero because channel remains closed
+  -> actual open callback is suppressed by one-shot guard
 
-client route
-  -> create PeerJS client and optional BroadcastChannel
-  -> BroadcastChannel presence suppresses peer.connect
-  -> post client-connect
-  -> mark connected without acknowledgement
-
-shared run
-  -> lobby and protocol events update stores
-  -> host starts run and publishes START_GAME/SYNC
-  -> rendering begins only if the selected transport actually delivers them
+host start
+  -> Start run has no admitted-channel or all-ready gate
+  -> bootstrap consumes current lobbyPlayers
+  -> START_GAME and SYNC skip unopened connections
+  -> host can render a participant who never received the run
 ```
 
 ## Current finding
 
 ```txt
-capability and policy are fused
-local bridge replaces rather than supplements PeerJS
-client connection result is unacknowledged
-false connected status is possible
-cross-origin/device reachability is not proven
-fallback is absent
-transport mode/revision is absent from state and messages
-first remote-player frame receipt is absent
+connection candidate creation is mislabeled as channel open
+channel open event has no generation or actual-open proof
+roster mutation occurs before connection admission
+lobby publication can fail without rollback
+true open transition can be consumed prematurely
+error without close does not reconcile roster membership
+host start can include ghost members
+visible player count has no roster revision proof
 ```
 
 ## Required parent domain
 
 ```txt
-corridor-transport-mode-reachability-authority-domain
+corridor-data-channel-roster-admission-authority-domain
 ```
 
 ## Required flow
 
 ```txt
-ConnectSessionCommand
-  -> observe capabilities
-  -> select explicit preferred and fallback modes
-  -> allocate attempt and transport generation
-  -> prepare detached candidates
-  -> require host or data-channel acknowledgement
-  -> admit one path and retire others
-  -> publish typed connection and delivery results
-  -> correlate lobby, protocol and runtime state with transport revision
-  -> acknowledge the first visible remote-player frame
+AdmitLobbyMemberCommand
+  -> allocate candidate ID and connection generation
+  -> observe actual DataConnection open state
+  -> validate session and transport generations
+  -> validate remote identity claim
+  -> bind one connection to one actor/member
+  -> commit room membership and roster revision atomically
+  -> publish typed admission and lobby-delivery results
+  -> seal start eligibility from the committed roster
+  -> acknowledge the first visible lobby frame
 ```
 
 ## Census
 
 ```txt
 source-backed kits: 29
-planned transport-mode kits and fixtures: 28
+planned connection-admission kits and fixtures: 26
 ```
 
 The complete kit and service inventory is in `.agent/current-audit.md`, `.agent/kit-registry.json` and the current tracker.
