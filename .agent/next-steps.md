@@ -1,10 +1,10 @@
 # HorrorCorridor Next Steps
 
-**Updated:** `2026-07-11T21-21-12-04-00`
+**Updated:** `2026-07-11T23-18-16-04-00`
 
 ## Plan ledger
 
-**Goal:** preserve identity and run-lifecycle prerequisites, then make runtime startup atomic, rollback-safe, retryable and proven by its first committed frame before later simulation authorities rely on readiness.
+**Goal:** preserve identity, startup and lifecycle prerequisites, then make surface sizing transactional and frame-correlated before later simulation and presentation claims rely on rendering readiness.
 
 ### Gate 1: roster identity and peer binding
 
@@ -46,7 +46,19 @@
 
 - [ ] Lease simulation, rendering, networking and input providers.
 - [ ] Revoke readiness on stop, replacement or failure.
-- [ ] Correlate provider revisions with session/run/runtime generation.
+- [ ] Correlate provider revisions with session, run and runtime generation.
+
+### Gate 4c: render surface resolution and frame correlation
+
+- [ ] Define a named surface policy with DPR limits, maximum physical pixels and zero-area behavior.
+- [ ] Convert startup, ResizeObserver, window resize and DPR changes into sequenced surface commands.
+- [ ] Sample CSS size and device scale once per admitted observation.
+- [ ] Coalesce duplicate resize sources and reject stale observations.
+- [ ] Commit renderer, composer, bloom, camera and minimap from one plan.
+- [ ] Read back actual drawing-buffer and target sizes.
+- [ ] Publish monotonic surface identity and revision.
+- [ ] Require rendering readiness, visible frames, captures and debug records to cite the revision.
+- [ ] Add zero-area, DPR parity, resize-storm and stop/restart fixtures.
 
 ### Gate 5: state acceptance and gameplay commands
 
@@ -76,4 +88,4 @@
 
 ## Completion boundary
 
-Do not claim startup readiness, rollback safety or clean retry until failures injected after each acquisition step produce zero leaked mandatory leases and a later start commits one correlated first frame.
+Do not claim responsive or current rendering until every accepted browser size/DPR transition yields one observable surface result and the first following frame cites that surface revision.
