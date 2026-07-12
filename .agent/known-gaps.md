@@ -1,6 +1,15 @@
 # HorrorCorridor Known Gaps
 
-**Updated:** `2026-07-12T09-38-46-04-00`
+**Updated:** `2026-07-12T09-48-15-04-00`
+
+## Plan ledger
+
+**Goal:** preserve the ordered runtime gaps while distinguishing the documentation reconciliation completed in this run from the loading-transition behavior that remains unimplemented.
+
+- [x] Reconcile repo-local and central audit identity.
+- [x] Preserve the current loading-transition source findings.
+- [x] Preserve all prerequisite and downstream authority gaps.
+- [ ] Implement and prove loading-transition generation authority.
 
 ## Primary ordered gaps
 
@@ -32,27 +41,28 @@
 ## Current loading-transition gap
 
 ```txt
-async loading steps: five RAF + timeout pairs
+async loading steps: five RAF and timeout pairs
 loading command ID: absent
 loading generation: absent
 single-flight admission: absent
-cancel/supersede result: absent
+cancel or supersede result: absent
 owned timeout and RAF leases: absent
-sealed room/roster/readiness inputs: absent
-predecessor route/session check: absent
+sealed room, roster and readiness inputs: absent
+predecessor route and session check: absent
 candidate bootstrap validation: absent
 atomic multi-store commit: absent
-duplicate START_GAME/SYNC suppression: absent
+duplicate START_GAME and SYNC suppression: absent
+world and snapshot generation parity: absent
 first visible run-frame receipt: absent
 ```
 
 ## Stale closure path
 
 ```txt
-startPlay captures room, lobbyPlayers, peerIdentity and connectionStatus
+startPlay retains room, lobbyPlayers, peerIdentity and connectionStatus
   -> await runLoadingSteps()
-  -> transport/lobby state may change
-  -> bootstrap uses captured predecessor values
+  -> transport or lobby state may change
+  -> bootstrap uses predecessor values
   -> live stores and network messages receive stale start state
 ```
 
@@ -70,18 +80,18 @@ loading A begins
 
 ```txt
 GameCanvas initializes once from snapshot A
-  -> retained maze/world geometry is built from A
+  -> retained maze and world geometry is built from A
 snapshot B commits after initialization
   -> authoritativeSnapshot changes to B
   -> retained world is not rebuilt
-  -> B can be rendered through A's topology and object inventory
+  -> B can be rendered through A topology and object inventory
 ```
 
 ## Missing loading authority
 
 ```txt
 command and generation identity
-single-flight/supersession policy
+single-flight or supersession policy
 cancellation token
 owned async leases
 sealed predecessor revisions
@@ -101,10 +111,18 @@ bounded loading journal
 stale lobby membership can enter a run
 cancelled loading can resurrect PLAYING state
 overlapping starts can commit more than once
-host can emit duplicate start/sync pairs
+host can emit duplicate start and sync pairs
 session, runtime and UI stores can expose mixed generations
 retained world geometry can disagree with the latest snapshot
 current diagnostics cannot identify which load produced the visible run
+```
+
+## Documentation-state correction
+
+```txt
+central ledger before run: canonical runtime clock at 2026-07-12T07-41-06-04-00
+repo-local audit before run: loading transition generation at 2026-07-12T09-38-46-04-00
+current synchronized audit family: loading transition generation reconciliation at 2026-07-12T09-48-15-04-00
 ```
 
 ## Retained gaps
