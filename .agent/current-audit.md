@@ -1,52 +1,55 @@
 # HorrorCorridor Current Audit
 
 **Repository:** `LuminaryLabs-Publish/HorrorCorridor`  
-**Updated:** `2026-07-11T23-18-16-04-00`
+**Updated:** `2026-07-12T01-08-06-04-00`
 
 ## Status
 
 ```txt
-status: render-surface-resolution-frame-correlation-authority-audited
+status: debug-observability-capability-authority-audited
 runtime source changed: no
 branch: main
 root .agent state: refreshed
 central ledger sync: complete
-central change log: internal-change-log/2026-07-11T23-18-16-04-00-horror-corridor-render-surface-authority.md
+central change log: internal-change-log/2026-07-12T01-08-06-04-00-horror-corridor-debug-observability-authority.md
 ```
 
 ## Summary
 
-The main 3D canvas and minimap do not share one render-surface authority. `GameCanvas` caps the WebGL surface at DPR 1, while `Minimap` uses uncapped `window.devicePixelRatio`. Startup, ResizeObserver and window-resize paths directly mutate renderer, camera, EffectComposer and bloom state.
+The runtime logger is technically functional and bounded, but its activation and export surfaces are not product-authorized. Query parameters, localStorage, the backquote key and an unguarded window API can enable full-state frame capture in the public runtime.
 
-A zero-width or zero-height mount silently returns without a result. No surface ID, revision, product pixel budget, capability fallback, resize coalescing, requested/actual physical-size result or visible-frame correlation exists. Rendering readiness and the RAF can remain active while the latest size observation was implicitly rejected.
+The captured model contains enough information to reveal the ordered anomaly solution and locate every cube. The same data is cloned for up to 180 frames, recent event payloads are retained, and the capability preference survives into later sessions. There is no public-safe tier, privileged QA tier, capability lease, redaction profile, export result or session revocation contract.
 
 ## Plan ledger
 
-**Goal:** define one product-owned surface policy and commit result that synchronizes WebGL, post-processing, camera, minimap, readiness and visible-frame evidence.
+**Goal:** define a revocable debug capability that separates player-safe telemetry from privileged QA state and guarantees that public production cannot expose puzzle-solving or session-identifying data by ambient browser actions.
 
 - [x] Compare the complete Publish inventory and central ledger.
 - [x] Exclude `TheCavalryOfRome`.
 - [x] Confirm all nine eligible repositories are tracked and have root `.agent` state.
 - [x] Select only `HorrorCorridor` as the oldest eligible repository.
-- [x] Trace startup sizing, ResizeObserver, window resize, DPR, camera, composer, bloom and minimap sizing.
+- [x] Read the debug store, frame panel, HUD mount and GameCanvas activation/capture paths.
+- [x] Confirm four activation families: query, persistent browser state, keyboard and window API.
+- [x] Confirm privileged frame fields and visible puzzle disclosure.
 - [x] Identify the interaction loop, domains, all 29 implemented kits and offered services.
-- [x] Define surface policy, identity, revision, admission, commit and fixture contracts.
+- [x] Define capability, classification, redaction, retention, export, revocation and fixture contracts.
 - [x] Add timestamped architecture and system audits.
-- [x] Refresh root `.agent` state.
-- [x] Synchronize `LuminaryLabs-Dev/LuminaryLabs` on `main`.
-- [ ] Runtime implementation and executable browser fixtures remain future work.
+- [x] Refresh root `.agent` state and central tracking.
+- [ ] Runtime implementation and executable browser/deployment fixtures remain future work.
 
 ## Product interaction loop
 
 ```txt
 mode selection and lobby
-  -> snapshot and runtime startup
-  -> renderer, scene, camera, post-processing and world creation
-  -> CSS size and browser DPR observation
-  -> renderer/composer/bloom/camera sizing
-  -> RAF simulation and render
-  -> minimap independently samples DPR
-  -> world, minimap, HUD and debug projection
+  -> authoritative snapshot bootstrap
+  -> GameCanvas initializes runtime debug
+  -> query/localStorage preferences are admitted without product policy
+  -> public window debug API is attached
+  -> Backquote can enable capture and show the overlay
+  -> every enabled RAF clones pose, input, snapshot, cubes, anomaly, cadence and scene data
+  -> 180 frame and 80 event ring buffers retain recent history
+  -> overlay or JavaScript callers read/export privileged state
+  -> localStorage carries enabled state into future sessions
 ```
 
 ## Domains in use
@@ -54,114 +57,153 @@ mode selection and lobby
 ```txt
 application shell and screen routing
 UI loading pause completion settings and terminal projection
-session lobby transport protocol and snapshot authority
-runtime startup readiness lifecycle and cleanup
-input pointer lock movement collision camera and host admission
-interaction cube/slot claims anomaly outcome and ooze pressure
-Three.js world renderer post-processing and bloom
+session mode peer identity room roster connection readiness and reset
+lobby identity actor binding readiness start and bootstrap
+runtime startup acquisition rollback retry and first-frame commit
+runtime readiness lifecycle exit disconnect and reconnect
+PeerJS host/client transport and BroadcastChannel local bridge
+protocol envelopes serialization request and sequence admission
+seeded maze topology cube placement target sequence and random streams
+replicated snapshot construction publication acceptance delivery and backpressure
+pointer lock keyboard mouse blur and input lifecycle
+movement collision camera prediction and host admission
+interaction target cube/slot claims ordered anomaly and ooze pressure
+Three.js world renderer post-processing bloom minimap and cleanup
 render-surface observation policy sizing revision and frame correlation
-minimap 2D surface sizing and projection
-HUD debug validation build and deployment
+debug activation capability lease and revocation
+debug frame/event classification redaction retention and export
+HUD debug overlay and public window projection
+validation build and deployment
 ```
 
 ## Implemented kits and services
 
-The repository retains 29 source-backed kit responsibilities. Services cover application routing, session state, runtime snapshots, pause/completion projection, lobby presentation, PeerJS and BroadcastChannel transport, protocol construction, deterministic maze bootstrap, input, movement, network updates, interactions, anomaly evaluation, ooze, authoritative publication, RAF lifecycle, Three.js world construction, post-processing, minimap rendering, debug readback, cleanup and package validation.
-
-The directly relevant implemented kits are:
+The repository retains 29 source-backed kit responsibilities:
 
 ```txt
-corridor-render-world-kit       scene resources, update, attach and dispose
-corridor-post-processing-kit    composer, bloom, output, resize, render and dispose
-corridor-minimap-kit            2D surface sizing and entity projection
-corridor-animation-loop-kit     RAF delta and lifecycle
-runtime-debug-frame-kit         bounded frame/event readback
-runtime-resource-cleanup-kit    observer/listener/GPU cleanup
+corridor-application-shell-kit         routing, solo/host/client entry, loading, pause, completion and exits
+corridor-session-domain-kit            session mode, peer identity, room, roster, readiness and reset
+runtime-store-snapshot-kit             authoritative snapshot, pose, view, input flags and readiness
+ui-pause-projection-kit                pause state, pause reason and overlay projection
+ui-completion-projection-kit           terminal state, message, timestamp, acknowledgement and routing
+complete-screen-presentation-kit       outcome presentation, restart and title exit
+lobby-screen-presentation-kit          room, roster, readiness, controls and connection state
+peer-host-transport-kit                host peer, connections, broadcast, targeted send and destroy
+peer-client-transport-kit              host connection, send, status, disconnect and destroy
+peer-event-bus-kit                     typed events, subscription and cleanup
+protocol-message-construction-kit      START_GAME, PLAYER_UPDATE, TRY_INTERACT, SYNC and LOBBY_EVENT
+protocol-serialization-kit             JSON encode/decode, protocol version and shape checks
+maze-snapshot-bootstrap-kit            seed, maze, players, cubes, anomaly, room and initial snapshot
+seeded-maze-rng-kit                    deterministic topology, cube placement and target sequence
+first-person-input-kit                 keyboard, pointer lock, look accumulation and input snapshots
+movement-collision-camera-kit          movement, maze collision, eye pose, walk shake and camera
+network-player-update-kit              client sequence/cadence, pose envelope and host consume
+corridor-interaction-domain-kit        action inference, pickup, drop, place, remove and held-cube sync
+ordered-anomaly-sequence-kit           ordered validation, slots and victory evaluation
+ooze-trail-domain-kit                  spawn, decay, variation, spacing, capacity and pressure
+snapshot-outcome-routing-kit           snapshot-to-UI outcome projection
+corridor-authoritative-publication-kit tick, snapshot clone, SYNC construction and broadcast
+corridor-animation-loop-kit            RAF lifecycle, delta and running guard
+corridor-render-world-kit              terrain, maze, objects, lights, update, attach and disposal
+corridor-post-processing-kit           composer, bloom, output, resize, render and disposal
+corridor-minimap-kit                   2D surface sizing and maze/entity projection
+runtime-debug-frame-kit                activation, bounded frames/events, overlay state and JSON export
+runtime-resource-cleanup-kit           loop stop, observer/listener cleanup and GPU disposal
+package-validation-kit                 build, lint, ProtoKit, harness, visual and live-player checks
 ```
 
 ## Source findings
 
 ```txt
-main pixel ratio cap: 1
-main size source: mount.clientWidth/clientHeight
-minimap DPR source: uncapped window.devicePixelRatio
-resize ingress: startup + ResizeObserver + window resize
-resize coalescing: absent
-surface identity/revision: absent
-physical pixel budget: absent
-actual drawing-buffer/target result: absent
-zero-area typed result: absent
-surface revision in readiness/debug/capture: absent
+query activation values: 1, true, frames, verbose
+query keys: debug, debugFrames
+persistent enable key: horror-corridor:runtime-debug
+persistent overlay key: horror-corridor:runtime-debug-overlay
+keyboard activation: Backquote
+window API attached during runtime: yes
+build-mode/environment gate: absent
+actor/role admission: absent
+session capability lease: absent
+data classification/redaction: absent
+frame retention: 180 records
+event retention: 80 records
+export authorization/result: absent
+automatic revocation on session replacement: absent
+```
+
+## Privileged fields currently exposed
+
+```txt
+roomId and localPlayerId
+local pose, velocity, carrying cube and input state
+snapshot tick, timestamps, game state and counts
+every cube ID, color, state, owner ID and world position
+ordered anomaly color sequence and occupied slots
+network cadence counters
+scene-dressing counts and validation
+recent runtime/network/interaction event payloads
 ```
 
 ## Main finding
 
 ```txt
-layout or DPR changes
-  -> one or more direct resize callbacks
-  -> renderer, composer, bloom and camera mutate
-  -> minimap samples DPR separately
-  -> no aggregate commit result
-  -> no monotonic surface revision
-  -> no frame/capture evidence for the applied surface
+public player opens runtime
+  -> uses ?debug=frames, persisted flag, Backquote or window API
+  -> debug capability becomes enabled without an admission result
+  -> each RAF captures privileged state
+  -> overlay reveals anomaly order and all cube coordinates
+  -> JavaScript caller can export up to 180 frames and 80 events
+  -> localStorage silently enables the capability in later sessions
 ```
 
-For a zero-area mount:
-
-```txt
-resize callback
-  -> silent return
-  -> readiness unchanged
-  -> RAF and simulation continue
-  -> prior buffers remain the implicit surface
-```
+The existing logger audit proves that these paths work. The missing boundary is not logger functionality; it is product authority over who may activate which data tier, for which session, in which build channel and for how long.
 
 ## Required parent domain
 
 ```txt
-corridor-render-surface-authority-domain
+corridor-debug-observability-authority-domain
 ```
 
 ## Candidate kits
 
 ```txt
-render-surface-policy-kit
-render-surface-command-kit
-render-surface-admission-kit
-render-surface-id-kit
-render-surface-revision-kit
-container-size-observation-kit
-device-scale-observation-kit
-resize-source-observation-kit
-pixel-budget-kit
-surface-capability-result-kit
-surface-resize-plan-kit
-surface-resize-coalescing-kit
-renderer-size-commit-kit
-post-processing-size-commit-kit
-camera-projection-commit-kit
-minimap-surface-adapter-kit
-surface-commit-result-kit
-surface-frame-correlation-kit
-surface-debug-projection-kit
-surface-journal-kit
-zero-area-surface-fixture-kit
-dpr-parity-fixture-kit
-resize-storm-fixture-kit
+debug-capability-policy-kit
+debug-build-channel-kit
+debug-activation-command-kit
+debug-activation-admission-kit
+debug-capability-tier-kit
+debug-session-lease-kit
+debug-role-capability-kit
+debug-data-classification-kit
+debug-redaction-profile-kit
+debug-frame-projection-kit
+debug-event-projection-kit
+debug-retention-budget-kit
+debug-export-command-kit
+debug-export-result-kit
+debug-overlay-projection-kit
+debug-preference-persistence-kit
+debug-revocation-kit
+debug-observation-journal-kit
+production-debug-disable-fixture-kit
+redaction-parity-fixture-kit
+session-revocation-fixture-kit
+browser-debug-capability-smoke-kit
 ```
 
 ## Required authority flow
 
 ```txt
-ResizeSurfaceCommand
-  -> validate runtime generation, mount and prior revision
-  -> sample CSS size and device scale once
-  -> apply named quality tier and physical-pixel budget
-  -> coalesce duplicates and reject stale observations
-  -> commit renderer, post-processing, camera and minimap adapters
-  -> read back actual physical sizes
-  -> publish one SurfaceCommitResult
-  -> require following frames, captures and debug records to cite the revision
+DebugActivationCommand
+  -> validate build channel, runtime generation and session epoch
+  -> validate actor identity, role and requested capability tier
+  -> reject ambient public activation when policy forbids it
+  -> issue a bounded revocable debug lease
+  -> select a named classification/redaction profile
+  -> capture only admitted fields within count and byte budgets
+  -> render/export through typed results that cite lease and session
+  -> revoke on stop, session replacement, role loss or expiry
+  -> clear privileged buffers and persisted flags on revocation
 ```
 
 ## Ordered safe ledges
@@ -174,6 +216,7 @@ ResizeSurfaceCommand
 4a. Runtime Startup Acquisition and Rollback Authority
 4b. Runtime Readiness Lease and Generation Fencing
 4c. Render Surface Resolution and Frame Correlation Authority
+4d. Debug Observability Capability and Redaction Authority
 5. Snapshot Acceptance Authority
 5a. Interaction Target Intent and Cube/Slot Claim Authority
 5b. Active-Run Disconnect and Reconnect Authority
