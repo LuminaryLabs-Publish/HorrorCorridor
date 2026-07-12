@@ -1,50 +1,48 @@
 # HorrorCorridor Validation
 
-**Updated:** `2026-07-12T01-08-06-04-00`
+**Updated:** `2026-07-12T02-49-19-04-00`
 
 ## Scope
 
-Documentation-only audit of runtime-debug activation, persistence, frame/event capture, overlay rendering, JavaScript export, data classification, redaction, capability leases and production deployment policy.
+Documentation-only audit of active gameplay HUD composition, minimap mount reachability, per-frame canvas lookup, presentation consumer admission, surface leases, projection results and visible-frame correlation.
 
-The preceding render-surface, startup, readiness, randomness, snapshot-delivery, cadence, disconnect, movement, snapshot-acceptance, interaction, outcome, lobby, exit and pause audits remain retained.
+The preceding render-surface, startup, readiness, randomness, snapshot-delivery, cadence, disconnect, movement, snapshot-acceptance, interaction, outcome, lobby, exit, pause and debug-observability audits remain retained.
 
 ## Plan ledger
 
-**Goal:** distinguish a working bounded logger from an authorized production diagnostics capability with explicit tiers, redaction, revocation and deployment proof.
+**Goal:** distinguish an implemented minimap renderer from a reachable active gameplay consumer with explicit screen policy, surface ownership, projection results and browser proof.
 
 - [x] Compare the full Publish inventory and central ledger.
 - [x] Exclude `TheCavalryOfRome`.
 - [x] Select only `HorrorCorridor`.
 - [x] Read current root `.agent` state.
-- [x] Read `runtimeDebugStore.ts`, `FrameDebugPanel.tsx`, `HUDOverlay.tsx` and `GameCanvas.tsx`.
-- [x] Confirm query, localStorage, keyboard and window-API activation paths.
-- [x] Confirm frame/event retention limits.
-- [x] Confirm privileged frame fields and visible anomaly/cube disclosure.
-- [x] Confirm no build-channel, actor, role, lease, redaction or revocation authority exists.
+- [x] Read `GameShell.tsx`, `GameCanvas.tsx`, `HUDOverlay.tsx` and `Minimap.tsx`.
+- [x] Confirm `PLAYING` omits the minimap mount.
+- [x] Confirm `COMPLETED` includes the minimap mount.
+- [x] Confirm `GameCanvas` attempts the draw each RAF.
+- [x] Confirm missing canvas returns without a result.
+- [x] Reconcile all 29 implemented kits and services.
+- [x] Define surface lease, consumer result and committed-frame fixture gates.
 - [x] Update required docs and timestamped audits.
-- [ ] Implement and run debug capability fixtures.
+- [ ] Implement and run active HUD/minimap fixtures.
 
 ## Source-backed checks
 
 ```txt
-query activation: present
-query values: 1, true, frames, verbose
-localStorage activation/persistence: present
-Backquote activation: present
-window API activation and extraction: present
-FrameDebugPanel mounted in runtime HUD: present
-frame retention bound: 180
-event retention bound: 80
-room/player identity in frames: present
-cube IDs/colors/states/owners/positions in frames: present
-anomaly sequence and slot state in frames: present
-anomaly and cube state rendered in overlay: present
-build-channel admission: absent
-actor/role admission: absent
-session/runtime capability lease: absent
-field classification/redaction: absent
-typed export result: absent
-automatic revocation and privileged-buffer clearing: absent
+HUDOverlay PLAYING branch exists: yes
+PLAYING branch mounts SettingsOverlay: yes
+PLAYING branch mounts FrameDebugPanel: yes
+PLAYING branch mounts Minimap: no
+COMPLETED branch mounts Minimap: yes
+GameCanvas performs minimap lookup every RAF: yes
+lookup mechanism: document.getElementById
+missing canvas returns silently: yes
+minimap renderer draws maze/ooze/cubes/players/heading: yes
+screen consumer policy: absent
+HUD/minimap surface lease: absent
+consumer admission/result schema: absent
+mandatory consumer barrier: absent
+active minimap frame receipt: absent
 ```
 
 ## Existing package commands
@@ -60,26 +58,25 @@ npm run validate:live-player:dev
 npm run review:object-kit
 ```
 
-These commands were not run because runtime source and package configuration were unchanged. The March logging audit already proves that query activation, overlay toggles, window extraction and bounded buffers work; this run audits the missing product-authorization boundary rather than re-proving logger functionality.
+These commands were not run because runtime source and package configuration were unchanged. The source inspection is sufficient to establish that `Minimap` is excluded from the `PLAYING` branch and that missing-canvas handling is a no-op. Executable proof remains required before claiming the defect repaired.
 
 ## Required fixture gate
 
 ```txt
-public production starts with privileged debug disabled
-public query parameters cannot activate privileged capture
-Backquote cannot elevate capability in public production
-public window API is absent or exposes only a player-safe redacted tier
-localStorage from a QA/development session cannot elevate a later public session
-QA/developer activation returns a typed result and revocable lease
-lease binds actor, role, runtime generation and session epoch
-role loss, stop, restart and session replacement revoke the lease
-revocation clears privileged frame/event buffers and persisted flags
-player-safe frames exclude anomaly order, cube coordinates, owner IDs and room/player identifiers
-privileged overlay and exported state use the same classification profile
-frame/event count and byte budgets are enforced
-export returns explicit accepted, rejected, redacted and truncated results
-production bundle/deployment check proves the declared policy
-browser smoke proves public, QA and development capability parity
+PLAYING mounts the active HUD shell
+PLAYING mounts Minimap when policy requires it
+runtime-minimap exists before terminal completion
+minimap surface lease cites runtime generation and screen revision
+valid draw returns Accepted with one frameId
+missing required lease returns Unavailable
+stale lease returns Stale
+optional hidden policy returns IntentionallySkipped
+world, post-processing, HUD and minimap results cite one frameId
+mandatory minimap failure blocks frame commit
+movement/yaw changes minimap pixel fingerprint
+pause/resume preserves or renews lease explicitly
+COMPLETED transition does not create the first minimap lease
+teardown revokes the lease and rejects stale draws
 ```
 
 ## Change validation
@@ -90,16 +87,16 @@ package scripts changed: no
 dependencies changed: no
 network behavior changed: no
 render behavior changed: no
-debug behavior changed: no
+HUD behavior changed: no
+minimap behavior changed: no
 deployment changed: no
 branch created: no
 pull request created: no
 existing checks run: no
-production-disable fixture available: no
-redaction-parity fixture available: no
-session-revocation fixture available: no
-export-budget fixture available: no
-browser debug capability smoke run: no
+active-play HUD fixture available: no
+minimap mount lifecycle fixture available: no
+consumer parity fixture available: no
+browser HUD/minimap smoke run: no
 ```
 
-No production-safe diagnostics, capability isolation, redaction, revocation or authorized-export claim is made until the required fixtures pass.
+No active-HUD completeness, active minimap visibility, consumer admission or committed presentation-frame claim is made until the required fixtures pass.
