@@ -1,6 +1,6 @@
 # HorrorCorridor Known Gaps
 
-**Updated:** `2026-07-11T23-18-16-04-00`
+**Updated:** `2026-07-12T01-08-06-04-00`
 
 ## Primary ordered gaps
 
@@ -12,63 +12,89 @@
 5. runtime startup acquisition, rollback and clean retry
 6. runtime readiness leases and generation fencing
 7. render-surface resolution, revision and frame correlation
-8. snapshot acceptance ordering and monotonic revision
-9. explicit interaction targets and cube/slot claims
-10. active-run disconnect, player retirement and reconnect claims
-11. monotonic terminal outcome authority
-12. host network cadence and fixed simulation authority
-13. host movement admission and client reconciliation
-14. snapshot delivery, payload budgeting and backpressure authority
-15. authoritative randomness, checkpoint and replay authority
-16. replicated pause/resume convergence
+8. debug-observability capability, redaction and revocation
+9. snapshot acceptance ordering and monotonic revision
+10. explicit interaction targets and cube/slot claims
+11. active-run disconnect, player retirement and reconnect claims
+12. monotonic terminal outcome authority
+13. host network cadence and fixed simulation authority
+14. host movement admission and client reconciliation
+15. snapshot delivery, payload budgeting and backpressure authority
+16. authoritative randomness, checkpoint and replay authority
+17. replicated pause/resume convergence
 ```
 
-## Current render-surface gap
+## Current debug-observability gap
 
 ```txt
-main WebGL DPR policy: capped at 1
-minimap DPR policy: uncapped browser DPR
-main CSS size source: live mount dimensions
-resize ingress: startup, ResizeObserver and window resize
-aggregate surface command/result: absent
-surface revision: absent
-actual physical-size readback: absent
-zero-area typed result: absent
-frame/capture correlation: absent
+public query activation: present
+persisted browser activation: present
+Backquote activation: present
+public window API activation/export: present
+build-channel gate: absent
+role/actor admission: absent
+runtime/session lease: absent
+data classification: absent
+redaction profile: absent
+export authorization/result: absent
+automatic revocation: absent
+production-safe telemetry tier: absent
 ```
 
-`resizeRenderer()` directly mutates the renderer, camera, composer and bloom pass. It returns silently when the mount has no area. The minimap samples device scale independently during frame drawing. No product pixel budget or common quality policy joins those paths.
+The logger retains up to 180 full frame records and 80 event records. Frame records include room/player identity, local pose and input, every cube's ID/color/state/owner/position, the full anomaly sequence and slots, cadence and scene-dressing data.
 
-## Missing surface authority
+## Concrete disclosure paths
 
 ```txt
-surface policy identity and quality tier
-runtime/mount/surface identity
-resize observation and source identity
-monotonic surface revision
-DPR floor, cap and maximum physical-pixel budget
-capability fallback result
-resize coalescing and stale-observation rejection
-renderer/composer/camera/minimap adapter results
-actual drawing-buffer and target-size readback
-zero-area lifecycle result
-surface debug projection and journal
-visible-frame and capture correlation
-zero-area, DPR parity and resize-storm fixtures
+?debug=frames
+  -> runtime initializes debug
+  -> overlay becomes visible
+  -> anomaly order and cube positions are rendered
+
+Backquote
+  -> debug is enabled unconditionally
+  -> overlay visibility toggles
+
+window.__HORROR_CORRIDOR_DEBUG__.extractState()
+  -> returns current privileged frame
+  -> returns retained frame history
+  -> returns retained event history
+
+persisted localStorage flag
+  -> later runtime initializes with debug already enabled
+  -> no new session admission occurs
+```
+
+## Missing debug authority
+
+```txt
+named public, QA and developer capability tiers
+build/deployment channel identity
+actor identity and role requirements
+runtime generation and session epoch binding
+revocable capability lease
+field-level data classification
+public-safe redaction profile
+privileged capture byte/count budget
+export command and typed export result
+overlay projection policy
+preference persistence policy
+revocation and privileged-buffer clearing
+production-disable and redaction fixtures
+browser proof across restart and session replacement
 ```
 
 ## Consequences
 
 ```txt
-main view and minimap can follow different scale rules
-multiple callbacks can mutate the same surface without ordering evidence
-zero-area observations leave stale physical buffers as implicit current state
-simulation and networking can continue while no current visible surface exists
-rendering readiness does not prove a valid current surface
-frames and captures cannot identify which resize result produced them
-performance and quality decisions are hidden constants rather than product policy
+players can reveal the puzzle solution and world coordinates
+privileged capture can persist across later sessions
+public scripts can extract recent gameplay and event history
+session-identifying values can outlive the session that produced them
+QA diagnostics and production telemetry have no explicit separation
+bounded retention limits memory growth but does not limit authority or disclosure
 ```
 
 ## Retained gaps
 
-The prior startup, readiness, randomness, snapshot-delivery, network-cadence, movement, disconnect, interaction, outcome, snapshot-acceptance, lobby, exit and pause findings remain open. This audit does not supersede them.
+The preceding render-surface, startup, readiness, randomness, snapshot-delivery, network-cadence, movement, disconnect, interaction, outcome, snapshot-acceptance, lobby, exit and pause findings remain open. This audit does not supersede them.
