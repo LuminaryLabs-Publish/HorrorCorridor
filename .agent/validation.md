@@ -1,19 +1,19 @@
 # HorrorCorridor Validation
 
-**Updated:** `2026-07-12T12-21-38-04-00`
+**Updated:** `2026-07-12T14-22-01-04-00`
 
 ## Plan ledger
 
-**Goal:** record exactly what source inspection proves and withhold runtime multiplayer claims until executable transport fixtures pass.
+**Goal:** record exactly what source inspection proves and withhold lobby, start and multiplayer claims until executable connection-admission fixtures pass.
 
 - [x] Compare the full Publish inventory and central ledger.
-- [x] Verify root `.agent` state for all eligible repositories.
+- [x] Verify root `.agent` state for all nine eligible repositories.
 - [x] Inspect current HorrorCorridor audit routing and recent commits.
-- [x] Inspect `GameShell.tsx`, `createHost.ts` and `createClient.ts`.
-- [x] Trace BroadcastChannel and PeerJS mode branches.
+- [x] Inspect PeerJS host/client adapters, event contracts, session store, lobby UI and start bootstrap.
+- [x] Trace candidate creation through visible roster mutation and initial run publication.
 - [x] Refresh required root and timestamped documentation.
 - [x] Update central tracking.
-- [ ] Run browser and cross-device fixtures after implementation exists.
+- [ ] Run browser and PeerJS event-order fixtures after implementation exists.
 
 ## Change scope
 
@@ -34,25 +34,36 @@ documentation changed: yes
 
 ```txt
 complete LuminaryLabs-Publish repository inventory
-central Publish repo ledgers
-root START_HERE state for all nine eligible repositories
+all nine central Publish repo ledgers
+all nine eligible root .agent/START_HERE.md files
 HorrorCorridor recent main commits
-HorrorCorridor-V1/src/components/game/GameShell.tsx
 HorrorCorridor-V1/src/features/networking/peer/createHost.ts
 HorrorCorridor-V1/src/features/networking/peer/createClient.ts
+HorrorCorridor-V1/src/features/networking/peer/peerTypes.ts
+HorrorCorridor-V1/src/features/networking/peer/peerEvents.ts
+HorrorCorridor-V1/src/components/game/GameShell.tsx
+HorrorCorridor-V1/src/features/game-state/store/sessionStore.ts
+HorrorCorridor-V1/src/components/menus/LobbyScreen.tsx
 HorrorCorridor-V1/package.json
 ```
 
 ## Confirmed by inspection
 
 ```txt
-host creates a BroadcastChannel whenever the API exists
-host installs PeerJS connection handling only when no local bridge exists
-client creates a BroadcastChannel whenever the API and host ID exist
-client calls peer.connect only when no local bridge exists
-client local-bridge connect posts a packet and immediately sets connected
-no host acknowledgement, timeout or fallback is required
-local bridge and PeerJS mode/revision are absent from session state
+host inserts PeerJS DataConnection into the map before open proof
+host installs an open callback and checks connection.open
+host then invokes the connection-open emitter unconditionally
+connection-open event carries no actual-open or generation evidence
+GameShell adds a connected guest from that event
+sessionStore updates lobbyPlayers and room.players together
+player-joined publication can attempt to send while connection.open is false
+connectionOpenEmitted can suppress the later true open callback
+connection error does not remove the host connection map entry
+GameShell removes roster members on connection-close but not peer/error
+host Start run is always exposed by LobbyScreen
+start bootstrap consumes current lobbyPlayers
+START_GAME and SYNC publication skips unopened PeerJS connections
+no roster revision, start eligibility result or first roster-frame acknowledgement exists
 ```
 
 ## Documentation checks
@@ -65,7 +76,7 @@ architecture audit: yes
 render audit: yes
 gameplay audit: yes
 interaction audit: yes
-transport-mode audit: yes
+connection-admission audit: yes
 deploy audit: yes
 kit registry refreshed: yes
 central ledger update: current run
@@ -79,26 +90,29 @@ npm install
 npm run build
 npm run lint
 browser launch
-same-origin tab multiplayer smoke
-cross-origin multiplayer smoke
-cross-device multiplayer smoke
+same-origin multiplayer smoke
+PeerJS delayed-open smoke
+PeerJS never-open smoke
+error-without-close smoke
+host/client visible roster smoke
 GitHub Pages smoke
 ```
 
 ## Missing executable fixtures
 
 ```txt
-client-without-host fixture
-client-before-host-listener fixture
-same-origin local bridge fixture
-separate-browser-profile PeerJS fixture
-cross-origin PeerJS fixture
-cross-device PeerJS fixture
-transport fallback fixture
-duplicate-delivery fixture
-first remote-player frame acknowledgement fixture
+connection candidate open=false fixture
+delayed-open fixture
+never-open timeout fixture
+error-without-close fixture
+close-before-open fixture
+duplicate-open fixture
+start-during-opening fixture
+start-after-roster-seal fixture
+host/client roster parity fixture
+first shared gameplay-frame roster fixture
 ```
 
 ## Claims intentionally withheld
 
-No claim is made for working cross-origin or cross-device multiplayer, truthful connected status, acknowledged reachability, deterministic fallback, duplicate-safe path switching or visible remote-player parity until executable fixtures exist and pass.
+No claim is made for truthful connected membership, ghost-free rosters, sealed start eligibility, host/client lobby parity, reliable initial run delivery or shared multiplayer-frame correctness until actual open admission and executable fixtures exist and pass.
