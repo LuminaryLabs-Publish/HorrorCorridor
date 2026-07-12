@@ -1,10 +1,10 @@
 # HorrorCorridor Next Steps
 
-**Updated:** `2026-07-12T16-29-56-04-00`
+**Updated:** `2026-07-12T16-39-35-04-00`
 
 ## Summary
 
-Establish canonical connection and actor identity first, then put a source-admission gate between structural protocol decoding and every host-authoritative client mutation. A decoded message must not be trusted merely because its type and payload are valid.
+Establish canonical connection and actor identity, then put a source-admission gate between structural protocol decoding and every host-authoritative client mutation. A decoded message must not be trusted merely because its type and payload are valid.
 
 ## Plan ledger
 
@@ -12,7 +12,7 @@ Establish canonical connection and actor identity first, then put a source-admis
 
 ### Documentation
 
-- [x] Add the authoritative message-source admission audit family.
+- [x] Add the authoritative message-source reconciliation audit family.
 - [x] Preserve the complete 29-kit inventory and domain map.
 - [x] Refresh root docs and machine registry.
 - [x] Synchronize central ledger and internal change log.
@@ -24,7 +24,7 @@ Establish canonical connection and actor identity first, then put a source-admis
 - [ ] Add monotonic session epoch, transport revision and connection generation.
 - [ ] Bind every admitted connection generation to one actor and role.
 
-### Gate 2: explicit transport and connection admission
+### Gate 2: transport and connection admission
 
 - [ ] Implement named `local-bridge` and `peerjs` modes.
 - [ ] Require acknowledged reachability and actual channel-open evidence.
@@ -36,25 +36,25 @@ Establish canonical connection and actor identity first, then put a source-admis
 - [ ] Classify `START_GAME`, `SYNC` and `LOBBY_EVENT` as host-only.
 - [ ] Classify `PLAYER_UPDATE` and `TRY_INTERACT` as actor-bound client requests.
 - [ ] Give every authoritative message a stable message ID.
-- [ ] Add an authority revision or equivalent monotonic host-state revision.
+- [ ] Add a monotonic host authority revision.
 
 ### Gate 4: source and room admission
 
 - [ ] Compare `event.remotePeerId` with the admitted host peer.
 - [ ] Compare `message.senderId` with the admitted host player.
 - [ ] Compare `event.connectionId` and generation with current host ownership.
-- [ ] Compare envelope `roomId`, payload room and active room.
+- [ ] Compare envelope room, payload room and active room.
 - [ ] Compare session epoch, transport revision and authority revision.
 - [ ] Return typed Accepted, Rejected, Stale and Duplicate results.
-- [ ] Require rejected results to perform zero store mutation.
+- [ ] Require every non-Accepted result to perform zero state mutation.
 
-### Gate 5: state commit and observation
+### Gate 5: atomic commit and observation
 
 - [ ] Dispatch accepted messages through typed state commands.
 - [ ] Commit room, roster, snapshot, route and readiness under one result revision.
 - [ ] Record predecessor and successor fingerprints.
 - [ ] Add bounded authority observations and journals.
-- [ ] Avoid storing unbounded snapshots in the journal.
+- [ ] Avoid retaining unbounded snapshots or payloads.
 
 ### Gate 6: visible proof
 
