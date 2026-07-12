@@ -1,130 +1,116 @@
 # HorrorCorridor Known Gaps
 
-**Updated:** `2026-07-12T09-48-15-04-00`
+**Updated:** `2026-07-12T12-21-38-04-00`
 
 ## Plan ledger
 
-**Goal:** preserve the ordered runtime gaps while distinguishing the documentation reconciliation completed in this run from the loading-transition behavior that remains unimplemented.
+**Goal:** preserve the ordered runtime authority gaps while elevating transport-mode reachability ahead of higher-level multiplayer correctness claims.
 
-- [x] Reconcile repo-local and central audit identity.
-- [x] Preserve the current loading-transition source findings.
-- [x] Preserve all prerequisite and downstream authority gaps.
-- [ ] Implement and prove loading-transition generation authority.
+- [x] Preserve prior identity, loading, lifecycle, clock, snapshot, movement, rendering and debug findings.
+- [x] Add explicit transport-mode and reachability findings.
+- [ ] Implement and prove transport selection, handshake and fallback.
 
 ## Primary ordered gaps
 
 ```txt
 1. canonical lobby member, peer and gameplay-player identity
-2. transport actor binding and message admission
-3. sealed lobby start transaction and correlated initial SYNC
-4. loading transition generation, cancellation and atomic commit
-5. run exit, session epoch and late-message quarantine
-6. runtime startup acquisition, rollback and clean retry
-7. runtime readiness leases and generation fencing
-8. render-surface resolution, revision and frame correlation
-9. active gameplay presentation, HUD/minimap reachability and consumer acknowledgement
-10. debug-observability capability, redaction and revocation
-11. focus, visibility and held-control retirement
-12. runtime frame-failure containment, disposal and cold restart
-13. canonical runtime clock and temporal provenance
-14. snapshot acceptance ordering and monotonic revision
-15. explicit interaction targets and cube/slot claims
-16. active-run disconnect, player retirement and reconnect claims
-17. monotonic terminal outcome authority
-18. host network cadence and fixed simulation authority
-19. host movement admission and client reconciliation
-20. snapshot delivery, payload budgeting and backpressure authority
-21. authoritative randomness, checkpoint and replay authority
-22. replicated pause/resume convergence
+2. explicit transport mode, reachability handshake and fallback
+3. transport actor binding and message admission
+4. sealed lobby start transaction and correlated initial SYNC
+5. loading transition generation, cancellation and atomic commit
+6. run exit, session epoch and late-message quarantine
+7. runtime startup acquisition, rollback and clean retry
+8. runtime readiness leases and generation fencing
+9. render-surface resolution, revision and frame correlation
+10. active gameplay presentation and consumer acknowledgement
+11. debug-observability capability, redaction and revocation
+12. focus, visibility and held-control retirement
+13. runtime frame-failure containment and cold restart
+14. canonical runtime clock and temporal provenance
+15. snapshot acceptance ordering and monotonic revision
+16. explicit interaction targets and cube/slot claims
+17. active-run disconnect and reconnect claims
+18. monotonic terminal outcome authority
+19. host cadence and fixed simulation authority
+20. host movement admission and client reconciliation
+21. snapshot payload budgeting and backpressure
+22. authoritative randomness, checkpoint and replay
+23. replicated pause/resume convergence
 ```
 
-## Current loading-transition gap
+## Current transport-mode gap
 
 ```txt
-async loading steps: five RAF and timeout pairs
-loading command ID: absent
-loading generation: absent
-single-flight admission: absent
-cancel or supersede result: absent
-owned timeout and RAF leases: absent
-sealed room, roster and readiness inputs: absent
-predecessor route and session check: absent
-candidate bootstrap validation: absent
-atomic multi-store commit: absent
-duplicate START_GAME and SYNC suppression: absent
-world and snapshot generation parity: absent
-first visible run-frame receipt: absent
+BroadcastChannel capability selects local bridge implicitly
+local bridge suppresses PeerJS connection handling
+client marks connected without host acknowledgement
+no timeout, retry or fallback exists
+no transport mode ID or revision exists
+no host-presence result exists
+no delivery result exists
+no first visible remote-player frame receipt exists
 ```
 
-## Stale closure path
+## Failure paths
+
+### Remote client
 
 ```txt
-startPlay retains room, lobbyPlayers, peerIdentity and connectionStatus
-  -> await runLoadingSteps()
-  -> transport or lobby state may change
-  -> bootstrap uses predecessor values
-  -> live stores and network messages receive stale start state
+client on another device or origin
+  -> BroadcastChannel exists locally
+  -> local bridge selected
+  -> peer.connect skipped
+  -> host never receives packet
+  -> client reports connected
 ```
 
-## Late completion path
+### Late local host
 
 ```txt
-loading A begins
-  -> route, session or component lifetime changes
-  -> no AbortSignal or generation fence is consulted
-  -> loading A resumes
-  -> writes session, snapshot, route and readiness after its owner is obsolete
+client posts client-connect before host listener exists
+  -> BroadcastChannel does not replay the packet
+  -> client reports connected
+  -> host roster never admits client
 ```
 
-## Retained-world divergence
+### No host
 
 ```txt
-GameCanvas initializes once from snapshot A
-  -> retained maze and world geometry is built from A
-snapshot B commits after initialization
-  -> authoritativeSnapshot changes to B
-  -> retained world is not rebuilt
-  -> B can be rendered through A topology and object inventory
+client enters any join code
+  -> local bridge packet posted
+  -> no acknowledgement required
+  -> connected status shown despite absent host
 ```
 
-## Missing loading authority
+## Missing authority
 
 ```txt
-command and generation identity
-single-flight or supersession policy
-cancellation token
-owned async leases
-sealed predecessor revisions
-candidate bootstrap
-validation result
-atomic commit receipt
-rollback result
-stale-result rejection
-world/bootstrap generation parity
-first visible frame acknowledgement
-bounded loading journal
+capability observation result
+explicit transport policy
+mode identity and revision
+attempt identity and generation
+host handshake and acknowledgement
+reachability result
+fallback and path-switch result
+predecessor retirement
+message delivery result
+status projection contract
+transport observation and journal
+first remote-player frame acknowledgement
 ```
 
 ## Consequences
 
 ```txt
-stale lobby membership can enter a run
-cancelled loading can resurrect PLAYING state
-overlapping starts can commit more than once
-host can emit duplicate start and sync pairs
-session, runtime and UI stores can expose mixed generations
-retained world geometry can disagree with the latest snapshot
-current diagnostics cannot identify which load produced the visible run
-```
-
-## Documentation-state correction
-
-```txt
-central ledger before run: canonical runtime clock at 2026-07-12T07-41-06-04-00
-repo-local audit before run: loading transition generation at 2026-07-12T09-38-46-04-00
-current synchronized audit family: loading transition generation reconciliation at 2026-07-12T09-48-15-04-00
+same-origin tests can mask broken network multiplayer
+cross-device joins can never reach the host under selected path
+lobby status can lie about connectivity
+host and client rosters can diverge
+START_GAME and SYNC can be unreachable
+fallback can never recover the session
+current diagnostics cannot identify the active transport path
 ```
 
 ## Retained gaps
 
-All preceding canonical-clock, frame-failure, input-lifecycle, active-presentation, debug, render-surface, startup, readiness, randomness, snapshot-delivery, cadence, movement, disconnect, interaction, outcome, snapshot-acceptance, lobby, exit and pause findings remain open.
+All preceding loading-transition, canonical-clock, frame-failure, input-lifecycle, active-presentation, debug, render-surface, startup, readiness, randomness, snapshot-delivery, cadence, movement, disconnect, interaction, outcome, snapshot-acceptance, lobby, exit and pause findings remain open.
