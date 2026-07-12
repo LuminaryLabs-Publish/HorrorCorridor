@@ -1,33 +1,45 @@
 {
-  "schemaVersion": 75,
-  "generatedAt": "2026-07-12T09-38-46-04-00",
+  "schemaVersion": 76,
+  "generatedAt": "2026-07-12T09-48-15-04-00",
   "repository": "LuminaryLabs-Publish/HorrorCorridor",
   "branch": "main",
-  "status": "loading-transition-generation-authority-audited",
-  "selectedBecause": "All nine eligible Publish repositories were tracked and had root .agent state. HorrorCorridor had the oldest synchronized central-ledger timestamp after excluding TheCavalryOfRome.",
-  "latestTracker": ".agent/trackers/2026-07-12T09-38-46-04-00/project-breakdown.md",
-  "latestTurnLedger": ".agent/turn-ledger/2026-07-12T09-38-46-04-00.md",
+  "status": "loading-transition-generation-central-sync-reconciled",
+  "selectedBecause": "All nine eligible Publish repositories were tracked and had root .agent state. HorrorCorridor's repo-local loading-transition audit was newer than its central ledger entry, so it was selected for reconciliation.",
+  "latestTracker": ".agent/trackers/2026-07-12T09-48-15-04-00/project-breakdown.md",
+  "latestTurnLedger": ".agent/turn-ledger/2026-07-12T09-48-15-04-00.md",
   "latestAudits": {
+    "architecture": ".agent/architecture-audit/2026-07-12T09-48-15-04-00-loading-transition-central-reconciliation-dsk-map.md",
+    "render": ".agent/render-audit/2026-07-12T09-48-15-04-00-world-snapshot-generation-ledger-gap.md",
+    "gameplay": ".agent/gameplay-audit/2026-07-12T09-48-15-04-00-loading-race-source-reconciliation.md",
+    "interaction": ".agent/interaction-audit/2026-07-12T09-48-15-04-00-start-command-central-admission-map.md",
+    "centralSync": ".agent/central-sync-audit/2026-07-12T09-48-15-04-00-repo-ledger-machine-registry-contract.md",
+    "deploy": ".agent/deploy-audit/2026-07-12T09-48-15-04-00-loading-fixture-central-gate.md"
+  },
+  "retainedDetailedAudit": {
+    "timestamp": "2026-07-12T09-38-46-04-00",
+    "tracker": ".agent/trackers/2026-07-12T09-38-46-04-00/project-breakdown.md",
     "architecture": ".agent/architecture-audit/2026-07-12T09-38-46-04-00-loading-transition-generation-dsk-map.md",
     "render": ".agent/render-audit/2026-07-12T09-38-46-04-00-stale-bootstrap-world-snapshot-provenance-gap.md",
     "gameplay": ".agent/gameplay-audit/2026-07-12T09-38-46-04-00-overlapping-loading-stale-run-commit-loop.md",
     "interaction": ".agent/interaction-audit/2026-07-12T09-38-46-04-00-start-cancel-commit-admission-map.md",
-    "loadingTransition": ".agent/loading-transition-audit/2026-07-12T09-38-46-04-00-generation-cancellation-atomic-commit-contract.md",
+    "system": ".agent/loading-transition-audit/2026-07-12T09-38-46-04-00-generation-cancellation-atomic-commit-contract.md",
     "deploy": ".agent/deploy-audit/2026-07-12T09-38-46-04-00-loading-race-fixture-gate.md"
   },
   "selection": {
     "inventoryCount": 10,
     "eligibleCount": 9,
-    "newOrLedgerMissingCount": 0,
+    "newEligibleCount": 0,
+    "centralLedgerMissingCount": 0,
     "rootUndocumentedCount": 0,
     "excluded": [
       "LuminaryLabs-Publish/TheCavalryOfRome"
     ],
     "selectedRepository": "LuminaryLabs-Publish/HorrorCorridor",
+    "reason": "Repo-local audit state at 2026-07-12T09-38-46-04-00 was newer than central tracking at 2026-07-12T07-41-06-04-00.",
     "ledgerOrder": [
-      "HorrorCorridor:2026-07-12T07-41-06-04-00",
+      "HorrorCorridor:central-2026-07-12T07-41-06-04-00:local-2026-07-12T09-38-46-04-00:selected",
       "ZombieOrchard:2026-07-12T07-51-04-04-00",
-      "MyCozyIsland:2026-07-12T08:00:16-04:00",
+      "MyCozyIsland:2026-07-12T08-00-16-04-00",
       "TheUnmappedHouse:2026-07-12T08-10-36-04-00",
       "AetherVale:2026-07-12T08-31-49-04-00",
       "PrehistoricRush:2026-07-12T09-01-44-04-00",
@@ -68,6 +80,35 @@
     "runtime-resource-cleanup-kit": ["loop", "subscriptions", "listeners", "observers", "GPU cleanup"],
     "package-validation-kit": ["build", "lint", "harness", "visual", "live-player checks"]
   },
+  "interactionLoop": [
+    "solo or host start enters LOADING",
+    "five requestAnimationFrame and timeout step pairs execute",
+    "retained session, lobby, identity and connection inputs are used",
+    "candidate state is built and live stores are mutated independently",
+    "host may broadcast START_GAME and initial SYNC",
+    "GameCanvas initializes retained world resources once from the first snapshot",
+    "input, simulation, networking and rendering begin without loading/run generation parity"
+  ],
+  "domainsInUse": [
+    "application shell and screen routing",
+    "UI loading pause completion settings and terminal projection",
+    "session mode peer identity room roster readiness and reset",
+    "lobby identity actor binding readiness start and bootstrap",
+    "loading step orchestration async leases and transition generation",
+    "runtime startup readiness frame lifecycle failure containment and cleanup",
+    "browser clocks cadence simulation time and clock generations",
+    "PeerJS host client transport and BroadcastChannel bridge",
+    "protocol envelopes serialization request and sequence admission",
+    "seeded maze topology placement target sequence and random streams",
+    "snapshot construction publication acceptance delivery and backpressure",
+    "keyboard mouse pointer lock focus visibility and input lifecycle",
+    "movement collision camera prediction and host admission",
+    "cube interactions slot claims anomaly sequence and ooze pressure",
+    "Three.js world camera post processing bloom and disposal",
+    "render surface sizing presentation policy and frame correlation",
+    "HUD minimap and debug projection",
+    "validation build deployment and central tracking"
+  ],
   "plannedParentDomain": "corridor-loading-transition-generation-authority-domain",
   "plannedKits": [
     "loading-command-id-kit",
@@ -97,5 +138,27 @@
     "unmount-during-load-fixture-kit",
     "world-snapshot-generation-parity-fixture-kit"
   ],
-  "runtimeChanged": false
+  "centralSync": {
+    "previousCentralTimestamp": "2026-07-12T07-41-06-04-00",
+    "previousLocalTimestamp": "2026-07-12T09-38-46-04-00",
+    "currentTimestamp": "2026-07-12T09-48-15-04-00",
+    "ledgerPath": "repo-ledger/LuminaryLabs-Publish/HorrorCorridor.md",
+    "changeLogPath": "internal-change-log/2026-07-12T09-48-15-04-00-horror-corridor-loading-transition-reconciliation.md"
+  },
+  "validation": {
+    "runtimeChanged": false,
+    "networkChanged": false,
+    "inputChanged": false,
+    "movementChanged": false,
+    "renderChanged": false,
+    "packageScriptsChanged": false,
+    "dependenciesChanged": false,
+    "deploymentChanged": false,
+    "branchCreated": false,
+    "pullRequestCreated": false,
+    "runtimeCommandsRun": false,
+    "loadingFixturesAvailable": false,
+    "browserSmokeRun": false,
+    "pagesSmokeRun": false
+  }
 }
