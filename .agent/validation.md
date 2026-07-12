@@ -1,44 +1,45 @@
 # HorrorCorridor Validation
 
-**Updated:** `2026-07-11T19-38-14-04-00`
+**Updated:** `2026-07-11T21-21-12-04-00`
 
 ## Scope
 
-Documentation-only audit of deterministic maze generation, authoritative ooze random draws, random-stream ownership, snapshot/checkpoint projection, replay/restore, host migration and rendered-frame correlation.
+Documentation-only audit of GameShell bootstrap, GameCanvas initialization, resource acquisition, readiness publication, partial-start rollback, clean retry and first committed frame proof.
 
-The preceding host cadence, snapshot-delivery, disconnect, movement, snapshot-acceptance, interaction, outcome and pause audits remain retained.
+The preceding randomness, snapshot-delivery, cadence, disconnect, movement, snapshot-acceptance, interaction, outcome, lobby, exit and pause audits remain retained.
 
 ## Plan ledger
 
-**Goal:** distinguish source-backed deterministic behavior from unimplemented random-stream, checkpoint, replay and migration proof.
+**Goal:** distinguish successful-path cleanup from unimplemented partial-start rollback and first-frame readiness proof.
 
 - [x] Compare the full Publish inventory and central ledger.
 - [x] Exclude `TheCavalryOfRome`.
 - [x] Select only `HorrorCorridor`.
 - [x] Read current root `.agent` state.
-- [x] Read `generateMaze.ts`, `createInitialGameState.ts`, `oozeRules.ts`, `GameCanvas.tsx`, `syncSnapshot.ts` and `shared.ts`.
-- [x] Confirm maze generation uses a deterministic seeded stream.
-- [x] Confirm authoritative ooze advancement omits an RNG and falls back to `Math.random()`.
-- [x] Confirm the snapshot includes ooze outputs but no RNG checkpoint.
-- [x] Confirm protocol/debug/frame surfaces do not carry stream identity or draw index.
+- [x] Read `GameShell.tsx`, `GameCanvas.tsx`, `animationLoop.ts`, `createRenderer.ts` and `createPostProcessing.ts`.
+- [x] Confirm GameShell publishes readiness before GameCanvas construction.
+- [x] Confirm GameCanvas sets initialized before fallible resource acquisition.
+- [x] Confirm partial startup is outside the installed cleanup closure.
+- [x] Confirm no first-frame acknowledgement or retry result exists.
 - [x] Update required docs and timestamped audits.
-- [ ] Implement and run deterministic randomness fixtures.
+- [ ] Implement and run startup failure-injection fixtures.
 
 ## Source-backed checks
 
 ```txt
-createSeededMazeRng(seed): present
-maze topology consumes seeded RNG: yes
-cube selection consumes seeded RNG: yes
-target sequence consumes seeded RNG: yes
-
-ooze RNG parameter: optional
-ooze fallback: Math.random
-host-injected deterministic ooze RNG: no
-random stream ID in GameState: no
-random checkpoint in ReplicatedGameSnapshot: no
-random algorithm version in protocol: no
-draw index in debug frame: no
+GameShell loading projection: present
+initial snapshot bootstrap: present
+readiness write before GameCanvas mount: yes
+readiness write before first frame: yes
+initialized set before renderer construction: yes
+renderer/post/world acquisition ledger: no
+partial-start try/catch: no
+partial-start rollback: no
+normal successful unmount cleanup: yes
+first-frame readiness receipt: no
+startup failure result: no
+clean retry result: no
+runtime generation fence: no
 ```
 
 ## Existing package commands
@@ -59,18 +60,19 @@ These commands were not run because runtime source and package configuration wer
 ## Required fixture gate
 
 ```txt
-same-seed same-step ooze spawn parity
-same-seed same-step ooze decay parity
-pause consumes zero draws
-duplicate step consumes zero additional draws
-failed transaction preserves checkpoint
-checkpoint serialize/deserialize roundtrip
-snapshot restore next-draw parity
-host migration next-draw parity
-algorithm-version mismatch rejection
-draw-journal completeness
-simulation/RNG/frame revision parity
-multi-peer visible ooze convergence
+failure after renderer creation retires renderer and canvas
+failure after post-processing creation retires composer and renderer
+failure after world construction retires world, post and renderer
+failure after canvas/world attachment detaches and disposes both
+failure after listener/observer installation removes every callback lease
+failure before first frame keeps readiness false
+first-frame throw produces typed startup failure and complete rollback
+duplicate rollback is idempotent
+stale callback cannot mutate after rollback
+retry uses a new generation
+retry reaches one committed frame
+mandatory live-lease count is zero between attempts
+solo, host and client startup follow the same contract
 ```
 
 ## Change validation
@@ -85,10 +87,11 @@ deployment changed: no
 branch created: no
 pull request created: no
 existing checks run: no
-deterministic ooze fixtures available: no
-checkpoint roundtrip fixture available: no
-host migration continuation fixture available: no
-browser replay smoke run: no
+startup failure injection available: no
+rollback-order fixture available: no
+clean-retry fixture available: no
+first-frame readiness fixture available: no
+browser startup smoke run: no
 ```
 
-No deterministic replay, restore, host migration or frame-provenance claim is made until the required fixtures pass.
+No runtime startup atomicity, rollback completeness, clean retry or first-frame readiness claim is made until the required fixtures pass.
