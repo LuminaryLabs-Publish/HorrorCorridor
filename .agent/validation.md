@@ -1,51 +1,50 @@
 # HorrorCorridor Validation
 
-**Updated:** `2026-07-11T23-18-16-04-00`
+**Updated:** `2026-07-12T01-08-06-04-00`
 
 ## Scope
 
-Documentation-only audit of main-canvas and minimap scaling, resize observation, renderer/composer/camera mutations, zero-area handling, surface identity, physical-size readback and visible-frame correlation.
+Documentation-only audit of runtime-debug activation, persistence, frame/event capture, overlay rendering, JavaScript export, data classification, redaction, capability leases and production deployment policy.
 
-The preceding startup, readiness, randomness, snapshot-delivery, cadence, disconnect, movement, snapshot-acceptance, interaction, outcome, lobby, exit and pause audits remain retained.
+The preceding render-surface, startup, readiness, randomness, snapshot-delivery, cadence, disconnect, movement, snapshot-acceptance, interaction, outcome, lobby, exit and pause audits remain retained.
 
 ## Plan ledger
 
-**Goal:** distinguish current responsive mutation code from unimplemented product surface policy, commit results and frame-correlated proof.
+**Goal:** distinguish a working bounded logger from an authorized production diagnostics capability with explicit tiers, redaction, revocation and deployment proof.
 
 - [x] Compare the full Publish inventory and central ledger.
 - [x] Exclude `TheCavalryOfRome`.
 - [x] Select only `HorrorCorridor`.
 - [x] Read current root `.agent` state.
-- [x] Read `GameCanvas.tsx`, `createRenderer.ts`, `createPostProcessing.ts` and `Minimap.tsx`.
-- [x] Confirm main WebGL DPR is capped at 1.
-- [x] Confirm minimap uses uncapped browser DPR.
-- [x] Confirm ResizeObserver and window resize both directly invoke sizing.
-- [x] Confirm zero-area sizing silently returns.
-- [x] Confirm no surface revision or requested/actual size result exists.
-- [x] Confirm debug frames omit surface provenance.
+- [x] Read `runtimeDebugStore.ts`, `FrameDebugPanel.tsx`, `HUDOverlay.tsx` and `GameCanvas.tsx`.
+- [x] Confirm query, localStorage, keyboard and window-API activation paths.
+- [x] Confirm frame/event retention limits.
+- [x] Confirm privileged frame fields and visible anomaly/cube disclosure.
+- [x] Confirm no build-channel, actor, role, lease, redaction or revocation authority exists.
 - [x] Update required docs and timestamped audits.
-- [ ] Implement and run surface fixtures.
+- [ ] Implement and run debug capability fixtures.
 
 ## Source-backed checks
 
 ```txt
-main renderer pixel ratio cap: 1
-main size source: mount client width/height
-renderer resize: present
-camera aspect update: present
-composer resize: present
-bloom resolution mutation: present
-minimap DPR sampling: present and uncapped
-ResizeObserver: present
-window resize listener: present
-resize command identity: absent
-resize coalescing: absent
-surface revision: absent
-zero-area result: absent
-actual drawing-buffer readback: absent
-actual composer/bloom target readback: absent
-surface provenance in debug frame: absent
-surface provenance in rendering readiness: absent
+query activation: present
+query values: 1, true, frames, verbose
+localStorage activation/persistence: present
+Backquote activation: present
+window API activation and extraction: present
+FrameDebugPanel mounted in runtime HUD: present
+frame retention bound: 180
+event retention bound: 80
+room/player identity in frames: present
+cube IDs/colors/states/owners/positions in frames: present
+anomaly sequence and slot state in frames: present
+anomaly and cube state rendered in overlay: present
+build-channel admission: absent
+actor/role admission: absent
+session/runtime capability lease: absent
+field classification/redaction: absent
+typed export result: absent
+automatic revocation and privileged-buffer clearing: absent
 ```
 
 ## Existing package commands
@@ -61,25 +60,26 @@ npm run validate:live-player:dev
 npm run review:object-kit
 ```
 
-These commands were not run because runtime source and package configuration were unchanged.
+These commands were not run because runtime source and package configuration were unchanged. The March logging audit already proves that query activation, overlay toggles, window extraction and bounded buffers work; this run audits the missing product-authorization boundary rather than re-proving logger functionality.
 
 ## Required fixture gate
 
 ```txt
-startup at DPR 1, 1.5, 2 and 3 commits bounded physical sizes
-main canvas and minimap follow declared named policies
-rapid ResizeObserver and window-resize events coalesce deterministically
-stale observations cannot replace a newer surface revision
-zero-area mount produces the declared lifecycle result
-simulation/input/network behavior matches zero-area policy
-restored mount commits a new revision
-renderer drawing-buffer size matches commit result
-composer and bloom target sizes match commit result
-camera aspect matches accepted CSS dimensions
-rendering readiness requires a valid committed surface
-first frame after every accepted resize cites the new revision
-debug export includes surface identity, revision and actual sizes
-stop/restart creates a new runtime generation and surface identity
+public production starts with privileged debug disabled
+public query parameters cannot activate privileged capture
+Backquote cannot elevate capability in public production
+public window API is absent or exposes only a player-safe redacted tier
+localStorage from a QA/development session cannot elevate a later public session
+QA/developer activation returns a typed result and revocable lease
+lease binds actor, role, runtime generation and session epoch
+role loss, stop, restart and session replacement revoke the lease
+revocation clears privileged frame/event buffers and persisted flags
+player-safe frames exclude anomaly order, cube coordinates, owner IDs and room/player identifiers
+privileged overlay and exported state use the same classification profile
+frame/event count and byte budgets are enforced
+export returns explicit accepted, rejected, redacted and truncated results
+production bundle/deployment check proves the declared policy
+browser smoke proves public, QA and development capability parity
 ```
 
 ## Change validation
@@ -90,16 +90,16 @@ package scripts changed: no
 dependencies changed: no
 network behavior changed: no
 render behavior changed: no
+debug behavior changed: no
 deployment changed: no
 branch created: no
 pull request created: no
 existing checks run: no
-zero-area fixture available: no
-DPR parity fixture available: no
-resize-storm fixture available: no
-physical-size readback fixture available: no
-surface/frame correlation fixture available: no
-browser resize smoke run: no
+production-disable fixture available: no
+redaction-parity fixture available: no
+session-revocation fixture available: no
+export-budget fixture available: no
+browser debug capability smoke run: no
 ```
 
-No responsive-surface authority, DPR parity, zero-area policy, physical-size correctness or frame-correlation claim is made until the required fixtures pass.
+No production-safe diagnostics, capability isolation, redaction, revocation or authorized-export claim is made until the required fixtures pass.
