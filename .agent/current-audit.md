@@ -1,30 +1,28 @@
 # HorrorCorridor Current Audit
 
 **Repository:** `LuminaryLabs-Publish/HorrorCorridor`  
-**Updated:** `2026-07-12T16-39-35-04-00`  
+**Updated:** `2026-07-12T18-31-01-04-00`  
 **Branch:** `main`  
-**Status:** `authoritative-message-source-admission-central-reconciled`
+**Status:** `room-join-code-allocation-authority-audited`
 
 ## Summary
 
-The repository retains a 29-kit browser runtime spanning application routing, session and lobby state, PeerJS transport, a same-origin BroadcastChannel bridge, deterministic maze bootstrap, movement, interactions, ooze, authoritative snapshots, Three.js rendering, bloom, minimap, diagnostics and cleanup.
+The repository retains a 29-kit browser runtime spanning application routing, sessions, lobby state, PeerJS, a same-origin BroadcastChannel bridge, deterministic maze bootstrap, movement, interactions, ooze, authoritative snapshots, Three.js rendering, bloom, minimap, diagnostics and cleanup.
 
-The current boundary is authoritative message-source admission. `peer/message` contains `remotePeerId`, `connectionId` and a decoded protocol message. The envelope contains `senderId`, `roomId`, timestamp and payload. Structural decoding succeeds without proving that the source is the current host, belongs to the active room, or belongs to the current session and connection generation. `GameShell` then accepts `START_GAME`, `SYNC` and `LOBBY_EVENT` by message type and can replace client room, roster, snapshot, route, status and readiness.
+The current boundary is room and join-code allocation. `GameShell` generates a logical room ID, four-character random join code, host player ID and host peer ID, commits the room and lobby UI, then asks `createHost()` to acquire the join code as a PeerJS ID. No reservation, collision admission, retry generation, canonical identity manifest or first valid-hosting frame receipt exists.
 
 ## Plan ledger
 
-**Goal:** make every host-class message source-bound, room-bound, generation-bound, monotonic and reducible to one typed admission result before client state or presentation changes.
+**Goal:** commit room ID, join code, host player ID, admitted host peer ID and transport mode as one revisioned manifest before the lobby claims the room is joinable.
 
-- [x] Compare the complete Publish inventory and central ledger.
+- [x] Compare the full Publish inventory and central ledger.
 - [x] Exclude `TheCavalryOfRome`.
 - [x] Verify all nine eligible root `.agent` entrypoints.
-- [x] Select only HorrorCorridor from repo-local audit state newer than central tracking.
+- [x] Select only HorrorCorridor by the oldest synchronized timestamp.
 - [x] Preserve the complete interaction loop, domains, all 29 kits and services.
-- [x] Reconcile the message-source authority audit into a fresh timestamped family.
-- [x] Refresh root documentation and machine registry.
-- [x] Synchronize central ledger and internal change log on `main`.
-- [x] Create no branch or pull request.
-- [ ] Runtime implementation and executable adversarial fixtures remain future work.
+- [x] Trace identity generation, lobby projection, PeerJS acquisition and generic errors.
+- [x] Add the timestamped room-identity audit family.
+- [ ] Implement and prove collision-safe identity admission.
 
 ## Selection state
 
@@ -34,9 +32,9 @@ eligible non-Cavalry repositories: 9
 new eligible repositories: 0
 central-ledger-missing eligible repositories: 0
 root-.agent-missing eligible repositories: 0
+unsynchronized eligible repositories: 0
 selected repository: LuminaryLabs-Publish/HorrorCorridor
-selection reason: repo-local 2026-07-12T16-29-56-04-00 newer than central 2026-07-12T14-30-36-04-00
-excluded repository: LuminaryLabs-Publish/TheCavalryOfRome
+selection reason: oldest synchronized central/root timestamp at 2026-07-12T16-39-35-04-00
 ```
 
 ## Complete interaction loop
@@ -45,23 +43,18 @@ excluded repository: LuminaryLabs-Publish/TheCavalryOfRome
 browser route
   -> choose solo, host or client
 
-transport setup
-  -> create PeerJS or BroadcastChannel transport
-  -> admitted channel emits peer/message
-  -> event carries remotePeerId, connectionId, role and decoded message
+host identity setup
+  -> generate roomId, joinCode, hostPlayerId and requested hostPeerId
+  -> commit room, peer identity, lobby screen, overlay and readiness
+  -> create PeerJS host with peerId = joinCode
+  -> create BroadcastChannel with joinCode
+  -> receive peer/open or generic peer/error
+  -> no reservation, collision retry or identity-manifest commit
 
-protocol decode
-  -> validate protocol version and structural payload shape
-  -> message carries senderId, roomId, timestamp and payload
-
-client host-class consumption
-  -> GameShell branches on START_GAME, SYNC or LOBBY_EVENT
-  -> no contextual source or generation admission occurs
-  -> room, roster, snapshot, route, status and readiness can be replaced
-
-presentation
-  -> LobbyScreen, HUDOverlay, GameCanvas and minimap consume successor stores
-  -> no accepted-source or authority-revision receipt reaches the visible frame
+lobby and run
+  -> roster, readiness and start consume current room identity
+  -> protocol and snapshots drive simulation
+  -> Three.js world, HUD and minimap render successor stores
 ```
 
 ## Domains in use
@@ -70,7 +63,8 @@ presentation
 application shell and screen routing
 UI loading, pause, completion, settings and terminal projection
 session identity, room, roster, readiness and reset
-lobby identity, actor binding, readiness, start and bootstrap
+room ID, join-code, peer-ID and identity-generation allocation
+lobby actor binding, readiness, start and bootstrap
 loading transition and runtime lifecycle
 browser clocks, cadence and simulation time
 transport capability, mode selection and local bridge
@@ -119,121 +113,84 @@ corridor-post-processing-kit           composer, bloom, sizing, render, disposal
 corridor-minimap-kit                   maze, players, cubes, ooze, heading
 runtime-debug-frame-kit                activation, bounded capture, overlay, export
 runtime-resource-cleanup-kit           loop, subscriptions, listeners, observers, GPU cleanup
-package-validation-kit                 build, lint, harness, visual and live-player checks
+package-validation-kit                build, lint, harness, visual and live-player checks
 ```
 
 ## Source-backed findings
 
 ```txt
-peer/message includes remotePeerId: yes
-peer/message includes connectionId: yes
-protocol envelope includes senderId: yes
-protocol envelope includes roomId: yes
-serializer validates version and structural shape: yes
-serializer binds senderId to remotePeerId: no
-serializer validates active room: no
-serializer validates current host authority: no
-START_GAME validates current host source: no
-SYNC validates current host source: no
-LOBBY_EVENT validates current host source: no
-connection generation checked: no
-session epoch checked: no
-authority revision monotonic: no
-duplicate host-message result exists: no
-wrong-source rejection guarantees zero mutation: no
-first authoritative-message visible-frame acknowledgement exists: no
+makeJoinCode uses Math.random: yes
+join code length: four base-36 characters
+host requests PeerJS ID equal to join code: yes
+room state committed before peer/open: yes
+lobby screen and overlay committed before peer/open: yes
+BroadcastChannel created from the same join code: yes
+candidate reservation exists: no
+collision-specific error classification exists: no
+bounded retry generation exists: no
+partial identity rollback exists: no
+canonical roomId/joinCode/peerId manifest exists: no
+first accepted-hosting frame acknowledgement exists: no
 ```
 
-## Concrete failure paths
+## Concrete failure path
 
 ```txt
-non-host forged START_GAME
-  -> client replaces room and players
-  -> client replaces host identity and connection status
-
-non-host forged SYNC
-  -> client replaces authoritative snapshot
-  -> route can become playing, paused or victory
-  -> readiness becomes true
-
-wrong-room LOBBY_EVENT
-  -> client replaces active room and visible roster
-
-late predecessor message after reconnect
-  -> stale connection generation is not compared
-  -> predecessor can mutate successor session
+candidate code C is generated
+  -> lobby advertises C
+  -> PeerJS rejects or cannot acquire ID C
+  -> generic peer/error is emitted
+  -> GameShell has no room-identity allocation failure branch
+  -> lobby retains C
+  -> local bridge C may remain available
+  -> clients receive no single authoritative ownership result
 ```
 
 ## Required parent domain
 
 ```txt
-corridor-authoritative-message-source-admission-authority-domain
+corridor-room-join-code-allocation-authority-domain
 ```
 
 ## Candidate kits
 
 ```txt
-authoritative-message-class-kit
-authoritative-message-id-kit
-message-source-identity-kit
-message-source-binding-kit
-host-authority-capability-kit
-message-room-binding-kit
-session-epoch-kit
-transport-mode-revision-kit
-connection-generation-kit
-sender-peer-consistency-kit
-host-peer-consistency-kit
-room-consistency-kit
-host-message-admission-kit
-stale-authority-message-rejection-kit
-duplicate-authority-message-kit
-message-authority-result-kit
-authority-observation-kit
-authority-journal-kit
-first-authoritative-message-frame-ack-kit
-forged-start-game-fixture-kit
-forged-sync-fixture-kit
-wrong-room-lobby-event-fixture-kit
-sender-peer-mismatch-fixture-kit
-stale-host-generation-fixture-kit
-duplicate-authority-message-fixture-kit
+room-id-kit
+join-code-candidate-kit
+join-code-entropy-policy-kit
+join-code-normalization-kit
+join-code-reservation-kit
+peer-id-ownership-admission-kit
+room-identity-manifest-kit
+room-identity-generation-kit
+room-identity-fingerprint-kit
+host-identity-start-command-kit
+host-identity-retry-policy-kit
+identity-collision-result-kit
+identity-error-classification-kit
+local-bridge-identity-binding-kit
+peerjs-identity-binding-kit
+identity-observation-kit
+identity-journal-kit
+first-hosting-state-frame-ack-kit
+join-code-collision-fixture-kit
+peer-id-unavailable-fixture-kit
+mode-parity-fixture-kit
 ```
 
 ## Required transaction
 
 ```txt
-PeerMessageEnvelope
-  -> classify host-only or client-originating authority
-  -> bind current session epoch and transport revision
-  -> bind current connection ID and generation
-  -> validate remote peer against admitted host peer
-  -> validate senderId against admitted host player
-  -> validate envelope, payload and active room identity
-  -> validate monotonic authority revision and duplicate identity
-  -> publish Accepted, Rejected, Stale or Duplicate
-
-Accepted
-  -> atomically commit room, roster, snapshot, route and readiness
-  -> publish successor fingerprint
-  -> acknowledge first visible frame citing message and authority revision
-
-Rejected, Stale or Duplicate
-  -> perform zero state mutation
-  -> publish bounded reason observation
-```
-
-## Current audit family
-
-```txt
-.agent/trackers/2026-07-12T16-39-35-04-00/project-breakdown.md
-.agent/turn-ledger/2026-07-12T16-39-35-04-00.md
-.agent/architecture-audit/2026-07-12T16-39-35-04-00-authoritative-message-source-central-reconciliation-dsk-map.md
-.agent/render-audit/2026-07-12T16-39-35-04-00-authoritative-message-visible-frame-reconciliation-gap.md
-.agent/gameplay-audit/2026-07-12T16-39-35-04-00-forged-host-message-state-replacement-reconciliation.md
-.agent/interaction-audit/2026-07-12T16-39-35-04-00-host-message-source-admission-reconciliation-map.md
-.agent/protocol-authority-audit/2026-07-12T16-39-35-04-00-sender-peer-room-generation-reconciliation-contract.md
-.agent/deploy-audit/2026-07-12T16-39-35-04-00-authoritative-message-fixture-central-reconciliation-gate.md
+StartHostIdentityCommand
+  -> allocate identity generation
+  -> generate and normalize candidate join code
+  -> reserve candidate
+  -> acquire requested PeerJS peer ID
+  -> bind local bridge and transport mode
+  -> commit canonical RoomIdentityManifest
+  -> publish Accepted, Collision, Unavailable, TimedOut, Cancelled or Failed
+  -> expose joinable lobby only for Accepted
+  -> acknowledge first matching visible frame
 ```
 
 ## Validation boundary
