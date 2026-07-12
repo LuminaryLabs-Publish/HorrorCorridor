@@ -10,7 +10,8 @@ status: runtime-startup-acquisition-rollback-authority-audited
 runtime source changed: no
 branch: main
 root .agent state: refreshed
-central ledger sync: pending until central commit
+central ledger sync: complete
+central change log: internal-change-log/2026-07-11T21-21-12-04-00-horror-corridor-runtime-startup-rollback-authority.md
 ```
 
 ## Summary
