@@ -1,10 +1,10 @@
 # HorrorCorridor Next Steps
 
-**Updated:** `2026-07-12T02-49-19-04-00`
+**Updated:** `2026-07-12T04-28-03-04-00`
 
 ## Plan ledger
 
-**Goal:** preserve identity, startup, lifecycle and render-surface prerequisites, then make every active gameplay presentation consumer reachable and frame-correlated before diagnostics or deployment claims rely on the current UI composition.
+**Goal:** preserve identity, startup, lifecycle and presentation prerequisites, then ensure focus and visibility loss cannot leave gameplay controls active or publish stale movement.
 
 ### Gate 1: roster identity and peer binding
 
@@ -54,16 +54,10 @@
 ### Gate 4d: active gameplay presentation and HUD/minimap reachability
 
 - [ ] Define PLAYING, PAUSED and COMPLETED consumer policies.
-- [ ] Mount the active HUD shell during `PLAYING`.
-- [ ] Mount `Minimap` during `PLAYING` when required by policy.
-- [ ] Replace `document.getElementById` discovery with an explicit minimap surface ref/lease.
+- [ ] Mount the active HUD shell and required minimap during `PLAYING`.
+- [ ] Replace `document.getElementById` discovery with an explicit minimap surface lease.
 - [ ] Bind HUD and minimap leases to runtime generation and screen revision.
-- [ ] Create one immutable `PresentationFramePlan` per RAF.
-- [ ] Return accepted, skipped, unavailable, stale and failed consumer results.
-- [ ] Require world, post-processing, HUD and policy-required minimap acknowledgements.
-- [ ] Commit one visible presentation frame receipt.
-- [ ] Revoke stale surface leases on screen transition and teardown.
-- [ ] Add active-play mount, pause/resume, completion-transition and frame-correlation fixtures.
+- [ ] Commit one visible presentation receipt after mandatory consumer acknowledgement.
 
 ### Gate 4e: debug observability capability and redaction
 
@@ -71,8 +65,23 @@
 - [ ] Replace ambient query, Backquote, localStorage and window-API elevation with admitted commands.
 - [ ] Bind capability to actor, role, runtime generation and session epoch.
 - [ ] Apply field classification, redaction, retention and export policy.
-- [ ] Require debug projection to consume committed presentation frames.
 - [ ] Revoke leases and clear privileged buffers on stop or replacement.
+
+### Gate 4f: focus, visibility and held-control retirement
+
+- [ ] Add a monotonic `inputRevision` and one active `controlLeaseId`.
+- [ ] Treat `blur`, `visibilitychange(hidden)`, `pagehide`, pointer-lock loss, pause, route exit and runtime stop as retirement commands.
+- [ ] Make retirement idempotent by runtime, run and input revision.
+- [ ] Atomically clear every held button, look delta and pointer-lock flag.
+- [ ] Update `runtimeStore.inputFlags` with the neutral snapshot before another simulation step.
+- [ ] Suspend movement and interaction admission while focus/control lease is invalid.
+- [ ] For clients, publish one sequenced zero-input update when transport and run identity are still valid.
+- [ ] Record prior axes, cause, revisions, publication result and final neutral state.
+- [ ] Require a new focus-qualified physical keydown to create the next control lease.
+- [ ] Neutralize input during GameCanvas cleanup and route teardown.
+- [ ] Add non-pointer-lock blur, hidden-tab, pointer-lock loss, pause, route-exit and unmount fixtures.
+- [ ] Add client zero-input and host stale-movement rejection fixtures.
+- [ ] Add a browser smoke proving movement stops before the first post-focus-loss frame.
 
 ### Gate 5: state acceptance and gameplay commands
 
@@ -97,8 +106,9 @@
 
 - [ ] Replicate pause authority.
 - [ ] Freeze simulation and random-stream consumption while paused.
+- [ ] Route pause and resume through input-retirement and control-lease renewal.
 - [ ] Resume under a new acknowledged transition revision.
 
 ## Completion boundary
 
-Do not claim the active presentation surface complete until `PLAYING` mounts every mandatory consumer, missing surfaces produce typed failures, world/HUD/minimap results cite one frame identity, and browser fixtures prove the minimap is usable before terminal completion.
+Do not claim browser input lifecycle safety until every focus/visibility/runtime loss path produces a neutral input result, a client cannot continue publishing stale movement, and browser fixtures prove that movement and interaction stop before the next admitted simulation frame.
