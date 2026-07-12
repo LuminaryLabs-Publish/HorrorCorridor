@@ -2,110 +2,107 @@
 
 **Repository:** `LuminaryLabs-Publish/HorrorCorridor`  
 **Branch:** `main`  
-**Updated:** `2026-07-12T09-48-15-04-00`
+**Updated:** `2026-07-12T12-21-38-04-00`
 
 ## Summary
 
-HorrorCorridor is a cooperative first-person procedural maze with solo, host and client sessions, deterministic maze bootstrap, authoritative snapshots, cube/anomaly interactions, ooze pressure, Three.js rendering, bloom, minimap and runtime diagnostics.
+HorrorCorridor is a cooperative first-person procedural maze with solo, host and client routes, deterministic maze bootstrap, authoritative snapshots, cube/anomaly interactions, ooze pressure, Three.js rendering, bloom, minimap and diagnostics.
 
-The current implementation boundary is asynchronous loading-transition authority. `runLoadingSteps()` crosses five animation-frame and timer pairs, then solo and host start paths commit session, runtime, UI and transport results without a loading generation, cancellation token, sealed predecessor revisions or atomic commit receipt. This turn reconciles that repo-local audit with central tracking; runtime behavior remains unchanged.
+The current audit isolates transport-mode selection and reachability. In modern browsers the existence of `BroadcastChannel` automatically selects the local bridge, suppresses PeerJS connection paths and lets a client report `connected` without a host acknowledgement. This makes same-origin local testing look valid while cross-origin and cross-device multiplayer can remain unreachable.
 
 ## Plan ledger
 
-**Goal:** keep the loading-transition authority, root audit routing, machine registry and central ledger aligned while preserving the complete source-backed breakdown.
+**Goal:** preserve the full repository breakdown while defining one explicit transport-mode authority from capability observation through acknowledged reachability, fallback, message delivery and first visible multiplayer proof.
 
 - [x] Compare all ten accessible Publish repositories.
 - [x] Exclude `TheCavalryOfRome`.
 - [x] Confirm all nine eligible repositories have central-ledger and root `.agent` coverage.
-- [x] Select only `HorrorCorridor` because its repo-local audit was newer than central tracking.
-- [x] Verify loading steps, solo/host commit paths and one-time world initialization.
+- [x] Select only `HorrorCorridor` as the oldest eligible synchronized repository.
+- [x] Inspect host/client transport construction, connection, send, broadcast and status paths.
 - [x] Identify the interaction loop, all domains, 29 implemented kits and offered services.
-- [x] Add a new tracker, turn ledger and architecture/render/gameplay/interaction/central/deploy audit family.
-- [x] Refresh root human and machine-readable audit state.
-- [x] Prepare central ledger and internal change-log synchronization.
-- [x] Use `main` only; create no branch or pull request.
-- [ ] Runtime implementation and executable loading-race fixtures remain future work.
+- [x] Add the transport-mode audit family and refresh root routing.
+- [x] Update central tracking on `main`.
+- [x] Create no branch or pull request.
+- [ ] Runtime implementation and executable multiplayer fixtures remain future work.
 
 ## Read first
 
 ```txt
-.agent/trackers/2026-07-12T09-48-15-04-00/project-breakdown.md
-.agent/turn-ledger/2026-07-12T09-48-15-04-00.md
+.agent/trackers/2026-07-12T12-21-38-04-00/project-breakdown.md
+.agent/turn-ledger/2026-07-12T12-21-38-04-00.md
 .agent/current-audit.md
 .agent/known-gaps.md
 .agent/next-steps.md
 .agent/validation.md
 .agent/kit-registry.json
-.agent/architecture-audit/2026-07-12T09-48-15-04-00-loading-transition-central-reconciliation-dsk-map.md
-.agent/render-audit/2026-07-12T09-48-15-04-00-world-snapshot-generation-ledger-gap.md
-.agent/gameplay-audit/2026-07-12T09-48-15-04-00-loading-race-source-reconciliation.md
-.agent/interaction-audit/2026-07-12T09-48-15-04-00-start-command-central-admission-map.md
-.agent/central-sync-audit/2026-07-12T09-48-15-04-00-repo-ledger-machine-registry-contract.md
-.agent/deploy-audit/2026-07-12T09-48-15-04-00-loading-fixture-central-gate.md
+.agent/architecture-audit/2026-07-12T12-21-38-04-00-transport-mode-reachability-dsk-map.md
+.agent/render-audit/2026-07-12T12-21-38-04-00-connected-status-visible-session-gap.md
+.agent/gameplay-audit/2026-07-12T12-21-38-04-00-local-bridge-replaces-network-loop.md
+.agent/interaction-audit/2026-07-12T12-21-38-04-00-connect-attempt-path-admission-map.md
+.agent/transport-mode-audit/2026-07-12T12-21-38-04-00-capability-policy-handshake-fallback-contract.md
+.agent/deploy-audit/2026-07-12T12-21-38-04-00-multiplayer-transport-matrix-gate.md
 ```
 
-Retain the detailed loading-transition audit family at `2026-07-12T09-38-46-04-00` and all preceding canonical-clock, frame-failure, input-lifecycle, active-presentation, debug, render-surface, startup, randomness, transport, cadence, movement, disconnect, interaction, outcome, snapshot, lobby, exit and pause audits.
+Retain the loading-transition audit family at `2026-07-12T09-48-15-04-00` and all preceding identity, actor-binding, lobby-start, lifecycle, startup, readiness, render-surface, input, clock, snapshot, movement, interaction, outcome, randomness, delivery, pause and debug audits.
 
 ## Interaction loop
 
 ```txt
-solo or host Start action
-  -> set route to LOADING
-  -> execute five display steps
-       -> wait one requestAnimationFrame
-       -> wait one 90 ms timer
-  -> reuse retained route/session/lobby/identity/connection values
-  -> create run bootstrap
-  -> mutate session, runtime and UI stores
-  -> host may broadcast START_GAME and initial SYNC
-  -> GameCanvas initializes once from the first snapshot
-  -> retained world and later snapshots continue without generation parity proof
+host route
+  -> create PeerJS host and optional BroadcastChannel
+  -> BroadcastChannel presence suppresses PeerJS connection listener
+
+client route
+  -> create PeerJS client and optional BroadcastChannel
+  -> BroadcastChannel presence suppresses peer.connect
+  -> post client-connect
+  -> mark connected without acknowledgement
+
+shared run
+  -> lobby and protocol events update stores
+  -> host starts run and publishes START_GAME/SYNC
+  -> rendering begins only if the selected transport actually delivers them
 ```
 
 ## Current finding
 
 ```txt
-loading command ID: absent
-loading generation: absent
-single-flight admission: absent
-cancellation or supersession: absent
-owned RAF/timer leases: absent
-sealed lobby/readiness inputs: absent
-route/session predecessor validation: absent
-candidate bootstrap validation: absent
-atomic multi-store commit: absent
-duplicate initial broadcast suppression: absent
-world/snapshot generation parity: absent
-first visible run-frame receipt: absent
+capability and policy are fused
+local bridge replaces rather than supplements PeerJS
+client connection result is unacknowledged
+false connected status is possible
+cross-origin/device reachability is not proven
+fallback is absent
+transport mode/revision is absent from state and messages
+first remote-player frame receipt is absent
 ```
 
 ## Required parent domain
 
 ```txt
-corridor-loading-transition-generation-authority-domain
+corridor-transport-mode-reachability-authority-domain
 ```
 
 ## Required flow
 
 ```txt
-StartRunCommand
-  -> validate route/session and predecessor revisions
-  -> allocate command ID, loading generation and cancellation token
-  -> enforce single-flight or typed supersession
-  -> seal room, roster, readiness, identity and connection inputs
-  -> execute owned cancellable loading leases
-  -> build and validate a detached candidate bootstrap
-  -> re-check all predecessors before atomic commit
-  -> publish session, runtime, UI and transport results exactly once
-  -> build world resources from the committed run generation
-  -> acknowledge the first visible frame with the same generation
+ConnectSessionCommand
+  -> observe capabilities
+  -> select explicit preferred and fallback modes
+  -> allocate attempt and transport generation
+  -> prepare detached candidates
+  -> require host or data-channel acknowledgement
+  -> admit one path and retire others
+  -> publish typed connection and delivery results
+  -> correlate lobby, protocol and runtime state with transport revision
+  -> acknowledge the first visible remote-player frame
 ```
 
 ## Census
 
 ```txt
 source-backed kits: 29
-planned loading-transition kits: 26
+planned transport-mode kits and fixtures: 28
 ```
 
 The complete kit and service inventory is in `.agent/current-audit.md`, `.agent/kit-registry.json` and the current tracker.
