@@ -43,7 +43,7 @@ corridor-local-bridge-packet-admission-fanout-authority-domain
 ## Source finding
 
 ```txt
-channel namespace: horrorridor:<joinCode>
+channel namespace: horrorcorridor:<joinCode>
 runtime packet schema: absent
 session generation/capability: absent
 connection lease ownership: absent
