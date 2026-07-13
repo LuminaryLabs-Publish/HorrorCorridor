@@ -2,27 +2,27 @@
 
 **Repository:** `LuminaryLabs-Publish/HorrorCorridor`  
 **Branch:** `main`  
-**Updated:** `2026-07-12T22-44-30-04-00`  
-**Status:** `lobby-capacity-admission-authority-central-reconciled`
+**Updated:** `2026-07-13T01-08-28-04-00`  
+**Status:** `protocol-semantic-admission-authority-audited`
 
 ## Summary
 
-HorrorCorridor is a cooperative first-person procedural maze with solo, host and client routes, PeerJS, a same-origin `BroadcastChannel` bridge, deterministic bootstrap, authoritative snapshots, interactions, ooze pressure, Three.js rendering, bloom, minimap and diagnostics.
+HorrorCorridor is a cooperative procedural first-person maze with solo, host and client routes, PeerJS, a same-origin `BroadcastChannel` bridge, deterministic maze bootstrap, movement, interactions, ooze pressure, Three.js rendering, bloom, minimap and diagnostics.
 
-The current audit isolates lobby-capacity admission. Rooms declare `maxPlayers: 4`, but remote connection, local bridge, placeholder, store, protocol and bootstrap paths can all accept more members. This reconciliation promotes the completed repo-local audit into central tracking without changing runtime behavior.
+The current audit isolates protocol semantic admission. The decoder validates protocol version and broad runtime shape, but exact enum values, numeric ranges, unique identities and relationships between envelope, room, snapshot, actor and tick fields remain unvalidated. Structurally valid but contradictory messages can reach store, gameplay and presentation consumers.
 
 ## Plan ledger
 
-**Goal:** keep the repo-local and central records aligned around one revisioned capacity authority between member candidates, roster mutation, run bootstrap, protocol publication and visible state.
+**Goal:** keep one canonical semantic-admission result between structural decoding and every lobby, runtime or visible-state mutation.
 
 - [x] Compare all ten accessible Publish repositories.
 - [x] Exclude `TheCavalryOfRome`.
 - [x] Confirm all nine eligible repositories have central-ledger and root `.agent` coverage.
-- [x] Select only HorrorCorridor because its repo-local capacity audit was newer than central tracking.
-- [x] Preserve the complete interaction loop, active domains, 29 implemented kits and services.
-- [x] Add a new timestamped reconciliation tracker and audit family.
-- [x] Keep all repo-local writes on `main`.
-- [ ] Implement reservation, capacity admission, typed rejection and executable fixtures.
+- [x] Select only HorrorCorridor as the oldest eligible central entry.
+- [x] Preserve the complete interaction loop, active domains and 29-kit service inventory.
+- [x] Add the timestamped protocol-semantic audit family.
+- [x] Keep all writes on `main`; create no branch or pull request.
+- [ ] Implement semantic admission and executable fixtures.
 
 ## Read first
 
@@ -30,47 +30,46 @@ The current audit isolates lobby-capacity admission. Rooms declare `maxPlayers: 
 2. `.agent/next-steps.md`
 3. `.agent/known-gaps.md`
 4. `.agent/validation.md`
-5. `.agent/trackers/2026-07-12T22-44-30-04-00/project-breakdown.md`
-6. `.agent/architecture-audit/2026-07-12T22-44-30-04-00-lobby-capacity-central-reconciliation-dsk-map.md`
-7. `.agent/lobby-capacity-audit/2026-07-12T22-44-30-04-00-reservation-policy-central-reconciliation-contract.md`
-8. `.agent/central-sync-audit/2026-07-12T22-44-30-04-00-repo-ledger-capacity-reconciliation.md`
+5. `.agent/trackers/2026-07-13T01-08-28-04-00/project-breakdown.md`
+6. `.agent/architecture-audit/2026-07-13T01-08-28-04-00-protocol-semantic-admission-dsk-map.md`
+7. `.agent/protocol-semantic-audit/2026-07-13T01-08-28-04-00-enum-relation-range-contract.md`
+8. `.agent/deploy-audit/2026-07-13T01-08-28-04-00-protocol-semantic-fixture-gate.md`
 
 ## Current authority boundary
 
 ```txt
-corridor-lobby-capacity-admission-authority-domain
+corridor-protocol-semantic-admission-authority-domain
 ```
 
 ## Source finding
 
 ```txt
-room maxPlayers declaration: 4
-remote connection-open capacity check: absent
-local client-connect capacity check: absent
-Add guest capacity check: absent
-session-store roster capacity invariant: absent
-protocol players.length <= maxPlayers validation: absent
-bootstrap capacity check: absent
-visible count/max/full state: incomplete
-first capacity-consistent frame acknowledgement: absent
+exact enum validation: incomplete
+numeric integer/range policy: incomplete
+optional requestId validation: absent
+envelope/payload room relation: absent
+room/snapshot consistency: absent
+authoritativeTick/snapshot.tick relation: absent
+sender/actor relation: absent
+unique collection identities: absent
+typed semantic admission result: absent
+first semantically admitted visible frame acknowledgement: absent
 ```
 
 ## Required transaction
 
 ```txt
-LobbyMemberAdmissionCommand
-  -> bind room, roster revision and transport generation
-  -> classify remote connection, local bridge, placeholder or restore source
-  -> reserve one slot without mutating live state
-  -> validate maxPlayers, identity uniqueness and connection ownership
-  -> return Accepted, Full, Duplicate, Stale, Cancelled, Invalid or Failed
-  -> commit one canonical roster revision atomically
-  -> consume or release the reservation exactly once
-  -> reject over-capacity store and protocol payloads
-  -> allow bootstrap only from a sealed capacity-valid roster
-  -> publish the first matching visible lobby or gameplay frame
+ProtocolMessageCandidate
+  -> structural decode
+  -> exact enum, optional-field, range and collection checks
+  -> envelope/room/snapshot/actor/tick relation checks
+  -> source, room generation and revision admission
+  -> Accepted or typed rejection
+  -> one atomic canonical effect or zero mutation
+  -> bounded observation and journal
+  -> first visible frame acknowledgement
 ```
 
 ## Validation boundary
 
-Documentation only. Runtime source, networking, gameplay, rendering, dependencies, package scripts and deployment were not changed. No capacity enforcement, reservation, final-slot race, over-capacity rejection, rollback or visible-frame claim is made until focused fixtures pass on `main`.
+Documentation only. Runtime source, networking, gameplay, rendering, dependencies, package scripts and deployment were not changed. No semantic-integrity or production-readiness claim is made until focused fixtures pass on `main`.
