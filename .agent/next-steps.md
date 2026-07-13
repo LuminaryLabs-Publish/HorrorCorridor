@@ -1,6 +1,6 @@
 # HorrorCorridor Next Steps
 
-**Updated:** `2026-07-13T03-31-44-04-00`
+**Updated:** `2026-07-13T03-38-31-04-00`
 
 ## Summary
 
@@ -16,7 +16,9 @@ Insert a client join-attempt authority between raw join-form activation and all 
 - [x] Preserve the 29-kit inventory and complete domain map.
 - [x] Define the parent DSK and candidate kits.
 - [x] Add architecture, render, gameplay, interaction, join-attempt and deploy audits.
+- [x] Add the timestamped central-reconciliation family.
 - [x] Refresh root docs and machine registry.
+- [x] Synchronize the repo ledger and internal change log.
 
 ### Gate 1: input policy
 
@@ -45,7 +47,7 @@ Insert a client join-attempt authority between raw join-form activation and all 
 ### Gate 4: commit and rollback
 
 - [ ] Return `Accepted`, `InvalidInput`, `RoomUnavailable`, `RoomFull`, `Rejected`, `TransportUnavailable`, `TimedOut`, `Cancelled`, `Stale`, `Duplicate` or `Failed`.
-- [ ] Commit peer identity, room and roster atomically for `Accepted` only.
+- [ ] Commit peer identity, room, roster and readiness atomically for `Accepted` only.
 - [ ] Keep pending attempts out of canonical `room` and `lobbyPlayers`.
 - [ ] Retire DataConnection, BroadcastChannel participation and callbacks exactly once for non-accepted results.
 - [ ] Publish typed cancellation and rollback receipts.
