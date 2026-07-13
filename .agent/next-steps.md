@@ -1,89 +1,87 @@
 # HorrorCorridor Next Steps
 
-**Updated:** `2026-07-12T20-20-02-04-00`
+**Updated:** `2026-07-12T22-29-30-04-00`
 
 ## Summary
 
-Place a packet-admission and exact-once fanout authority around the `BroadcastChannel` path. Channel discovery by join code must not authorize connection, message or disconnect effects, and one logical host broadcast must reach each intended client exactly once.
+Place a capacity-admission authority around every path that can add a lobby member. A declared four-player room must reserve and commit slots consistently across PeerJS, the local bridge, placeholders, Zustand stores, protocol payloads, bootstrap and visible UI.
 
 ## Plan ledger
 
-**Goal:** replace raw local packet trust with generation-bound capabilities, owned connection leases, typed results, exact-once fanout and visible-frame proof.
+**Goal:** replace unconstrained roster mutation with revisioned slot reservations, typed capacity results, capacity-valid bootstrap and visible-frame proof.
 
 ### Documentation
 
-- [x] Audit host and client local bridge source.
+- [x] Audit room creation, connection intake, placeholders, store mutation, protocol validation and bootstrap.
 - [x] Preserve the 29-kit inventory and complete domain map.
 - [x] Define the parent DSK and candidate kits.
-- [x] Add architecture, render, gameplay, interaction, local-bridge and deploy audits.
+- [x] Add architecture, render, gameplay, interaction, lobby-capacity and deploy audits.
 - [x] Refresh root docs and machine registry.
 
-### Gate 1: packet envelope and generation
+### Gate 1: canonical capacity policy
 
-- [ ] Define a runtime-validated `LocalBridgePacketEnvelope`.
-- [ ] Include protocol version, packet ID, room ID, session generation, connection ID, actor ID, sequence and timestamp.
-- [ ] Allocate a new bridge generation on host creation/restart.
-- [ ] Reject packets from predecessor generations before event publication.
+- [ ] Define `RoomCapacityPolicy` with normalized finite `maxPlayers`.
+- [ ] Allocate a room generation, roster revision and capacity fingerprint.
+- [ ] Require one authoritative roster projection rather than independent room and lobby arrays.
+- [ ] Reject malformed policies, negative capacities and inconsistent restored state.
 
-### Gate 2: capability and connection lease
+### Gate 2: slot reservation
 
-- [ ] Issue a scoped client capability after accepted room/transport admission.
-- [ ] Treat the join code only as channel discovery.
-- [ ] Create one `LocalConnectionLease` per accepted client.
-- [ ] Bind capability, connection ID, canonical actor and generation.
-- [ ] Reject unknown-connection messages.
-- [ ] Require disconnect actor and capability to match the lease owner.
+- [ ] Create one `LobbySlotReservation` before member mutation.
+- [ ] Bind reservation to room generation, candidate identity, source and connection lease.
+- [ ] Make reservation acquisition atomic against the current roster revision.
+- [ ] Return `Accepted`, `Full`, `Duplicate`, `Stale`, `Cancelled` or `Rejected`.
+- [ ] Consume or release every reservation exactly once.
 
-### Gate 3: packet identity and replay safety
+### Gate 3: shared admission paths
 
-- [ ] Add packet IDs and per-lease monotonic sequences.
-- [ ] Return typed accepted, rejected, duplicate and stale results.
-- [ ] Ensure duplicates and stale packets cause no roster, gameplay or snapshot mutation.
-- [ ] Store bounded, secret-free observations and journals.
+- [ ] Route PeerJS connection-open through capacity admission.
+- [ ] Route local `client-connect` through the same authority.
+- [ ] Route `Add guest`, restore and migration through the same authority.
+- [ ] Ensure duplicate identity does not consume another slot.
+- [ ] Retire rejected transport candidates without adding visible members.
 
-### Gate 4: exact-once fanout
+### Gate 4: roster, protocol and bootstrap
 
-- [ ] Build one logical broadcast intent with a unique broadcast ID.
-- [ ] Derive the intended recipient set once.
-- [ ] Either post one deduplicated broadcast or one non-null targeted delivery per recipient.
-- [ ] Remove the current per-connection/null-target hybrid.
-- [ ] Publish complete per-recipient delivery results.
-- [ ] Guarantee linear recipient delivery counts.
+- [ ] Enforce `players.length <= maxPlayers` in store commits.
+- [ ] Validate the relationship during protocol decoding, not only number and array shape.
+- [ ] Seal a capacity-valid roster before Start run.
+- [ ] Reject bootstrap when the roster exceeds capacity or cites a stale revision.
+- [ ] Carry capacity revision and fingerprint through START_GAME and SYNC.
 
-### Gate 5: consumer and frame admission
+### Gate 5: presentation
 
-- [ ] Allow GameShell and gameplay consumers to receive only admitted typed events.
-- [ ] Carry packet/broadcast revision into room, roster and snapshot commits.
-- [ ] Correlate the first visible lobby/game frame with the accepted revision.
-- [ ] Expose rejection and duplicate counts without capability material.
+- [ ] Display `players.length / maxPlayers` and remaining slots.
+- [ ] Disable or reject Add guest when full.
+- [ ] Project typed full/rejection state without mutating the roster.
+- [ ] Correlate the first lobby and gameplay frames with the committed capacity revision.
 
 ### Gate 6: fixtures
 
-- [ ] Valid connection accepted once.
-- [ ] Rogue same-origin tab without capability rejected.
-- [ ] Unknown-connection message rejected.
-- [ ] Actor/lease mismatch rejected.
-- [ ] Forged disconnect rejected.
-- [ ] Duplicate and stale packet rejected with no mutation.
-- [ ] One through four clients receive one delivery each per broadcast.
-- [ ] START_GAME and initial SYNC apply once per client.
-- [ ] Host restart fences old packets.
-- [ ] PeerJS and local-bridge semantic parity.
-- [ ] Source, production build and deployed browser parity.
+- [ ] First through fourth unique members accepted exactly once.
+- [ ] Fifth PeerJS member rejected with no roster mutation.
+- [ ] Fifth local-bridge member rejected with no roster mutation.
+- [ ] Placeholder requests stop at capacity.
+- [ ] Duplicate member consumes no new slot.
+- [ ] Cancelled reservation releases capacity.
+- [ ] Concurrent final-slot requests produce one winner.
+- [ ] Over-capacity START_GAME, SYNC and LOBBY_EVENT rejected.
+- [ ] Capacity-valid roster bootstraps and renders correctly.
+- [ ] Source, production build and deployed-browser parity.
 
 ## Dependency order
 
 ```txt
-accepted room identity
-  -> bridge generation and capability
-  -> connection lease and actor binding
-  -> packet identity/sequence admission
-  -> message/disconnect ownership
-  -> exact-once fanout
-  -> state commit
+room identity and generation
+  -> capacity policy
+  -> slot reservation
+  -> identity and connection admission
+  -> atomic roster commit
+  -> protocol capacity validation
+  -> sealed bootstrap
   -> visible-frame acknowledgement
 ```
 
 ## Completion boundary
 
-Do not claim the local bridge is authenticated, spoof-resistant, exact-once or PeerJS-equivalent until the authority and fixture matrix pass on `main`.
+Do not claim four-player capacity enforcement, race-safe admission, over-capacity protocol rejection or visible roster consistency until the authority and fixture matrix pass on `main`.
