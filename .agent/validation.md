@@ -1,23 +1,23 @@
 # HorrorCorridor Validation
 
-**Updated:** `2026-07-12T20-20-02-04-00`
+**Updated:** `2026-07-12T22-29-30-04-00`
 
 ## Summary
 
-Source inspection confirms that the active same-origin local bridge has no runtime packet capability, generation, identity or connection-lease admission. It also confirms that local broadcast posts one untargeted packet per accepted connection and every client processes every copy. This audit does not prove runtime exploitation or corrected delivery because no implementation or focused fixtures exist.
+Source inspection confirms that rooms declare `maxPlayers: 4` while transport admission, placeholders, roster stores, protocol validation and bootstrap do not enforce the relationship between current players and capacity. This audit does not prove runtime overflow or corrected enforcement because no implementation or focused fixtures exist.
 
 ## Plan ledger
 
-**Goal:** record exactly what source inspection proves and withhold packet-safety and exact-once claims until executable browser fixtures pass.
+**Goal:** record exactly what source inspection proves and withhold capacity-safety claims until executable concurrency, protocol, bootstrap and visible-frame fixtures pass.
 
 - [x] Compare the full Publish inventory and central ledger.
 - [x] Verify central-ledger and root `.agent` coverage for all nine eligible repositories.
 - [x] Select HorrorCorridor as the oldest eligible repository.
-- [x] Inspect host/client bridge, session, shared types, shell and package scripts.
+- [x] Inspect room creation, host transport, session store, lobby UI, serializers and bootstrap.
 - [x] Preserve the 29-kit and service census.
-- [x] Add the timestamped local-bridge audit family.
+- [x] Add the timestamped lobby-capacity audit family.
 - [x] Refresh root documentation and machine registry.
-- [ ] Run deterministic, adversarial, multi-client, build and deployed fixtures after implementation exists.
+- [ ] Run capacity, race, protocol, bootstrap, build and deployed fixtures after implementation exists.
 
 ## Change scope
 
@@ -39,35 +39,34 @@ documentation changed: yes
 ```txt
 complete LuminaryLabs-Publish repository inventory
 central Publish repo ledger state
-HorrorCorridor current root .agent state
+all nine eligible root .agent entrypoints
 HorrorCorridor-V1/src/components/game/GameShell.tsx
+HorrorCorridor-V1/src/components/menus/LobbyScreen.tsx
 HorrorCorridor-V1/src/features/game-state/store/sessionStore.ts
+HorrorCorridor-V1/src/features/game-state/domain/createInitialGameState.ts
 HorrorCorridor-V1/src/features/networking/peer/createHost.ts
-HorrorCorridor-V1/src/features/networking/peer/createClient.ts
-HorrorCorridor-V1/src/types/shared.ts
-HorrorCorridor-V1/package.json
+HorrorCorridor-V1/src/features/networking/protocol/serializers.ts
+HorrorCorridor current root .agent state
 ```
 
 ## Confirmed by inspection
 
 ```txt
-host creates BroadcastChannel whenever the API exists
-host PeerJS connection handler is skipped when localBridge exists
-client creates the same channel from hostPeerId/join code
-LocalBridgePacket is compile-time only
-runtime handler validates only packet truthiness and kind
-client-connect claims remotePeerId and connectionId
-host admits claimed connection without capability or generation
-GameShell maps remotePeerId directly to lobby player ID
-client-message does not require a known local connection
-client-message does not compare actor with connection owner
-client-disconnect does not prove caller ownership
-host broadcast posts once per local connection
-host broadcast targetPeerId is null
-client filters only non-null targetPeerId
-all clients accept all null-target copies
-N clients therefore produce N² message events per logical broadcast
-no broadcast/frame acknowledgement exists
+room creation declares maxPlayers = 4
+active bootstrap room declares maxPlayers = 4
+host connection-open handler checks capacity: no
+local client-connect handler checks capacity: no
+host Add guest path checks capacity: no
+host Add guest button capacity-disabled: no
+sessionStore roster setters check capacity: no
+sessionStore upsert checks capacity: no
+serializer checks maxPlayers is finite: yes
+serializer checks players are structurally valid: yes
+serializer checks players.length <= maxPlayers: no
+bootstrap maps all input players: yes
+bootstrap truncates or rejects excess players: no
+lobby exposes players.length but not capacity/full state: yes
+first capacity-consistent frame receipt: no
 ```
 
 ## Documentation checks
@@ -80,7 +79,7 @@ architecture audit: yes
 render audit: yes
 gameplay audit: yes
 interaction audit: yes
-local-bridge audit: yes
+lobby-capacity audit: yes
 deploy audit: yes
 kit registry refreshed: yes
 central ledger update: current run
@@ -96,9 +95,9 @@ npm run build
 npm run harness:horror-corridor
 npm run validate:live-player:dev
 browser launch
-multi-tab local bridge test
-multi-client fanout test
-PeerJS/local-bridge parity test
+multi-client lobby test
+concurrent final-slot test
+protocol adversarial test
 production server smoke
 deployed-origin smoke
 ```
@@ -106,19 +105,23 @@ deployed-origin smoke
 ## Missing executable fixtures
 
 ```txt
-valid connection accepted once
-rogue same-origin publisher rejection
-unknown-connection message rejection
-actor/lease mismatch rejection
-forged disconnect rejection
-duplicate packet no-change
-stale generation rejection
-one-through-four-client exact-once fanout
-START_GAME and initial SYNC exact-once application
-first visible local-bridge frame acknowledgement
+first-through-fourth-member acceptance
+fifth PeerJS member rejection
+fifth local-bridge member rejection
+placeholder capacity rejection
+duplicate-member no-slot-consumption
+cancelled-reservation release
+concurrent final-slot winner
+malformed capacity policy rejection
+over-capacity START_GAME rejection
+over-capacity SYNC rejection
+over-capacity LOBBY_EVENT rejection
+capacity-valid bootstrap
+first capacity-consistent lobby frame
+first capacity-consistent gameplay frame
 source/build/browser/deployed parity
 ```
 
 ## Claims intentionally withheld
 
-No claim is made for local-bridge authentication, spoof resistance, connection ownership, exact-once fanout, linear delivery, PeerJS parity, visible-frame correlation or production readiness until the authority and fixtures exist and pass.
+No claim is made for room-capacity enforcement, reservation atomicity, overflow resistance, protocol capacity integrity, capacity-valid bootstrap, visible-frame correlation or production readiness until the authority and fixtures exist and pass.
