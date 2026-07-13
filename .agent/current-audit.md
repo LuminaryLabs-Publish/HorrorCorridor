@@ -1,30 +1,29 @@
 # HorrorCorridor Current Audit
 
 **Repository:** `LuminaryLabs-Publish/HorrorCorridor`  
-**Updated:** `2026-07-13T03-38-31-04-00`  
+**Updated:** `2026-07-13T07-00-29-04-00`  
 **Branch:** `main`  
-**Status:** `client-join-attempt-admission-central-reconciled`
+**Status:** `cross-store-session-transition-authority-central-reconciled`
 
 ## Summary
 
-The repository retains a 29-kit browser runtime spanning application routing, sessions, lobby state, PeerJS, a same-origin `BroadcastChannel` bridge, deterministic maze bootstrap, movement, interactions, ooze, authoritative snapshots, Three.js rendering, bloom, minimap, diagnostics and cleanup.
+The repository retains a 29-kit browser runtime spanning routing, sessions, lobby state, PeerJS, a same-origin `BroadcastChannel` bridge, deterministic maze bootstrap, movement, interactions, ooze, authoritative snapshots, Three.js rendering, bloom, minimap, diagnostics and cleanup.
 
-The current boundary is client join-attempt admission. Raw join input is weakly normalized, then provisional room, roster, peer identity, lobby projection and networking readiness are committed before any host-presence or room-admission acknowledgement. PeerJS joining has no bounded attempt timeout or typed result. The local bridge emits connection-open and connected immediately after sending a one-way `client-connect` packet.
+The current boundary is cross-store session transition coherence. Session, runtime and UI remain valid bounded domains, but `GameShell` coordinates them through sequential store setter calls. React subscribers can observe intermediate combinations, and no typed aggregate result proves that room, roster, identity, snapshot, readiness and screen state committed together.
 
 ## Plan ledger
 
-**Goal:** require a typed, cancellable and generation-fenced join result before a client can commit canonical room membership or display an accepted lobby.
+**Goal:** require one revisioned command and terminal result for every transition that spans session, runtime and UI ownership.
 
 - [x] Compare the full Publish inventory and central ledger.
 - [x] Exclude `TheCavalryOfRome`.
 - [x] Verify all nine eligible repositories have root `.agent` state.
-- [x] Detect HorrorCorridor repo-local audit state newer than central tracking.
-- [x] Select only HorrorCorridor.
-- [x] Read join input, client session mutation, transport connection and lobby projection code.
-- [x] Preserve the complete interaction loop, active domains and 29-kit service census.
-- [x] Add the timestamped central-reconciliation audit family.
+- [x] Select HorrorCorridor as the oldest eligible central entry.
+- [x] Read `GameShell`, session/runtime/UI stores, `GameCanvas` and `HUDOverlay`.
+- [x] Preserve the complete interaction loop, domains and 29-kit service census.
+- [x] Add the timestamped cross-store transition audit family.
 - [x] Refresh all required root docs and the machine registry.
-- [ ] Implement and prove client-join admission.
+- [ ] Implement and prove atomic transition authority.
 
 ## Selection state
 
@@ -34,73 +33,75 @@ eligible non-Cavalry repositories: 9
 new eligible repositories: 0
 central-ledger-missing eligible repositories: 0
 root-.agent-missing eligible repositories: 0
-repo-local-newer-than-central eligible repositories: 1
+repo-local-newer-than-central eligible repositories: 0
 selected repository: LuminaryLabs-Publish/HorrorCorridor
-central timestamp before reconciliation: 2026-07-13T01-08-28-04-00
-repo-local audit timestamp: 2026-07-13T03-31-44-04-00
-reconciliation timestamp: 2026-07-13T03-38-31-04-00
+selection timestamp: 2026-07-13T07-00-29-04-00
 ```
 
 ## Complete interaction loop
 
 ```txt
-browser route
-  -> choose solo, host or client
+local route or admitted network event
+  -> GameShell calls independent session/runtime/UI actions
+  -> each store immediately publishes its own successor revision
+  -> components can render between participant mutations
+  -> GameCanvas reads a runtime snapshot and fresh session state
+  -> HUDOverlay combines independent UI, session and runtime selectors
+  -> world, lobby, HUD, minimap and overlays project the observed combination
+  -> no combined result or coherent-frame acknowledgement exists
+```
 
-client join
-  -> enter arbitrary room code and display name
-  -> trim/uppercase code and substitute generated code when blank
-  -> generate client peer/player identity
-  -> construct provisional room from requested code
-  -> commit session, room and provisional roster
-  -> show client lobby and Joined room overlay
-  -> mark networking readiness true
-  -> create client transport and call connectToHost()
+## Concrete transition paths
 
-PeerJS
-  -> open signalling peer
-  -> create DataConnection
-  -> wait for open/error/close without bounded join timeout
-  -> unscoped events mutate shared connection state
+### Host start
 
-local bridge
-  -> create BroadcastChannel from requested code
-  -> post client-connect
-  -> immediately emit connection-open and connected
-  -> require no host acknowledgement
+```txt
+captured room and lobbyPlayers
+  -> async loading steps
+  -> create bootstrap
+  -> setRoom
+  -> setLobbyPlayers again
+  -> setAuthoritativeSnapshot
+  -> resetUi
+  -> setScreen
+  -> setGameScreen
+  -> setPaused
+  -> setOverlay
+  -> setReadiness
+  -> broadcast START_GAME
+  -> broadcast SYNC separately
+```
 
-consumer path
-  -> later START_GAME, SYNC or LOBBY_EVENT may replace room and roster
-  -> lobby, world, HUD and minimap render successor state
+### Client adoption
 
-cancel/retry
-  -> Back destroys transport and clears stores
-  -> no JoinAttemptId, generation, terminal receipt or late-event quarantine
+```txt
+START_GAME
+  -> room and roster
+  -> host identity and connection
+  -> prior/null snapshot, route and readiness remain
+
+SYNC
+  -> room and roster again
+  -> authoritative snapshot
+  -> playing, paused or completed UI
+  -> readiness
 ```
 
 ## Domains in use
 
 ```txt
-application shell and screen routing
-UI join loading lobby pause completion settings and terminal projection
-session mode room roster identity readiness and reset
-client join intent validation admission cancellation retry and timeout
-room join-code host identity capacity membership and lifecycle
-transport mode reachability and lifecycle
-PeerJS signalling and DataConnection ownership
-BroadcastChannel namespace local transport and packet admission
-protocol construction serialization structural decoding and semantic admission
-message identity source room actor revision and request correlation
-lobby membership readiness start and bootstrap
-runtime lifecycle clock cadence and frame scheduling
-seeded maze topology deterministic bootstrap and snapshot construction
-snapshot publication acceptance delivery and backpressure
-keyboard pointer lock focus and input lifecycle
-movement collision camera prediction and host admission
+application shell and route lifecycle
+session mode room roster peer identity connection and reset
+runtime snapshot pose input readiness and cadence
+UI screen game-screen overlay pause completion and hints
+cross-store transition identity revision preparation commit rollback and proof
+client join host start lobby readiness and run bootstrap
+PeerJS BroadcastChannel and protocol message handling
+seeded maze and replicated state
+input movement collision camera and prediction
 cube interactions anomaly sequence and ooze pressure
-Three.js world post-processing render surface and disposal
-HUD minimap connection status debug and visible-frame proof
-validation deployment and central audit tracking
+Three.js world post-processing minimap HUD and diagnostics
+cleanup validation build Pages deployment and central tracking
 ```
 
 ## Implemented kits and offered services
@@ -117,7 +118,7 @@ peer-host-transport-kit: PeerJS host, BroadcastChannel bridge, connection map, b
 peer-client-transport-kit: PeerJS client, BroadcastChannel bridge, connect, send, status, disconnect, destroy
 peer-event-bus-kit: typed transport events, subscription, cleanup
 protocol-message-construction-kit: START_GAME, PLAYER_UPDATE, TRY_INTERACT, SYNC, LOBBY_EVENT
-protocol-serialization-kit: encode, decode, protocol version and structural shape validation
+protocol-serialization-kit: encode, decode, protocol version, structural shape validation
 maze-snapshot-bootstrap-kit: seed, maze, players, cubes, anomaly, initial snapshot
 seeded-maze-rng-kit: topology, placement, target sequence
 first-person-input-kit: keyboard, pointer lock, look, snapshots
@@ -134,126 +135,94 @@ corridor-post-processing-kit: composer, bloom, sizing, render, disposal
 corridor-minimap-kit: maze, players, cubes, ooze, heading
 runtime-debug-frame-kit: activation, bounded capture, overlay, export
 runtime-resource-cleanup-kit: loop, subscriptions, listeners, observers, GPU cleanup
-package-validation-kit: build, lint, harness, visual and live-player checks
+package-validation-kit: build, lint, harness, visual, live-player checks
 ```
 
 ## Source-backed findings
 
 ```txt
-JoinMenu join-code maxlength/pattern: absent
-JoinMenu display-name maxlength/policy: absent
-shared generated/requested join-code schema: absent
-blank input creates unrelated generated code: yes
-provisional room committed before host acknowledgement: yes
-provisional roster committed before host acknowledgement: yes
-client lobby shown before host acknowledgement: yes
-overlay claims Joined room before host acknowledgement: yes
-networking readiness true before admission: yes
-join attempt identity/generation: absent
-PeerJS transport-open timeout: absent
-host-presence timeout: absent
-room-admission acknowledgement: absent
-local bridge one-way post reports connected: yes
-connectToHost result consumed as admission result: no
-typed JoinResult: absent
-cancellation/rollback receipt: absent
-late predecessor event quarantine: absent
-first accepted-lobby visible-frame acknowledgement: absent
-```
-
-## Concrete failure paths
-
-```txt
-unavailable requested room
-  -> provisional room and local player are committed
-  -> client lobby says Joined room
-  -> no bounded room-unavailable or timeout result
-  -> provisional membership remains until manual exit or an unscoped event
-```
-
-```txt
-BroadcastChannel available but no matching host listener
-  -> client posts client-connect
-  -> client immediately emits connection-open and connected
-  -> lobby presents connected state without host presence or admission proof
-```
-
-```txt
-attempt A is cancelled and attempt B starts
-  -> callbacks carry no JoinAttemptGeneration
-  -> late A status, acknowledgement or message can reach shared consumers
-  -> B cannot prove that the event belongs to its attempt
+aggregate transition command/result: absent
+transition identity and generation: absent
+expected participant revisions: absent
+session/runtime/UI prepare receipts: absent
+atomic multi-store commit: absent
+rollback result: absent
+setRoom already synchronizes room.players and lobbyPlayers: yes
+redundant setLobbyPlayers calls after setRoom: yes
+redundant call rewrites room.updatedAt: yes
+START_GAME/SYNC shared transition identity: absent
+host local commit precedes two separate broadcasts: yes
+GameCanvas session/snapshot coherence check: absent
+HUDOverlay shared revision envelope: absent
+readiness derived from aggregate commit: no
+first coherent visible-frame acknowledgement: absent
 ```
 
 ## Required parent domain
 
 ```txt
-corridor-client-join-attempt-admission-authority-domain
+corridor-cross-store-session-transition-authority-domain
 ```
 
 ## Candidate kits
 
 ```txt
-client-join-command-kit
-join-attempt-id-kit
-join-attempt-generation-kit
-join-code-schema-kit
-display-name-policy-kit
-join-intent-normalization-kit
-join-candidate-kit
-join-attempt-state-kit
-join-attempt-timeout-kit
-join-attempt-cancellation-kit
-join-transport-selection-kit
-host-presence-challenge-kit
-host-join-ack-kit
-canonical-room-manifest-kit
-join-result-kit
-join-session-commit-kit
-join-rollback-kit
-join-late-event-quarantine-kit
-join-observation-kit
-join-journal-kit
-first-joined-lobby-frame-ack-kit
-invalid-code-fixture-kit
-no-host-timeout-fixture-kit
-cancel-retry-fixture-kit
-stale-ack-fixture-kit
-peerjs-local-bridge-join-parity-fixture-kit
+session-transition-command-kit
+transition-id-kit
+transition-generation-kit
+participant-revision-kit
+transition-precondition-kit
+session-transition-candidate-kit
+runtime-transition-candidate-kit
+ui-transition-candidate-kit
+room-roster-coherence-kit
+snapshot-room-coherence-kit
+identity-snapshot-binding-kit
+screen-snapshot-coherence-kit
+readiness-derivation-kit
+participant-prepare-result-kit
+participant-commit-result-kit
+participant-rollback-kit
+cross-store-transition-result-kit
+start-sync-correlation-kit
+transition-late-event-quarantine-kit
+transition-journal-kit
+transition-observation-kit
+coherent-frame-envelope-kit
+first-coherent-frame-ack-kit
+cross-store-zero-partial-fixture-kit
+start-sync-order-fixture-kit
+completion-transition-fixture-kit
 ```
 
 ## Required transaction
 
 ```txt
-ClientJoinCommand
-  -> validate session generation
-  -> allocate attempt ID and generation
-  -> normalize and validate code and name
-  -> retain detached candidate
-  -> select explicit transport mode
-  -> open transport under attempt generation
-  -> challenge host presence
-  -> source-admit canonical HostJoinAck
-  -> validate room capacity and member admission
-  -> Accepted or typed non-accepted result
-  -> atomic session commit or complete rollback
-  -> late predecessor quarantine
-  -> bounded observation and journal
-  -> first accepted-lobby visible-frame acknowledgement
+SessionTransitionCommand
+  -> allocate transition identity and generation
+  -> validate expected participant revisions
+  -> construct detached candidates
+  -> validate cross-domain invariants
+  -> prepare every participant without publication
+  -> commit all participant revisions or none
+  -> publish terminal CrossStoreTransitionResult
+  -> correlate START_GAME and SYNC
+  -> derive readiness from the committed result
+  -> render and acknowledge one coherent frame
 ```
 
 ## Current file family
 
 ```txt
-.agent/trackers/2026-07-13T03-38-31-04-00/project-breakdown.md
-.agent/turn-ledger/2026-07-13T03-38-31-04-00.md
-.agent/architecture-audit/2026-07-13T03-38-31-04-00-client-join-central-reconciliation-dsk-map.md
-.agent/render-audit/2026-07-13T03-38-31-04-00-accepted-join-visible-frame-central-reconciliation-gap.md
-.agent/gameplay-audit/2026-07-13T03-38-31-04-00-provisional-client-lobby-central-reconciliation.md
-.agent/interaction-audit/2026-07-13T03-38-31-04-00-join-command-result-central-reconciliation-map.md
-.agent/join-attempt-audit/2026-07-13T03-38-31-04-00-attempt-generation-ack-central-reconciliation-contract.md
-.agent/deploy-audit/2026-07-13T03-38-31-04-00-client-join-central-fixture-gate.md
-.agent/central-sync-audit/2026-07-13T03-38-31-04-00-repo-ledger-client-join-reconciliation.md
+.agent/trackers/2026-07-13T07-00-29-04-00/project-breakdown.md
+.agent/turn-ledger/2026-07-13T07-00-29-04-00.md
+.agent/architecture-audit/2026-07-13T07-00-29-04-00-cross-store-session-transition-authority-dsk-map.md
+.agent/render-audit/2026-07-13T07-00-29-04-00-cross-store-visible-state-coherence-gap.md
+.agent/gameplay-audit/2026-07-13T07-00-29-04-00-multi-store-session-runtime-ui-transition-loop.md
+.agent/interaction-audit/2026-07-13T07-00-29-04-00-transition-command-participant-result-map.md
+.agent/state-transition-audit/2026-07-13T07-00-29-04-00-session-runtime-ui-atomic-commit-contract.md
+.agent/deploy-audit/2026-07-13T07-00-29-04-00-cross-store-transition-fixture-gate.md
+.agent/central-sync-audit/2026-07-13T07-00-29-04-00-repo-ledger-cross-store-transition-reconciliation.md
 ```
 
 ## Validation boundary
