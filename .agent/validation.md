@@ -1,21 +1,21 @@
 # HorrorCorridor Validation
 
-**Updated:** `2026-07-13T03-38-31-04-00`
+**Updated:** `2026-07-13T07-00-29-04-00`
 
 ## Summary
 
-Source inspection confirms that the client commits provisional lobby state before host acknowledgement, has no shared join-input policy, attempt generation, bounded timeout, typed result or visible acceptance receipt, and that the local bridge can report connected after a one-way post. This audit does not prove an exploit or corrected behavior because runtime implementation and focused fixtures do not exist.
+Source inspection confirms that `GameShell` coordinates session, runtime and UI through independent Zustand actions, that `START_GAME` and `SYNC` are adopted in separate stages, and that visible consumers independently combine participant state. This documentation pass does not prove a runtime defect in every React schedule or corrected behavior because no atomic transition authority or focused fixture exists.
 
 ## Plan ledger
 
-**Goal:** record exactly what source inspection proves and withhold client-join correctness claims until executable input, transport, cancellation, retry and visible-frame fixtures pass.
+**Goal:** record exactly what source inspection proves and withhold atomicity and visible-coherence claims until executable cross-store fixtures pass.
 
 - [x] Compare the full Publish inventory and central ledger.
 - [x] Verify central-ledger and root `.agent` coverage for all nine eligible repositories.
-- [x] Select HorrorCorridor because repo-local documentation was newer than central tracking.
-- [x] Inspect join form, client session mutation, client transport and lobby projection.
+- [x] Select HorrorCorridor as the oldest eligible central entry.
+- [x] Inspect `GameShell`, session/runtime/UI stores, `GameCanvas` and `HUDOverlay`.
 - [x] Preserve the 29-kit and service census.
-- [x] Add the timestamped client-join reconciliation family.
+- [x] Add the timestamped cross-store transition family.
 - [x] Refresh root documentation and machine registry.
 - [x] Prepare the central ledger and internal change log.
 - [ ] Run implementation, build and deployed-browser fixtures after the authority exists.
@@ -40,40 +40,36 @@ documentation changed: yes
 ```txt
 complete LuminaryLabs-Publish repository inventory
 central Publish repo ledger state
-all nine eligible root .agent entrypoints
-HorrorCorridor-V1/src/components/menus/JoinMenu.tsx
 HorrorCorridor-V1/src/components/game/GameShell.tsx
-HorrorCorridor-V1/src/features/networking/peer/createClient.ts
+HorrorCorridor-V1/src/features/game-state/store/sessionStore.ts
+HorrorCorridor-V1/src/features/game-state/store/runtimeStore.ts
+HorrorCorridor-V1/src/features/game-state/store/uiStore.ts
+HorrorCorridor-V1/src/components/game/GameCanvas.tsx
+HorrorCorridor-V1/src/components/hud/HUDOverlay.tsx
 HorrorCorridor current root .agent state
-repo-local client-join audit family at 2026-07-13T03-31-44-04-00
 ```
 
 ## Confirmed by inspection
 
 ```txt
-join-code input maxlength: no
-join-code input pattern: no
-display-name maxlength or policy: no
-host/client shared code schema: no
-blank code rejected: no
-blank code replaced with generated code: yes
-provisional room committed before host acknowledgement: yes
-provisional roster committed before host acknowledgement: yes
-client lobby displayed before host acknowledgement: yes
-Joined room overlay shown before host acknowledgement: yes
-networking readiness true before admission: yes
-join attempt ID: no
-join attempt generation: no
-PeerJS connect timeout: no
-host-presence challenge/acknowledgement: no
-room-admission acknowledgement: no
-local bridge one-way post emits connection-open: yes
-local bridge one-way post emits connected: yes
-connectToHost boolean used as canonical admission result: no
-typed JoinResult: no
-cancellation receipt: no
-retry predecessor quarantine: no
-first accepted-lobby frame receipt: no
+independent Zustand stores: session, runtime, UI
+single aggregate transition API: no
+transition ID/generation: no
+expected participant revisions: no
+participant prepare/commit/rollback receipts: no
+setRoom updates room and lobbyPlayers together: yes
+GameShell calls setLobbyPlayers after setRoom in multiple paths: yes
+setLobbyPlayers rewrites room.updatedAt using Date.now(): yes
+host loading introduces asynchronous interval before commit: yes
+host expected roster revision check after loading: no
+host local commit precedes START_GAME and SYNC broadcasts: yes
+START_GAME and SYNC are separate messages: yes
+client START_GAME leaves snapshot/UI/readiness unchanged: yes
+client SYNC performs additional independent participant mutations: yes
+GameCanvas reads session state separately from runtime snapshot: yes
+HUDOverlay subscribes independently to UI/session/runtime: yes
+coherent frame envelope: no
+first coherent frame acknowledgement: no
 ```
 
 ## Documentation checks
@@ -86,7 +82,7 @@ architecture audit: yes
 render audit: yes
 gameplay audit: yes
 interaction audit: yes
-join-attempt audit: yes
+state-transition audit: yes
 deploy audit: yes
 central-sync audit: yes
 kit registry refreshed: yes
@@ -101,10 +97,9 @@ npm install
 npm run lint
 npm run build
 npm run harness:horror-corridor
-npm run validate:live-player:dev
 browser launch
 PeerJS multiplayer test
-local BroadcastChannel test
+BroadcastChannel test
 production server smoke
 deployed-origin smoke
 ```
@@ -112,28 +107,25 @@ deployed-origin smoke
 ## Missing executable fixtures
 
 ```txt
-valid shared join-code grammar
-empty and invalid join-code rejection
-oversized join-code rejection
-invalid and oversized display-name rejection
-PeerJS no-host timeout
-local bridge no-host timeout
-host rejection
-room-full rejection
-cancel before open
-cancel while awaiting acknowledgement
-retry generation fencing
-late predecessor open/error/message rejection
-Accepted atomic session commit
-non-Accepted zero canonical store mutation
-PeerJS/local-bridge result parity
-pending join projection
-accepted lobby projection
-rejected and timed-out projection
-first accepted-lobby frame
+host-start all-participant commit
+roster mutation during loading stale rejection
+START_GAME without SYNC pending behavior
+SYNC without accepted START_GAME policy
+START_GAME/SYNC reorder and duplicate handling
+late predecessor generation quarantine
+room/roster fingerprint mismatch
+snapshot/room mismatch
+identity absent from snapshot
+PLAYING without readiness
+COMPLETED with nonterminal snapshot
+participant prepare failure zero mutation
+participant commit failure rollback
+first coherent lobby frame
+first coherent playing frame
+first coherent completion frame
 source/build/browser/deployed parity
 ```
 
 ## Claims intentionally withheld
 
-No claim is made for validated join input, host presence, room membership, bounded timeout, exact cancellation, retry isolation, transport parity, visible-frame correlation or production readiness until the authority and fixtures exist and pass.
+No claim is made for atomic participant adoption, stale-transition rejection, rollback safety, START_GAME/SYNC convergence, coherent visible projection or production readiness until the authority and fixtures exist and pass.
