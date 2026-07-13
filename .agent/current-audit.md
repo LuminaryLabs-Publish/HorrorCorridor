@@ -1,9 +1,9 @@
 # HorrorCorridor Current Audit
 
 **Repository:** `LuminaryLabs-Publish/HorrorCorridor`  
-**Updated:** `2026-07-13T03-31-44-04-00`  
+**Updated:** `2026-07-13T03-38-31-04-00`  
 **Branch:** `main`  
-**Status:** `client-join-attempt-admission-authority-audited`
+**Status:** `client-join-attempt-admission-central-reconciled`
 
 ## Summary
 
@@ -18,10 +18,12 @@ The current boundary is client join-attempt admission. Raw join input is weakly 
 - [x] Compare the full Publish inventory and central ledger.
 - [x] Exclude `TheCavalryOfRome`.
 - [x] Verify all nine eligible repositories have root `.agent` state.
-- [x] Select only HorrorCorridor as the oldest eligible central entry.
+- [x] Detect HorrorCorridor repo-local audit state newer than central tracking.
+- [x] Select only HorrorCorridor.
 - [x] Read join input, client session mutation, transport connection and lobby projection code.
 - [x] Preserve the complete interaction loop, active domains and 29-kit service census.
-- [x] Add the timestamped client-join audit family.
+- [x] Add the timestamped central-reconciliation audit family.
+- [x] Refresh all required root docs and the machine registry.
 - [ ] Implement and prove client-join admission.
 
 ## Selection state
@@ -32,9 +34,11 @@ eligible non-Cavalry repositories: 9
 new eligible repositories: 0
 central-ledger-missing eligible repositories: 0
 root-.agent-missing eligible repositories: 0
-unsynchronized eligible repositories: 0
+repo-local-newer-than-central eligible repositories: 1
 selected repository: LuminaryLabs-Publish/HorrorCorridor
-selected central timestamp: 2026-07-13T01-08-28-04-00
+central timestamp before reconciliation: 2026-07-13T01-08-28-04-00
+repo-local audit timestamp: 2026-07-13T03-31-44-04-00
+reconciliation timestamp: 2026-07-13T03-38-31-04-00
 ```
 
 ## Complete interaction loop
@@ -57,6 +61,7 @@ PeerJS
   -> open signalling peer
   -> create DataConnection
   -> wait for open/error/close without bounded join timeout
+  -> unscoped events mutate shared connection state
 
 local bridge
   -> create BroadcastChannel from requested code
@@ -69,7 +74,7 @@ consumer path
   -> lobby, world, HUD and minimap render successor state
 
 cancel/retry
-  -> Back to title destroys transport and clears stores
+  -> Back destroys transport and clears stores
   -> no JoinAttemptId, generation, terminal receipt or late-event quarantine
 ```
 
@@ -80,7 +85,7 @@ application shell and screen routing
 UI join loading lobby pause completion settings and terminal projection
 session mode room roster identity readiness and reset
 client join intent validation admission cancellation retry and timeout
-room join-code host identity capacity and lifecycle
+room join-code host identity capacity membership and lifecycle
 transport mode reachability and lifecycle
 PeerJS signalling and DataConnection ownership
 BroadcastChannel namespace local transport and packet admission
@@ -235,6 +240,20 @@ ClientJoinCommand
   -> late predecessor quarantine
   -> bounded observation and journal
   -> first accepted-lobby visible-frame acknowledgement
+```
+
+## Current file family
+
+```txt
+.agent/trackers/2026-07-13T03-38-31-04-00/project-breakdown.md
+.agent/turn-ledger/2026-07-13T03-38-31-04-00.md
+.agent/architecture-audit/2026-07-13T03-38-31-04-00-client-join-central-reconciliation-dsk-map.md
+.agent/render-audit/2026-07-13T03-38-31-04-00-accepted-join-visible-frame-central-reconciliation-gap.md
+.agent/gameplay-audit/2026-07-13T03-38-31-04-00-provisional-client-lobby-central-reconciliation.md
+.agent/interaction-audit/2026-07-13T03-38-31-04-00-join-command-result-central-reconciliation-map.md
+.agent/join-attempt-audit/2026-07-13T03-38-31-04-00-attempt-generation-ack-central-reconciliation-contract.md
+.agent/deploy-audit/2026-07-13T03-38-31-04-00-client-join-central-fixture-gate.md
+.agent/central-sync-audit/2026-07-13T03-38-31-04-00-repo-ledger-client-join-reconciliation.md
 ```
 
 ## Validation boundary
