@@ -2,29 +2,29 @@
 
 **Repository:** `LuminaryLabs-Publish/HorrorCorridor`  
 **Branch:** `main`  
-**Updated:** `2026-07-13T03-38-31-04-00`  
-**Status:** `client-join-attempt-admission-central-reconciled`
+**Updated:** `2026-07-13T07-00-29-04-00`  
+**Status:** `cross-store-session-transition-authority-central-reconciled`
 
 ## Summary
 
 HorrorCorridor is a cooperative procedural first-person maze with solo, host and client routes, PeerJS, a same-origin `BroadcastChannel` bridge, deterministic maze bootstrap, movement, interactions, ooze pressure, Three.js rendering, bloom, minimap and diagnostics.
 
-The current reconciliation isolates client join-attempt admission. The join form accepts unconstrained room-code and display-name strings. The client then commits a provisional room and roster, displays `Joined room`, marks networking readiness true and enters the client lobby before host presence or member admission is acknowledged. PeerJS has no bounded attempt timeout or typed result, while the local bridge reports connected immediately after a one-way `client-connect` post.
+The current audit isolates cross-store transition coherence. `GameShell` mutates independent session, runtime and UI Zustand stores in ordered setter sequences. `GameCanvas`, `HUDOverlay`, lobby surfaces and diagnostics independently observe those stores, but no transition identity, participant revision set, atomic commit result, rollback or coherent-frame acknowledgement proves they adopted one state together.
 
 ## Plan ledger
 
-**Goal:** make every client join a validated, revisioned and cancellable attempt that commits canonical lobby state only after a source-admitted host acknowledgement.
+**Goal:** make each route, lobby, gameplay, sync, pause, completion and exit transition an all-or-nothing commit across session, runtime and UI ownership.
 
 - [x] Compare all ten accessible Publish repositories.
 - [x] Exclude `TheCavalryOfRome`.
 - [x] Confirm all nine eligible repositories have central-ledger and root `.agent` coverage.
-- [x] Detect HorrorCorridor repo-local documentation newer than central tracking.
-- [x] Select only HorrorCorridor.
+- [x] Confirm no higher-priority new, missing or unsynchronized repository exists.
+- [x] Select only HorrorCorridor as the oldest eligible central entry.
 - [x] Preserve the complete interaction loop, active domains and 29-kit service inventory.
-- [x] Add the timestamped reconciliation audit family.
-- [x] Refresh root `.agent` documents and the machine registry.
+- [x] Add the timestamped cross-store transition audit family.
+- [x] Refresh root `.agent` documents and machine registry.
 - [x] Keep all writes on `main`; create no branch or pull request.
-- [ ] Implement and prove client-join admission.
+- [ ] Implement and prove cross-store transition authority.
 
 ## Read first
 
@@ -32,51 +32,48 @@ The current reconciliation isolates client join-attempt admission. The join form
 2. `.agent/next-steps.md`
 3. `.agent/known-gaps.md`
 4. `.agent/validation.md`
-5. `.agent/trackers/2026-07-13T03-38-31-04-00/project-breakdown.md`
-6. `.agent/architecture-audit/2026-07-13T03-38-31-04-00-client-join-central-reconciliation-dsk-map.md`
-7. `.agent/join-attempt-audit/2026-07-13T03-38-31-04-00-attempt-generation-ack-central-reconciliation-contract.md`
-8. `.agent/deploy-audit/2026-07-13T03-38-31-04-00-client-join-central-fixture-gate.md`
-9. `.agent/central-sync-audit/2026-07-13T03-38-31-04-00-repo-ledger-client-join-reconciliation.md`
+5. `.agent/trackers/2026-07-13T07-00-29-04-00/project-breakdown.md`
+6. `.agent/architecture-audit/2026-07-13T07-00-29-04-00-cross-store-session-transition-authority-dsk-map.md`
+7. `.agent/state-transition-audit/2026-07-13T07-00-29-04-00-session-runtime-ui-atomic-commit-contract.md`
+8. `.agent/deploy-audit/2026-07-13T07-00-29-04-00-cross-store-transition-fixture-gate.md`
+9. `.agent/central-sync-audit/2026-07-13T07-00-29-04-00-repo-ledger-cross-store-transition-reconciliation.md`
 
 ## Current authority boundary
 
 ```txt
-corridor-client-join-attempt-admission-authority-domain
+corridor-cross-store-session-transition-authority-domain
 ```
 
 ## Source finding
 
 ```txt
-join-code schema shared by host and client: absent
-input length and character policy: absent
-provisional room/roster committed before acknowledgement: yes
-Joined room projection before acknowledgement: yes
-networking readiness true before acceptance: yes
-join attempt ID and generation: absent
-bounded transport/ack timeout: absent
-host-presence and room-admission acknowledgement: absent
-local bridge one-way post reports connected: yes
-typed join result and cancellation receipt: absent
-late predecessor acknowledgement quarantine: absent
-first accepted-lobby visible-frame acknowledgement: absent
+cross-store transition ID/generation: absent
+expected session/runtime/UI revisions: absent
+participant prepare/commit/rollback results: absent
+setRoom already updates lobbyPlayers: yes
+GameShell often calls setLobbyPlayers again: yes
+START_GAME and SYNC correlated atomically: no
+host commits local state before separate START_GAME and SYNC broadcasts: yes
+GameCanvas combines runtime snapshot with fresh session read: yes
+HUDOverlay independently combines three stores: yes
+readiness derived from committed aggregate result: no
+first coherent visible-frame acknowledgement: absent
 ```
 
 ## Required transaction
 
 ```txt
-ClientJoinCommand
-  -> allocate attempt identity and generation
-  -> normalize and validate code and display name
-  -> connect without canonical room mutation
-  -> challenge host presence
-  -> validate canonical HostJoinAck and room admission
-  -> Accepted or typed non-accepted result
-  -> atomic session commit or complete rollback
-  -> late predecessor quarantine
-  -> bounded evidence
-  -> first accepted-lobby frame acknowledgement
+SessionTransitionCommand
+  -> validate predecessor revisions
+  -> prepare detached session/runtime/UI candidates
+  -> validate cross-domain invariants
+  -> commit every participant or none
+  -> publish CrossStoreTransitionResult
+  -> bind network messages to the transition generation
+  -> derive readiness
+  -> publish CoherentFrameEnvelope and FirstCoherentFrameAck
 ```
 
 ## Validation boundary
 
-Documentation only. Runtime source, networking, gameplay, rendering, dependencies, package scripts and deployment were not changed. No input-safety, room-membership, host-presence, timeout, cancellation, retry-isolation, transport-parity or visible-frame claim is made until focused fixtures pass on `main`.
+Documentation only. Runtime source, networking, gameplay, rendering, dependencies, package scripts and deployment were not changed. No atomic transition, rollback, frame-coherence or production-readiness claim is made until focused fixtures pass on `main`.
