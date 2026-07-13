@@ -1,6 +1,6 @@
 # HorrorCorridor Known Gaps
 
-**Updated:** `2026-07-13T03-31-44-04-00`
+**Updated:** `2026-07-13T03-38-31-04-00`
 
 ## Summary
 
@@ -11,7 +11,7 @@ The highest current gap is client join-attempt admission. The UI and session sto
 **Goal:** preserve the ordered multiplayer authority gaps while placing validated, cancellable client join admission before canonical client lobby state.
 
 - [x] Preserve prior identity, capacity, transport, packet, roster, lifecycle, simulation, rendering and proof findings.
-- [x] Add the client join-attempt admission gap.
+- [x] Add and centrally reconcile the client join-attempt admission gap.
 - [ ] Implement and prove the complete multiplayer authority chain.
 
 ## Primary ordered gaps
