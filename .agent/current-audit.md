@@ -1,28 +1,28 @@
 # HorrorCorridor Current Audit
 
 **Repository:** `LuminaryLabs-Publish/HorrorCorridor`  
-**Updated:** `2026-07-12T22-29-30-04-00`  
+**Updated:** `2026-07-13T01-08-28-04-00`  
 **Branch:** `main`  
-**Status:** `lobby-capacity-admission-authority-audited`
+**Status:** `protocol-semantic-admission-authority-audited`
 
 ## Summary
 
 The repository retains a 29-kit browser runtime spanning application routing, sessions, lobby state, PeerJS, a same-origin `BroadcastChannel` bridge, deterministic maze bootstrap, movement, interactions, ooze, authoritative snapshots, Three.js rendering, bloom, minimap, diagnostics and cleanup.
 
-The current boundary is lobby-capacity admission. Rooms declare `maxPlayers: 4`, yet remote connection events, local bridge connection packets, host-created placeholders and direct store mutations can all extend the roster without consulting that limit. Protocol validation accepts any structurally valid player-array length, and run bootstrap maps every supplied lobby member into gameplay state.
+The current boundary is transport-independent protocol semantic admission. `deserializeProtocolMessage()` validates the protocol version, finite numeric primitives and broad object/array shape, but it does not enforce many TypeScript unions or cross-field invariants. Structurally valid messages can therefore contradict their own room, snapshot, actor, host or tick identities before reaching store, route, simulation and render consumers.
 
 ## Plan ledger
 
-**Goal:** admit every lobby member through one room-revision and slot-reservation authority before the member can affect the roster, bootstrap, protocol publications or visible frames.
+**Goal:** require one typed semantic-admission result before a decoded protocol candidate can mutate canonical state or presentation.
 
 - [x] Compare the full Publish inventory and central ledger.
 - [x] Exclude `TheCavalryOfRome`.
 - [x] Verify all nine eligible repositories have root `.agent` state.
 - [x] Select only HorrorCorridor as the oldest eligible central entry.
-- [x] Read room creation, transport admission, session store, lobby UI, protocol validation and run bootstrap source.
+- [x] Read protocol message types, serializers, host/client transports and GameShell consumers.
 - [x] Preserve the complete interaction loop, active domains and 29-kit service census.
-- [x] Add the timestamped lobby-capacity audit family.
-- [ ] Implement and prove capacity authority.
+- [x] Add the timestamped protocol-semantic audit family.
+- [ ] Implement and prove semantic admission.
 
 ## Selection state
 
@@ -33,7 +33,7 @@ new eligible repositories: 0
 central-ledger-missing eligible repositories: 0
 root-.agent-missing eligible repositories: 0
 selected repository: LuminaryLabs-Publish/HorrorCorridor
-selected central timestamp: 2026-07-12T20-20-02-04-00
+selected central timestamp: 2026-07-12T22-44-30-04-00
 ```
 
 ## Complete interaction loop
@@ -41,26 +41,23 @@ selected central timestamp: 2026-07-12T20-20-02-04-00
 ```txt
 browser route
   -> choose solo, host or client
+  -> create room/session and optional transport
 
-host setup
-  -> create room with maxPlayers = 4
-  -> install PeerJS and/or local bridge transport
-  -> display host lobby and Add guest control
+PeerJS message path
+  -> receive raw data
+  -> deserializeProtocolMessage()
+  -> validate version and broad structural shape
+  -> return ProtocolMessage without semantic relation result
 
-member intake
-  -> remote connection-open or local client-connect arrives
-  -> GameShell creates or updates a connected guest
-  -> sessionStore upserts the player without capacity admission
-  -> host may also append arbitrary placeholder guests
-  -> lobby displays players.length without full-state semantics
+local bridge path
+  -> retains the earlier packet-admission gap
+  -> may bypass deserializeProtocolMessage entirely
 
-run start
-  -> host presses Start run
-  -> bootstrap receives complete lobbyPlayers array
-  -> createInitialGameState maps every source player into gameplay actors
-  -> active room still reports maxPlayers = 4
-  -> START_GAME and SYNC publish the over-capacity roster
-  -> Three.js world, HUD and minimap render successor state
+consumer path
+  -> GameShell handles START_GAME, SYNC and LOBBY_EVENT
+  -> GameCanvas/host consumers handle PLAYER_UPDATE and TRY_INTERACT
+  -> session/runtime/UI stores mutate
+  -> world, HUD, minimap, completion and overlays render successor state
 ```
 
 ## Domains in use
@@ -69,17 +66,15 @@ run start
 application shell and screen routing
 UI loading pause completion settings and terminal projection
 session room roster identity readiness and reset
-room join-code host identity and declared capacity
-lobby member candidate reservation admission and retirement
+room join-code host identity capacity and lifecycle
 transport mode reachability and lifecycle
 PeerJS signalling and DataConnection ownership
-BroadcastChannel namespace and local transport
-local packet schema capability generation and sequencing
-connection lease actor binding and retirement
-protocol construction serialization source admission and deduplication
+BroadcastChannel namespace local transport and packet admission
+protocol construction serialization structural decoding and semantic admission
+message identity source room actor revision and request correlation
 lobby membership readiness start and bootstrap
 runtime lifecycle clock cadence and frame scheduling
-seeded maze topology and deterministic bootstrap
+seeded maze topology deterministic bootstrap and snapshot construction
 snapshot publication acceptance delivery and backpressure
 keyboard pointer lock focus and input lifecycle
 movement collision camera prediction and host admission
@@ -103,7 +98,7 @@ peer-host-transport-kit: PeerJS host, BroadcastChannel bridge, connection map, b
 peer-client-transport-kit: PeerJS client, BroadcastChannel bridge, connect, send, status, disconnect, destroy
 peer-event-bus-kit: typed transport events, subscription, cleanup
 protocol-message-construction-kit: START_GAME, PLAYER_UPDATE, TRY_INTERACT, SYNC, LOBBY_EVENT
-protocol-serialization-kit: encode, decode, version, structural shape validation
+protocol-serialization-kit: encode, decode, version and structural shape validation
 maze-snapshot-bootstrap-kit: seed, maze, players, cubes, anomaly, initial snapshot
 seeded-maze-rng-kit: topology, placement, target sequence
 first-person-input-kit: keyboard, pointer lock, look, snapshots
@@ -120,106 +115,90 @@ corridor-post-processing-kit: composer, bloom, sizing, render, disposal
 corridor-minimap-kit: maze, players, cubes, ooze, heading
 runtime-debug-frame-kit: activation, bounded capture, overlay, export
 runtime-resource-cleanup-kit: loop, subscriptions, listeners, observers, GPU cleanup
-package-validation-kit: build, lint, harness, visual, live-player checks
+package-validation-kit: build, lint, harness, visual and live-player checks
 ```
 
 ## Source-backed findings
 
 ```txt
-room declaration maxPlayers: 4
-GameShell host connection-open admission checks maxPlayers: no
-createHost PeerJS candidate map checks capacity: no
-createHost local client-connect checks capacity: no
-host Add guest control disabled at capacity: no
-addGuestPlaceholder checks capacity: no
-sessionStore setLobbyPlayers checks capacity: no
-sessionStore upsertLobbyPlayer checks capacity: no
-protocol isRoomState checks players.length <= maxPlayers: no
-createInitialGameState checks sourcePlayers length: no
-bootstrap copies all sourcePlayers into room and actor snapshots: yes
-lobby displays players.length / maxPlayers: no
-capacity revision or reservation identity: no
-first capacity-consistent visible frame acknowledgement: no
+RoomState.phase enum enforced at runtime: no
+LobbyPlayer.connectionState enum enforced: no
+snapshot appState/gameState enums enforced: no
+TRY_INTERACT action enum enforced: no
+SYNC reason enum enforced: no
+LOBBY_EVENT event enum enforced: no
+optional requestId type validated: no
+envelope roomId == payload room.roomId: no
+payload room == snapshot.room: no
+SYNC authoritativeTick == snapshot.tick: no
+START_GAME maxPlayers == room.maxPlayers: no
+START_GAME hostPlayer.id == room.hostId: no
+LOBBY_EVENT players == room.players: no
+senderId == payload playerId: no
+duplicate player/cube/cell IDs rejected: no
+sequence/tick/maxPlayers integer and range policy: absent
+typed semantic admission result: absent
+first semantically admitted frame acknowledgement: absent
 ```
 
 ## Concrete failure path
 
 ```txt
-room declares maxPlayers = 4
-  -> host receives more unique connection-open events or presses Add guest repeatedly
-  -> each member is appended to lobbyPlayers and room.players
-  -> visible player count exceeds four
-  -> host starts run
-  -> createInitialGameState maps every supplied player
-  -> active room still advertises maxPlayers = 4
-  -> START_GAME and SYNC distribute the contradictory state
-  -> clients can render an over-capacity roster and actor set
+receive a version-1 structurally valid SYNC
+  -> envelope roomId names room A
+  -> payload room names room B
+  -> snapshot room names room C
+  -> authoritativeTick differs from snapshot.tick
+  -> reason or gameState uses an undeclared string
+  -> decoder returns the message
+  -> consumer installs payload.room and payload.snapshot independently
+  -> route/readiness and visible presentation can cite contradictory state
 ```
 
 ## Required parent domain
 
 ```txt
-corridor-lobby-capacity-admission-authority-domain
+corridor-protocol-semantic-admission-authority-domain
 ```
 
 ## Candidate kits
 
 ```txt
-room-capacity-policy-kit
-lobby-slot-id-kit
-lobby-slot-reservation-kit
-lobby-member-candidate-kit
-lobby-member-source-classification-kit
-lobby-capacity-revision-kit
-lobby-capacity-fingerprint-kit
-lobby-member-identity-uniqueness-kit
-lobby-connection-lease-capacity-kit
-placeholder-member-admission-kit
-lobby-capacity-result-kit
-lobby-roster-commit-kit
-lobby-slot-release-kit
-lobby-capacity-rejection-observation-kit
-lobby-capacity-journal-kit
-bootstrap-roster-capacity-gate-kit
-protocol-room-capacity-validation-kit
-first-capacity-consistent-frame-ack-kit
-remote-fifth-player-fixture-kit
-local-bridge-fifth-player-fixture-kit
-placeholder-capacity-fixture-kit
-duplicate-member-no-capacity-consumption-fixture-kit
-reservation-cancel-release-fixture-kit
-over-capacity-protocol-rejection-fixture-kit
-capacity-valid-bootstrap-fixture-kit
+protocol-candidate-id-kit
+protocol-exact-enum-schema-kit
+protocol-optional-field-schema-kit
+protocol-numeric-range-policy-kit
+protocol-collection-invariant-kit
+protocol-unique-identity-kit
+protocol-envelope-payload-relation-kit
+protocol-room-snapshot-consistency-kit
+protocol-actor-source-binding-kit
+protocol-tick-revision-consistency-kit
+protocol-semantic-admission-result-kit
+protocol-canonicalization-kit
+protocol-rejection-observation-kit
+protocol-admission-journal-kit
+first-protocol-admitted-frame-ack-kit
+message-enum-rejection-fixture-kit
+room-identity-mismatch-fixture-kit
+snapshot-room-mismatch-fixture-kit
+tick-mismatch-fixture-kit
+duplicate-identity-fixture-kit
+peerjs-local-bridge-semantic-parity-fixture-kit
 ```
 
 ## Required transaction
 
 ```txt
-LobbyMemberAdmissionCommand
-  -> bind room ID, room generation and expected roster revision
-  -> classify remote connection, local bridge, placeholder, restore or migration source
-  -> validate candidate identity and transport ownership
-  -> reserve one slot against the current capacity revision
-  -> reject Full, Duplicate, Stale or Invalid with zero roster mutation
-  -> commit one canonical member and successor roster revision
-  -> consume or release the reservation exactly once
-  -> publish capacity count, remaining slots and fingerprint
-  -> allow start sealing only when players.length <= maxPlayers
-  -> reject over-capacity protocol room/snapshot payloads
-  -> acknowledge the first visible frame citing the committed revision
-```
-
-## Invariants
-
-```txt
-0 <= committed player count <= maxPlayers
-one canonical member consumes at most one slot
-candidate and placeholder paths use the same admission authority
-rejected or cancelled requests consume no durable slot
-room.players and lobbyPlayers share one roster revision
-bootstrap cannot admit an invalid roster
-protocol decode cannot accept players.length > maxPlayers
-visible player count cites the same capacity revision as the roster
+ProtocolMessageCandidate
+  -> structural decode
+  -> exact enum, optional-field, range and collection checks
+  -> envelope/room/snapshot/actor/tick relation checks
+  -> source, room generation and expected-revision admission
+  -> Accepted or typed rejection
+  -> one canonical atomic effect or zero mutation
+  -> bounded observation and journal
+  -> first visible frame acknowledgement
 ```
 
 ## Validation boundary
