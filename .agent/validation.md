@@ -1,23 +1,22 @@
 # HorrorCorridor Validation
 
-**Updated:** `2026-07-13T11-58-45-04-00`
+**Updated:** `2026-07-13T17-40-04-04-00`
 
 ## Summary
 
-Source inspection confirms one application-created renderer/composer/world generation, no product-owned context-loss/restoration listeners, no context/resource generations, no fallback and no recovered-frame acknowledgement. This documentation pass does not prove failure on every browser or corrected recovery because no implementation or executable context-loss fixture exists.
+Source inspection confirms that host start checks only host mode and room existence, crosses asynchronous frame/timer waits without a loading generation, commits local playable state before two independent broadcasts, and has no client preparation/commit acknowledgement or coherent multiplayer-frame result. This documentation pass does not prove a runtime failure or corrected behavior because no implementation or executable fixture was added.
 
 ## Plan ledger
 
-**Goal:** record exactly what source inspection proves and withhold recovery claims until deterministic source, build and deployed-browser fixtures pass.
+**Goal:** record exactly what source inspection proves and withhold multiplayer-start claims until deterministic source, build and deployed-browser fixtures pass.
 
 - [x] Compare the full Publish inventory and central ledger.
 - [x] Verify central-ledger and root `.agent` coverage for all nine eligible repositories.
 - [x] Select HorrorCorridor as the oldest eligible central entry.
-- [x] Inspect renderer, post-processing, animation loop and `GameCanvas` lifecycle.
+- [x] Inspect `GameShell.tsx` host/client start flow and protocol message types.
 - [x] Preserve the 29-kit and service census.
-- [x] Add the timestamped WebGL recovery audit family.
+- [x] Add the timestamped host-start audit family.
 - [x] Refresh root documentation and machine registry.
-- [x] Prepare central ledger and internal change log.
 - [ ] Run implementation, build and deployed-browser fixtures after the authority exists.
 
 ## Change scope
@@ -27,7 +26,6 @@ runtime source changed: no
 network behavior changed: no
 gameplay behavior changed: no
 render behavior changed: no
-WebGL lifecycle behavior changed: no
 package scripts changed: no
 dependencies changed: no
 deployment changed: no
@@ -41,41 +39,33 @@ documentation changed: yes
 ```txt
 full LuminaryLabs-Publish repository inventory
 central Publish repo ledger state
-root .agent presence for all nine eligible repositories
-HorrorCorridor-V1/package.json
-HorrorCorridor-V1/src/features/render/three/createRenderer.ts
-HorrorCorridor-V1/src/features/render/three/createPostProcessing.ts
-HorrorCorridor-V1/src/features/render/three/animationLoop.ts
-HorrorCorridor-V1/src/components/game/GameCanvas.tsx
-HorrorCorridor current root .agent state
+root .agent state for the selected repository
+HorrorCorridor-V1/src/components/game/GameShell.tsx
+HorrorCorridor-V1/src/features/networking/protocol/messageTypes.ts
+current HorrorCorridor root .agent state
 ```
 
 ## Confirmed by inspection
 
 ```txt
-renderer constructed once in initializeRuntime: yes
-composer and render passes constructed once: yes
-world resource graph constructed once: yes
-initialized guard exists: yes
-renderer canvas appended before RAF start: yes
-rendering readiness set true before first proven visible frame: yes
-frame submission through postProcessing.render: yes
-successor RAF scheduled after onFrame returns: yes
-frame callback exception containment: no
-application webglcontextlost listener: no
-application webglcontextrestored listener: no
-context/resource generations: no
-render-submission lease: no
-rendering readiness downgrade on context loss: no
-WebGL-independent fallback: no
-resource rebuild preparation receipts: no
-probe-frame result: no
-atomic recovered-generation adoption: no
-first recovered frame acknowledgement: no
-WEBGL_lose_context fixture: no
+host-mode check: yes
+room-exists check: yes
+all-ready check: no
+connected sealed-roster check: no
+room/roster/transport expected revision: no
+start attempt identity: no
+loading generation: no
+cancellation check after awaits: no
+host local commit before broadcasts: yes
+START_GAME and SYNC sent separately: yes
+shared start correlation identity: no
+protocol start acknowledgement message: no
+client preparation result: no
+host waits for client commit acknowledgement: no
+client SYNC independently enters PLAYING: yes
+aggregate rollback: no
+first coherent multiplayer-frame acknowledgement: no
 ```
-
-Three.js may own internal context behavior. The confirmed gap is the absence of application-level policy, evidence and cross-participant recovery proof.
 
 ## Documentation checks
 
@@ -87,7 +77,7 @@ architecture audit: yes
 render audit: yes
 gameplay audit: yes
 interaction audit: yes
-WebGL lifecycle audit: yes
+lobby-start audit: yes
 deploy audit: yes
 central-sync audit: yes
 kit registry refreshed: yes
@@ -114,23 +104,19 @@ deployed-origin smoke
 ## Missing executable fixtures
 
 ```txt
-loss before first frame
-loss during solo/host/client frames
-loss while paused/completed
-restore after resize/DPR change
-renderer preparation failure
-composer/render-target preparation failure
-world-resource preparation failure
-second loss during recovery
-unmount during recovery
-single successor RAF generation
-no duplicate simulation/network mutation
-fallback visibility
-rendering-readiness convergence
-first recovered frame correlation
+unready member start
+disconnected member start
+join/leave/ready change during loading
+route or transport replacement during loading
+START_GAME/SYNC reorder and duplication
+wrong-room and wrong-sender admission
+client prepare timeout
+host/client commit failure and rollback
+late acknowledgement after cancellation
+first coherent participant frame
 source/build/deployed parity
 ```
 
 ## Claims intentionally withheld
 
-No claim is made for application-owned context recovery, complete GPU-resource reconstruction, bounded gameplay/network continuation, fallback coverage, rendering-readiness correctness or recovered visible-frame proof.
+No claim is made for sealed roster admission, readiness enforcement, loading cancellation, start-message correlation, atomic host/client commit, rollback, visible convergence or production readiness.
