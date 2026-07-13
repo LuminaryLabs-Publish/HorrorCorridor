@@ -1,6 +1,6 @@
 # HorrorCorridor Validation
 
-**Updated:** `2026-07-13T03-31-44-04-00`
+**Updated:** `2026-07-13T03-38-31-04-00`
 
 ## Summary
 
@@ -12,11 +12,12 @@ Source inspection confirms that the client commits provisional lobby state befor
 
 - [x] Compare the full Publish inventory and central ledger.
 - [x] Verify central-ledger and root `.agent` coverage for all nine eligible repositories.
-- [x] Select HorrorCorridor as the oldest eligible repository.
+- [x] Select HorrorCorridor because repo-local documentation was newer than central tracking.
 - [x] Inspect join form, client session mutation, client transport and lobby projection.
 - [x] Preserve the 29-kit and service census.
-- [x] Add the timestamped client-join audit family.
+- [x] Add the timestamped client-join reconciliation family.
 - [x] Refresh root documentation and machine registry.
+- [x] Prepare the central ledger and internal change log.
 - [ ] Run implementation, build and deployed-browser fixtures after the authority exists.
 
 ## Change scope
@@ -41,10 +42,10 @@ complete LuminaryLabs-Publish repository inventory
 central Publish repo ledger state
 all nine eligible root .agent entrypoints
 HorrorCorridor-V1/src/components/menus/JoinMenu.tsx
-HorrorCorridor-V1/src/components/menus/LobbyScreen.tsx
 HorrorCorridor-V1/src/components/game/GameShell.tsx
 HorrorCorridor-V1/src/features/networking/peer/createClient.ts
 HorrorCorridor current root .agent state
+repo-local client-join audit family at 2026-07-13T03-31-44-04-00
 ```
 
 ## Confirmed by inspection
@@ -87,6 +88,7 @@ gameplay audit: yes
 interaction audit: yes
 join-attempt audit: yes
 deploy audit: yes
+central-sync audit: yes
 kit registry refreshed: yes
 central ledger update: current run
 central internal change log: current run
