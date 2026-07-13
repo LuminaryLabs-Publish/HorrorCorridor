@@ -2,27 +2,27 @@
 
 **Repository:** `LuminaryLabs-Publish/HorrorCorridor`  
 **Branch:** `main`  
-**Updated:** `2026-07-12T20-20-02-04-00`  
-**Status:** `local-bridge-packet-admission-fanout-authority-audited`
+**Updated:** `2026-07-12T22-29-30-04-00`  
+**Status:** `lobby-capacity-admission-authority-audited`
 
 ## Summary
 
 HorrorCorridor is a cooperative first-person procedural maze with solo, host and client routes, PeerJS, a same-origin `BroadcastChannel` bridge, deterministic bootstrap, authoritative snapshots, interactions, ooze pressure, Three.js rendering, bloom, minimap and diagnostics.
 
-The current audit isolates local-bridge packet authority. Packet identity, connection ownership and session capability are not validated at runtime, and host broadcast posts one untargeted packet per local connection. Every local client accepts every copy, so `N` clients produce `N²` message events for one logical broadcast.
+The current audit isolates lobby-capacity admission. Every room declares `maxPlayers: 4`, but PeerJS and local-bridge connection admission, the host `Add guest` control, Zustand roster mutation, protocol decoding and run bootstrap all accept arbitrarily large player arrays. The visible lobby can therefore exceed its declared capacity and the host can materialize and publish an over-capacity gameplay roster.
 
 ## Plan ledger
 
-**Goal:** place one generation-bound packet and fanout authority between raw browser-channel observations and lobby, gameplay, protocol or rendering consumers.
+**Goal:** place one revisioned capacity authority between connection candidates, placeholder requests, roster mutation, run bootstrap and visible lobby/game state.
 
 - [x] Compare all ten accessible Publish repositories.
 - [x] Exclude `TheCavalryOfRome`.
 - [x] Confirm all nine eligible repositories have central-ledger and root `.agent` coverage.
 - [x] Select only HorrorCorridor as the oldest eligible entry.
-- [x] Preserve the complete interaction loop, domains, 29 kits and services.
-- [x] Add the local-bridge packet audit family.
-- [x] Refresh root documentation and machine registry.
-- [ ] Implement capability admission, connection leases, exact-once fanout and fixtures.
+- [x] Preserve the complete interaction loop, active domains, 29 implemented kits and services.
+- [x] Add the timestamped lobby-capacity audit family.
+- [x] Refresh required root documentation and machine registry.
+- [ ] Implement reservation, capacity admission, typed rejection and executable fixtures.
 
 ## Read first
 
@@ -30,45 +30,45 @@ The current audit isolates local-bridge packet authority. Packet identity, conne
 2. `.agent/next-steps.md`
 3. `.agent/known-gaps.md`
 4. `.agent/validation.md`
-5. `.agent/trackers/2026-07-12T20-20-02-04-00/project-breakdown.md`
-6. `.agent/architecture-audit/2026-07-12T20-20-02-04-00-local-bridge-packet-authority-dsk-map.md`
-7. `.agent/local-bridge-audit/2026-07-12T20-20-02-04-00-capability-lease-exact-once-contract.md`
+5. `.agent/trackers/2026-07-12T22-29-30-04-00/project-breakdown.md`
+6. `.agent/architecture-audit/2026-07-12T22-29-30-04-00-lobby-capacity-admission-dsk-map.md`
+7. `.agent/lobby-capacity-audit/2026-07-12T22-29-30-04-00-max-player-reservation-commit-contract.md`
 
 ## Current authority boundary
 
 ```txt
-corridor-local-bridge-packet-admission-fanout-authority-domain
+corridor-lobby-capacity-admission-authority-domain
 ```
 
 ## Source finding
 
 ```txt
-channel namespace: horrorcorridor:<joinCode>
-runtime packet schema: absent
-session generation/capability: absent
-connection lease ownership: absent
-unknown-connection message rejection: absent
-disconnect actor/owner match: absent
-broadcast posts per connection: yes
-broadcast targetPeerId: null
-client accepts null target: yes
-N clients -> N² client message events: yes
-first visible broadcast-frame acknowledgement: absent
+room maxPlayers declaration: 4
+connection-open capacity check: absent
+local client-connect capacity check: absent
+Add guest capacity check: absent
+session-store roster capacity invariant: absent
+protocol players.length <= maxPlayers validation: absent
+bootstrap capacity check: absent
+visible full/capacity state: absent
+first capacity-consistent frame acknowledgement: absent
 ```
 
-## Latest audit family
+## Required transaction
 
 ```txt
-.agent/trackers/2026-07-12T20-20-02-04-00/project-breakdown.md
-.agent/turn-ledger/2026-07-12T20-20-02-04-00.md
-.agent/architecture-audit/2026-07-12T20-20-02-04-00-local-bridge-packet-authority-dsk-map.md
-.agent/render-audit/2026-07-12T20-20-02-04-00-duplicate-local-broadcast-visible-frame-gap.md
-.agent/gameplay-audit/2026-07-12T20-20-02-04-00-forged-packet-quadratic-fanout-loop.md
-.agent/interaction-audit/2026-07-12T20-20-02-04-00-local-packet-lease-delivery-map.md
-.agent/local-bridge-audit/2026-07-12T20-20-02-04-00-capability-lease-exact-once-contract.md
-.agent/deploy-audit/2026-07-12T20-20-02-04-00-local-bridge-adversarial-fixture-gate.md
+LobbyMemberAdmissionCommand
+  -> bind room, roster revision and transport generation
+  -> classify remote connection, placeholder or restore source
+  -> reserve one slot without mutating the live roster
+  -> validate maxPlayers, identity uniqueness and live ownership
+  -> return Accepted, Full, Duplicate, Stale or Rejected
+  -> commit one canonical roster revision
+  -> release or consume the reservation exactly once
+  -> allow bootstrap only from a capacity-valid sealed roster
+  -> publish the first matching visible lobby or gameplay frame
 ```
 
 ## Validation boundary
 
-Documentation only. Runtime, network, gameplay, rendering, dependencies, package scripts and deployment were not changed.
+Documentation only. Runtime source, networking, gameplay, rendering, dependencies, package scripts and deployment were not changed. No capacity enforcement, reservation, over-capacity rejection, rollback or visible-frame claim is made until focused fixtures pass on `main`.
