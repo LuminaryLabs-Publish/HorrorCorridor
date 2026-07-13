@@ -1,145 +1,144 @@
 # HorrorCorridor Known Gaps
 
-**Updated:** `2026-07-13T03-38-31-04-00`
+**Updated:** `2026-07-13T07-00-29-04-00`
 
 ## Summary
 
-The highest current gap is client join-attempt admission. The UI and session stores treat a requested room as joined before validated input, host-presence proof or room-membership acknowledgement exists. The retained transport, protocol, roster and runtime authority gaps remain open.
+The highest current gap is cross-store session transition coherence. Session, runtime and UI are mutated through independent setter calls, so route, lobby, gameplay, snapshot, readiness and visible presentation can temporarily or permanently cite different transitions. The retained client-join, transport, protocol, roster, simulation and rendering gaps remain open.
 
 ## Plan ledger
 
-**Goal:** preserve the ordered multiplayer authority gaps while placing validated, cancellable client join admission before canonical client lobby state.
+**Goal:** place atomic cross-store transition authority before all multi-domain route and network adoption while preserving every previously documented multiplayer gap.
 
-- [x] Preserve prior identity, capacity, transport, packet, roster, lifecycle, simulation, rendering and proof findings.
-- [x] Add and centrally reconcile the client join-attempt admission gap.
-- [ ] Implement and prove the complete multiplayer authority chain.
+- [x] Preserve prior identity, capacity, join, transport, packet, roster, lifecycle, simulation, rendering and proof findings.
+- [x] Add and centrally reconcile the cross-store transition gap.
+- [ ] Implement and prove the complete authority chain.
 
 ## Primary ordered gaps
 
 ```txt
-1. room ID, join-code, host-player and host-peer allocation authority
-2. room capacity policy, slot reservation and capacity revision
-3. member candidate identity, duplicate detection and atomic admission
-4. client join input, attempt identity, timeout, acknowledgement and cancellation
-5. local bridge session capability and generation
-6. local packet runtime schema, ID and sequence admission
-7. local connection lease and canonical actor binding
-8. local message and disconnect ownership
-9. exact-once local broadcast fanout and per-recipient results
-10. canonical lobby member, peer and gameplay-player identity
-11. explicit transport mode, reachability handshake and fallback
-12. actual data-channel-open admission and connection generation
-13. scoped transport-error classification and exactly-once retirement
-14. late connection-event quarantine and replacement supersession
-15. authoritative host-message source, room and generation admission
-16. protocol exact enums, ranges, unique IDs and cross-field semantic admission
-17. room-roster revision, fingerprint and sealed start eligibility
-18. sealed lobby start transaction and correlated initial SYNC
-19. loading transition generation, cancellation and atomic commit
-20. run exit, session epoch and late-message quarantine
-21. runtime startup acquisition, rollback and clean retry
-22. runtime readiness leases and generation fencing
-23. render-surface resolution, revision and frame correlation
-24. active gameplay presentation and consumer acknowledgement
-25. debug-observability capability, redaction and revocation
-26. focus, visibility and held-control retirement
-27. runtime frame-failure containment and cold restart
-28. canonical runtime clock and temporal provenance
-29. snapshot acceptance ordering and monotonic revision
-30. explicit interaction targets and cube/slot claims
-31. active-run disconnect and reconnect claims
-32. monotonic terminal outcome authority
-33. host cadence and fixed simulation authority
-34. host movement admission and client reconciliation
-35. snapshot payload budgeting and backpressure
-36. authoritative randomness, checkpoint and replay
-37. replicated pause/resume convergence
+1. cross-store session/runtime/UI transition identity, preparation and atomic commit
+2. coherent room/roster/snapshot/identity/screen/readiness invariants
+3. START_GAME/SYNC transition correlation and late-generation quarantine
+4. first coherent visible-frame acknowledgement
+5. room ID, join-code, host-player and host-peer allocation authority
+6. room capacity policy, slot reservation and capacity revision
+7. member candidate identity, duplicate detection and atomic admission
+8. client join input, attempt identity, timeout, acknowledgement and cancellation
+9. local bridge session capability and generation
+10. local packet runtime schema, ID and sequence admission
+11. local connection lease and canonical actor binding
+12. local message and disconnect ownership
+13. exact-once local broadcast fanout and per-recipient results
+14. canonical lobby member, peer and gameplay-player identity
+15. explicit transport mode, reachability handshake and fallback
+16. actual data-channel-open admission and connection generation
+17. scoped transport-error classification and exactly-once retirement
+18. late connection-event quarantine and replacement supersession
+19. authoritative host-message source, room and generation admission
+20. protocol exact enums, ranges, unique IDs and cross-field semantic admission
+21. room-roster revision, fingerprint and sealed start eligibility
+22. sealed lobby start transaction and correlated initial SYNC
+23. loading transition generation, cancellation and atomic commit
+24. run exit, session epoch and late-message quarantine
+25. runtime startup acquisition, rollback and clean retry
+26. runtime readiness leases and generation fencing
+27. render-surface resolution, revision and frame correlation
+28. active gameplay presentation and consumer acknowledgement
+29. debug-observability capability, redaction and revocation
+30. focus, visibility and held-control retirement
+31. runtime frame-failure containment and cold restart
+32. canonical runtime clock and temporal provenance
+33. snapshot acceptance ordering and monotonic revision
+34. explicit interaction targets and cube/slot claims
+35. active-run disconnect and reconnect claims
+36. monotonic terminal outcome authority
+37. host cadence and fixed simulation authority
+38. host movement admission and client reconciliation
+39. snapshot payload budgeting and backpressure
+40. authoritative randomness, checkpoint and replay
+41. replicated pause/resume convergence
 ```
 
-## Current client join gap
+## Current cross-store transition gap
 
 ```txt
-shared host/client join-code grammar: absent
-join-code maxlength and character policy: absent
-display-name bound and character policy: absent
-empty input rejection: absent
-provisional room installed before acknowledgement: yes
-provisional roster installed before acknowledgement: yes
-Joined room projection before acknowledgement: yes
-accepted networking readiness before acknowledgement: yes
-join attempt ID and generation: absent
-bounded PeerJS connect timeout: absent
-bounded host-presence timeout: absent
-bounded room-admission timeout: absent
-host challenge/acknowledgement: absent
-local bridge one-way post reports connected: yes
-typed join result: absent
-idempotent cancellation receipt: absent
-retry generation fence: absent
-late predecessor acknowledgement quarantine: absent
-first accepted-lobby visible-frame acknowledgement: absent
+aggregate transition command/result: absent
+transition ID and generation: absent
+expected session/runtime/UI revisions: absent
+participant prepare receipts: absent
+atomic multi-store commit: absent
+rollback result: absent
+setRoom already updates room.players and lobbyPlayers: yes
+redundant setLobbyPlayers after setRoom: common
+redundant call rewrites room.updatedAt: yes
+host start uses captured room/roster after async loading: yes
+host local state commits before START_GAME/SYNC broadcasts: yes
+START_GAME and SYNC share transition identity: no
+client START_GAME can install room before snapshot/UI/readiness: yes
+GameCanvas validates session/snapshot coherence: no
+HUDOverlay cites a shared participant revision: no
+readiness derives from aggregate commit: no
+first coherent visible-frame acknowledgement: absent
 ```
 
 ## Failure paths
 
-### Unknown requested room
+### START_GAME without correlated SYNC
 
 ```txt
-enter code X
-  -> create and commit provisional room X
-  -> show client lobby and Joined room X
-  -> no host accepts the client
-  -> no bounded timeout or typed room-unavailable result
-  -> provisional membership remains until manual cleanup or an unscoped event
+receive START_GAME
+  -> install room and roster
+  -> update host identity and connection
+  -> retain prior/null authoritative snapshot
+  -> retain prior route and readiness
+  -> visible state can combine new session with predecessor runtime/UI
 ```
 
-### Local bridge false acceptance
+### Stale host bootstrap
 
 ```txt
-BroadcastChannel exists
-  -> create channel for X
-  -> post client-connect
-  -> no host listener or wrong host generation
-  -> client immediately emits connection-open and connected
-  -> UI presents connected lobby without host presence proof
+host captures room and roster
+  -> asynchronous loading steps run
+  -> player joins, leaves or changes readiness
+  -> bootstrap uses captured predecessor values
+  -> no expected roster revision rejects stale candidate
 ```
 
-### Cancel and retry
+### Partial local transition
 
 ```txt
-attempt A starts
-  -> user exits and starts attempt B
-  -> callbacks carry no join-attempt generation
-  -> late A event reaches shared status or message consumers
-  -> B cannot distinguish predecessor ownership
+setRoom succeeds
+  -> subscribers render
+  -> later runtime or UI action fails or is delayed
+  -> no rollback or partial-result classification
+  -> world/HUD/lobby can cite different transitions
 ```
 
 ## Missing authority
 
 ```txt
-ClientJoinCommand
-JoinAttemptId and generation
-shared join-code schema
-display-name policy
-detached join candidate
-explicit transport selection
-bounded transport and acknowledgement deadlines
-host-presence challenge
-source-admitted HostJoinAck
-canonical room manifest
-member-admission result
-atomic accepted-session commit
-complete non-accepted rollback
-idempotent cancellation receipt
-late predecessor quarantine
-bounded observations and journal
-first accepted-lobby frame acknowledgement
+SessionTransitionCommand
+TransitionId and generation
+participant revision counters
+detached session/runtime/UI candidates
+room-roster coherence result
+snapshot-room coherence result
+identity-snapshot binding result
+screen-snapshot coherence result
+readiness derivation result
+participant prepare/commit/rollback receipts
+CrossStoreTransitionResult
+START_GAME/SYNC correlation
+late-generation quarantine
+CoherentFrameEnvelope
+FirstCoherentFrameAck
 ```
 
 ## Retained gaps
 
-All previous room identity, capacity, readiness, local bridge, transport, connection, roster, lobby-start, loading, lifecycle, clock, snapshot, input, movement, interaction, outcome, rendering, debug and deployment findings remain open.
+All previous room identity, capacity, readiness, client join, local bridge, transport, connection, roster, lobby-start, loading, lifecycle, clock, snapshot, input, movement, interaction, outcome, rendering, debug and deployment findings remain open.
 
 ## Do not claim
 
-Do not claim validated join input, host presence, room membership, bounded timeout, exact cancellation, retry isolation, transport parity or accepted-lobby visible-state consistency until the authority and fixtures pass on `main`.
+Do not claim atomic store adoption, stale-transition rejection, rollback safety, START_GAME/SYNC convergence or visible-state coherence until the authority and fixtures pass on `main`.
