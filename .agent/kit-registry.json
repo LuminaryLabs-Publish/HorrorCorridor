@@ -1,26 +1,27 @@
 {
-  "schemaVersion": 85,
-  "generatedAt": "2026-07-12T22-29-30-04-00",
+  "schemaVersion": 86,
+  "generatedAt": "2026-07-12T22-44-30-04-00",
   "repository": "LuminaryLabs-Publish/HorrorCorridor",
   "branch": "main",
-  "status": "lobby-capacity-admission-authority-audited",
-  "selectedBecause": "All nine eligible Publish repositories were centrally tracked and had root .agent state. HorrorCorridor had the oldest eligible central timestamp after excluding TheCavalryOfRome.",
-  "latestTracker": ".agent/trackers/2026-07-12T22-29-30-04-00/project-breakdown.md",
-  "latestTurnLedger": ".agent/turn-ledger/2026-07-12T22-29-30-04-00.md",
+  "status": "lobby-capacity-admission-authority-central-reconciled",
+  "selectedBecause": "All nine eligible Publish repositories were centrally tracked and had root .agent state. HorrorCorridor had a complete repo-local lobby-capacity audit newer than its central ledger entry.",
+  "latestTracker": ".agent/trackers/2026-07-12T22-44-30-04-00/project-breakdown.md",
+  "latestTurnLedger": ".agent/turn-ledger/2026-07-12T22-44-30-04-00.md",
   "latestAudits": {
-    "architecture": ".agent/architecture-audit/2026-07-12T22-29-30-04-00-lobby-capacity-admission-dsk-map.md",
-    "render": ".agent/render-audit/2026-07-12T22-29-30-04-00-over-capacity-roster-visible-state-gap.md",
-    "gameplay": ".agent/gameplay-audit/2026-07-12T22-29-30-04-00-over-capacity-bootstrap-loop.md",
-    "interaction": ".agent/interaction-audit/2026-07-12T22-29-30-04-00-member-capacity-admission-map.md",
-    "lobbyCapacity": ".agent/lobby-capacity-audit/2026-07-12T22-29-30-04-00-max-player-reservation-commit-contract.md",
-    "deploy": ".agent/deploy-audit/2026-07-12T22-29-30-04-00-lobby-capacity-fixture-gate.md"
+    "architecture": ".agent/architecture-audit/2026-07-12T22-44-30-04-00-lobby-capacity-central-reconciliation-dsk-map.md",
+    "render": ".agent/render-audit/2026-07-12T22-44-30-04-00-capacity-visible-frame-central-reconciliation-gap.md",
+    "gameplay": ".agent/gameplay-audit/2026-07-12T22-44-30-04-00-over-capacity-bootstrap-central-reconciliation.md",
+    "interaction": ".agent/interaction-audit/2026-07-12T22-44-30-04-00-member-capacity-central-reconciliation-map.md",
+    "lobbyCapacity": ".agent/lobby-capacity-audit/2026-07-12T22-44-30-04-00-reservation-policy-central-reconciliation-contract.md",
+    "deploy": ".agent/deploy-audit/2026-07-12T22-44-30-04-00-capacity-central-reconciliation-fixture-gate.md",
+    "centralSync": ".agent/central-sync-audit/2026-07-12T22-44-30-04-00-repo-ledger-capacity-reconciliation.md"
   },
   "retainedDetailedAudit": {
-    "timestamp": "2026-07-12T20-20-02-04-00",
-    "status": "local-bridge-packet-admission-fanout-authority-audited",
-    "repoLocalCompletionHead": "41fe59a4c7ab047fb63689cc37a822afc1e2d16d",
-    "tracker": ".agent/trackers/2026-07-12T20-20-02-04-00/project-breakdown.md",
-    "system": ".agent/local-bridge-audit/2026-07-12T20-20-02-04-00-capability-lease-exact-once-contract.md"
+    "timestamp": "2026-07-12T22-29-30-04-00",
+    "status": "lobby-capacity-admission-authority-audited",
+    "repoLocalCompletionHead": "6f4b4446db90e00d8ab7d91cc82fc85c880ae2cc",
+    "tracker": ".agent/trackers/2026-07-12T22-29-30-04-00/project-breakdown.md",
+    "system": ".agent/lobby-capacity-audit/2026-07-12T22-29-30-04-00-max-player-reservation-commit-contract.md"
   },
   "selection": {
     "inventoryCount": 10,
@@ -32,9 +33,9 @@
       "LuminaryLabs-Publish/TheCavalryOfRome"
     ],
     "selectedRepository": "LuminaryLabs-Publish/HorrorCorridor",
-    "reason": "Oldest eligible central timestamp at 2026-07-12T20-20-02-04-00.",
+    "reason": "Repo-local lobby-capacity audit at 2026-07-12T22-29-30-04-00 was newer than central tracking.",
     "ledgerOrderAtSelection": [
-      "HorrorCorridor:2026-07-12T20-20-02-04-00:selected",
+      "HorrorCorridor:central-2026-07-12T20-20-02-04-00:repo-local-2026-07-12T22-29-30-04-00:selected",
       "ZombieOrchard:2026-07-12T20-31-27-04-00",
       "MyCozyIsland:2026-07-12T20-40-56-04-00",
       "TheUnmappedHouse:2026-07-12T20-51-16-04-00",
@@ -169,6 +170,8 @@
     "reservationRaceFixtureAvailable": false,
     "overCapacityProtocolFixtureAvailable": false,
     "capacityBootstrapFixtureAvailable": false,
-    "visibleFrameFixtureAvailable": false
+    "visibleFrameFixtureAvailable": false,
+    "centralLedgerSynchronized": true,
+    "centralChangeLogCreated": true
   }
 }
