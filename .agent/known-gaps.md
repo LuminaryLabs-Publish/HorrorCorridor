@@ -1,136 +1,135 @@
 # HorrorCorridor Known Gaps
 
-**Updated:** `2026-07-12T20-20-02-04-00`
+**Updated:** `2026-07-12T22-29-30-04-00`
 
 ## Summary
 
-The highest current gap is local-bridge packet admission and exact-once fanout. The same-origin `BroadcastChannel` path trusts self-asserted packet identity and connection fields, while host broadcast produces duplicate deliveries that grow quadratically with local client count.
+The highest current gap is lobby-capacity admission. Rooms declare a maximum of four players, but all active member-intake and bootstrap paths can exceed that limit. Previous room identity, packet, transport, roster, lifecycle, simulation, rendering and proof findings remain open.
 
 ## Plan ledger
 
-**Goal:** preserve the ordered multiplayer authority gaps while placing packet capability, lease ownership and exact-once local delivery before further lobby, gameplay or presentation claims.
+**Goal:** preserve the ordered multiplayer authority gaps while placing capacity reservations and capacity-valid roster commits before further lobby, start or presentation claims.
 
-- [x] Preserve prior room identity, transport, roster, protocol, lifecycle, clock, snapshot, movement, rendering and debug findings.
-- [x] Add the local bridge packet and fanout gap.
+- [x] Preserve prior identity, transport, packet, roster, protocol, lifecycle, clock, snapshot, movement, rendering and debug findings.
+- [x] Add the lobby-capacity admission gap.
 - [ ] Implement and prove the complete multiplayer authority chain.
 
 ## Primary ordered gaps
 
 ```txt
 1. room ID, join-code, host-player and host-peer allocation authority
-2. local bridge session capability and generation
-3. local packet runtime schema, ID and sequence admission
-4. local connection lease and canonical actor binding
-5. local message and disconnect ownership
-6. exact-once local broadcast fanout and per-recipient results
-7. canonical lobby member, peer and gameplay-player identity
-8. explicit transport mode, reachability handshake and fallback
-9. actual data-channel-open admission and connection generation
-10. scoped transport-error classification and exactly-once retirement
-11. late connection-event quarantine and replacement supersession
-12. authoritative host-message source, room and generation admission
-13. room-roster revision, fingerprint and sealed start eligibility
-14. sealed lobby start transaction and correlated initial SYNC
-15. loading transition generation, cancellation and atomic commit
-16. run exit, session epoch and late-message quarantine
-17. runtime startup acquisition, rollback and clean retry
-18. runtime readiness leases and generation fencing
-19. render-surface resolution, revision and frame correlation
-20. active gameplay presentation and consumer acknowledgement
-21. debug-observability capability, redaction and revocation
-22. focus, visibility and held-control retirement
-23. runtime frame-failure containment and cold restart
-24. canonical runtime clock and temporal provenance
-25. snapshot acceptance ordering and monotonic revision
-26. explicit interaction targets and cube/slot claims
-27. active-run disconnect and reconnect claims
-28. monotonic terminal outcome authority
-29. host cadence and fixed simulation authority
-30. host movement admission and client reconciliation
-31. snapshot payload budgeting and backpressure
-32. authoritative randomness, checkpoint and replay
-33. replicated pause/resume convergence
+2. room capacity policy, slot reservation and capacity revision
+3. member candidate identity, duplicate detection and atomic admission
+4. local bridge session capability and generation
+5. local packet runtime schema, ID and sequence admission
+6. local connection lease and canonical actor binding
+7. local message and disconnect ownership
+8. exact-once local broadcast fanout and per-recipient results
+9. canonical lobby member, peer and gameplay-player identity
+10. explicit transport mode, reachability handshake and fallback
+11. actual data-channel-open admission and connection generation
+12. scoped transport-error classification and exactly-once retirement
+13. late connection-event quarantine and replacement supersession
+14. authoritative host-message source, room and generation admission
+15. room-roster revision, fingerprint and sealed start eligibility
+16. sealed lobby start transaction and correlated initial SYNC
+17. loading transition generation, cancellation and atomic commit
+18. run exit, session epoch and late-message quarantine
+19. runtime startup acquisition, rollback and clean retry
+20. runtime readiness leases and generation fencing
+21. render-surface resolution, revision and frame correlation
+22. active gameplay presentation and consumer acknowledgement
+23. debug-observability capability, redaction and revocation
+24. focus, visibility and held-control retirement
+25. runtime frame-failure containment and cold restart
+26. canonical runtime clock and temporal provenance
+27. snapshot acceptance ordering and monotonic revision
+28. explicit interaction targets and cube/slot claims
+29. active-run disconnect and reconnect claims
+30. monotonic terminal outcome authority
+31. host cadence and fixed simulation authority
+32. host movement admission and client reconciliation
+33. snapshot payload budgeting and backpressure
+34. authoritative randomness, checkpoint and replay
+35. replicated pause/resume convergence
 ```
 
-## Current local bridge gap
+## Current capacity gap
 
 ```txt
-channel namespace based on join code: yes
-channel namespace treated as discovery only: no
-runtime packet schema validation: absent
-session generation: absent
-client capability/token: absent
-packet ID: absent
-per-lease sequence: absent
-connection lease: absent
-actor/connection owner binding: absent
-unknown client-message connection rejection: absent
-disconnect actor ownership comparison: absent
-broadcast ID: absent
-host posts one packet per local connection: yes
-broadcast targetPeerId null: yes
-client accepts every null-target packet: yes
-exact-once client delivery: absent
-per-recipient result: absent
-first visible broadcast-frame acknowledgement: absent
+room maxPlayers value: 4
+capacity policy object: absent
+capacity revision/fingerprint: absent
+slot reservation: absent
+remote connection capacity check: absent
+local client-connect capacity check: absent
+placeholder capacity check: absent
+store roster invariant: absent
+protocol players.length relation check: absent
+bootstrap capacity check: absent
+full-state UI: absent
+first capacity-consistent frame acknowledgement: absent
 ```
 
 ## Failure paths
 
-### Forged member
+### Connection overflow
 
 ```txt
-same-origin publisher knows join code
-  -> posts client-connect with chosen actor/connection IDs
-  -> host admits open connection
-  -> GameShell admits chosen actor as lobby player
+four members already committed
+  -> another unique connection-open arrives
+  -> GameShell upserts another connected guest
+  -> room.players exceeds maxPlayers
 ```
 
-### Unowned message
+### Placeholder overflow
 
 ```txt
-publisher posts client-message with unknown connection ID
-  -> host forwards peer/message without lease lookup
-  -> protocol/gameplay consumers receive the packet
+host presses Add guest repeatedly
+  -> each request generates a unique player ID
+  -> sessionStore appends every placeholder
+  -> no capacity or reservation result exists
 ```
 
-### Forged disconnect
+### Over-capacity run
 
 ```txt
-publisher posts existing connectionId
-  -> host checks connection ID existence only
-  -> connection closes without proving caller ownership
+over-capacity lobbyPlayers
+  -> host presses Start run
+  -> bootstrap maps every source member into an actor
+  -> active room still declares maxPlayers = 4
+  -> START_GAME and SYNC publish contradictory state
 ```
 
-### Quadratic broadcast
+### Over-capacity protocol acceptance
 
 ```txt
-N local clients
-  -> N host posts
-  -> each client accepts N posts
-  -> N² client events for one logical broadcast
+structurally valid room with players.length > maxPlayers
+  -> serializer validates maxPlayers as a finite number
+  -> validates each player shape
+  -> does not validate the relationship
+  -> payload is accepted
 ```
 
 ## Missing authority
 
 ```txt
-bridge session generation
-scoped client capability
-runtime packet schema
-packet identity and sequence ledger
-connection lease and actor binding
-message/disconnect ownership admission
-broadcast identity and intended recipient set
-exact-once delivery and deduplication
-per-recipient terminal result
-bounded secret-free observations and journal
-first visible local-bridge frame acknowledgement
+canonical room-capacity policy
+room generation and capacity revision
+atomic slot reservation and release
+candidate source classification
+identity uniqueness and connection ownership
+capacity-safe store commit
+capacity-aware protocol validation
+capacity-valid start sealing and bootstrap
+bounded observations and journal
+first capacity-consistent visible frame acknowledgement
 ```
 
 ## Retained gaps
 
-All previous identity, transport, connection, roster, lobby-start, loading, lifecycle, clock, snapshot, input, movement, interaction, outcome, rendering, debug and deployment findings remain open.
+All previous room identity, local bridge, transport, connection, roster, lobby-start, loading, lifecycle, clock, snapshot, input, movement, interaction, outcome, rendering, debug and deployment findings remain open.
 
 ## Do not claim
 
-Do not claim local-bridge authentication, spoof resistance, connection ownership, exact-once fanout, PeerJS parity or visible multiplayer provenance until the authority and fixtures pass on `main`.
+Do not claim four-player enforcement, race-safe final-slot admission, protocol capacity integrity, capacity-valid bootstrap or visible roster consistency until the authority and fixtures pass on `main`.
