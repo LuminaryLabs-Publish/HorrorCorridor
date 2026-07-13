@@ -1,28 +1,28 @@
 # HorrorCorridor Current Audit
 
 **Repository:** `LuminaryLabs-Publish/HorrorCorridor`  
-**Updated:** `2026-07-13T01-08-28-04-00`  
+**Updated:** `2026-07-13T03-31-44-04-00`  
 **Branch:** `main`  
-**Status:** `protocol-semantic-admission-authority-audited`
+**Status:** `client-join-attempt-admission-authority-audited`
 
 ## Summary
 
 The repository retains a 29-kit browser runtime spanning application routing, sessions, lobby state, PeerJS, a same-origin `BroadcastChannel` bridge, deterministic maze bootstrap, movement, interactions, ooze, authoritative snapshots, Three.js rendering, bloom, minimap, diagnostics and cleanup.
 
-The current boundary is transport-independent protocol semantic admission. `deserializeProtocolMessage()` validates the protocol version, finite numeric primitives and broad object/array shape, but it does not enforce many TypeScript unions or cross-field invariants. Structurally valid messages can therefore contradict their own room, snapshot, actor, host or tick identities before reaching store, route, simulation and render consumers.
+The current boundary is client join-attempt admission. Raw join input is weakly normalized, then provisional room, roster, peer identity, lobby projection and networking readiness are committed before any host-presence or room-admission acknowledgement. PeerJS joining has no bounded attempt timeout or typed result. The local bridge emits connection-open and connected immediately after sending a one-way `client-connect` packet.
 
 ## Plan ledger
 
-**Goal:** require one typed semantic-admission result before a decoded protocol candidate can mutate canonical state or presentation.
+**Goal:** require a typed, cancellable and generation-fenced join result before a client can commit canonical room membership or display an accepted lobby.
 
 - [x] Compare the full Publish inventory and central ledger.
 - [x] Exclude `TheCavalryOfRome`.
 - [x] Verify all nine eligible repositories have root `.agent` state.
 - [x] Select only HorrorCorridor as the oldest eligible central entry.
-- [x] Read protocol message types, serializers, host/client transports and GameShell consumers.
+- [x] Read join input, client session mutation, transport connection and lobby projection code.
 - [x] Preserve the complete interaction loop, active domains and 29-kit service census.
-- [x] Add the timestamped protocol-semantic audit family.
-- [ ] Implement and prove semantic admission.
+- [x] Add the timestamped client-join audit family.
+- [ ] Implement and prove client-join admission.
 
 ## Selection state
 
@@ -32,8 +32,9 @@ eligible non-Cavalry repositories: 9
 new eligible repositories: 0
 central-ledger-missing eligible repositories: 0
 root-.agent-missing eligible repositories: 0
+unsynchronized eligible repositories: 0
 selected repository: LuminaryLabs-Publish/HorrorCorridor
-selected central timestamp: 2026-07-12T22-44-30-04-00
+selected central timestamp: 2026-07-13T01-08-28-04-00
 ```
 
 ## Complete interaction loop
@@ -41,31 +42,44 @@ selected central timestamp: 2026-07-12T22-44-30-04-00
 ```txt
 browser route
   -> choose solo, host or client
-  -> create room/session and optional transport
 
-PeerJS message path
-  -> receive raw data
-  -> deserializeProtocolMessage()
-  -> validate version and broad structural shape
-  -> return ProtocolMessage without semantic relation result
+client join
+  -> enter arbitrary room code and display name
+  -> trim/uppercase code and substitute generated code when blank
+  -> generate client peer/player identity
+  -> construct provisional room from requested code
+  -> commit session, room and provisional roster
+  -> show client lobby and Joined room overlay
+  -> mark networking readiness true
+  -> create client transport and call connectToHost()
 
-local bridge path
-  -> retains the earlier packet-admission gap
-  -> may bypass deserializeProtocolMessage entirely
+PeerJS
+  -> open signalling peer
+  -> create DataConnection
+  -> wait for open/error/close without bounded join timeout
+
+local bridge
+  -> create BroadcastChannel from requested code
+  -> post client-connect
+  -> immediately emit connection-open and connected
+  -> require no host acknowledgement
 
 consumer path
-  -> GameShell handles START_GAME, SYNC and LOBBY_EVENT
-  -> GameCanvas/host consumers handle PLAYER_UPDATE and TRY_INTERACT
-  -> session/runtime/UI stores mutate
-  -> world, HUD, minimap, completion and overlays render successor state
+  -> later START_GAME, SYNC or LOBBY_EVENT may replace room and roster
+  -> lobby, world, HUD and minimap render successor state
+
+cancel/retry
+  -> Back to title destroys transport and clears stores
+  -> no JoinAttemptId, generation, terminal receipt or late-event quarantine
 ```
 
 ## Domains in use
 
 ```txt
 application shell and screen routing
-UI loading pause completion settings and terminal projection
-session room roster identity readiness and reset
+UI join loading lobby pause completion settings and terminal projection
+session mode room roster identity readiness and reset
+client join intent validation admission cancellation retry and timeout
 room join-code host identity capacity and lifecycle
 transport mode reachability and lifecycle
 PeerJS signalling and DataConnection ownership
@@ -98,7 +112,7 @@ peer-host-transport-kit: PeerJS host, BroadcastChannel bridge, connection map, b
 peer-client-transport-kit: PeerJS client, BroadcastChannel bridge, connect, send, status, disconnect, destroy
 peer-event-bus-kit: typed transport events, subscription, cleanup
 protocol-message-construction-kit: START_GAME, PLAYER_UPDATE, TRY_INTERACT, SYNC, LOBBY_EVENT
-protocol-serialization-kit: encode, decode, version and structural shape validation
+protocol-serialization-kit: encode, decode, protocol version and structural shape validation
 maze-snapshot-bootstrap-kit: seed, maze, players, cubes, anomaly, initial snapshot
 seeded-maze-rng-kit: topology, placement, target sequence
 first-person-input-kit: keyboard, pointer lock, look, snapshots
@@ -121,84 +135,106 @@ package-validation-kit: build, lint, harness, visual and live-player checks
 ## Source-backed findings
 
 ```txt
-RoomState.phase enum enforced at runtime: no
-LobbyPlayer.connectionState enum enforced: no
-snapshot appState/gameState enums enforced: no
-TRY_INTERACT action enum enforced: no
-SYNC reason enum enforced: no
-LOBBY_EVENT event enum enforced: no
-optional requestId type validated: no
-envelope roomId == payload room.roomId: no
-payload room == snapshot.room: no
-SYNC authoritativeTick == snapshot.tick: no
-START_GAME maxPlayers == room.maxPlayers: no
-START_GAME hostPlayer.id == room.hostId: no
-LOBBY_EVENT players == room.players: no
-senderId == payload playerId: no
-duplicate player/cube/cell IDs rejected: no
-sequence/tick/maxPlayers integer and range policy: absent
-typed semantic admission result: absent
-first semantically admitted frame acknowledgement: absent
+JoinMenu join-code maxlength/pattern: absent
+JoinMenu display-name maxlength/policy: absent
+shared generated/requested join-code schema: absent
+blank input creates unrelated generated code: yes
+provisional room committed before host acknowledgement: yes
+provisional roster committed before host acknowledgement: yes
+client lobby shown before host acknowledgement: yes
+overlay claims Joined room before host acknowledgement: yes
+networking readiness true before admission: yes
+join attempt identity/generation: absent
+PeerJS transport-open timeout: absent
+host-presence timeout: absent
+room-admission acknowledgement: absent
+local bridge one-way post reports connected: yes
+connectToHost result consumed as admission result: no
+typed JoinResult: absent
+cancellation/rollback receipt: absent
+late predecessor event quarantine: absent
+first accepted-lobby visible-frame acknowledgement: absent
 ```
 
-## Concrete failure path
+## Concrete failure paths
 
 ```txt
-receive a version-1 structurally valid SYNC
-  -> envelope roomId names room A
-  -> payload room names room B
-  -> snapshot room names room C
-  -> authoritativeTick differs from snapshot.tick
-  -> reason or gameState uses an undeclared string
-  -> decoder returns the message
-  -> consumer installs payload.room and payload.snapshot independently
-  -> route/readiness and visible presentation can cite contradictory state
+unavailable requested room
+  -> provisional room and local player are committed
+  -> client lobby says Joined room
+  -> no bounded room-unavailable or timeout result
+  -> provisional membership remains until manual exit or an unscoped event
+```
+
+```txt
+BroadcastChannel available but no matching host listener
+  -> client posts client-connect
+  -> client immediately emits connection-open and connected
+  -> lobby presents connected state without host presence or admission proof
+```
+
+```txt
+attempt A is cancelled and attempt B starts
+  -> callbacks carry no JoinAttemptGeneration
+  -> late A status, acknowledgement or message can reach shared consumers
+  -> B cannot prove that the event belongs to its attempt
 ```
 
 ## Required parent domain
 
 ```txt
-corridor-protocol-semantic-admission-authority-domain
+corridor-client-join-attempt-admission-authority-domain
 ```
 
 ## Candidate kits
 
 ```txt
-protocol-candidate-id-kit
-protocol-exact-enum-schema-kit
-protocol-optional-field-schema-kit
-protocol-numeric-range-policy-kit
-protocol-collection-invariant-kit
-protocol-unique-identity-kit
-protocol-envelope-payload-relation-kit
-protocol-room-snapshot-consistency-kit
-protocol-actor-source-binding-kit
-protocol-tick-revision-consistency-kit
-protocol-semantic-admission-result-kit
-protocol-canonicalization-kit
-protocol-rejection-observation-kit
-protocol-admission-journal-kit
-first-protocol-admitted-frame-ack-kit
-message-enum-rejection-fixture-kit
-room-identity-mismatch-fixture-kit
-snapshot-room-mismatch-fixture-kit
-tick-mismatch-fixture-kit
-duplicate-identity-fixture-kit
-peerjs-local-bridge-semantic-parity-fixture-kit
+client-join-command-kit
+join-attempt-id-kit
+join-attempt-generation-kit
+join-code-schema-kit
+display-name-policy-kit
+join-intent-normalization-kit
+join-candidate-kit
+join-attempt-state-kit
+join-attempt-timeout-kit
+join-attempt-cancellation-kit
+join-transport-selection-kit
+host-presence-challenge-kit
+host-join-ack-kit
+canonical-room-manifest-kit
+join-result-kit
+join-session-commit-kit
+join-rollback-kit
+join-late-event-quarantine-kit
+join-observation-kit
+join-journal-kit
+first-joined-lobby-frame-ack-kit
+invalid-code-fixture-kit
+no-host-timeout-fixture-kit
+cancel-retry-fixture-kit
+stale-ack-fixture-kit
+peerjs-local-bridge-join-parity-fixture-kit
 ```
 
 ## Required transaction
 
 ```txt
-ProtocolMessageCandidate
-  -> structural decode
-  -> exact enum, optional-field, range and collection checks
-  -> envelope/room/snapshot/actor/tick relation checks
-  -> source, room generation and expected-revision admission
-  -> Accepted or typed rejection
-  -> one canonical atomic effect or zero mutation
+ClientJoinCommand
+  -> validate session generation
+  -> allocate attempt ID and generation
+  -> normalize and validate code and name
+  -> retain detached candidate
+  -> select explicit transport mode
+  -> open transport under attempt generation
+  -> challenge host presence
+  -> source-admit canonical HostJoinAck
+  -> validate room capacity and member admission
+  -> Accepted or typed non-accepted result
+  -> atomic session commit or complete rollback
+  -> late predecessor quarantine
   -> bounded observation and journal
-  -> first visible frame acknowledgement
+  -> first accepted-lobby visible-frame acknowledgement
 ```
 
 ## Validation boundary
