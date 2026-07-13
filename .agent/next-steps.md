@@ -1,91 +1,100 @@
 # HorrorCorridor Next Steps
 
-**Updated:** `2026-07-13T07-00-29-04-00`
+**Updated:** `2026-07-13T11-58-45-04-00`
 
 ## Summary
 
-Insert a cross-store transition authority between route/network intents and direct session, runtime and UI mutation. Participant domains should prepare detached candidates, validate shared invariants and publish one terminal result before any successor revision becomes visible.
+Insert a WebGL context/resource recovery authority between browser context events and live renderer/composer/world ownership. Rendering readiness must become false on accepted loss and return only after one complete recovered generation produces an acknowledged visible frame.
 
 ## Plan ledger
 
-**Goal:** replace ordered setter sequences with revisioned all-or-nothing participant adoption, rollback and coherent-frame proof.
+**Goal:** replace opaque context restoration with generation-bound loss admission, complete resource preparation, probe validation, atomic adoption and recovered-frame proof.
 
 ### Documentation
 
-- [x] Audit `GameShell`, session/runtime/UI stores, `GameCanvas` and `HUDOverlay`.
-- [x] Preserve the 29-kit inventory and complete domain map.
-- [x] Define the parent DSK and candidate kits.
-- [x] Add architecture, render, gameplay, interaction, state-transition, deploy and central-sync audits.
+- [x] Audit renderer, composer, animation loop and `GameCanvas` lifecycle.
+- [x] Preserve the 29-kit inventory and full domain map.
+- [x] Define the parent DSK and 21 child kits.
+- [x] Add architecture, render, gameplay, interaction, lifecycle, deploy and central-sync audits.
 - [x] Refresh root docs and machine registry.
-- [x] Synchronize the repo ledger and internal change log.
+- [x] Synchronize the central ledger and internal change log.
 
-### Gate 1: identities and revisions
+### Gate 1: identity and lifecycle
 
-- [ ] Add `TransitionId` and monotonic transition generation.
-- [ ] Add session, runtime and UI revision counters.
-- [ ] Require expected predecessor revisions on every transition command.
-- [ ] Reject stale and duplicate transition work with zero participant mutation.
-- [ ] Bind START_GAME, SYNC and late transport events to transition generation.
+- [ ] Add stable `RenderSurfaceId`.
+- [ ] Add monotonic `ContextGeneration` and `ResourceGeneration`.
+- [ ] Add `Ready`, `Lost`, `Restoring`, `Failed` and `Disposed` states.
+- [ ] Install `webglcontextlost` and `webglcontextrestored` adapters.
+- [ ] Reject duplicate, stale and wrong-surface events with zero mutation.
+- [ ] Prevent default on accepted loss only when recovery policy is active.
 
-### Gate 2: detached participant candidates
+### Gate 2: submission and readiness
 
-- [ ] Build session, runtime and UI candidates outside live stores.
-- [ ] Remove redundant `setLobbyPlayers` calls after `setRoom` when one participant candidate already owns roster coherence.
-- [ ] Preserve one room `updatedAt` and roster fingerprint per transition.
-- [ ] Prevent asynchronous loading from committing a stale captured roster.
-- [ ] Return typed prepare results from every participant.
+- [ ] Add a generation-bound render-submission lease.
+- [ ] Reject world/composer submission while Lost, Restoring, Failed or Disposed.
+- [ ] Set rendering readiness false on accepted loss.
+- [ ] Expose lifecycle state through detached diagnostics.
+- [ ] Add a WebGL-independent DOM/CSS fallback.
 
-### Gate 3: cross-domain invariants
+### Gate 3: gameplay/network liveness policy
 
-- [ ] Require `room.players` and `lobbyPlayers` fingerprint equality.
-- [ ] Require snapshot room identity/revision to match session room identity/revision.
-- [ ] Require active peer identity to belong to the accepted roster/snapshot.
-- [ ] Require PLAYING to cite an accepted gameplay snapshot and readiness result.
-- [ ] Require COMPLETED to cite one terminal snapshot/result.
-- [ ] Derive readiness from committed session/runtime capability results.
+- [ ] Define solo loss policy.
+- [ ] Define host loss policy without silently stopping authority publication.
+- [ ] Define client loss policy for transport reception and prediction.
+- [ ] Ensure no duplicate tick, update or interaction request on recovery.
+- [ ] Retire the failed frame-loop generation exactly once.
 
-### Gate 4: atomic commit and rollback
+### Gate 4: resource manifests and preparation
 
-- [ ] Commit session, runtime and UI revisions under one coordinator result.
-- [ ] Publish no participant revision before all prepare checks succeed.
-- [ ] Roll back every participant if commit cannot complete.
-- [ ] Record `Accepted`, `RejectedStale`, `RejectedInvariant`, `Duplicate`, `Cancelled`, `RolledBack` or `Failed`.
-- [ ] Keep a bounded transition journal and observation stream.
+- [ ] Describe renderer capabilities and drawing-buffer state.
+- [ ] Describe composer, passes and render targets.
+- [ ] Describe world meshes, materials, textures and disposal ownership.
+- [ ] Prepare a complete detached successor generation.
+- [ ] Reject incomplete or capability-incompatible candidates.
 
-### Gate 5: presentation
+### Gate 5: probe and atomic adoption
 
-- [ ] Build one `CoherentFrameEnvelope` from committed participant revisions.
-- [ ] Initialize `GameCanvas` only from a coherent session/snapshot envelope.
-- [ ] Make HUD, lobby, minimap and diagnostics cite the same transition revision.
-- [ ] Keep START_GAME-only clients in a typed pending state until correlated state is available.
-- [ ] Publish `FirstCoherentFrameAck` for lobby, playing, paused and completed transitions.
+- [ ] Apply the accepted viewport revision to the candidate.
+- [ ] Submit one deterministic recovery probe frame.
+- [ ] Publish `ProbeAccepted` or `ProbeFailed`.
+- [ ] Adopt renderer, composer and world resources together or none.
+- [ ] Start only one successor RAF generation.
+- [ ] Dispose predecessor resources only after accepted adoption.
 
-### Gate 6: fixtures
+### Gate 6: visible proof
 
-- [ ] Host-start atomic commit fixture.
-- [ ] Roster mutation during loading stale-rejection fixture.
-- [ ] START_GAME/SYNC reorder, duplicate and missing-message fixtures.
-- [ ] Room/roster and snapshot/room mismatch fixtures.
-- [ ] Identity-not-in-snapshot fixture.
-- [ ] PLAYING-without-readiness zero-mutation fixture.
-- [ ] Participant prepare failure fixture.
-- [ ] Partial commit rollback fixture.
-- [ ] First coherent lobby, playing and completion frame fixtures.
+- [ ] Publish `ContextRecoveryResult`.
+- [ ] Publish `FirstRecoveredFrameAck` with context/resource generations.
+- [ ] Keep fallback visible until acknowledgement.
+- [ ] Set rendering readiness true only after acknowledgement.
+- [ ] Correlate debug and public readback with the recovered generation.
+
+### Gate 7: fixtures
+
+- [ ] Loss before first frame.
+- [ ] Loss during solo, host and client frames.
+- [ ] Loss while paused and completed.
+- [ ] Restore before/after resize and DPR change.
+- [ ] Renderer, composer and world preparation failure.
+- [ ] Repeated loss during recovery.
+- [ ] Unmount during recovery.
+- [ ] Cold restart after failed recovery.
 - [ ] Source, production build and deployed-origin parity.
 
 ## Dependency order
 
 ```txt
-transition identity and participant revisions
-  -> detached candidates
-  -> cross-domain invariant validation
-  -> participant prepare receipts
-  -> atomic commit or rollback
-  -> terminal transition result
-  -> coherent frame envelope
-  -> first coherent frame acknowledgement
+surface/context/resource identity
+  -> context event admission
+  -> submission lease and readiness retirement
+  -> simulation/network loss policy
+  -> complete resource candidate
+  -> capability validation and probe
+  -> atomic recovered-generation adoption
+  -> first recovered frame acknowledgement
+  -> fallback/readiness convergence
 ```
 
 ## Completion boundary
 
-Do not claim atomic state adoption, stale-transition rejection, rollback safety or visible-state coherence until the authority and fixture matrix pass on `main`. The retained client-join, transport, protocol, roster, simulation and presentation gaps remain open.
+Do not claim context recovery, GPU-resource parity, presentation liveness or production readiness until the authority and fixture matrix pass on `main`. All retained session, transport, protocol, simulation and cross-store gaps remain open.
