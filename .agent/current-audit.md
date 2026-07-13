@@ -1,28 +1,28 @@
 # HorrorCorridor Current Audit
 
 **Repository:** `LuminaryLabs-Publish/HorrorCorridor`  
-**Updated:** `2026-07-12T20-20-02-04-00`  
+**Updated:** `2026-07-12T22-29-30-04-00`  
 **Branch:** `main`  
-**Status:** `local-bridge-packet-admission-fanout-authority-audited`
+**Status:** `lobby-capacity-admission-authority-audited`
 
 ## Summary
 
 The repository retains a 29-kit browser runtime spanning application routing, sessions, lobby state, PeerJS, a same-origin `BroadcastChannel` bridge, deterministic maze bootstrap, movement, interactions, ooze, authoritative snapshots, Three.js rendering, bloom, minimap, diagnostics and cleanup.
 
-The current boundary is local-bridge packet admission and exact-once fanout. The host and client derive a channel from the join code. Runtime handlers trust caller-supplied `remotePeerId`, `connectionId` and protocol messages without a session capability, connection lease, generation, packet ID or sequence. Host broadcast also posts one `targetPeerId = null` packet per local connection, while every client accepts every null-target packet.
+The current boundary is lobby-capacity admission. Rooms declare `maxPlayers: 4`, yet remote connection events, local bridge connection packets, host-created placeholders and direct store mutations can all extend the roster without consulting that limit. Protocol validation accepts any structurally valid player-array length, and run bootstrap maps every supplied lobby member into gameplay state.
 
 ## Plan ledger
 
-**Goal:** admit local connection, message, disconnect and broadcast effects through one capability- and lease-backed authority before transport events or game state can consume them.
+**Goal:** admit every lobby member through one room-revision and slot-reservation authority before the member can affect the roster, bootstrap, protocol publications or visible frames.
 
 - [x] Compare the full Publish inventory and central ledger.
 - [x] Exclude `TheCavalryOfRome`.
-- [x] Verify all nine eligible root `.agent` entrypoints through current tracking.
+- [x] Verify all nine eligible repositories have root `.agent` state.
 - [x] Select only HorrorCorridor as the oldest eligible central entry.
-- [x] Read host/client local transport, session, protocol and UI source.
-- [x] Preserve the complete interaction loop, domains and 29-kit service census.
-- [x] Add the timestamped local-bridge audit family.
-- [ ] Implement and prove the authority.
+- [x] Read room creation, transport admission, session store, lobby UI, protocol validation and run bootstrap source.
+- [x] Preserve the complete interaction loop, active domains and 29-kit service census.
+- [x] Add the timestamped lobby-capacity audit family.
+- [ ] Implement and prove capacity authority.
 
 ## Selection state
 
@@ -33,7 +33,7 @@ new eligible repositories: 0
 central-ledger-missing eligible repositories: 0
 root-.agent-missing eligible repositories: 0
 selected repository: LuminaryLabs-Publish/HorrorCorridor
-selected central timestamp: 2026-07-12T18-38-51-04-00
+selected central timestamp: 2026-07-12T20-20-02-04-00
 ```
 
 ## Complete interaction loop
@@ -42,24 +42,25 @@ selected central timestamp: 2026-07-12T18-38-51-04-00
 browser route
   -> choose solo, host or client
 
-local transport setup
-  -> derive horrorcorridor:<joinCode> BroadcastChannel
-  -> host suppresses PeerJS connection listener because localBridge exists
-  -> client posts self-asserted client-connect
-  -> host records connection and emits peer/connection-open
-  -> GameShell maps remotePeerId to lobby player ID
+host setup
+  -> create room with maxPlayers = 4
+  -> install PeerJS and/or local bridge transport
+  -> display host lobby and Add guest control
 
-local packet flow
-  -> client posts self-asserted client-message or client-disconnect
-  -> host forwards packet fields into peer events
-  -> lobby/protocol/gameplay consumers mutate stores
+member intake
+  -> remote connection-open or local client-connect arrives
+  -> GameShell creates or updates a connected guest
+  -> sessionStore upserts the player without capacity admission
+  -> host may also append arbitrary placeholder guests
+  -> lobby displays players.length without full-state semantics
 
-local host publication
-  -> iterate localConnections
-  -> post one host-message per connection with targetPeerId null
-  -> every client accepts every copy
-  -> room, roster, snapshot, screens and readiness may be replaced repeatedly
-  -> Three.js world, HUD, minimap and debug render successor state
+run start
+  -> host presses Start run
+  -> bootstrap receives complete lobbyPlayers array
+  -> createInitialGameState maps every source player into gameplay actors
+  -> active room still reports maxPlayers = 4
+  -> START_GAME and SYNC publish the over-capacity roster
+  -> Three.js world, HUD and minimap render successor state
 ```
 
 ## Domains in use
@@ -68,7 +69,8 @@ local host publication
 application shell and screen routing
 UI loading pause completion settings and terminal projection
 session room roster identity readiness and reset
-room join-code host identity allocation
+room join-code host identity and declared capacity
+lobby member candidate reservation admission and retirement
 transport mode reachability and lifecycle
 PeerJS signalling and DataConnection ownership
 BroadcastChannel namespace and local transport
@@ -124,105 +126,100 @@ package-validation-kit: build, lint, harness, visual, live-player checks
 ## Source-backed findings
 
 ```txt
-BroadcastChannel created whenever API exists: yes
-PeerJS host connection listener installed when localBridge exists: no
-channel name includes join code only: yes
-runtime LocalBridgePacket validation: no
-session capability/token: no
-session generation: no
-packet ID or sequence: no
-client-connect remotePeerId/connectionId self-asserted: yes
-client-message requires known connection record: no
-client-message actor/lease comparison: no
-client-disconnect compares actor with stored owner: no
-host broadcast posts once per local connection: yes
-host broadcast targetPeerId: null
-client accepts every null-target host packet: yes
-N clients create N² client message events: yes
-broadcast-to-visible-frame acknowledgement: no
+room declaration maxPlayers: 4
+GameShell host connection-open admission checks maxPlayers: no
+createHost PeerJS candidate map checks capacity: no
+createHost local client-connect checks capacity: no
+host Add guest control disabled at capacity: no
+addGuestPlaceholder checks capacity: no
+sessionStore setLobbyPlayers checks capacity: no
+sessionStore upsertLobbyPlayer checks capacity: no
+protocol isRoomState checks players.length <= maxPlayers: no
+createInitialGameState checks sourcePlayers length: no
+bootstrap copies all sourcePlayers into room and actor snapshots: yes
+lobby displays players.length / maxPlayers: no
+capacity revision or reservation identity: no
+first capacity-consistent visible frame acknowledgement: no
 ```
 
-## Concrete failure paths
-
-### Same-origin forged member
+## Concrete failure path
 
 ```txt
-publisher knows join code
-  -> posts client-connect with chosen identity
-  -> host records local connection
-  -> GameShell admits chosen identity as connected lobby player
-```
-
-### Unknown-connection message
-
-```txt
-publisher posts client-message with arbitrary connectionId
-  -> host does not require matching local connection record
-  -> peer/message reaches protocol consumers
-```
-
-### Quadratic broadcast
-
-```txt
-N clients
-  -> host emits N untargeted packets
-  -> each client accepts N packets
-  -> N² applications of one logical broadcast
+room declares maxPlayers = 4
+  -> host receives more unique connection-open events or presses Add guest repeatedly
+  -> each member is appended to lobbyPlayers and room.players
+  -> visible player count exceeds four
+  -> host starts run
+  -> createInitialGameState maps every supplied player
+  -> active room still advertises maxPlayers = 4
+  -> START_GAME and SYNC distribute the contradictory state
+  -> clients can render an over-capacity roster and actor set
 ```
 
 ## Required parent domain
 
 ```txt
-corridor-local-bridge-packet-admission-fanout-authority-domain
+corridor-lobby-capacity-admission-authority-domain
 ```
 
 ## Candidate kits
 
 ```txt
-local-bridge-channel-namespace-kit
-local-bridge-session-generation-kit
-local-bridge-capability-token-kit
-local-bridge-packet-schema-kit
-local-bridge-packet-id-kit
-local-bridge-connection-lease-kit
-local-bridge-actor-binding-kit
-local-bridge-source-admission-kit
-local-bridge-sequence-ledger-kit
-local-bridge-replay-dedup-kit
-local-bridge-disconnect-admission-kit
-local-bridge-broadcast-intent-kit
-local-bridge-fanout-plan-kit
-local-bridge-target-selection-kit
-local-bridge-delivery-result-kit
-local-bridge-commit-kit
-local-bridge-rejection-observation-kit
-local-bridge-journal-kit
-first-local-bridge-frame-ack-kit
-rogue-same-origin-publisher-fixture-kit
-unknown-connection-message-fixture-kit
-forged-disconnect-fixture-kit
-multi-client-exact-once-fanout-fixture-kit
-stale-generation-packet-fixture-kit
-peerjs-local-bridge-parity-fixture-kit
+room-capacity-policy-kit
+lobby-slot-id-kit
+lobby-slot-reservation-kit
+lobby-member-candidate-kit
+lobby-member-source-classification-kit
+lobby-capacity-revision-kit
+lobby-capacity-fingerprint-kit
+lobby-member-identity-uniqueness-kit
+lobby-connection-lease-capacity-kit
+placeholder-member-admission-kit
+lobby-capacity-result-kit
+lobby-roster-commit-kit
+lobby-slot-release-kit
+lobby-capacity-rejection-observation-kit
+lobby-capacity-journal-kit
+bootstrap-roster-capacity-gate-kit
+protocol-room-capacity-validation-kit
+first-capacity-consistent-frame-ack-kit
+remote-fifth-player-fixture-kit
+local-bridge-fifth-player-fixture-kit
+placeholder-capacity-fixture-kit
+duplicate-member-no-capacity-consumption-fixture-kit
+reservation-cancel-release-fixture-kit
+over-capacity-protocol-rejection-fixture-kit
+capacity-valid-bootstrap-fixture-kit
 ```
 
 ## Required transaction
 
 ```txt
-LocalBridgePacketCommand
-  -> validate runtime schema
-  -> validate room/session generation and capability
-  -> admit packet ID and monotonic sequence
-  -> resolve live connection lease and canonical actor
-  -> validate kind-specific ownership
-  -> reject unknown duplicate stale or mismatched packets
-  -> publish one typed packet result
-  -> commit at most one state effect
-  -> create one logical broadcast intent
-  -> derive intended recipients once
-  -> deliver exactly once per recipient
-  -> publish complete per-recipient results
-  -> acknowledge first visible frame citing committed revision
+LobbyMemberAdmissionCommand
+  -> bind room ID, room generation and expected roster revision
+  -> classify remote connection, local bridge, placeholder, restore or migration source
+  -> validate candidate identity and transport ownership
+  -> reserve one slot against the current capacity revision
+  -> reject Full, Duplicate, Stale or Invalid with zero roster mutation
+  -> commit one canonical member and successor roster revision
+  -> consume or release the reservation exactly once
+  -> publish capacity count, remaining slots and fingerprint
+  -> allow start sealing only when players.length <= maxPlayers
+  -> reject over-capacity protocol room/snapshot payloads
+  -> acknowledge the first visible frame citing the committed revision
+```
+
+## Invariants
+
+```txt
+0 <= committed player count <= maxPlayers
+one canonical member consumes at most one slot
+candidate and placeholder paths use the same admission authority
+rejected or cancelled requests consume no durable slot
+room.players and lobbyPlayers share one roster revision
+bootstrap cannot admit an invalid roster
+protocol decode cannot accept players.length > maxPlayers
+visible player count cites the same capacity revision as the roster
 ```
 
 ## Validation boundary
