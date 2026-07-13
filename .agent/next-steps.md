@@ -1,87 +1,87 @@
 # HorrorCorridor Next Steps
 
-**Updated:** `2026-07-12T22-29-30-04-00`
+**Updated:** `2026-07-13T01-08-28-04-00`
 
 ## Summary
 
-Place a capacity-admission authority around every path that can add a lobby member. A declared four-player room must reserve and commit slots consistently across PeerJS, the local bridge, placeholders, Zustand stores, protocol payloads, bootstrap and visible UI.
+Insert a transport-independent semantic-admission authority after structural decoding and before every lobby, runtime, simulation or presentation consumer. A decoded message must prove exact enum membership, valid ranges, canonical identities and consistent room, snapshot, actor and tick relations before it can commit any effect.
 
 ## Plan ledger
 
-**Goal:** replace unconstrained roster mutation with revisioned slot reservations, typed capacity results, capacity-valid bootstrap and visible-frame proof.
+**Goal:** replace direct consumption of structurally valid messages with typed semantic admission, atomic effect commit, zero-mutation rejection and visible-frame proof.
 
 ### Documentation
 
-- [x] Audit room creation, connection intake, placeholders, store mutation, protocol validation and bootstrap.
+- [x] Audit protocol types, structural decoder, host/client transports and GameShell consumers.
 - [x] Preserve the 29-kit inventory and complete domain map.
 - [x] Define the parent DSK and candidate kits.
-- [x] Add architecture, render, gameplay, interaction, lobby-capacity and deploy audits.
+- [x] Add architecture, render, gameplay, interaction, protocol-semantic and deploy audits.
 - [x] Refresh root docs and machine registry.
 
-### Gate 1: canonical capacity policy
+### Gate 1: exact runtime schemas
 
-- [ ] Define `RoomCapacityPolicy` with normalized finite `maxPlayers`.
-- [ ] Allocate a room generation, roster revision and capacity fingerprint.
-- [ ] Require one authoritative roster projection rather than independent room and lobby arrays.
-- [ ] Reject malformed policies, negative capacities and inconsistent restored state.
+- [ ] Enforce every declared enum at runtime.
+- [ ] Validate optional `requestId` and action-specific optional fields.
+- [ ] Reject unknown keys where strict canonical payloads are required.
+- [ ] Return a structural result distinct from semantic admission.
 
-### Gate 2: slot reservation
+### Gate 2: numeric and collection invariants
 
-- [ ] Create one `LobbySlotReservation` before member mutation.
-- [ ] Bind reservation to room generation, candidate identity, source and connection lease.
-- [ ] Make reservation acquisition atomic against the current roster revision.
-- [ ] Return `Accepted`, `Full`, `Duplicate`, `Stale`, `Cancelled` or `Rejected`.
-- [ ] Consume or release every reservation exactly once.
+- [ ] Require integer, nonnegative and bounded tick, sequence and capacity values.
+- [ ] Enforce admitted movement, rotation, pitch, velocity and ooze ranges.
+- [ ] Bound player, cube, maze, anomaly and ooze collections.
+- [ ] Reject duplicate player, cube and cell identities.
+- [ ] Reject references to unknown actors, cubes, cells or slots.
 
-### Gate 3: shared admission paths
+### Gate 3: cross-field relations
 
-- [ ] Route PeerJS connection-open through capacity admission.
-- [ ] Route local `client-connect` through the same authority.
-- [ ] Route `Add guest`, restore and migration through the same authority.
-- [ ] Ensure duplicate identity does not consume another slot.
-- [ ] Retire rejected transport candidates without adding visible members.
+- [ ] Require envelope `roomId` to match all nested room IDs.
+- [ ] Require SYNC payload room and snapshot room to describe one canonical room.
+- [ ] Require `authoritativeTick === snapshot.tick`.
+- [ ] Require START_GAME host and capacity fields to match the room.
+- [ ] Require LOBBY_EVENT roster projection to match `room.players`.
+- [ ] Bind sender ID, payload player ID and transport connection lease.
 
-### Gate 4: roster, protocol and bootstrap
+### Gate 4: admission and commit
 
-- [ ] Enforce `players.length <= maxPlayers` in store commits.
-- [ ] Validate the relationship during protocol decoding, not only number and array shape.
-- [ ] Seal a capacity-valid roster before Start run.
-- [ ] Reject bootstrap when the roster exceeds capacity or cites a stale revision.
-- [ ] Carry capacity revision and fingerprint through START_GAME and SYNC.
+- [ ] Allocate one protocol candidate/admission ID.
+- [ ] Bind admission to room generation and expected state revision.
+- [ ] Return `Accepted`, `InvalidSchema`, `InvalidSemantic`, `Stale`, `Duplicate`, `Unauthorized` or `Failed`.
+- [ ] Commit one canonical effect atomically or perform zero mutation.
+- [ ] Publish bounded acceptance and rejection observations.
 
 ### Gate 5: presentation
 
-- [ ] Display `players.length / maxPlayers` and remaining slots.
-- [ ] Disable or reject Add guest when full.
-- [ ] Project typed full/rejection state without mutating the roster.
-- [ ] Correlate the first lobby and gameplay frames with the committed capacity revision.
+- [ ] Project rejection state without replacing room, snapshot or route state.
+- [ ] Carry the admission ID and canonical revision into render snapshots.
+- [ ] Acknowledge the first visible lobby or gameplay frame citing the accepted result.
+- [ ] Keep debug output redacted and bounded.
 
 ### Gate 6: fixtures
 
-- [ ] First through fourth unique members accepted exactly once.
-- [ ] Fifth PeerJS member rejected with no roster mutation.
-- [ ] Fifth local-bridge member rejected with no roster mutation.
-- [ ] Placeholder requests stop at capacity.
-- [ ] Duplicate member consumes no new slot.
-- [ ] Cancelled reservation releases capacity.
-- [ ] Concurrent final-slot requests produce one winner.
-- [ ] Over-capacity START_GAME, SYNC and LOBBY_EVENT rejected.
-- [ ] Capacity-valid roster bootstraps and renders correctly.
-- [ ] Source, production build and deployed-browser parity.
+- [ ] Valid fixtures for all five message types.
+- [ ] Invalid enum and optional-field fixtures.
+- [ ] Negative, fractional and out-of-range numeric fixtures.
+- [ ] Envelope, room and snapshot identity-mismatch fixtures.
+- [ ] Tick and host-identity mismatch fixtures.
+- [ ] Duplicate identity and unknown-reference fixtures.
+- [ ] Rejected-message zero-mutation fixtures.
+- [ ] PeerJS and local-bridge semantic-parity fixtures.
+- [ ] First admitted visible-frame fixture.
+- [ ] Source, production-build and deployed-browser parity.
 
 ## Dependency order
 
 ```txt
-room identity and generation
-  -> capacity policy
-  -> slot reservation
-  -> identity and connection admission
-  -> atomic roster commit
-  -> protocol capacity validation
-  -> sealed bootstrap
-  -> visible-frame acknowledgement
+structural decode
+  -> exact enum and optional-field schema
+  -> numeric and collection invariants
+  -> cross-field identity and revision relations
+  -> source and generation admission
+  -> atomic effect result
+  -> presentation acknowledgement
 ```
 
 ## Completion boundary
 
-Do not claim four-player capacity enforcement, race-safe admission, over-capacity protocol rejection or visible roster consistency until the authority and fixture matrix pass on `main`.
+Do not claim protocol semantic integrity, canonical state convergence, zero-mutation rejection or visible-frame correlation until the authority and fixture matrix pass on `main`.
