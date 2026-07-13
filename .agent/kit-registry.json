@@ -3,7 +3,7 @@
   "generatedAt": "2026-07-13T17-40-04-04-00",
   "repository": "LuminaryLabs-Publish/HorrorCorridor",
   "branch": "main",
-  "status": "host-start-barrier-loading-generation-authority-audited",
+  "status": "host-start-barrier-loading-generation-authority-central-reconciled",
   "selectedBecause": "All nine eligible Publish repositories were centrally tracked, had root .agent state, and matched their central documentation heads. HorrorCorridor was selected as the oldest eligible central entry after excluding TheCavalryOfRome.",
   "latestTracker": ".agent/trackers/2026-07-13T17-40-04-04-00/project-breakdown.md",
   "latestTurnLedger": ".agent/turn-ledger/2026-07-13T17-40-04-04-00.md",
@@ -146,7 +146,7 @@
     "browserMultiplayerSmokeRun": false,
     "hostStartFixtureAvailable": false,
     "firstMultiplayerFrameFixtureAvailable": false,
-    "centralLedgerSynchronized": false,
-    "centralChangeLogCreated": false
+    "centralLedgerSynchronized": true,
+    "centralChangeLogCreated": true
   }
 }
