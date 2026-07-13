@@ -1,100 +1,80 @@
 # HorrorCorridor Next Steps
 
-**Updated:** `2026-07-13T11-58-45-04-00`
+**Updated:** `2026-07-13T17-40-04-04-00`
 
 ## Summary
 
-Insert a WebGL context/resource recovery authority between browser context events and live renderer/composer/world ownership. Rendering readiness must become false on accepted loss and return only after one complete recovered generation produces an acknowledged visible frame.
+Insert a host-start barrier between the lobby Start action and live session/runtime/UI mutation. Seal the roster, validate readiness and connection policy, make loading cancellable, prepare one detached snapshot, collect client acknowledgements, and commit or roll back every participant under one attempt.
 
 ## Plan ledger
 
-**Goal:** replace opaque context restoration with generation-bound loss admission, complete resource preparation, probe validation, atomic adoption and recovered-frame proof.
+**Goal:** replace optimistic local start with one typed multiplayer transaction and visible convergence proof.
 
 ### Documentation
 
-- [x] Audit renderer, composer, animation loop and `GameCanvas` lifecycle.
-- [x] Preserve the 29-kit inventory and full domain map.
-- [x] Define the parent DSK and 21 child kits.
-- [x] Add architecture, render, gameplay, interaction, lifecycle, deploy and central-sync audits.
-- [x] Refresh root docs and machine registry.
-- [x] Synchronize the central ledger and internal change log.
+- [x] Audit host start, loading and client reception.
+- [x] Preserve the 29-kit inventory and domains.
+- [x] Define the parent DSK and candidate surfaces.
+- [x] Add the timestamped audit family.
+- [x] Refresh root docs and registry.
 
-### Gate 1: identity and lifecycle
+### Gate 1: command and preconditions
 
-- [ ] Add stable `RenderSurfaceId`.
-- [ ] Add monotonic `ContextGeneration` and `ResourceGeneration`.
-- [ ] Add `Ready`, `Lost`, `Restoring`, `Failed` and `Disposed` states.
-- [ ] Install `webglcontextlost` and `webglcontextrestored` adapters.
-- [ ] Reject duplicate, stale and wrong-surface events with zero mutation.
-- [ ] Prevent default on accepted loss only when recovery policy is active.
+- [ ] Add `HostStartCommand`, `StartAttemptId` and expected revisions.
+- [ ] Seal the eligible roster for the attempt.
+- [ ] Require connected and ready members under explicit policy.
+- [ ] Reject duplicate, stale, unready, disconnected and invalid commands with zero mutation.
 
-### Gate 2: submission and readiness
+### Gate 2: loading lifecycle
 
-- [ ] Add a generation-bound render-submission lease.
-- [ ] Reject world/composer submission while Lost, Restoring, Failed or Disposed.
-- [ ] Set rendering readiness false on accepted loss.
-- [ ] Expose lifecycle state through detached diagnostics.
-- [ ] Add a WebGL-independent DOM/CSS fallback.
+- [ ] Add monotonic `LoadingGeneration`.
+- [ ] Revalidate after every await.
+- [ ] Cancel on route, room, roster, transport or policy replacement.
+- [ ] Publish timeout, cancellation and supersession results.
 
-### Gate 3: gameplay/network liveness policy
+### Gate 3: detached preparation
 
-- [ ] Define solo loss policy.
-- [ ] Define host loss policy without silently stopping authority publication.
-- [ ] Define client loss policy for transport reception and prediction.
-- [ ] Ensure no duplicate tick, update or interaction request on recovery.
-- [ ] Retire the failed frame-loop generation exactly once.
+- [ ] Build one immutable initial snapshot candidate.
+- [ ] Bind seed, room revision and roster fingerprint.
+- [ ] Request client preparation for the sealed roster.
+- [ ] Collect typed preparation results.
 
-### Gate 4: resource manifests and preparation
+### Gate 4: correlated commit
 
-- [ ] Describe renderer capabilities and drawing-buffer state.
-- [ ] Describe composer, passes and render targets.
-- [ ] Describe world meshes, materials, textures and disposal ownership.
-- [ ] Prepare a complete detached successor generation.
-- [ ] Reject incomplete or capability-incompatible candidates.
+- [ ] Commit host session, runtime, UI and readiness together.
+- [ ] Correlate `START_GAME` and `SYNC` under one attempt or replace them with one start envelope.
+- [ ] Require client commit acknowledgement.
+- [ ] Quarantine stale, duplicate and predecessor messages.
 
-### Gate 5: probe and atomic adoption
+### Gate 5: rollback and proof
 
-- [ ] Apply the accepted viewport revision to the candidate.
-- [ ] Submit one deterministic recovery probe frame.
-- [ ] Publish `ProbeAccepted` or `ProbeFailed`.
-- [ ] Adopt renderer, composer and world resources together or none.
-- [ ] Start only one successor RAF generation.
-- [ ] Dispose predecessor resources only after accepted adoption.
+- [ ] Restore the predecessor lobby after any non-accepted result.
+- [ ] Retire candidate state and timers exactly once.
+- [ ] Publish `HostStartResult`.
+- [ ] Publish participant-correlated first-frame acknowledgements.
 
-### Gate 6: visible proof
+### Gate 6: fixtures
 
-- [ ] Publish `ContextRecoveryResult`.
-- [ ] Publish `FirstRecoveredFrameAck` with context/resource generations.
-- [ ] Keep fallback visible until acknowledgement.
-- [ ] Set rendering readiness true only after acknowledgement.
-- [ ] Correlate debug and public readback with the recovered generation.
-
-### Gate 7: fixtures
-
-- [ ] Loss before first frame.
-- [ ] Loss during solo, host and client frames.
-- [ ] Loss while paused and completed.
-- [ ] Restore before/after resize and DPR change.
-- [ ] Renderer, composer and world preparation failure.
-- [ ] Repeated loss during recovery.
-- [ ] Unmount during recovery.
-- [ ] Cold restart after failed recovery.
-- [ ] Source, production build and deployed-origin parity.
+- [ ] Unready or disconnected member.
+- [ ] Join, leave or ready change during loading.
+- [ ] Route or transport replacement during loading.
+- [ ] START/SYNC reordering and duplication.
+- [ ] Client timeout or commit failure.
+- [ ] Aggregate rollback and first-frame convergence.
+- [ ] Source, production-build and deployed-origin parity.
 
 ## Dependency order
 
 ```txt
-surface/context/resource identity
-  -> context event admission
-  -> submission lease and readiness retirement
-  -> simulation/network loss policy
-  -> complete resource candidate
-  -> capability validation and probe
-  -> atomic recovered-generation adoption
-  -> first recovered frame acknowledgement
-  -> fallback/readiness convergence
+command and revisions
+  -> sealed roster and policy
+  -> cancellable loading generation
+  -> detached snapshot and client preparation
+  -> correlated atomic commit
+  -> rollback and late-message quarantine
+  -> first coherent participant frame proof
 ```
 
 ## Completion boundary
 
-Do not claim context recovery, GPU-resource parity, presentation liveness or production readiness until the authority and fixture matrix pass on `main`. All retained session, transport, protocol, simulation and cross-store gaps remain open.
+Do not claim reliable multiplayer start, lobby sealing, loading cancellation, client convergence or production readiness until the authority and fixtures pass on `main`.
