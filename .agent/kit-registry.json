@@ -1,26 +1,26 @@
 {
-  "schemaVersion": 88,
-  "generatedAt": "2026-07-13T03-31-44-04-00",
+  "schemaVersion": 89,
+  "generatedAt": "2026-07-13T03-38-31-04-00",
   "repository": "LuminaryLabs-Publish/HorrorCorridor",
   "branch": "main",
-  "status": "client-join-attempt-admission-authority-audited",
-  "selectedBecause": "All nine eligible Publish repositories were centrally tracked and had root .agent state. HorrorCorridor had the oldest eligible central timestamp after excluding TheCavalryOfRome.",
-  "latestTracker": ".agent/trackers/2026-07-13T03-31-44-04-00/project-breakdown.md",
-  "latestTurnLedger": ".agent/turn-ledger/2026-07-13T03-31-44-04-00.md",
+  "status": "client-join-attempt-admission-central-reconciled",
+  "selectedBecause": "HorrorCorridor had a complete repo-local client-join audit newer than its central ledger entry. All nine eligible Publish repositories had central-ledger and root .agent coverage, and TheCavalryOfRome was excluded.",
+  "latestTracker": ".agent/trackers/2026-07-13T03-38-31-04-00/project-breakdown.md",
+  "latestTurnLedger": ".agent/turn-ledger/2026-07-13T03-38-31-04-00.md",
   "latestAudits": {
-    "architecture": ".agent/architecture-audit/2026-07-13T03-31-44-04-00-client-join-attempt-admission-dsk-map.md",
-    "render": ".agent/render-audit/2026-07-13T03-31-44-04-00-provisional-joined-lobby-visible-state-gap.md",
-    "gameplay": ".agent/gameplay-audit/2026-07-13T03-31-44-04-00-unacknowledged-client-join-loop.md",
-    "interaction": ".agent/interaction-audit/2026-07-13T03-31-44-04-00-client-join-command-result-map.md",
-    "joinAttempt": ".agent/join-attempt-audit/2026-07-13T03-31-44-04-00-input-timeout-ack-cancel-contract.md",
-    "deploy": ".agent/deploy-audit/2026-07-13T03-31-44-04-00-client-join-attempt-fixture-gate.md"
+    "architecture": ".agent/architecture-audit/2026-07-13T03-38-31-04-00-client-join-central-reconciliation-dsk-map.md",
+    "render": ".agent/render-audit/2026-07-13T03-38-31-04-00-accepted-join-visible-frame-central-reconciliation-gap.md",
+    "gameplay": ".agent/gameplay-audit/2026-07-13T03-38-31-04-00-provisional-client-lobby-central-reconciliation.md",
+    "interaction": ".agent/interaction-audit/2026-07-13T03-38-31-04-00-join-command-result-central-reconciliation-map.md",
+    "joinAttempt": ".agent/join-attempt-audit/2026-07-13T03-38-31-04-00-attempt-generation-ack-central-reconciliation-contract.md",
+    "deploy": ".agent/deploy-audit/2026-07-13T03-38-31-04-00-client-join-central-fixture-gate.md",
+    "centralSync": ".agent/central-sync-audit/2026-07-13T03-38-31-04-00-repo-ledger-client-join-reconciliation.md"
   },
   "retainedDetailedAudit": {
-    "timestamp": "2026-07-13T01-08-28-04-00",
-    "status": "protocol-semantic-admission-authority-audited",
-    "repoLocalCompletionHead": "6444ddb860138a2649e04c62c5f9a17423ac55a4",
-    "tracker": ".agent/trackers/2026-07-13T01-08-28-04-00/project-breakdown.md",
-    "system": ".agent/protocol-semantic-audit/2026-07-13T01-08-28-04-00-enum-relation-range-contract.md"
+    "timestamp": "2026-07-13T03-31-44-04-00",
+    "status": "client-join-attempt-admission-authority-audited",
+    "tracker": ".agent/trackers/2026-07-13T03-31-44-04-00/project-breakdown.md",
+    "system": ".agent/join-attempt-audit/2026-07-13T03-31-44-04-00-input-timeout-ack-cancel-contract.md"
   },
   "selection": {
     "inventoryCount": 10,
@@ -28,14 +28,14 @@
     "newEligibleCount": 0,
     "centralLedgerMissingCount": 0,
     "rootUndocumentedCount": 0,
-    "unsynchronizedCount": 0,
+    "unsynchronizedCount": 1,
     "excluded": [
       "LuminaryLabs-Publish/TheCavalryOfRome"
     ],
     "selectedRepository": "LuminaryLabs-Publish/HorrorCorridor",
-    "reason": "Oldest eligible central timestamp at 2026-07-13T01-08-28-04-00.",
+    "reason": "Repo-local client-join audit at 2026-07-13T03-31-44-04-00 was newer than the central ledger timestamp 2026-07-13T01-08-28-04-00.",
     "ledgerOrderAtSelection": [
-      "HorrorCorridor:2026-07-13T01-08-28-04-00:selected",
+      "HorrorCorridor:central=2026-07-13T01-08-28-04-00:repo-local=2026-07-13T03-31-44-04-00:selected",
       "ZombieOrchard:2026-07-13T01-18-20-04-00",
       "MyCozyIsland:2026-07-13T01-40-00-04-00",
       "TheUnmappedHouse:2026-07-13T01-49-49-04-00",
