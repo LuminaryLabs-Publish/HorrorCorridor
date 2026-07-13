@@ -4,7 +4,7 @@
 
 ## Summary
 
-The repo-local lobby-capacity audit completed after the central HorrorCorridor ledger entry. This record explains why HorrorCorridor was selected ahead of the oldest-documentation fallback and defines the central synchronization boundary.
+The repo-local lobby-capacity audit completed after the central HorrorCorridor ledger entry. This record explains why HorrorCorridor was selected ahead of the oldest-documentation fallback and records the central synchronization payload completed in the same run.
 
 ## Plan ledger
 
@@ -17,7 +17,7 @@ The repo-local lobby-capacity audit completed after the central HorrorCorridor l
 - [x] Select only HorrorCorridor.
 - [x] Preserve the full interaction, domain, kit and service inventory.
 - [x] Add a new reconciliation tracker and audit family.
-- [ ] Update the central ledger and internal change log to the final repo-local documentation head.
+- [x] Prepare the central ledger and internal change-log synchronization on `main`.
 
 ## Sync payload
 
@@ -31,7 +31,7 @@ branch created: no
 pull request created: no
 ```
 
-## Required central records
+## Central records
 
 ```txt
 LuminaryLabs-Dev/LuminaryLabs/repo-ledger/LuminaryLabs-Publish/HorrorCorridor.md
