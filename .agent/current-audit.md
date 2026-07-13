@@ -43,7 +43,7 @@ browser route
   -> choose solo, host or client
 
 local transport setup
-  -> derive horrorridor:<joinCode> BroadcastChannel
+  -> derive horrorcorridor:<joinCode> BroadcastChannel
   -> host suppresses PeerJS connection listener because localBridge exists
   -> client posts self-asserted client-connect
   -> host records connection and emits peer/connection-open
