@@ -1,23 +1,23 @@
 # HorrorCorridor Validation
 
-**Updated:** `2026-07-12T22-29-30-04-00`
+**Updated:** `2026-07-13T01-08-28-04-00`
 
 ## Summary
 
-Source inspection confirms that rooms declare `maxPlayers: 4` while transport admission, placeholders, roster stores, protocol validation and bootstrap do not enforce the relationship between current players and capacity. This audit does not prove runtime overflow or corrected enforcement because no implementation or focused fixtures exist.
+Source inspection confirms that the network decoder validates protocol version and broad structural shape but does not enforce many declared enums, numeric policies, unique identities or cross-field room, snapshot, actor, host and tick relationships. This audit does not prove an exploit or corrected integrity because no implementation or focused fixtures exist.
 
 ## Plan ledger
 
-**Goal:** record exactly what source inspection proves and withhold capacity-safety claims until executable concurrency, protocol, bootstrap and visible-frame fixtures pass.
+**Goal:** record exactly what source inspection proves and withhold semantic-integrity claims until executable decoder, transport, zero-mutation and visible-frame fixtures pass.
 
 - [x] Compare the full Publish inventory and central ledger.
 - [x] Verify central-ledger and root `.agent` coverage for all nine eligible repositories.
 - [x] Select HorrorCorridor as the oldest eligible repository.
-- [x] Inspect room creation, host transport, session store, lobby UI, serializers and bootstrap.
+- [x] Inspect message types, shared unions, serializers, transports and message consumers.
 - [x] Preserve the 29-kit and service census.
-- [x] Add the timestamped lobby-capacity audit family.
+- [x] Add the timestamped protocol-semantic audit family.
 - [x] Refresh root documentation and machine registry.
-- [ ] Run capacity, race, protocol, bootstrap, build and deployed fixtures after implementation exists.
+- [ ] Run semantic, build and deployed-browser fixtures after implementation exists.
 
 ## Change scope
 
@@ -40,33 +40,40 @@ documentation changed: yes
 complete LuminaryLabs-Publish repository inventory
 central Publish repo ledger state
 all nine eligible root .agent entrypoints
-HorrorCorridor-V1/src/components/game/GameShell.tsx
-HorrorCorridor-V1/src/components/menus/LobbyScreen.tsx
-HorrorCorridor-V1/src/features/game-state/store/sessionStore.ts
-HorrorCorridor-V1/src/features/game-state/domain/createInitialGameState.ts
-HorrorCorridor-V1/src/features/networking/peer/createHost.ts
+HorrorCorridor-V1/src/types/shared.ts
+HorrorCorridor-V1/src/features/networking/protocol/messageTypes.ts
 HorrorCorridor-V1/src/features/networking/protocol/serializers.ts
+HorrorCorridor-V1/src/features/networking/peer/createHost.ts
+HorrorCorridor-V1/src/features/networking/peer/createClient.ts
+HorrorCorridor-V1/src/components/game/GameShell.tsx
 HorrorCorridor current root .agent state
 ```
 
 ## Confirmed by inspection
 
 ```txt
-room creation declares maxPlayers = 4
-active bootstrap room declares maxPlayers = 4
-host connection-open handler checks capacity: no
-local client-connect handler checks capacity: no
-host Add guest path checks capacity: no
-host Add guest button capacity-disabled: no
-sessionStore roster setters check capacity: no
-sessionStore upsert checks capacity: no
-serializer checks maxPlayers is finite: yes
-serializer checks players are structurally valid: yes
-serializer checks players.length <= maxPlayers: no
-bootstrap maps all input players: yes
-bootstrap truncates or rejects excess players: no
-lobby exposes players.length but not capacity/full state: yes
-first capacity-consistent frame receipt: no
+protocol version check: yes
+finite-number primitive check: yes
+broad record/array shape checks: yes
+exact room-phase enum check: no
+exact connection-state enum check: no
+exact app/game-state enum checks: no
+exact interaction-action enum check: no
+exact SYNC-reason enum check: no
+exact lobby-event enum check: no
+optional requestId type check: no
+integer/range policy: no
+envelope/payload room identity relation: no
+payload-room/snapshot-room consistency: no
+authoritativeTick/snapshot.tick consistency: no
+START_GAME capacity relation: no
+START_GAME host relation: no
+LOBBY_EVENT roster equality: no
+sender/payload actor relation: no
+unique player/cube/cell identities: no
+typed semantic admission result: no
+first admitted visible-frame receipt: no
+local bridge always uses structural decoder: no
 ```
 
 ## Documentation checks
@@ -79,7 +86,7 @@ architecture audit: yes
 render audit: yes
 gameplay audit: yes
 interaction audit: yes
-lobby-capacity audit: yes
+protocol-semantic audit: yes
 deploy audit: yes
 kit registry refreshed: yes
 central ledger update: current run
@@ -95,9 +102,8 @@ npm run build
 npm run harness:horror-corridor
 npm run validate:live-player:dev
 browser launch
-multi-client lobby test
-concurrent final-slot test
-protocol adversarial test
+PeerJS multiplayer test
+local BroadcastChannel test
 production server smoke
 deployed-origin smoke
 ```
@@ -105,23 +111,26 @@ deployed-origin smoke
 ## Missing executable fixtures
 
 ```txt
-first-through-fourth-member acceptance
-fifth PeerJS member rejection
-fifth local-bridge member rejection
-placeholder capacity rejection
-duplicate-member no-slot-consumption
-cancelled-reservation release
-concurrent final-slot winner
-malformed capacity policy rejection
-over-capacity START_GAME rejection
-over-capacity SYNC rejection
-over-capacity LOBBY_EVENT rejection
-capacity-valid bootstrap
-first capacity-consistent lobby frame
-first capacity-consistent gameplay frame
+valid fixture for each message type
+invalid enum rejection
+invalid optional-field rejection
+negative/fractional/range rejection
+envelope/payload room mismatch rejection
+payload/snapshot room mismatch rejection
+tick mismatch rejection
+host identity and capacity mismatch rejection
+roster mismatch rejection
+duplicate identity rejection
+unknown-reference rejection
+rejected-message zero-store-mutation
+rejected-message zero-route-mutation
+rejected-message zero-visible-frame-revision
+PeerJS/local-bridge semantic parity
+first admitted lobby frame
+first admitted gameplay frame
 source/build/browser/deployed parity
 ```
 
 ## Claims intentionally withheld
 
-No claim is made for room-capacity enforcement, reservation atomicity, overflow resistance, protocol capacity integrity, capacity-valid bootstrap, visible-frame correlation or production readiness until the authority and fixtures exist and pass.
+No claim is made for semantic protocol integrity, authorization, canonical room/snapshot convergence, zero-mutation rejection, transport parity, visible-frame correlation or production readiness until the authority and fixtures exist and pass.
