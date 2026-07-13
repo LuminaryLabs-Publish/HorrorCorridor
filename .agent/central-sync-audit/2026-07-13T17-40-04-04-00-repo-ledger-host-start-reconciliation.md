@@ -12,20 +12,20 @@ This audit advances HorrorCorridor from WebGL recovery documentation to a source
 - [x] Record interaction loop, domains, all 29 kits and services.
 - [x] Add the timestamped audit family.
 - [x] Refresh root `.agent` routing.
-- [ ] Update the central repository ledger.
-- [ ] Add the central internal change log.
+- [x] Prepare the central repository ledger update.
+- [x] Prepare the central internal change log.
 
-## Central update requirements
+## Central state
 
 ```txt
 status: host-start-barrier-loading-generation-authority-central-reconciled
 technical status: host-start-barrier-loading-generation-authority-audited
-retain WebGL recovery and all predecessor statuses
-record final repo-local documentation head
-record source findings and validation limits
-record every added/refreshed .agent path
+retained: WebGL recovery and all predecessor statuses
+central files: repo ledger plus timestamped internal change log
+branch policy: main only
+runtime change: none
 ```
 
 ## Validation boundary
 
-No runtime, networking, gameplay, rendering, dependency, package-script or deployment change is part of this reconciliation.
+No runtime, networking, gameplay, rendering, dependency, package-script or deployment change is part of this reconciliation. Central synchronization is completed by the paired `LuminaryLabs-Dev/LuminaryLabs` commit in the same run.
