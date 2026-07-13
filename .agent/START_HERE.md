@@ -2,26 +2,26 @@
 
 **Repository:** `LuminaryLabs-Publish/HorrorCorridor`  
 **Branch:** `main`  
-**Updated:** `2026-07-12T22-29-30-04-00`  
-**Status:** `lobby-capacity-admission-authority-audited`
+**Updated:** `2026-07-12T22-44-30-04-00`  
+**Status:** `lobby-capacity-admission-authority-central-reconciled`
 
 ## Summary
 
 HorrorCorridor is a cooperative first-person procedural maze with solo, host and client routes, PeerJS, a same-origin `BroadcastChannel` bridge, deterministic bootstrap, authoritative snapshots, interactions, ooze pressure, Three.js rendering, bloom, minimap and diagnostics.
 
-The current audit isolates lobby-capacity admission. Every room declares `maxPlayers: 4`, but PeerJS and local-bridge connection admission, the host `Add guest` control, Zustand roster mutation, protocol decoding and run bootstrap all accept arbitrarily large player arrays. The visible lobby can therefore exceed its declared capacity and the host can materialize and publish an over-capacity gameplay roster.
+The current audit isolates lobby-capacity admission. Rooms declare `maxPlayers: 4`, but remote connection, local bridge, placeholder, store, protocol and bootstrap paths can all accept more members. This reconciliation promotes the completed repo-local audit into central tracking without changing runtime behavior.
 
 ## Plan ledger
 
-**Goal:** place one revisioned capacity authority between connection candidates, placeholder requests, roster mutation, run bootstrap and visible lobby/game state.
+**Goal:** keep the repo-local and central records aligned around one revisioned capacity authority between member candidates, roster mutation, run bootstrap, protocol publication and visible state.
 
 - [x] Compare all ten accessible Publish repositories.
 - [x] Exclude `TheCavalryOfRome`.
 - [x] Confirm all nine eligible repositories have central-ledger and root `.agent` coverage.
-- [x] Select only HorrorCorridor as the oldest eligible entry.
+- [x] Select only HorrorCorridor because its repo-local capacity audit was newer than central tracking.
 - [x] Preserve the complete interaction loop, active domains, 29 implemented kits and services.
-- [x] Add the timestamped lobby-capacity audit family.
-- [x] Refresh required root documentation and machine registry.
+- [x] Add a new timestamped reconciliation tracker and audit family.
+- [x] Keep all repo-local writes on `main`.
 - [ ] Implement reservation, capacity admission, typed rejection and executable fixtures.
 
 ## Read first
@@ -30,9 +30,10 @@ The current audit isolates lobby-capacity admission. Every room declares `maxPla
 2. `.agent/next-steps.md`
 3. `.agent/known-gaps.md`
 4. `.agent/validation.md`
-5. `.agent/trackers/2026-07-12T22-29-30-04-00/project-breakdown.md`
-6. `.agent/architecture-audit/2026-07-12T22-29-30-04-00-lobby-capacity-admission-dsk-map.md`
-7. `.agent/lobby-capacity-audit/2026-07-12T22-29-30-04-00-max-player-reservation-commit-contract.md`
+5. `.agent/trackers/2026-07-12T22-44-30-04-00/project-breakdown.md`
+6. `.agent/architecture-audit/2026-07-12T22-44-30-04-00-lobby-capacity-central-reconciliation-dsk-map.md`
+7. `.agent/lobby-capacity-audit/2026-07-12T22-44-30-04-00-reservation-policy-central-reconciliation-contract.md`
+8. `.agent/central-sync-audit/2026-07-12T22-44-30-04-00-repo-ledger-capacity-reconciliation.md`
 
 ## Current authority boundary
 
@@ -44,13 +45,13 @@ corridor-lobby-capacity-admission-authority-domain
 
 ```txt
 room maxPlayers declaration: 4
-connection-open capacity check: absent
+remote connection-open capacity check: absent
 local client-connect capacity check: absent
 Add guest capacity check: absent
 session-store roster capacity invariant: absent
 protocol players.length <= maxPlayers validation: absent
 bootstrap capacity check: absent
-visible full/capacity state: absent
+visible count/max/full state: incomplete
 first capacity-consistent frame acknowledgement: absent
 ```
 
@@ -59,16 +60,17 @@ first capacity-consistent frame acknowledgement: absent
 ```txt
 LobbyMemberAdmissionCommand
   -> bind room, roster revision and transport generation
-  -> classify remote connection, placeholder or restore source
-  -> reserve one slot without mutating the live roster
-  -> validate maxPlayers, identity uniqueness and live ownership
-  -> return Accepted, Full, Duplicate, Stale or Rejected
-  -> commit one canonical roster revision
-  -> release or consume the reservation exactly once
-  -> allow bootstrap only from a capacity-valid sealed roster
+  -> classify remote connection, local bridge, placeholder or restore source
+  -> reserve one slot without mutating live state
+  -> validate maxPlayers, identity uniqueness and connection ownership
+  -> return Accepted, Full, Duplicate, Stale, Cancelled, Invalid or Failed
+  -> commit one canonical roster revision atomically
+  -> consume or release the reservation exactly once
+  -> reject over-capacity store and protocol payloads
+  -> allow bootstrap only from a sealed capacity-valid roster
   -> publish the first matching visible lobby or gameplay frame
 ```
 
 ## Validation boundary
 
-Documentation only. Runtime source, networking, gameplay, rendering, dependencies, package scripts and deployment were not changed. No capacity enforcement, reservation, over-capacity rejection, rollback or visible-frame claim is made until focused fixtures pass on `main`.
+Documentation only. Runtime source, networking, gameplay, rendering, dependencies, package scripts and deployment were not changed. No capacity enforcement, reservation, final-slot race, over-capacity rejection, rollback or visible-frame claim is made until focused fixtures pass on `main`.
