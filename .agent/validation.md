@@ -1,22 +1,22 @@
 # HorrorCorridor Validation
 
-**Updated:** `2026-07-14T10-40-05-04-00`
+**Updated:** `2026-07-14T16-00-05-04-00`
 
 ## Summary
 
-Source inspection confirms that Settings is a static overlay toggle rather than a settled settings system. Opening it does not change `PLAYING`, clear input, release pointer lock, suspend prediction or network sends, persist preferences, or produce a settings-revision-bound visible-frame receipt.
+Source inspection confirms that browser lifecycle transitions are unmanaged at the application level. The runtime has `blur` handling and unmount cleanup, but no visibility, pagehide, pageshow, freeze, resume or BFCache authority, participant receipts or first resumed-frame evidence.
 
 ## Plan ledger
 
-**Goal:** record exactly what source inspection proves and withhold functional settings claims until executable source, build, and deployed-browser fixtures pass.
+**Goal:** record exactly what inspection proves and withhold lifecycle claims until executable source, build and deployed-browser fixtures pass.
 
 - [x] Compare all 11 Publish repositories against ten eligible central ledgers.
-- [x] Confirm root `.agent` coverage and synchronization.
+- [x] Confirm root `.agent` coverage and synchronized eligible heads.
 - [x] Select HorrorCorridor by the oldest eligible timestamp.
-- [x] Inspect package, UI store, Settings, HUD, GameShell, and GameCanvas surfaces.
+- [x] Inspect RAF, movement, `GameCanvas`, transport, render and cleanup surfaces.
 - [x] Preserve the 29-kit and two-adapter census.
-- [x] Add and route the timestamped settings audit family.
-- [ ] Run implementation, fault-injection, build, and deployed-browser fixtures after the authority exists.
+- [x] Add and route the timestamped page-lifecycle audit family.
+- [ ] Run implementation, fault-injection, build and deployed-browser fixtures after the authority exists.
 
 ## Change scope
 
@@ -40,33 +40,32 @@ pull request created: no
 full LuminaryLabs-Publish repository inventory
 central Publish repo ledger state
 root .agent state for HorrorCorridor
-HorrorCorridor-V1/package.json
-HorrorCorridor-V1/src/components/game/GameShell.tsx
 HorrorCorridor-V1/src/components/game/GameCanvas.tsx
-HorrorCorridor-V1/src/components/hud/HUDOverlay.tsx
-HorrorCorridor-V1/src/components/hud/SettingsOverlay.tsx
-HorrorCorridor-V1/src/features/game-state/store/uiStore.ts
+HorrorCorridor-V1/src/features/render/three/animationLoop.ts
+HorrorCorridor-V1/src/features/player/domain/movement.ts
+HorrorCorridor-V1/src/features/render/three/worldBuilder.ts
+HorrorCorridor-V1/src/features/game-state/domain/oozeRules.ts
 .agent/kit-registry.json
 ```
 
 ## Confirmed by inspection
 
 ```txt
-SettingsOverlay is a static control map: yes
-mutable settings inputs exist: no
-PLAYING visible Settings button exists: no
-Q toggles overlay: yes
-overlay open changes screen from PLAYING: no
-held input is cleared on open: no
-pointer lock is released on open: no
-keydown and keyup check settings ownership: no
-simulation checks settings ownership: no
-client update send checks settings ownership: no
-passive network receipt can remain active: yes
-accepted SettingsRevision exists: no
-preference persistence exists: no
-settings participant receipts exist: no
-first visible matching settings frame exists: no
+one RAF controller exists: yes
+RAF stop/reset only occurs through explicit stop: yes
+GameCanvas blur handler exists: yes
+visibilitychange handler exists: no
+pagehide/pageshow handlers exist: no
+freeze/resume handlers exist: no
+BFCache persisted classification exists: no
+held input retirement on lifecycle event exists: no
+client-send lifecycle policy exists: no
+host-publication lifecycle policy exists: no
+session checkpoint exists: no
+participant resume revalidation exists: no
+stale lifecycle callback rejection exists: no
+first resumed runtime frame acknowledgement exists: no
+React unmount cleanup exists: yes
 ```
 
 ## Documentation checks
@@ -79,7 +78,7 @@ architecture audit: yes
 render audit: yes
 gameplay audit: yes
 interaction audit: yes
-settings system audit: yes
+page-lifecycle system audit: yes
 deploy audit: yes
 central-sync audit: yes
 kit registry refreshed: yes
@@ -92,27 +91,31 @@ npm install
 npm run lint
 npm run build
 browser launch
-pointer-lock fixture
-held-input fixture
-client send-suspension fixture
-settings persistence fixture
+visibility fixture
+pagehide/pageshow fixture
+BFCache navigation fixture
+freeze/resume fixture
+host/client suspension fixture
+transport disconnect fixture
+WebGL invalidation fixture
 source/build/deployed parity
 ```
 
 ## Missing executable fixtures
 
 ```txt
-hold movement while opening settings
-interaction rejection while open
-pointer-lock transfer and fresh reacquisition
-passive client receive with active send suspension
-stale key rejection after close
-preference apply and reload
-invalid candidate and persistence rollback
-route exit during settings session
-settings-revision visible-frame acknowledgement
+held key release while hidden
+pointer-lock hide and resume
+host hidden while clients continue
+client hidden while host continues
+persisted BFCache restore
+non-persisted pagehide retirement
+stale RAF and transport callbacks
+renderer/transport partial resume failure
+first resumed frame correlation
+source, build and deployed-origin parity
 ```
 
 ## Claims intentionally withheld
 
-No claim is made for safe Settings behavior, input suspension, pointer-lock ownership, adopted preferences, persistence, accessibility, visible-frame convergence, deployment parity, or production readiness.
+No claim is made for lifecycle suspension, BFCache compatibility, transport restoration, stale-input safety, atomic resume, resumed-frame convergence, deployment parity or production readiness.
