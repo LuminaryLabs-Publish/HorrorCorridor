@@ -1,94 +1,79 @@
 # HorrorCorridor Next Steps
 
-**Updated:** `2026-07-14T04-38-29-04-00`
+**Updated:** `2026-07-14T10-40-05-04-00`
 
 ## Summary
 
-Keep the existing live-agent scripts as adapters, but move proof identity and settlement into one authority. Bind source, dependencies, server, browser, page, frames, artifacts and retirement before treating an episode as reproducible evidence.
+Replace the direct Settings overlay toggle with a small authority that suspends gameplay input, transfers pointer ownership, validates supported preferences, persists one accepted revision, and proves visible adoption before returning to play.
 
 ## Plan ledger
 
-**Goal:** turn opportunistic local browser observations into hermetic, revision-bound proof without restructuring gameplay code.
+**Goal:** implement settings authority with minimal changes to the existing stores and `GameCanvas` lifecycle.
 
 ### Documentation
 
-- [x] Audit the recurring runner and browser harness.
-- [x] Preserve the 29-kit runtime/tooling inventory.
-- [x] Document the two proof adapters.
-- [x] Define the parent DSK and candidate surfaces.
-- [x] Add and route the timestamped audit family.
+- [x] Audit Settings, input, pointer lock, simulation, networking, and presentation.
+- [x] Preserve the 29-kit and two-adapter inventory.
+- [x] Define the parent domain and fixture gate.
 
-### Gate 1: source and environment admission
+### Gate 1: settings session and command admission
 
-- [ ] Add `LiveAgentProofCommand`, `ProofRunId`, `EpisodeId` and `ObservationGeneration`.
-- [ ] Bind repository commit, product manifest and proof-policy revisions.
-- [ ] Fingerprint package lock, Node, Playwright, browser, Python and Pillow.
-- [ ] Remove or explicitly admit the external NexusSimulator Playwright fallback.
+- [ ] Add `SettingsSessionId`, `SettingsRevision`, and command IDs.
+- [ ] Replace direct `toggleSettingsOverlay()` entry with `SettingsOpenCommand`.
+- [ ] Return typed open, apply, and close results.
+- [ ] Reject stale or duplicate settings commands.
 
-### Gate 2: server ownership
+### Gate 2: input and pointer ownership
 
-- [ ] Reserve an ephemeral loopback port before server spawn.
-- [ ] Prove the child PID owns the listening socket.
-- [ ] Expose expected application and repository fingerprints from the route.
-- [ ] Reject foreign HTTP responses and occupied-port ambiguity.
+- [ ] Clear held movement, look, interact, and pause input on open.
+- [ ] Release pointer lock and record the transfer result.
+- [ ] Block gameplay key and mouse admission while settings owns focus.
+- [ ] Suspend local prediction and client player-update sends.
+- [ ] Continue passive authoritative snapshot receipt.
 
-### Gate 3: browser and page identity
+### Gate 3: accessible presentation
 
-- [ ] Record executable path, digest, browser version, engine and launch policy.
-- [ ] Define whether CDP reuse is allowed.
-- [ ] Never silently reuse a foreign context.
-- [ ] Allocate browser, context and page generations.
-- [ ] Classify hardware, software and unavailable GPU presentation.
+- [ ] Add a visible Settings entry during PLAYING.
+- [ ] Add focus trap, keyboard navigation, Escape/Close behavior, and focus restoration.
+- [ ] Ensure PAUSED and route-exit behavior retire the settings session explicitly.
+- [ ] Require a fresh pointer gesture after close.
 
-### Gate 4: frame and action evidence
+### Gate 4: preferences
 
-- [ ] Bind the debug bridge to a renderer generation.
-- [ ] Admit an exact starting frame and snapshot revision.
-- [ ] Execute a typed, bounded action-profile command.
-- [ ] Record input admission/release frames and simulation ticks.
-- [ ] Capture before/after state and images from cited frames.
+- [ ] Declare only preferences with real consumers.
+- [ ] Validate ranges and capability support.
+- [ ] Atomically adopt camera, input, render, UI, and accessibility consumers.
+- [ ] Persist the accepted revision with schema/version metadata.
+- [ ] Roll back all participants on mandatory-consumer failure.
 
-### Gate 5: artifact settlement
+### Gate 5: visible proof
 
-- [ ] Hash screenshots, debug state, logs and report files.
-- [ ] Record dimensions, byte lengths, viewport, DPR and renderer fingerprint.
-- [ ] Make each image probe cite its input artifact hash and tool version.
-- [ ] Atomically promote one immutable episode manifest.
-- [ ] Publish typed gate and episode results.
+- [ ] Bind Settings frames to session and settings revisions.
+- [ ] Record input-suspension and pointer-lock receipts.
+- [ ] Acknowledge the first matching visible frame.
+- [ ] Verify source, production build, and deployed origin.
 
-### Gate 6: cancellation and retirement
+### Gate 6: fixtures
 
-- [ ] Replace or wrap blocking child execution with cancellable process control.
-- [ ] Reject late child output after cancellation or supersession.
-- [ ] Distinguish owned browser close from attached-browser disconnect.
-- [ ] Await page, context, browser, child, server and port-release receipts.
-- [ ] Publish a terminal run result only after mandatory cleanup settles.
-
-### Gate 7: fixtures
-
-- [ ] Foreign server on expected port.
-- [ ] Stale or foreign CDP endpoint.
-- [ ] Shared browser context with existing pages.
-- [ ] Browser/Playwright/Pillow version replacement.
-- [ ] Missing debug bridge and stale renderer frame.
-- [ ] Partial screenshot and artifact-hash mismatch.
-- [ ] SIGINT during an active episode.
-- [ ] Server refusing to exit.
-- [ ] Source, production-build and deployed-origin parity.
+- [ ] Hold W while opening Settings.
+- [ ] Press interaction keys while Settings is open.
+- [ ] Open while pointer locked.
+- [ ] Open as a client while receiving SYNC.
+- [ ] Close with stale held keys.
+- [ ] Apply, reload, reject invalid values, inject persistence failure, and exit route mid-session.
 
 ## Dependency order
 
 ```txt
-source and environment identity
-  -> owned server
-  -> admitted browser/context/page
-  -> debug and renderer frame identity
-  -> bounded action result
-  -> artifact hashes and gate settlement
-  -> cancellation and terminal retirement
+settings command identity
+  -> input suspension and pointer transfer
+  -> accessible overlay ownership
+  -> typed preference adoption
+  -> persistence and rollback
+  -> visible-frame proof
   -> source/build/deployed fixtures
 ```
 
 ## Completion boundary
 
-Do not treat a passing live-agent report as reproducible proof until the immutable evidence manifest and retirement fixtures pass on `main`.
+Do not treat the Settings surface as functional or safe during play until input suspension, preference adoption, persistence, and re-entry fixtures pass on `main`.
