@@ -2,27 +2,26 @@
 
 **Repository:** `LuminaryLabs-Publish/HorrorCorridor`  
 **Branch:** `main`  
-**Updated:** `2026-07-14T04-38-29-04-00`  
-**Status:** `live-agent-browser-proof-provenance-retirement-authority-audited`
+**Updated:** `2026-07-14T10-40-05-04-00`  
+**Status:** `settings-overlay-input-suspension-preference-authority-audited`
 
 ## Summary
 
-HorrorCorridor is a cooperative procedural first-person maze with solo, host and client routes, deterministic bootstrap, transport, interaction gameplay, Three.js presentation and browser proof tooling.
+HorrorCorridor is a cooperative procedural first-person maze with solo, host, and client routes, deterministic bootstrap, PeerJS/local transport, interaction gameplay, Three.js presentation, and browser proof tooling.
 
-The current audit isolates live-agent evidence provenance. The recurring runner and browser harness produce useful gameplay, debug and screenshot observations, but the report is not bound to one immutable source revision, dependency environment, owned server, browser executable/context, renderer frame, artifact hash manifest or terminal cleanup result.
+The current audit isolates Settings ownership. `Q` makes a static control-reference overlay visible while the UI remains `PLAYING`; pointer lock, held input, movement, interaction, prediction, publication, and rendering remain active. No typed preference, accepted settings revision, persistence result, or matching visible-frame receipt exists.
 
 ## Plan ledger
 
-**Goal:** make every live-agent episode independently reproducible and attributable from source admission through browser observation, artifact settlement and resource retirement.
+**Goal:** make settings entry, preference adoption, and exit one transaction that owns input suspension, pointer-lock transfer, persistence, rollback, and visible proof.
 
 - [x] Compare the full Publish inventory and central ledger.
 - [x] Exclude `TheCavalryOfRome`.
 - [x] Select only HorrorCorridor under the oldest eligible rule.
-- [x] Preserve the full interaction loop, domains, 29-kit inventory and services.
-- [x] Document the two live-agent proof adapters.
-- [x] Add the timestamped proof-provenance audit family.
+- [x] Preserve the full interaction loop, domains, 29-kit inventory, two adapters, and services.
+- [x] Add the timestamped settings audit family.
 - [x] Refresh root docs and machine registry.
-- [ ] Implement and execute hermetic proof, cancellation and retirement fixtures.
+- [ ] Implement and execute settings, input, pointer-lock, persistence, and frame fixtures.
 
 ## Read first
 
@@ -30,36 +29,37 @@ The current audit isolates live-agent evidence provenance. The recurring runner 
 2. `.agent/next-steps.md`
 3. `.agent/known-gaps.md`
 4. `.agent/validation.md`
-5. `.agent/trackers/2026-07-14T04-38-29-04-00/project-breakdown.md`
-6. `.agent/architecture-audit/2026-07-14T04-38-29-04-00-live-agent-browser-proof-provenance-dsk-map.md`
-7. `.agent/render-audit/2026-07-14T04-38-29-04-00-browser-frame-artifact-coherence-gap.md`
-8. `.agent/live-agent-audit/2026-07-14T04-38-29-04-00-server-browser-artifact-provenance-contract.md`
-9. `.agent/deploy-audit/2026-07-14T04-38-29-04-00-live-agent-proof-fixture-gate.md`
-10. `.agent/central-sync-audit/2026-07-14T04-38-29-04-00-repo-ledger-live-agent-proof-reconciliation.md`
+5. `.agent/trackers/2026-07-14T10-40-05-04-00/project-breakdown.md`
+6. `.agent/architecture-audit/2026-07-14T10-40-05-04-00-settings-overlay-input-suspension-dsk-map.md`
+7. `.agent/render-audit/2026-07-14T10-40-05-04-00-settings-overlay-visible-input-ownership-gap.md`
+8. `.agent/settings-audit/2026-07-14T10-40-05-04-00-control-preference-input-suspension-contract.md`
+9. `.agent/deploy-audit/2026-07-14T10-40-05-04-00-settings-overlay-fixture-gate.md`
+10. `.agent/central-sync-audit/2026-07-14T10-40-05-04-00-repo-ledger-settings-overlay-reconciliation.md`
 
 ## Current authority boundary
 
 ```txt
-corridor-live-agent-browser-proof-provenance-retirement-authority-domain
+corridor-settings-overlay-input-suspension-preference-authority-domain
 ```
 
 ## Required transaction
 
 ```txt
-LiveAgentProofCommand
-  -> bind source, product, dependency and proof-policy revisions
-  -> reserve and prove ownership of the server endpoint
-  -> fingerprint and admit the browser/CDP environment
-  -> create isolated context and page generations
-  -> admit the debug bridge and renderer frame generation
-  -> execute a bounded action command
-  -> capture frame-correlated state and images
-  -> hash and atomically publish one artifact manifest
-  -> derive typed gate and episode results
-  -> cancel stale work and retire child, page, browser and server ownership
-  -> publish one terminal LiveAgentProofResult
+SettingsOpenCommand
+  -> suspend gameplay input and local prediction
+  -> clear held input and release pointer lock
+  -> project an accessible overlay
+
+SettingsApplyCommand
+  -> validate and atomically adopt one SettingsRevision
+  -> persist and acknowledge the matching visible frame
+
+SettingsCloseCommand
+  -> retire overlay ownership
+  -> restore predecessor policy
+  -> require fresh pointer lock and reject stale input
 ```
 
 ## Validation boundary
 
-Documentation only. No hermetic proof, source identity, server ownership, browser identity, frame/artifact correlation, cancellation, retirement or production-readiness claim is made.
+Documentation only. No settings behavior, input suspension, pointer-lock transfer, persistence, visible-frame convergence, or production-readiness claim is made.
