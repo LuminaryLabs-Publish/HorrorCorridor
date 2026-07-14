@@ -1,23 +1,23 @@
 # HorrorCorridor Validation
 
-**Updated:** `2026-07-13T23-38-39-04-00`
+**Updated:** `2026-07-14T04-38-29-04-00`
 
 ## Summary
 
-Source inspection confirms that loading progress is timer-driven rather than subsystem-driven. The five rows have no work callbacks or step results, bootstrap executes after the rows, and visual construction starts after `PLAYING` and rendering readiness are committed. This documentation pass does not prove runtime failure or corrected behavior because no implementation or executable fixture was added.
+Source inspection confirms that the live-agent evidence chain is not revision-bound or hermetic. Server admission is HTTP-status based, browser/CDP admission is opportunistic, Playwright may come from an external checkout, image probes depend on undeclared Python/Pillow tooling, screenshots lack renderer-frame IDs and artifact hashes, and active child cancellation plus terminal cleanup receipts are absent.
 
 ## Plan ledger
 
-**Goal:** record exactly what source inspection proves and withhold loading/readiness claims until deterministic source, build and deployed-browser fixtures pass.
+**Goal:** record exactly what source inspection proves and withhold reproducibility claims until source, build and deployed-browser fixtures pass.
 
-- [x] Compare the full Publish inventory and central ledger.
-- [x] Verify central-ledger and root `.agent` coverage for all nine eligible repositories.
-- [x] Select HorrorCorridor as the oldest eligible central entry.
-- [x] Inspect `GameShell.tsx`, `LoadingScreen.tsx`, `GameCanvas.tsx`, stores and package scripts.
-- [x] Preserve the 29-kit and service census.
-- [x] Add the timestamped loading-evidence audit family.
+- [x] Compare all 11 Publish repositories against ten eligible central ledgers.
+- [x] Confirm root `.agent` coverage and synchronization.
+- [x] Select HorrorCorridor by the oldest eligible timestamp.
+- [x] Inspect package scripts and both live-agent proof adapters.
+- [x] Preserve the 29-kit census and document two proof adapters.
+- [x] Add the timestamped proof-provenance audit family.
 - [x] Refresh root documentation and machine registry.
-- [ ] Run implementation, build and deployed-browser fixtures after the authority exists.
+- [ ] Run implementation, fault-injection, build and deployed-browser fixtures after the authority exists.
 
 ## Change scope
 
@@ -26,6 +26,7 @@ runtime source changed: no
 network behavior changed: no
 gameplay behavior changed: no
 render behavior changed: no
+live-agent scripts changed: no
 package scripts changed: no
 dependencies changed: no
 deployment changed: no
@@ -39,33 +40,40 @@ documentation changed: yes
 ```txt
 full LuminaryLabs-Publish repository inventory
 central Publish repo ledger state
-root .agent state for the selected repository
-HorrorCorridor-V1/src/components/game/GameShell.tsx
-HorrorCorridor-V1/src/components/menus/LoadingScreen.tsx
-HorrorCorridor-V1/src/components/game/GameCanvas.tsx
-HorrorCorridor-V1/src/features/game-state/store/sessionStore.ts
-HorrorCorridor-V1/src/features/networking/protocol/messageTypes.ts
+root .agent state for HorrorCorridor
 HorrorCorridor-V1/package.json
+HorrorCorridor-V1/scripts/horror-corridor-live-agent.mjs
+HorrorCorridor-V1/scripts/horror-corridor-live-player-harness.mjs
+HorrorCorridor-V1/src/components/game/GameShell.tsx
+HorrorCorridor-V1/src/components/game/GameCanvas.tsx
+HorrorCorridor-V1/src/features/debug/store/runtimeDebugStore.ts
 ```
 
 ## Confirmed by inspection
 
 ```txt
-loading labels present: yes
-loading row work callback: no
-loading row result receipt: no
-row progression uses RAF and timeout: yes
-maze bootstrap occurs during named rows: no
-maze bootstrap occurs after rows: yes
-PLAYING set before GameCanvas mount: yes
-rendering ready set before renderer creation: yes
-renderer/scene/world first-frame proof: no
-client path uses same loading work plan: no
-load attempt identity: no
-load generation: no
-cancellation after asynchronous waits: no
-rollback result: no
-first visible frame acknowledgement: no
+recurring live-agent command exists: yes
+sample finite live-agent command exists: yes
+repository commit recorded in run manifest: no
+package/dependency fingerprint recorded: no
+Playwright external fallback exists: yes
+Python/Pillow probes exist: yes
+Python/Pillow versions recorded: no
+server port lease exists: no
+spawned-server ownership proof exists: no
+HTTP app identity validation exists: no
+HTTP readiness accepts any status below 500: yes
+reachable CDP reuse exists: yes
+browser executable/version fingerprint exists: no
+isolated CDP context required: no
+launch candidates include --disable-gpu: yes
+before/after debug and screenshots use one page: yes
+screenshot-to-renderer-frame ID exists: no
+artifact content hashes exist: no
+atomic immutable evidence manifest exists: no
+spawnSync child can be cancelled mid-episode: no
+browser cleanup errors are promoted: no
+server terminal exit/port-release receipt exists: no
 ```
 
 ## Documentation checks
@@ -78,7 +86,7 @@ architecture audit: yes
 render audit: yes
 gameplay audit: yes
 interaction audit: yes
-loading audit: yes
+live-agent system audit: yes
 deploy audit: yes
 central-sync audit: yes
 kit registry refreshed: yes
@@ -92,30 +100,32 @@ central internal change log: current run
 npm install
 npm run lint
 npm run build
-npm run harness:horror-corridor
-npm run visual:match
+npm run live-agent:sample
 npm run validate:live-player
-browser launch
-loading cancellation test
-first-frame readiness test
-production server smoke
-deployed-origin smoke
+npm run validate:live-player:dev
+browser or CDP launch
+Python/Pillow probe
+source server proof
+production server proof
+deployed-origin proof
 ```
 
 ## Missing executable fixtures
 
 ```txt
-timer-only progress rejection
-real step command/result correlation
-route replacement during every loading step
-bootstrap failure and rollback
-renderer/world preparation failure
-zero-sized mount
-first-frame timeout
-solo/host/client readiness parity
+foreign server and occupied-port rejection
+exact repository/app endpoint identity
+foreign and stale CDP rejection
+isolated browser context
+browser and tool version replacement
+hardware/software renderer classification
+frame-bound screenshot and debug-state capture
+artifact hash mismatch
+SIGINT during active episode
+browser/server retirement failure
 source/build/deployed parity
 ```
 
 ## Claims intentionally withheld
 
-No claim is made for truthful loading progress, load cancellation, readiness correctness, rollback, visible-frame completion or production readiness.
+No claim is made for hermetic proof, exact source/environment identity, owned server or browser execution, renderer-frame artifact provenance, cancellable episodes, terminal cleanup or production readiness.
