@@ -1,117 +1,146 @@
 # HorrorCorridor Known Gaps
 
-**Updated:** `2026-07-13T23-38-39-04-00`
+**Updated:** `2026-07-14T04-38-29-04-00`
 
 ## Summary
 
-The highest current gap is loading-progress and readiness evidence. Five fixed-delay rows claim maze, raycast, object, material and lighting progress without executing or observing those systems. Bootstrap and visual construction happen after the displayed sequence, while `PLAYING` and readiness can be committed before a visible frame exists.
+The highest current gap is live-agent proof provenance. The browser harness can produce a useful passing report without proving the exact repository revision, dependency environment, server owner, browser identity, renderer frames, artifact hashes or terminal cleanup that produced it.
 
 ## Plan ledger
 
-**Goal:** prioritize a real, cancellable loading transaction while retaining every earlier session, transport, protocol, rendering and lifecycle finding.
+**Goal:** prioritize reproducible proof while retaining every earlier loading, session, transport, protocol, rendering and gameplay finding.
 
 - [x] Preserve previous audits.
-- [x] Add and route the loading-evidence gap.
+- [x] Add and route the live-agent proof gap.
 - [ ] Implement and prove the complete authority chain.
 
 ## Primary ordered gaps
 
 ```txt
-1. load command identity and expected revisions
-2. immutable work plan with real subsystem steps
-3. typed step results and artifact fingerprints
-4. progress derived from accepted work instead of elapsed delay
-5. load generation, cancellation, timeout and supersession
-6. detached maze/bootstrap preparation
-7. renderer, scene, post-processing and world preparation
-8. evidence-backed readiness settlement and revocation
-9. first render submission and visible-frame acknowledgement
-10. host, solo and client loading/readiness parity
-11. rollback and partial-resource retirement
-12. host-start sealed roster and client convergence
-13. WebGL context and GPU-resource recovery
-14. cross-store session/runtime/UI atomic transition
-15. room identity, capacity and join admission
-16. local bridge and transport lifecycle
-17. protocol semantic and source admission
-18. focus, visibility and input retirement
-19. snapshot ordering, budgeting and backpressure
-20. interaction claim authority
-21. disconnect/reconnect and outcome convergence
+1. repository and product-manifest revision binding
+2. package, Playwright, browser, Python and Pillow environment fingerprint
+3. port lease and spawned-server ownership proof
+4. expected application identity at the admitted HTTP endpoint
+5. browser executable, version and launch-policy fingerprint
+6. explicit CDP reuse and ownership policy
+7. isolated browser context and page generations
+8. renderer generation and frame IDs
+9. action command identity and input admission/release receipts
+10. frame-bound debug state and screenshots
+11. artifact hashes and immutable manifest promotion
+12. typed proof-gate and episode results
+13. cancellable active child process
+14. page, context, browser, child, server and port retirement receipts
+15. source, production-build and deployed-origin proof parity
+16. truthful loading-progress and readiness settlement
+17. sealed host-start roster and client convergence
+18. WebGL context and GPU-resource recovery
+19. cross-store session/runtime/UI atomic transition
+20. protocol semantic and source admission
+21. snapshot ordering, budgeting and backpressure
+22. interaction claim authority and terminal outcome convergence
 ```
 
-## Current loading gap
+## Current proof gap
 
 ```txt
-visible labels: 5
-actual step commands: 0
-actual step results: 0
-progress source: active index plus RAF/timeout
-bootstrap during rows: no
-bootstrap after rows: yes
-renderer/world ready before rendering flag: no
-first visible frame gate: no
-client load-plan parity: no
-load attempt/generation: no
-cancellation after await: no
-rollback result: no
+repository SHA in run evidence: no
+product/package fingerprint: no
+external NexusSimulator revision: no
+Playwright source can be external: yes
+Python/Pillow environment manifest: no
+owned port/server proof: no
+HTTP admission validates app identity: no
+pre-existing CDP reuse: yes
+browser executable/version fingerprint: no
+foreign context reuse prevented: no
+software/hardware renderer classified: no
+screenshot-to-renderer-frame binding: no
+artifact hashes: no
+atomic immutable artifact manifest: no
+mid-episode cancellation: no
+terminal cleanup receipts: no
 ```
 
 ## Failure paths
 
-### Route replacement
+### Foreign server acceptance
 
 ```txt
-loading begins
-  -> user returns or session changes
-  -> pending RAF/timer continuation remains live
-  -> later continuation can commit PLAYING
+expected dev server fails or never owns port 3000
+  -> another service returns HTTP status below 500
+  -> waitForHttp succeeds
+  -> browser proof continues against the wrong application
 ```
 
-### Visual initialization failure
+### Foreign browser/context reuse
 
 ```txt
-rows finish
-  -> PLAYING and rendering ready commit
-  -> GameCanvas mounts
-  -> renderer or world creation fails
-  -> no terminal load failure or predecessor restoration
+an unrelated CDP endpoint is reachable
+  -> harness attaches
+  -> first existing context is reused
+  -> new proof page inherits an unsealed browser environment
+  -> report lacks ownership and executable identity
 ```
 
-### Client divergence
+### Uncontrolled tool environment
 
 ```txt
-client receives SYNC
-  -> marks all readiness true
-  -> bypasses host/solo work plan
-  -> visual construction still occurs afterward
+repo Playwright import fails
+  -> hard-coded NexusSimulator checkout supplies Playwright
+  -> Python/Pillow probes run from host environment
+  -> versions and source revisions are not included in evidence
+```
+
+### Signal during active episode
+
+```txt
+parent receives SIGINT or SIGTERM
+  -> interrupted flag changes
+  -> spawnSync child remains blocking
+  -> cancellation cannot settle until child exits
+  -> late artifacts are not classified by generation
+```
+
+### Partial retirement
+
+```txt
+browser close failure is swallowed
+server child receives kill
+  -> close promise may resolve after 1.5 seconds
+  -> no exit status, port release or ownership receipt is recorded
+  -> run manifest can still become terminal
 ```
 
 ## Missing authority
 
 ```txt
-CorridorLoadCommand
-LoadAttemptId
-LoadGeneration
-LoadWorkPlan
-LoadStepCommand
-LoadStepResult
-LoadProgressSnapshot
-LoadCancellationResult
-BootstrapPreparationResult
-RenderProviderPreparationResult
-ReadinessEvidence
-ReadinessRevocation
-FirstRenderSubmission
-FirstVisibleFrameAck
-CorridorLoadResult
-LoadRollbackResult
+LiveAgentProofCommand
+ProofRunId
+EpisodeId
+ObservationGeneration
+RepositoryRevisionBinding
+DependencyEnvironmentManifest
+ServerPortLease
+ServerOwnershipResult
+BrowserAdmissionResult
+ContextGeneration
+PageGeneration
+FrameEvidence
+ActionProfileResult
+ArtifactHashManifest
+ProofGateResult
+EpisodeProofResult
+EpisodeCancellationResult
+BrowserRetirementResult
+ServerRetirementResult
+LiveAgentProofResult
 ```
 
 ## Retained gaps
 
-All previous host-start, WebGL recovery, cross-store transition, room identity, capacity, client join, transport, protocol, runtime lifecycle, clock, snapshot, input, movement, interaction, outcome, debug and deployment findings remain open.
+All previous loading, host-start, WebGL recovery, cross-store transition, room identity, capacity, transport, protocol, runtime lifecycle, clock, snapshot, input, movement, interaction, outcome, debug and deployment findings remain open.
 
 ## Do not claim
 
-Do not claim truthful loading progress, cancellable loading, complete readiness, first-frame completion or production parity until the authority and fixtures pass on `main`.
+Do not claim hermetic live-agent proof, exact source identity, owned server/browser execution, frame-artifact provenance, cancellation, complete retirement or production parity until the authority and fixtures pass on `main`.
