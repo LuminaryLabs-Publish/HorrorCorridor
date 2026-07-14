@@ -1,112 +1,117 @@
 # HorrorCorridor Known Gaps
 
-**Updated:** `2026-07-13T17-40-04-04-00`
+**Updated:** `2026-07-13T23-38-39-04-00`
 
 ## Summary
 
-The highest current gap is multiplayer host-start admission. The host can begin from an unsealed mutable lobby, continue stale asynchronous loading, commit locally before transport convergence, and send independent start messages without client acknowledgement or first coherent multiplayer-frame proof.
+The highest current gap is loading-progress and readiness evidence. Five fixed-delay rows claim maze, raycast, object, material and lighting progress without executing or observing those systems. Bootstrap and visual construction happen after the displayed sequence, while `PLAYING` and readiness can be committed before a visible frame exists.
 
 ## Plan ledger
 
-**Goal:** prioritize a sealed, cancellable and rollback-safe host-start transaction while retaining every earlier session, transport, protocol, rendering and lifecycle finding.
+**Goal:** prioritize a real, cancellable loading transaction while retaining every earlier session, transport, protocol, rendering and lifecycle finding.
 
 - [x] Preserve previous audits.
-- [x] Add and centrally route the host-start gap.
+- [x] Add and route the loading-evidence gap.
 - [ ] Implement and prove the complete authority chain.
 
 ## Primary ordered gaps
 
 ```txt
-1. host-start command identity and expected revisions
-2. sealed roster, connected-member and all-ready policy
-3. loading generation, cancellation, timeout and supersession
-4. detached initial-snapshot preparation
-5. client preparation and commit acknowledgements
-6. START_GAME/SYNC correlation and source admission
-7. aggregate host/client commit or rollback
-8. first coherent multiplayer-frame acknowledgement
-9. WebGL context and GPU-resource recovery
-10. cross-store session/runtime/UI atomic transition
-11. room identity and capacity admission
-12. client join acknowledgement and cancellation
-13. local bridge and transport lifecycle
-14. protocol semantic admission
-15. render-surface and presentation acknowledgement
-16. focus/visibility/input retirement
-17. frame failure containment and runtime clock
-18. snapshot ordering, budgeting and backpressure
-19. interaction claim authority
-20. disconnect/reconnect retirement
-21. outcome, pause and replay convergence
+1. load command identity and expected revisions
+2. immutable work plan with real subsystem steps
+3. typed step results and artifact fingerprints
+4. progress derived from accepted work instead of elapsed delay
+5. load generation, cancellation, timeout and supersession
+6. detached maze/bootstrap preparation
+7. renderer, scene, post-processing and world preparation
+8. evidence-backed readiness settlement and revocation
+9. first render submission and visible-frame acknowledgement
+10. host, solo and client loading/readiness parity
+11. rollback and partial-resource retirement
+12. host-start sealed roster and client convergence
+13. WebGL context and GPU-resource recovery
+14. cross-store session/runtime/UI atomic transition
+15. room identity, capacity and join admission
+16. local bridge and transport lifecycle
+17. protocol semantic and source admission
+18. focus, visibility and input retirement
+19. snapshot ordering, budgeting and backpressure
+20. interaction claim authority
+21. disconnect/reconnect and outcome convergence
 ```
 
-## Current host-start gap
+## Current loading gap
 
 ```txt
-host/room checks: present
-all-ready connected sealed roster gate: absent
-room/roster/transport revision preconditions: absent
-StartAttemptId: absent
-LoadingGeneration: absent
-cancellation after waits: absent
-initial snapshot candidate: implicit live commit
-client preparation request/result: absent
-client start acknowledgement: absent
-START_GAME/SYNC shared correlation: absent
-late/duplicate quarantine: absent
-aggregate rollback: absent
-first coherent participant frame acknowledgement: absent
+visible labels: 5
+actual step commands: 0
+actual step results: 0
+progress source: active index plus RAF/timeout
+bootstrap during rows: no
+bootstrap after rows: yes
+renderer/world ready before rendering flag: no
+first visible frame gate: no
+client load-plan parity: no
+load attempt/generation: no
+cancellation after await: no
+rollback result: no
 ```
 
 ## Failure paths
 
-### Roster changes during loading
+### Route replacement
 
 ```txt
-Start accepted optimistically
-  -> asynchronous waits
-  -> membership/readiness/connection changes
-  -> stale continuation reads changed state
-  -> run commits without a terminal policy result
+loading begins
+  -> user returns or session changes
+  -> pending RAF/timer continuation remains live
+  -> later continuation can commit PLAYING
 ```
 
-### Message reordering
+### Visual initialization failure
 
 ```txt
-host commits locally
-  -> START_GAME and SYNC broadcast separately
-  -> client may observe either independently
-  -> no shared transition identity or acknowledgement
+rows finish
+  -> PLAYING and rendering ready commit
+  -> GameCanvas mounts
+  -> renderer or world creation fails
+  -> no terminal load failure or predecessor restoration
 ```
 
-### Cancellation or route replacement
+### Client divergence
 
 ```txt
-host returns to title or transport changes
-  -> pending loading continuation is not generation-fenced
-  -> later continuation can still mutate session/runtime/UI
+client receives SYNC
+  -> marks all readiness true
+  -> bypasses host/solo work plan
+  -> visual construction still occurs afterward
 ```
 
 ## Missing authority
 
 ```txt
-HostStartCommand
-StartAttemptId
-LobbyRevision and SealedRosterFingerprint
-LoadingGeneration and cancellation result
-InitialSnapshotCandidate
-ClientPrepareResult
-HostStartCommitResult and ClientStartCommitResult
-StartRollbackResult
-LateStartMessageQuarantine
-HostStartResult
-FirstMultiplayerFrameAck
+CorridorLoadCommand
+LoadAttemptId
+LoadGeneration
+LoadWorkPlan
+LoadStepCommand
+LoadStepResult
+LoadProgressSnapshot
+LoadCancellationResult
+BootstrapPreparationResult
+RenderProviderPreparationResult
+ReadinessEvidence
+ReadinessRevocation
+FirstRenderSubmission
+FirstVisibleFrameAck
+CorridorLoadResult
+LoadRollbackResult
 ```
 
 ## Retained gaps
 
-All previous WebGL recovery, cross-store transition, room identity, capacity, client join, local bridge, transport, protocol, runtime lifecycle, clock, snapshot, input, movement, interaction, outcome, debug and deployment findings remain open.
+All previous host-start, WebGL recovery, cross-store transition, room identity, capacity, client join, transport, protocol, runtime lifecycle, clock, snapshot, input, movement, interaction, outcome, debug and deployment findings remain open.
 
 ## Do not claim
 
-Do not claim sealed-lobby start, all-ready enforcement, cancellable loading, start-message convergence, atomic multiplayer commit, rollback or visible-frame parity until the authority and fixtures pass on `main`.
+Do not claim truthful loading progress, cancellable loading, complete readiness, first-frame completion or production parity until the authority and fixtures pass on `main`.
