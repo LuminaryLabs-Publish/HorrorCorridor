@@ -1,80 +1,63 @@
 # HorrorCorridor Current Audit
 
 **Repository:** `LuminaryLabs-Publish/HorrorCorridor`  
-**Updated:** `2026-07-14T04-38-29-04-00`  
+**Updated:** `2026-07-14T10-40-05-04-00`  
 **Branch:** `main`  
-**Status:** `live-agent-browser-proof-provenance-retirement-authority-audited`
+**Status:** `settings-overlay-input-suspension-preference-authority-audited`
 
 ## Summary
 
-The repository retains 29 implemented kit surfaces spanning routing, sessions, PeerJS/local transport, deterministic maze bootstrap, movement, interactions, ooze, authoritative snapshots, Three.js rendering, bloom, minimap, diagnostics, cleanup and package validation. It also contains a recurring live-agent runner and a live-player browser-proof adapter.
-
-The current boundary is proof provenance. The live-player harness can accept any HTTP response below 500, reuse a reachable CDP browser/context, load Playwright from an external NexusSimulator checkout, run undeclared Python/Pillow probes and publish screenshots without renderer-frame IDs or content hashes. The parent runner uses a blocking child process and records no terminal ownership receipts for child, browser or server retirement.
+The repository retains 29 implemented kit surfaces and two browser-proof adapters. The current boundary is Settings ownership: a static control overlay is toggled inside `PLAYING`, but input, pointer lock, local prediction, interaction, networking, and frame production are not suspended or version-bound.
 
 ## Plan ledger
 
-**Goal:** make every live-agent proof result cite one immutable source, server, browser, page, frame, action and artifact chain.
+**Goal:** establish one settings transaction from overlay entry through preference adoption, persistence, visible proof, and safe return to play.
 
-- [x] Compare the full Publish inventory and central ledger.
-- [x] Exclude `TheCavalryOfRome`.
-- [x] Select HorrorCorridor as the oldest eligible entry.
-- [x] Inspect package command wiring and both proof adapters.
-- [x] Preserve all 29 implemented kits and services.
-- [x] Document two proof adapters and their services.
-- [x] Add the timestamped proof-provenance audit family.
-- [x] Refresh root docs and registry.
+- [x] Compare 11 Publish repositories and ten eligible central ledgers.
+- [x] Confirm root `.agent` coverage and synchronization.
+- [x] Select HorrorCorridor by the oldest eligible timestamp.
+- [x] Inspect `GameShell`, `GameCanvas`, `HUDOverlay`, `SettingsOverlay`, `uiStore`, and package surfaces.
+- [x] Preserve all 29 kits, two adapters, and services.
+- [x] Add and route the timestamped settings audit family.
 - [ ] Implement and prove the authority.
 
 ## Complete interaction loop
 
 ```txt
-live-agent command
-  -> create run directory and mutable manifest
-  -> optionally spawn fixed-port dev server
-  -> choose movement profile from prior episode gates
-  -> synchronously spawn live-player child
+start/lobby
+  -> solo, host, or client admission
+  -> bootstrap snapshot
+  -> GameCanvas initializes world, input, network, and RAF
+  -> movement and interaction advance the maze loop
+  -> host publishes or client sends updates
+  -> renderer and minimap project state
 
-live-player child
-  -> accept HTTP endpoint
-  -> resolve Playwright/browser/CDP opportunistically
-  -> open or reuse context and create page
-  -> enter playable run and admit debug bridge
-  -> capture before state and screenshot
-  -> inject bounded movement
-  -> capture after state and screenshot
-  -> execute Python/Pillow probes
-  -> derive gates and write report.json
-
-parent
-  -> trust child exit status and optional report
-  -> append JSONL and replace latest summary
-  -> repeat
-  -> observe signals only between blocking episodes
-  -> best-effort close server
-  -> write terminal run manifest
+settings
+  -> Q directly toggles overlay visibility
+  -> screen remains PLAYING
+  -> pointer lock and listeners remain active
+  -> simulation/prediction and networking continue
+  -> no typed preference or accepted revision exists
+  -> Q or Close hides the overlay without a settled return transaction
 ```
 
 ## Domains in use
 
 ```txt
-repository and source revision identity
-package, dependency and external-tool environment
-Node child-process lifecycle
-server port, endpoint admission and ownership
-browser executable and CDP admission
-context and page generation
-route and playable-run admission
-runtime debug bridge and renderer-frame observation
-action profiles and keyboard injection
-screenshot, canvas and visible-text observation
-Python/Pillow image probes
-proof gate and episode settlement
-artifact hashing and manifest promotion
-recurring scheduling, cancellation and retirement
-source, build, deployment and central tracking
+routing and screen lifecycle
+session room roster connection and readiness
+loading and deterministic bootstrap
+transport protocol and snapshot publication
+keyboard pointer-lock focus and input state
+settings overlay visibility and control reference
+pause completion and UI projection
+movement collision camera and prediction
+interaction anomaly ooze and victory
+Three.js world post-processing minimap and RAF
+debug proof cleanup package build and deployment
 ```
 
-## Implemented kits and offered services
+## Implemented inventory
 
 ```txt
 implemented kits: 29
@@ -82,51 +65,45 @@ proof adapters: 2
 total implemented surfaces: 31
 ```
 
-The 29 kits remain unchanged. They cover application routing, session state, runtime snapshots, UI projection, host/client transport, event bus, protocol construction/serialization, deterministic bootstrap, input, movement, network updates, interactions, anomaly and ooze rules, authoritative publication, animation, Three.js world/post-processing/minimap, diagnostics, cleanup and package validation.
-
-The `live-agent-runner-adapter` offers recurring episode scheduling, adaptive action selection, child execution, JSONL history and latest-summary projection. The `live-player-browser-proof-adapter` offers server/browser admission, route control, debug readback, screenshots, image probes and proof gates.
+The full kit-by-kit service inventory remains in `.agent/kit-registry.json` and the latest tracker.
 
 ## Source-backed findings
 
 ```txt
-repository revision in evidence manifest: no
-locked dependency/environment fingerprint: no
-owned port/server proof: no
-HTTP expected-app identity check: no
-pre-existing CDP reuse: yes
-browser executable/version fingerprint: no
-isolated context required on CDP attach: no
-external Playwright fallback: yes
-Python/Pillow version manifest: no
-software/hardware renderer classification: no
-screenshot-to-frame correlation: no
-artifact hashes: no
-atomic immutable artifact manifest: no
-mid-episode cancellation with spawnSync: no
-terminal browser/server retirement receipts: no
-source/build/deployed parity: no
+mutable settings controls: no
+static control map: yes
+visible Settings button during PLAYING: no
+Q opens overlay while PLAYING: yes
+held input cleared on open: no
+pointer lock released on open: no
+gameplay input checks settings ownership: no
+simulation checks settings ownership: no
+network send suspension: no
+accepted SettingsRevision: no
+preference persistence: no
+matching visible-frame acknowledgement: no
 ```
 
-## Required parent domain
+## Required authority
 
 ```txt
-corridor-live-agent-browser-proof-provenance-retirement-authority-domain
+corridor-settings-overlay-input-suspension-preference-authority-domain
 ```
 
 ## Current file family
 
 ```txt
-.agent/trackers/2026-07-14T04-38-29-04-00/project-breakdown.md
-.agent/turn-ledger/2026-07-14T04-38-29-04-00.md
-.agent/architecture-audit/2026-07-14T04-38-29-04-00-live-agent-browser-proof-provenance-dsk-map.md
-.agent/render-audit/2026-07-14T04-38-29-04-00-browser-frame-artifact-coherence-gap.md
-.agent/gameplay-audit/2026-07-14T04-38-29-04-00-adaptive-episode-action-loop.md
-.agent/interaction-audit/2026-07-14T04-38-29-04-00-live-agent-command-result-map.md
-.agent/live-agent-audit/2026-07-14T04-38-29-04-00-server-browser-artifact-provenance-contract.md
-.agent/deploy-audit/2026-07-14T04-38-29-04-00-live-agent-proof-fixture-gate.md
-.agent/central-sync-audit/2026-07-14T04-38-29-04-00-repo-ledger-live-agent-proof-reconciliation.md
+.agent/trackers/2026-07-14T10-40-05-04-00/project-breakdown.md
+.agent/turn-ledger/2026-07-14T10-40-05-04-00.md
+.agent/architecture-audit/2026-07-14T10-40-05-04-00-settings-overlay-input-suspension-dsk-map.md
+.agent/render-audit/2026-07-14T10-40-05-04-00-settings-overlay-visible-input-ownership-gap.md
+.agent/gameplay-audit/2026-07-14T10-40-05-04-00-settings-open-live-simulation-loop.md
+.agent/interaction-audit/2026-07-14T10-40-05-04-00-settings-command-input-admission-map.md
+.agent/settings-audit/2026-07-14T10-40-05-04-00-control-preference-input-suspension-contract.md
+.agent/deploy-audit/2026-07-14T10-40-05-04-00-settings-overlay-fixture-gate.md
+.agent/central-sync-audit/2026-07-14T10-40-05-04-00-repo-ledger-settings-overlay-reconciliation.md
 ```
 
 ## Validation boundary
 
-Documentation only. No runtime, networking, gameplay, rendering, scripts, package, dependency or deployment behavior changed.
+Documentation only. Runtime, networking, gameplay, rendering, settings, scripts, dependencies, tests, workflows, and deployment are unchanged.
