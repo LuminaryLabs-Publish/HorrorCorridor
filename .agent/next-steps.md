@@ -1,80 +1,78 @@
 # HorrorCorridor Next Steps
 
-**Updated:** `2026-07-13T17-40-04-04-00`
+**Updated:** `2026-07-13T23-38-39-04-00`
 
 ## Summary
 
-Insert a host-start barrier between the lobby Start action and live session/runtime/UI mutation. Seal the roster, validate readiness and connection policy, make loading cancellable, prepare one detached snapshot, collect client acknowledgements, and commit or roll back every participant under one attempt.
+Replace timer-driven loading rows with an immutable work plan whose visible progress is derived from accepted subsystem results. Commit `PLAYING` and readiness only after bootstrap, render preparation and the first matching visible frame settle.
 
 ## Plan ledger
 
-**Goal:** replace optimistic local start with one typed multiplayer transaction and visible convergence proof.
+**Goal:** turn loading from a cosmetic delay into one cancellable, evidence-backed transaction.
 
 ### Documentation
 
-- [x] Audit host start, loading and client reception.
-- [x] Preserve the 29-kit inventory and domains.
+- [x] Audit the loading rows, bootstrap order and render mount order.
+- [x] Preserve the 29-kit inventory and complete domain map.
 - [x] Define the parent DSK and candidate surfaces.
 - [x] Add the timestamped audit family.
 - [x] Refresh root docs and registry.
 
-### Gate 1: command and preconditions
+### Gate 1: command and generation
 
-- [ ] Add `HostStartCommand`, `StartAttemptId` and expected revisions.
-- [ ] Seal the eligible roster for the attempt.
-- [ ] Require connected and ready members under explicit policy.
-- [ ] Reject duplicate, stale, unready, disconnected and invalid commands with zero mutation.
+- [ ] Add `CorridorLoadCommand`, `LoadAttemptId` and `LoadGeneration`.
+- [ ] Bind route, session, room, roster and provider revisions.
+- [ ] Reject duplicate or stale starts without mutation.
 
-### Gate 2: loading lifecycle
+### Gate 2: real work plan
 
-- [ ] Add monotonic `LoadingGeneration`.
-- [ ] Revalidate after every await.
-- [ ] Cancel on route, room, roster, transport or policy replacement.
-- [ ] Publish timeout, cancellation and supersession results.
+- [ ] Replace authored timer labels with subsystem step descriptors.
+- [ ] Give every step a command, expected revision and typed result.
+- [ ] Derive progress from accepted weighted receipts.
+- [ ] Expose failed and degraded states explicitly.
 
-### Gate 3: detached preparation
+### Gate 3: cancellation and rollback
 
-- [ ] Build one immutable initial snapshot candidate.
-- [ ] Bind seed, room revision and roster fingerprint.
-- [ ] Request client preparation for the sealed roster.
-- [ ] Collect typed preparation results.
+- [ ] Cancel after route, session, room, roster or provider replacement.
+- [ ] Revalidate after every asynchronous boundary.
+- [ ] Retire timers, partial bootstrap and visual resources exactly once.
+- [ ] Restore the predecessor route after failure or cancellation.
 
-### Gate 4: correlated commit
+### Gate 4: readiness settlement
 
-- [ ] Commit host session, runtime, UI and readiness together.
-- [ ] Correlate `START_GAME` and `SYNC` under one attempt or replace them with one start envelope.
-- [ ] Require client commit acknowledgement.
-- [ ] Quarantine stale, duplicate and predecessor messages.
+- [ ] Prepare the deterministic bootstrap artifact before adoption.
+- [ ] Prepare renderer, scene, post-processing and world resources before `PLAYING`.
+- [ ] Derive simulation, rendering, networking and input readiness from evidence.
+- [ ] Revoke readiness when its provider generation retires.
 
-### Gate 5: rollback and proof
+### Gate 5: visible completion
 
-- [ ] Restore the predecessor lobby after any non-accepted result.
-- [ ] Retire candidate state and timers exactly once.
-- [ ] Publish `HostStartResult`.
-- [ ] Publish participant-correlated first-frame acknowledgements.
+- [ ] Submit the first render under the accepted load generation.
+- [ ] Publish `FirstVisibleFrameAck`.
+- [ ] Commit `PLAYING` only with the matching acknowledgement.
+- [ ] Publish a terminal `CorridorLoadResult`.
 
 ### Gate 6: fixtures
 
-- [ ] Unready or disconnected member.
-- [ ] Join, leave or ready change during loading.
-- [ ] Route or transport replacement during loading.
-- [ ] START/SYNC reordering and duplication.
-- [ ] Client timeout or commit failure.
-- [ ] Aggregate rollback and first-frame convergence.
+- [ ] Timer-only false progress rejection.
+- [ ] Route replacement during every step.
+- [ ] Bootstrap and renderer failure.
+- [ ] Zero-sized mount and first-frame timeout.
+- [ ] Solo, host and client readiness parity.
 - [ ] Source, production-build and deployed-origin parity.
 
 ## Dependency order
 
 ```txt
-command and revisions
-  -> sealed roster and policy
-  -> cancellable loading generation
-  -> detached snapshot and client preparation
-  -> correlated atomic commit
-  -> rollback and late-message quarantine
-  -> first coherent participant frame proof
+command and generation
+  -> immutable real-work plan
+  -> typed step results and progress
+  -> cancellation and rollback
+  -> readiness evidence
+  -> first visible frame
+  -> source/build/deployed fixtures
 ```
 
 ## Completion boundary
 
-Do not claim reliable multiplayer start, lobby sealing, loading cancellation, client convergence or production readiness until the authority and fixtures pass on `main`.
+Do not claim truthful loading, complete readiness or playable visual entry until the authority and fixtures pass on `main`.
