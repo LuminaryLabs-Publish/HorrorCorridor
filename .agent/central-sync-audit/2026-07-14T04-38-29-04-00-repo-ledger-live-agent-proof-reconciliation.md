@@ -4,19 +4,21 @@
 
 ## Summary
 
-This record stages the HorrorCorridor live-agent proof-provenance findings for `LuminaryLabs-Dev/LuminaryLabs`. It replaces no earlier audit and retains loading, host-start, rendering, protocol, transport, gameplay and lifecycle findings.
+HorrorCorridor live-agent proof-provenance findings are synchronized to `LuminaryLabs-Dev/LuminaryLabs`. This audit replaces no earlier record and retains loading, host-start, rendering, protocol, transport, gameplay and lifecycle findings.
 
 ## Plan ledger
 
 **Goal:** mirror the selected repository, evidence, kit census, authority and validation boundary in the central ledger.
 
-- [x] Record full 11-repository Publish comparison.
-- [x] Record HorrorCorridor selection by oldest eligible timestamp.
+- [x] Record the full 11-repository Publish comparison.
+- [x] Record HorrorCorridor selection by the oldest eligible timestamp.
 - [x] Record 29 implemented kits and two proof adapters.
 - [x] Record the complete live-agent interaction loop.
 - [x] Record server, browser, frame, artifact and retirement gaps.
 - [x] Record the required parent authority and fixture boundary.
-- [ ] Central ledger and internal change log are completed after the repo-local documentation head is finalized.
+- [x] Update the central HorrorCorridor ledger.
+- [x] Add the paired internal change log.
+- [x] Push both repositories only to `main`.
 
 ## Central status
 
@@ -24,7 +26,7 @@ This record stages the HorrorCorridor live-agent proof-provenance findings for `
 live-agent-browser-proof-provenance-retirement-authority-central-reconciled
 ```
 
-## Required central files
+## Central files
 
 ```txt
 repo-ledger/LuminaryLabs-Publish/HorrorCorridor.md
@@ -37,4 +39,4 @@ The live-agent path generates useful same-page gameplay and visual observations,
 
 ## Validation boundary
 
-Documentation only. Central reconciliation must not claim runtime changes, executed browser proof or production parity.
+Documentation only. Central reconciliation does not claim runtime changes, executed browser proof or production parity.
