@@ -6,7 +6,7 @@
 
 ## Summary
 
-This audit family supersedes the prior Settings family as the current repo-local routing state while retaining every previous finding. The central ledger must record the new lifecycle authority, exact file family, unchanged runtime boundary and final repo-local documentation head.
+This audit family supersedes the prior Settings family as the current repo-local routing state while retaining every previous finding. The central ledger and paired internal change log now record the lifecycle authority, exact file family, unchanged runtime boundary and final repo-local documentation head.
 
 ## Plan ledger
 
@@ -15,9 +15,9 @@ This audit family supersedes the prior Settings family as the current repo-local
 - [x] Select only HorrorCorridor.
 - [x] Add the timestamped lifecycle audit family.
 - [x] Refresh root `.agent` routing and machine registry.
-- [ ] Record the final Publish head in the central ledger after repo-local writes complete.
-- [ ] Add the paired central internal change log.
-- [ ] Push the central repository only to `main`.
+- [x] Record the final Publish head in the central ledger after repo-local writes complete.
+- [x] Add the paired central internal change log.
+- [x] Push the central repository only to `main`.
 
 ## Central status
 
@@ -34,4 +34,4 @@ internal-change-log/2026-07-14T16-00-05-04-00-horror-corridor-page-lifecycle-sus
 
 ## Validation boundary
 
-The central reconciliation records documentation findings only. It must not promote lifecycle safety, BFCache compatibility, transport restoration, resumed-frame convergence or production readiness.
+The central reconciliation records documentation findings only. It does not promote lifecycle safety, BFCache compatibility, transport restoration, resumed-frame convergence or production readiness.
