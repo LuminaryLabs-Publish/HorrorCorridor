@@ -151,7 +151,7 @@
     "runtimeCommandsRun": false,
     "browserProofRun": false,
     "lifecycleFixtureAvailable": false,
-    "centralLedgerSynchronized": false,
-    "centralChangeLogCreated": false
+    "centralLedgerSynchronized": true,
+    "centralChangeLogCreated": true
   }
 }
