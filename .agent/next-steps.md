@@ -1,79 +1,81 @@
 # HorrorCorridor Next Steps
 
-**Updated:** `2026-07-14T10-40-05-04-00`
+**Updated:** `2026-07-14T16-00-05-04-00`
 
 ## Summary
 
-Replace the direct Settings overlay toggle with a small authority that suspends gameplay input, transfers pointer ownership, validates supported preferences, persists one accepted revision, and proves visible adoption before returning to play.
+Add one narrow page-lifecycle authority around the existing `GameCanvas` runtime. It should suspend local input, RAF and outbound work, preserve accepted snapshot truth, classify BFCache restoration, revalidate mandatory participants and prove the first resumed frame.
 
 ## Plan ledger
 
-**Goal:** implement settings authority with minimal changes to the existing stores and `GameCanvas` lifecycle.
+**Goal:** implement lifecycle safety without replacing existing input, transport, snapshot or rendering kits.
 
 ### Documentation
 
-- [x] Audit Settings, input, pointer lock, simulation, networking, and presentation.
+- [x] Audit visibility, pagehide/pageshow, freeze/resume, RAF, input, transport, rendering and cleanup.
 - [x] Preserve the 29-kit and two-adapter inventory.
-- [x] Define the parent domain and fixture gate.
+- [x] Define the parent authority and fixture gate.
 
-### Gate 1: settings session and command admission
+### Gate 1: lifecycle identity and event admission
 
-- [ ] Add `SettingsSessionId`, `SettingsRevision`, and command IDs.
-- [ ] Replace direct `toggleSettingsOverlay()` entry with `SettingsOpenCommand`.
-- [ ] Return typed open, apply, and close results.
-- [ ] Reject stale or duplicate settings commands.
+- [ ] Add `DocumentGeneration`, `LifecycleAttemptId` and `RuntimeGeneration`.
+- [ ] Normalize visibility, pagehide, pageshow, freeze and resume events.
+- [ ] Classify persisted BFCache transitions separately from normal navigation.
+- [ ] Reject duplicate, stale and superseded lifecycle work.
 
-### Gate 2: input and pointer ownership
+### Gate 2: suspension settlement
 
-- [ ] Clear held movement, look, interact, and pause input on open.
-- [ ] Release pointer lock and record the transfer result.
-- [ ] Block gameplay key and mouse admission while settings owns focus.
-- [ ] Suspend local prediction and client player-update sends.
-- [ ] Continue passive authoritative snapshot receipt.
+- [ ] Clear held movement, look, interaction and pause input.
+- [ ] Release pointer lock with a typed receipt.
+- [ ] Stop one accepted RAF generation and checkpoint the render clock.
+- [ ] Suspend client sends and define host publication policy.
+- [ ] Preserve or buffer passive snapshots under an explicit budget.
 
-### Gate 3: accessible presentation
+### Gate 3: checkpoint and transport policy
 
-- [ ] Add a visible Settings entry during PLAYING.
-- [ ] Add focus trap, keyboard navigation, Escape/Close behavior, and focus restoration.
-- [ ] Ensure PAUSED and route-exit behavior retire the settings session explicitly.
-- [ ] Require a fresh pointer gesture after close.
+- [ ] Fingerprint session, snapshot, pose, outcome, transport and renderer state.
+- [ ] Decide preserve, close or reconnect behavior for each lifecycle class.
+- [ ] Retire resources on non-persisted pagehide.
+- [ ] Preserve only BFCache-safe participants on persisted pagehide.
 
-### Gate 4: preferences
+### Gate 4: resume admission
 
-- [ ] Declare only preferences with real consumers.
-- [ ] Validate ranges and capability support.
-- [ ] Atomically adopt camera, input, render, UI, and accessibility consumers.
-- [ ] Persist the accepted revision with schema/version metadata.
-- [ ] Roll back all participants on mandatory-consumer failure.
+- [ ] Revalidate renderer, WebGL context, world, composer, viewport, listeners and transport.
+- [ ] Reconcile the latest accepted snapshot before movement resumes.
+- [ ] Reject predecessor RAF and transport callbacks.
+- [ ] Atomically adopt exactly one successor runtime generation.
+- [ ] Require fresh keyboard and pointer gestures.
 
 ### Gate 5: visible proof
 
-- [ ] Bind Settings frames to session and settings revisions.
-- [ ] Record input-suspension and pointer-lock receipts.
-- [ ] Acknowledge the first matching visible frame.
-- [ ] Verify source, production build, and deployed origin.
+- [ ] Bind the first resumed world, minimap and debug frame to the accepted generations.
+- [ ] Publish `PageLifecycleResult` and participant receipts.
+- [ ] Publish `FirstResumedRuntimeFrameAck`.
+- [ ] Verify source, production build and deployed origin.
 
 ### Gate 6: fixtures
 
-- [ ] Hold W while opening Settings.
-- [ ] Press interaction keys while Settings is open.
-- [ ] Open while pointer locked.
-- [ ] Open as a client while receiving SYNC.
-- [ ] Close with stale held keys.
-- [ ] Apply, reload, reject invalid values, inject persistence failure, and exit route mid-session.
+- [ ] Hold and release keys across hidden state.
+- [ ] Hide and resume while pointer locked.
+- [ ] Suspend host and client roles independently.
+- [ ] Exercise persisted and non-persisted pagehide.
+- [ ] Inject transport disconnect and WebGL invalidation while suspended.
+- [ ] Inject stale RAF and transport callbacks.
+- [ ] Repeat lifecycle events and verify one successor generation.
 
 ## Dependency order
 
 ```txt
-settings command identity
-  -> input suspension and pointer transfer
-  -> accessible overlay ownership
-  -> typed preference adoption
-  -> persistence and rollback
-  -> visible-frame proof
+lifecycle identity
+  -> input and local-command retirement
+  -> RAF and network suspension lease
+  -> checkpoint and BFCache policy
+  -> participant revalidation
+  -> atomic resume adoption
+  -> first resumed-frame proof
   -> source/build/deployed fixtures
 ```
 
 ## Completion boundary
 
-Do not treat the Settings surface as functional or safe during play until input suspension, preference adoption, persistence, and re-entry fixtures pass on `main`.
+Do not claim BFCache compatibility, safe multiplayer resume or resumed-frame convergence until the complete fixture matrix passes on `main`.
