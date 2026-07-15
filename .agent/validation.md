@@ -1,21 +1,21 @@
 # HorrorCorridor Validation
 
-**Updated:** `2026-07-14T16-00-05-04-00`
+**Updated:** `2026-07-14T20-58-46-04-00`
 
 ## Summary
 
-Source inspection confirms that browser lifecycle transitions are unmanaged at the application level. The runtime has `blur` handling and unmount cleanup, but no visibility, pagehide, pageshow, freeze, resume or BFCache authority, participant receipts or first resumed-frame evidence.
+Source inspection confirms that client movement is not admitted through a host-owned kinematic transaction. The protocol carries sender, player, sequence, input and pose, but the host directly applies the supplied pose to the supplied player and republishes the resulting snapshot.
 
 ## Plan ledger
 
-**Goal:** record exactly what inspection proves and withhold lifecycle claims until executable source, build and deployed-browser fixtures pass.
+**Goal:** record exactly what inspection proves and withhold movement-authority claims until executable source, build and deployed-browser fixtures pass.
 
 - [x] Compare all 11 Publish repositories against ten eligible central ledgers.
 - [x] Confirm root `.agent` coverage and synchronized eligible heads.
 - [x] Select HorrorCorridor by the oldest eligible timestamp.
-- [x] Inspect RAF, movement, `GameCanvas`, transport, render and cleanup surfaces.
+- [x] Inspect `GameCanvas`, `syncSnapshot`, `messageTypes`, `networkRules`, movement and collision surfaces.
 - [x] Preserve the 29-kit and two-adapter census.
-- [x] Add and route the timestamped page-lifecycle audit family.
+- [x] Add and route the timestamped movement audit family.
 - [ ] Run implementation, fault-injection, build and deployed-browser fixtures after the authority exists.
 
 ## Change scope
@@ -41,31 +41,28 @@ full LuminaryLabs-Publish repository inventory
 central Publish repo ledger state
 root .agent state for HorrorCorridor
 HorrorCorridor-V1/src/components/game/GameCanvas.tsx
-HorrorCorridor-V1/src/features/render/three/animationLoop.ts
-HorrorCorridor-V1/src/features/player/domain/movement.ts
-HorrorCorridor-V1/src/features/render/three/worldBuilder.ts
-HorrorCorridor-V1/src/features/game-state/domain/oozeRules.ts
+HorrorCorridor-V1/src/features/networking/protocol/syncSnapshot.ts
+HorrorCorridor-V1/src/features/networking/protocol/messageTypes.ts
+HorrorCorridor-V1/src/features/game-state/domain/networkRules.ts
 .agent/kit-registry.json
 ```
 
 ## Confirmed by inspection
 
 ```txt
-one RAF controller exists: yes
-RAF stop/reset only occurs through explicit stop: yes
-GameCanvas blur handler exists: yes
-visibilitychange handler exists: no
-pagehide/pageshow handlers exist: no
-freeze/resume handlers exist: no
-BFCache persisted classification exists: no
-held input retirement on lifecycle event exists: no
-client-send lifecycle policy exists: no
-host-publication lifecycle policy exists: no
-session checkpoint exists: no
-participant resume revalidation exists: no
-stale lifecycle callback rejection exists: no
-first resumed runtime frame acknowledgement exists: no
-React unmount cleanup exists: yes
+PLAYER_UPDATE has senderId: yes
+PLAYER_UPDATE payload has playerId: yes
+PLAYER_UPDATE input has sequence: yes
+host callback binds senderId to playerId: no
+host callback checks sequence freshness: no
+host applies supplied position/rotation/pitch/velocity: yes
+networkRules validates reachable displacement: no
+networkRules performs swept maze collision: no
+held-cube state follows the updated player: yes
+host republishes after update: yes
+typed movement result exists: no
+prediction correction receipt exists: no
+first authoritative movement frame acknowledgement exists: no
 ```
 
 ## Documentation checks
@@ -78,7 +75,7 @@ architecture audit: yes
 render audit: yes
 gameplay audit: yes
 interaction audit: yes
-page-lifecycle system audit: yes
+network-movement system audit: yes
 deploy audit: yes
 central-sync audit: yes
 kit registry refreshed: yes
@@ -91,31 +88,25 @@ npm install
 npm run lint
 npm run build
 browser launch
-visibility fixture
-pagehide/pageshow fixture
-BFCache navigation fixture
-freeze/resume fixture
-host/client suspension fixture
-transport disconnect fixture
-WebGL invalidation fixture
+host/client multiplayer launch
+movement fault injection
 source/build/deployed parity
 ```
 
 ## Missing executable fixtures
 
 ```txt
-held key release while hidden
-pointer-lock hide and resume
-host hidden while clients continue
-client hidden while host continues
-persisted BFCache restore
-non-persisted pagehide retirement
-stale RAF and transport callbacks
-renderer/transport partial resume failure
-first resumed frame correlation
-source, build and deployed-origin parity
+valid ordered movement
+sender/player impersonation
+stale duplicate and reordered sequence
+teleport and excessive-speed update
+wall crossing and out-of-maze update
+held-cube rollback on rejected movement
+client correction and smoothing
+first authoritative movement frame correlation
+source build and deployed-origin parity
 ```
 
 ## Claims intentionally withheld
 
-No claim is made for lifecycle suspension, BFCache compatibility, transport restoration, stale-input safety, atomic resume, resumed-frame convergence, deployment parity or production readiness.
+No claim is made for host-authoritative movement, identity binding, sequence safety, anti-teleport enforcement, swept collision, correction convergence, deployment parity or production readiness.
