@@ -4,7 +4,7 @@
 
 ## Summary
 
-This audit family supersedes page lifecycle as the current repo-local routing state while retaining every previous finding. The paired central ledger entry and internal change log must record the selected repository, source-backed movement gap, complete file family, unchanged runtime boundary and final repo-local documentation head.
+This audit family supersedes page lifecycle as the current repo-local routing state while retaining every previous finding. The paired central ledger entry and internal change log record the selected repository, source-backed movement gap, complete file family, unchanged runtime boundary and repo-local documentation head.
 
 ## Plan ledger
 
@@ -14,11 +14,11 @@ This audit family supersedes page lifecycle as the current repo-local routing st
 - [x] Select only HorrorCorridor.
 - [x] Add the timestamped movement audit family.
 - [x] Refresh root `.agent` routing and machine registry.
-- [ ] Record the final Publish head in the central ledger.
-- [ ] Add the paired central internal change log.
-- [ ] Push the central repository only to `main`.
+- [x] Record the Publish documentation head in the central ledger.
+- [x] Add the paired central internal change log.
+- [x] Push the central repository only to `main`.
 
-## Central status target
+## Central status
 
 ```txt
 client-movement-kinematic-admission-authority-central-reconciled
@@ -33,4 +33,4 @@ internal-change-log/2026-07-14T20-58-46-04-00-horror-corridor-client-movement-ki
 
 ## Validation boundary
 
-Central reconciliation records documentation findings only. It must not promote host-authoritative movement, anti-teleport safety, sequence ordering, correction convergence or production readiness.
+Central reconciliation records documentation findings only. It does not promote host-authoritative movement, anti-teleport safety, sequence ordering, correction convergence or production readiness.
