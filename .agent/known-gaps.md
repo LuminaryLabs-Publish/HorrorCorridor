@@ -1,91 +1,91 @@
 # HorrorCorridor Known Gaps
 
-**Updated:** `2026-07-15T07-00-28-04-00`
+**Updated:** `2026-07-15T11-39-04-04-00`
 
 ## Summary
 
-The highest current undocumented product gap is audio event projection. Simulation, multiplayer and rendering expose meaningful accepted state, but no audio domain owns browser capability, cue mapping, preferences, spatialization, lifecycle or proof.
+The highest current undocumented product gap is minimap backing-store ownership. Minimap content is complete, but raw DPR observation, floating-point sizing, integer coercion, context generation, resize admission and visible-frame proof are not represented as one authority.
 
 ## Plan ledger
 
-**Goal:** prioritize one authoritative audio path while retaining every previous lifecycle, loading, session, transport, protocol, movement, interaction, device-control, rendering and proof finding.
+**Goal:** prioritize a stable minimap surface contract while retaining every previous lifecycle, loading, session, transport, protocol, movement, interaction, device-control, audio, rendering and proof finding.
 
 - [x] Preserve previous audits.
-- [x] Add and route the audio projection gap.
+- [x] Add and route the minimap backing-store gap.
 - [ ] Implement and prove the complete authority chain.
 
 ## Primary ordered gaps
 
 ```txt
-1. browser audio capability snapshot
-2. one AudioContext generation owner
-3. accepted user-gesture unlock
-4. audio policy revision
-5. stable semantic AudioEventId
-6. cue descriptor registry
-7. gameplay result to cue mapping
-8. UI and terminal result to cue mapping
-9. ambience loop ownership
-10. listener pose projection
-11. spatial source projection
-12. distance and maze-occlusion policy
-13. master and category bus graph
-14. master volume preference
-15. category volume preferences
-16. mute state
-17. prediction/snapshot cue deduplication
-18. voice pooling and concurrency budget
-19. pause, visibility and route audio suspension
-20. AudioProjectionResult
-21. FirstAudibleCueAck
-22. FirstAudioVisualConvergenceAck
-23. unsupported/locked/failure fallback behavior
-24. source/build/deployed-origin browser parity
-25. retained device-control and multiplayer authority gaps
+1. MinimapSurfaceId and mount generation
+2. logical minimap size descriptor
+3. browser DPR capability snapshot
+4. DprPolicyRevision
+5. explicit integer physical-pixel quantization
+6. accepted backing-store descriptor
+7. descriptor fingerprint
+8. changed/unchanged resize admission
+9. width and height write receipts
+10. Canvas2D ContextGeneration
+11. cached canvas and context ownership
+12. logical-transform restoration policy
+13. immutable MinimapFramePlan
+14. SnapshotRevision binding
+15. LocalPoseRevision and HeadingRevision binding
+16. MinimapSurfaceResult
+17. MinimapFrameResult
+18. stale frame rejection
+19. surface retirement receipt
+20. FirstMinimapResizeFrameAck
+21. dimension-write diagnostics
+22. context-generation diagnostics
+23. fractional-DPR fixture matrix
+24. zoom, remount and replacement fixtures
+25. source/build/deployed-origin parity
+26. retained audio, lifecycle, transport and device-control gaps
 ```
 
 ## Current coverage gap
 
 ```txt
-browser audio context: no
-semantic audio events: no
-cue descriptors: no
-gameplay cue mapping: no
-UI cue mapping: no
-ambience: no
-spatial listener/source projection: no
-volume controls: no
-mute: no
-cue deduplication: no
-voice budget: no
-lifecycle suspension/retirement: no
-audible acknowledgement: no
-browser audio fixture: no
+explicit integer quantization: no
+accepted physical descriptor: no
+surface revision: no
+context generation: no
+unchanged-frame write receipt: no
+frame/source revision tuple: no
+retirement result: no
+visible frame acknowledgement: no
+fractional-DPR fixture: no
 ```
 
 ## Failure path
 
 ```txt
-accepted gameplay or session result
-  -> visual world, minimap, HUD or terminal projection updates
-  -> no audio event is published
-  -> no cue is admitted
-  -> no audible result or failure state is exposed
+unchanged frame
+  -> read raw DPR
+  -> compute 168 * DPR as floating point
+  -> compare against integer canvas properties
+  -> implicit integer conversion occurs on assignment
+  -> next frame can observe the same mismatch
+  -> backing store and context state can reset again
+  -> no typed result records the lifecycle mutation
 ```
 
-## Future duplication risk
+## Required invariants
 
 ```txt
-local prediction emits cue
-  + host authoritative snapshot repeats the same event
-  + repeated snapshot or React rerender emits again
-  -> duplicate audio unless keyed to semantic result identity and revision
+physical dimensions are positive integers before comparison
+unchanged descriptors produce zero dimension writes
+one descriptor change produces at most one context generation
+frame results bind the accepted descriptor and source revisions
+retired surfaces execute no late frames
 ```
 
 ## Retained gaps
 
-All previous page-lifecycle, settings, device-control, proof provenance, loading, host-start, WebGL recovery, cross-store transition, room identity, capacity, transport, protocol, movement, prediction, snapshot, interaction, terminal outcome, debug and deployment findings remain open.
+All previous page-lifecycle, settings, device-control, proof provenance, loading, host-start, WebGL recovery, cross-store transition, room identity, capacity, transport, protocol, movement, prediction, snapshot, interaction, terminal outcome, debug, audio and deployment findings remain open.
 
 ## Do not claim
 
-Do not claim audio support, audible gameplay feedback, preference persistence, spatial correctness, duplicate suppression, lifecycle safety, audiovisual convergence or production parity until the authority and fixtures pass on `main`.
+Do not claim a runtime fix, stable backing store, lower allocations, preserved context, visual equivalence, browser parity or production readiness until implementation and fixtures pass on `main`.
