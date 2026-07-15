@@ -3,7 +3,7 @@
   "generatedAt": "2026-07-15T11-39-04-04-00",
   "repository": "LuminaryLabs-Publish/HorrorCorridor",
   "branch": "main",
-  "status": "minimap-backing-store-dpr-resize-authority-audited",
+  "status": "minimap-backing-store-dpr-resize-authority-central-reconciled",
   "selectedBecause": "All ten eligible Publish repositories were centrally tracked, retained root .agent state and matched their documented heads. HorrorCorridor had the oldest eligible central timestamp after excluding TheCavalryOfRome.",
   "latestTracker": ".agent/trackers/2026-07-15T11-39-04-04-00/project-breakdown.md",
   "latestTurnLedger": ".agent/turn-ledger/2026-07-15T11-39-04-04-00.md",
@@ -143,7 +143,7 @@
     "runtimeCommandsRun": false,
     "browserProofRun": false,
     "fractionalDprFixtureAvailable": false,
-    "centralLedgerSynchronized": false,
-    "centralChangeLogCreated": false
+    "centralLedgerSynchronized": true,
+    "centralChangeLogCreated": true
   }
 }
