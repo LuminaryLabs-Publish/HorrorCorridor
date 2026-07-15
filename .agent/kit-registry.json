@@ -142,7 +142,7 @@
     "runtimeCommandsRun": false,
     "browserProofRun": false,
     "movementFixtureAvailable": false,
-    "centralLedgerSynchronized": false,
-    "centralChangeLogCreated": false
+    "centralLedgerSynchronized": true,
+    "centralChangeLogCreated": true
   }
 }
