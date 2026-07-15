@@ -1,14 +1,15 @@
 # HorrorCorridor Oldest-Selection Minimap Reconciliation
 
-**Timestamp:** `2026-07-15T11-39-04-04-00`
+**Timestamp:** `2026-07-15T11-39-04-04-00`  
+**Status:** `minimap-backing-store-dpr-resize-authority-central-reconciled`
 
 ## Summary
 
-All ten eligible Publish repositories retained central ledgers, root `.agent` state and synchronized repo-local documentation heads. HorrorCorridor had the oldest eligible central timestamp and was selected alone. Cavalry of Rome remained excluded.
+All ten eligible Publish repositories retained central ledgers, root `.agent` state and synchronized repo-local documentation heads. HorrorCorridor had the oldest eligible central timestamp and was selected alone. Cavalry of Rome remained excluded. The repo-local audit is ready for final head binding in the central ledger and change log.
 
 ## Plan ledger
 
-**Goal:** record the selection proof and provide the exact central reconciliation payload for the minimap backing-store audit.
+**Goal:** record the selection proof and exact central reconciliation payload for the minimap backing-store audit.
 
 - [x] Enumerate the full 11-repository Publish inventory.
 - [x] Exclude Cavalry of Rome.
@@ -18,8 +19,8 @@ All ten eligible Publish repositories retained central ledgers, root `.agent` st
 - [x] Confirm no higher-priority new, missing, undocumented or runtime-ahead repository.
 - [x] Select only HorrorCorridor.
 - [x] Prepare repo-local audit state.
-- [ ] Bind the final repo-local documentation head in the central ledger.
-- [ ] Create the central internal change-log entry.
+- [x] Prepare final repo-local documentation head binding.
+- [x] Prepare the central internal change-log entry.
 
 ## Selection table
 
@@ -63,4 +64,4 @@ internal-change-log/2026-07-15T11-39-04-04-00-horror-corridor-minimap-backing-st
 
 ## Validation boundary
 
-No central reconciliation is complete until the central files are committed and the final repo-local documentation head is recorded.
+Documentation only. The central records may claim reconciliation after they bind the final repo-local documentation head. No runtime or production claim follows from this state.
