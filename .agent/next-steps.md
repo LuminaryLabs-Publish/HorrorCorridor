@@ -1,60 +1,62 @@
 # HorrorCorridor Next Steps
 
-**Updated:** `2026-07-15T07-00-28-04-00`
+**Updated:** `2026-07-15T11-39-04-04-00`
 
 ## Summary
 
-The next implementation should introduce a semantic audio authority before adding isolated sound calls. Audio must consume accepted gameplay and lifecycle results, unlock through an admitted browser gesture, deduplicate prediction and snapshots, and retire with the owning route and runtime generation.
+The next implementation should separate minimap surface admission from minimap content drawing. Logical size and DPR must become one explicit integer backing-store descriptor before any canvas dimension comparison or write occurs.
 
 ## Plan ledger
 
-**Goal:** implement one browser-safe audio projection path with explicit event identity, cue policy, preferences, spatial ownership and proof.
+**Goal:** implement one stable minimap surface lifecycle with deterministic quantization, context generations, immutable frame plans and browser parity proof.
 
-- [ ] Define `AudioCapabilitySnapshot`, `AudioContextGeneration` and `AudioPolicyRevision`.
-- [ ] Define stable `AudioEventId`, `CueDescriptorId`, `BusId` and `VoiceId` types.
-- [ ] Add `AudioProjectionAdmissionCommand` and `AudioProjectionResult`.
-- [ ] Create one Web Audio context only after an accepted user gesture.
-- [ ] Add explicit unsupported, locked, suspended and failed states.
-- [ ] Map accepted cube, anomaly, ooze, session, pause and outcome results into semantic audio events.
-- [ ] Keep rejected gameplay commands from producing success cues.
-- [ ] Deduplicate local prediction, authoritative acknowledgement and repeated snapshots.
-- [ ] Add a cue descriptor registry with procedural or asset-backed fallback policy.
-- [ ] Add master, ambience, effects, UI and outcome buses.
-- [ ] Add persisted master volume, category volume and mute preferences.
-- [ ] Project listener pose from the accepted local camera/player revision.
-- [ ] Project world sources from accepted player, cube, anomaly and ooze revisions.
-- [ ] Add distance, occlusion, concurrency, priority and voice-budget policy.
-- [ ] Suspend or attenuate on pause and visibility loss.
-- [ ] Retire loops, nodes, handlers and timers on route/runtime replacement.
-- [ ] Publish `FirstAudibleCueAck`.
-- [ ] Publish `FirstAudioVisualConvergenceAck`.
-- [ ] Add source, production-build and deployed-origin browser fixtures.
+- [ ] Define `MinimapSurfaceId`, `ViewportRevision`, `DprPolicyRevision` and `ContextGeneration`.
+- [ ] Define immutable logical and physical surface descriptors.
+- [ ] Choose and freeze an integer pixel quantization policy.
+- [ ] Normalize and optionally clamp effective DPR before quantization.
+- [ ] Move dimension comparison and writes out of the draw executor.
+- [ ] Cache the active canvas and 2D context for one surface generation.
+- [ ] Resize only when the accepted integer descriptor changes.
+- [ ] Restore the logical transform only after an admitted resize or context replacement.
+- [ ] Bind snapshot, local-pose and heading revisions into `MinimapFramePlan`.
+- [ ] Publish `MinimapSurfaceResult` with dimension-write and context-generation receipts.
+- [ ] Publish `MinimapFrameResult` with source revisions and draw receipts.
+- [ ] Reject stale frame work after route, canvas or surface replacement.
+- [ ] Publish `FirstMinimapResizeFrameAck` for the matching visible frame.
+- [ ] Add dimension-write and context-generation counters to diagnostics.
+- [ ] Add a fractional-DPR browser fixture matrix.
+- [ ] Add browser zoom, remount and canvas replacement rows.
+- [ ] Prove source, production-build and deployed-origin parity.
 
 ## Checkpoints
 
 ```txt
 Checkpoint A
-  no cue is emitted directly from a render callback or raw input event
+  physical dimensions are integers before comparison
 
 Checkpoint B
-  accepted one-shot gameplay results produce at most one cue
+  unchanged frames write neither width nor height
 
 Checkpoint C
-  rejected or stale gameplay results do not sound successful
+  one accepted descriptor change creates at most one context generation
 
 Checkpoint D
-  one context generation owns every active bus and voice
+  the draw executor never reads raw DPR or assigns canvas dimensions
 
 Checkpoint E
-  pause, hide and route retirement leave no orphaned loops or nodes
+  each frame result references the accepted descriptor fingerprint
 
 Checkpoint F
-  audible and visible results reference the same semantic source revision
+  route or canvas retirement rejects later frame work
 
 Checkpoint G
-  unsupported or locked audio never blocks visual gameplay
+  source, production build and deployed origin produce matching receipts
 ```
+
+## Retained work
+
+Previous audio, lifecycle, loading, protocol, movement, device-control, render and deployment findings remain open. This minimap task must not silently absorb or replace those authorities.
 
 ## Do not claim
 
-Do not claim audible gameplay, autoplay-unlock reliability, spatial correctness, preference persistence, lifecycle safety or production parity until the corresponding fixtures pass.
+Do not claim stable DPR behavior, allocation reduction, context preservation, visible equivalence or production parity until the fixture matrix passes.
