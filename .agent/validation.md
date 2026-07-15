@@ -1,39 +1,41 @@
 # HorrorCorridor Validation
 
-**Updated:** `2026-07-15T11-39-04-04-00`  
-**Scope:** documentation-only minimap backing-store DPR audit
+**Updated:** `2026-07-15T16-39-06-04-00`  
+**Scope:** documentation-only active gameplay HUD projection audit
 
 ## Summary
 
-Source inspection confirms that the minimap is drawn from accepted snapshot and local-pose state, but its canvas surface is sized from raw floating-point DPR products without an explicit integer descriptor, context generation, resize result or visible-frame acknowledgement. No runtime code, package, workflow or deployment file changed in this run.
+Source inspection confirms that accepted gameplay state is available to `HUDOverlay`, but its `PLAYING` branch returns only settings and debug surfaces. The objective, anomaly sequence, held item, player/session panels and minimap canvas are mounted by the later `COMPLETED` branch. `GameCanvas` still queries for the minimap canvas and submits draw work every frame, while `drawMinimapFrame()` returns immediately for a null canvas.
 
 ## Plan ledger
 
-**Goal:** record exactly what was inspected and prevent unsupported resize, performance or production claims.
+**Goal:** record exactly what was inspected and prevent unsupported HUD, minimap, visual or production claims.
 
 - [x] Confirm the selected repository head matched its prior repo-local documentation head.
-- [x] Inspect `GameCanvas.tsx` render-frame ownership.
-- [x] Inspect `Minimap.tsx` canvas acquisition, DPR calculation, comparison, resize and draw path.
-- [x] Inspect `animationLoop.ts` frame scheduling.
+- [x] Inspect `GameShell.tsx` route and screen composition.
+- [x] Inspect `GameCanvas.tsx` frame and minimap-draw ownership.
+- [x] Inspect `HUDOverlay.tsx` PLAYING and COMPLETED branching.
+- [x] Inspect `Minimap.tsx` null-canvas guard and canvas component.
 - [x] Inspect `package.json` scripts and dependencies.
 - [x] Inspect `.agent/kit-registry.json` inventory.
-- [x] Search for minimap-specific DPR or backing-store fixtures.
+- [x] Search for active-run HUD and minimap mount fixtures.
 - [x] Update only `.agent` documentation and central tracking.
 - [ ] Run runtime and browser fixtures after implementation exists.
 
 ## Source evidence
 
 ```txt
-MAP_SIZE: 168
-DPR observation: window.devicePixelRatio || 1
-scaled width/height: MAP_SIZE * DPR
-canvas width/height comparison: strict inequality
-explicit integer quantization: absent
-accepted surface descriptor: absent
-context generation: absent
-dimension-write counter: absent
-FirstMinimapResizeFrameAck: absent
-fractional-DPR fixture: absent
+HUDOverlay screen filter: PLAYING and COMPLETED
+PLAYING early return: SettingsOverlay + FrameDebugPanel
+PLAYING objective/sequence/held/player panels: absent
+PLAYING Minimap component: absent
+COMPLETED panels and Minimap: present
+GameCanvas minimap lookup: every render frame
+null canvas behavior: drawMinimapFrame returns
+HudMountGeneration: absent
+GameplayHudProjectionResult: absent
+FirstPlayingHudFrameAck: absent
+active-run HUD fixture: absent
 ```
 
 ## Change classification
@@ -60,16 +62,16 @@ npm install: not run
 npm run lint: not run
 npm run build: not run
 desktop browser launch: not run
-fractional-DPR minimap fixture: unavailable
-dimension-write trace: unavailable
-context-generation trace: unavailable
-zoom transition fixture: unavailable
-route remount fixture: unavailable
-FirstMinimapResizeFrameAck fixture: unavailable
-production-build minimap smoke: not run
-deployed-origin minimap smoke: not run
+solo PLAYING HUD fixture: unavailable
+host PLAYING HUD fixture: unavailable
+client PLAYING HUD fixture: unavailable
+settings/debug preservation fixture: unavailable
+minimap mount/draw fixture: unavailable
+FirstPlayingHudFrameAck fixture: unavailable
+production-build HUD smoke: not run
+deployed-origin HUD smoke: not run
 ```
 
 ## Claim boundary
 
-No runtime repair, allocation reduction, context preservation, frame-time improvement, visual correctness, browser parity, deployment parity or production readiness is claimed.
+No runtime repair, active gameplay HUD availability, minimap availability, visual correctness, browser parity, deployment parity or production readiness is claimed.
