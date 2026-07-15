@@ -321,7 +321,7 @@
     "runtimeCommandsRun": false,
     "browserProofRun": false,
     "touchFixtureAvailable": false,
-    "centralLedgerSynchronized": false,
-    "centralChangeLogCreated": false
+    "centralLedgerSynchronized": true,
+    "centralChangeLogCreated": true
   }
 }
