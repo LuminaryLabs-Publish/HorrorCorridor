@@ -1,81 +1,80 @@
 # HorrorCorridor Next Steps
 
-**Updated:** `2026-07-14T16-00-05-04-00`
+**Updated:** `2026-07-14T20-58-46-04-00`
 
 ## Summary
 
-Add one narrow page-lifecycle authority around the existing `GameCanvas` runtime. It should suspend local input, RAF and outbound work, preserve accepted snapshot truth, classify BFCache restoration, revalidate mandatory participants and prove the first resumed frame.
+Add one narrow host-side movement admission authority around the existing client prediction and snapshot publication path. It should bind transport identity to one player, order updates, validate reachable motion through the maze, commit atomically and return an authoritative correction revision.
 
 ## Plan ledger
 
-**Goal:** implement lifecycle safety without replacing existing input, transport, snapshot or rendering kits.
+**Goal:** make multiplayer movement authoritative without replacing existing input, movement, collision, transport or renderer kits.
 
 ### Documentation
 
-- [x] Audit visibility, pagehide/pageshow, freeze/resume, RAF, input, transport, rendering and cleanup.
+- [x] Audit `PLAYER_UPDATE` construction, host consumption, `networkRules`, held-cube synchronization and client rendering.
 - [x] Preserve the 29-kit and two-adapter inventory.
 - [x] Define the parent authority and fixture gate.
 
-### Gate 1: lifecycle identity and event admission
+### Gate 1: identity and update admission
 
-- [ ] Add `DocumentGeneration`, `LifecycleAttemptId` and `RuntimeGeneration`.
-- [ ] Normalize visibility, pagehide, pageshow, freeze and resume events.
-- [ ] Classify persisted BFCache transitions separately from normal navigation.
-- [ ] Reject duplicate, stale and superseded lifecycle work.
+- [ ] Add `MovementUpdateId`, `SessionGeneration`, `ConnectionGeneration` and `PlayerMovementRevision`.
+- [ ] Bind remote peer, envelope `senderId` and payload `playerId` to one admitted actor.
+- [ ] Require the active room and session generation.
+- [ ] Reject unknown, impersonated, stale, duplicate and superseded updates.
 
-### Gate 2: suspension settlement
+### Gate 2: sequence and time policy
 
-- [ ] Clear held movement, look, interaction and pause input.
-- [ ] Release pointer lock with a typed receipt.
-- [ ] Stop one accepted RAF generation and checkpoint the render clock.
-- [ ] Suspend client sends and define host publication policy.
-- [ ] Preserve or buffer passive snapshots under an explicit budget.
+- [ ] Persist the last accepted input sequence per player.
+- [ ] Reject reordered or repeated sequence values.
+- [ ] Derive an accepted movement interval from host time and bounded client cadence.
+- [ ] Cap catch-up work instead of accepting one arbitrarily large displacement.
 
-### Gate 3: checkpoint and transport policy
+### Gate 3: kinematic admission
 
-- [ ] Fingerprint session, snapshot, pose, outcome, transport and renderer state.
-- [ ] Decide preserve, close or reconnect behavior for each lifecycle class.
-- [ ] Retire resources on non-persisted pagehide.
-- [ ] Preserve only BFCache-safe participants on persisted pagehide.
+- [ ] Validate bounded position, velocity, yaw and pitch values.
+- [ ] Enforce configured speed, acceleration and turn constraints.
+- [ ] Sweep from the last accepted pose through maze collision.
+- [ ] Reject wall crossings, out-of-maze positions and unreachable deltas.
+- [ ] Decide whether the host simulates from input or clamps a pose candidate.
 
-### Gate 4: resume admission
+### Gate 4: atomic settlement
 
-- [ ] Revalidate renderer, WebGL context, world, composer, viewport, listeners and transport.
-- [ ] Reconcile the latest accepted snapshot before movement resumes.
-- [ ] Reject predecessor RAF and transport callbacks.
-- [ ] Atomically adopt exactly one successor runtime generation.
-- [ ] Require fresh keyboard and pointer gestures.
+- [ ] Prepare player, held-cube, game-state and snapshot candidates.
+- [ ] Commit all participants under one `PlayerMovementRevision`.
+- [ ] Preserve the predecessor on rejection.
+- [ ] Publish `ClientMovementUpdateResult` with predicate receipts.
 
-### Gate 5: visible proof
+### Gate 5: prediction correction and visible proof
 
-- [ ] Bind the first resumed world, minimap and debug frame to the accepted generations.
-- [ ] Publish `PageLifecycleResult` and participant receipts.
-- [ ] Publish `FirstResumedRuntimeFrameAck`.
-- [ ] Verify source, production build and deployed origin.
+- [ ] Send accepted pose/revision or rejection correction to the originating client.
+- [ ] Reconcile local prediction without hiding large corrections.
+- [ ] Bind world, camera, minimap and debug projection to the accepted revision.
+- [ ] Publish `FirstAuthoritativeMovementFrameAck`.
 
 ### Gate 6: fixtures
 
-- [ ] Hold and release keys across hidden state.
-- [ ] Hide and resume while pointer locked.
-- [ ] Suspend host and client roles independently.
-- [ ] Exercise persisted and non-persisted pagehide.
-- [ ] Inject transport disconnect and WebGL invalidation while suspended.
-- [ ] Inject stale RAF and transport callbacks.
-- [ ] Repeat lifecycle events and verify one successor generation.
+- [ ] Valid forward movement at normal cadence.
+- [ ] Sender/player impersonation.
+- [ ] Duplicate, stale and reordered sequences.
+- [ ] Teleport and excessive-speed update.
+- [ ] Wall-crossing and out-of-maze update.
+- [ ] Held-cube movement during rejected pose.
+- [ ] Client correction after host rejection.
+- [ ] Source, production-build and deployed-origin parity.
 
 ## Dependency order
 
 ```txt
-lifecycle identity
-  -> input and local-command retirement
-  -> RAF and network suspension lease
-  -> checkpoint and BFCache policy
-  -> participant revalidation
-  -> atomic resume adoption
-  -> first resumed-frame proof
+connection and actor binding
+  -> sequence and host-time admission
+  -> kinematic and swept-collision validation
+  -> atomic player and held-cube settlement
+  -> prediction correction
+  -> first authoritative movement frame
   -> source/build/deployed fixtures
 ```
 
 ## Completion boundary
 
-Do not claim BFCache compatibility, safe multiplayer resume or resumed-frame convergence until the complete fixture matrix passes on `main`.
+Do not claim host-authoritative movement, anti-teleport safety or correction convergence until the complete fixture matrix passes on `main`.
