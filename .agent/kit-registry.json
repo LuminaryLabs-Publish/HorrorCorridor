@@ -1,20 +1,20 @@
 {
-  "schemaVersion": 97,
-  "generatedAt": "2026-07-14T20-58-46-04-00",
+  "schemaVersion": 98,
+  "generatedAt": "2026-07-15T02-00-17-04-00",
   "repository": "LuminaryLabs-Publish/HorrorCorridor",
   "branch": "main",
-  "status": "client-movement-kinematic-admission-authority-central-reconciled",
+  "status": "device-control-action-coverage-authority-central-reconciled",
   "selectedBecause": "All ten eligible Publish repositories were centrally tracked, had root .agent state, and matched their documented heads. HorrorCorridor had the oldest eligible central timestamp after excluding TheCavalryOfRome.",
-  "latestTracker": ".agent/trackers/2026-07-14T20-58-46-04-00/project-breakdown.md",
-  "latestTurnLedger": ".agent/turn-ledger/2026-07-14T20-58-46-04-00.md",
+  "latestTracker": ".agent/trackers/2026-07-15T02-00-17-04-00/project-breakdown.md",
+  "latestTurnLedger": ".agent/turn-ledger/2026-07-15T02-00-17-04-00.md",
   "latestAudits": {
-    "architecture": ".agent/architecture-audit/2026-07-14T20-58-46-04-00-client-movement-kinematic-admission-dsk-map.md",
-    "render": ".agent/render-audit/2026-07-14T20-58-46-04-00-authoritative-correction-visible-frame-gap.md",
-    "gameplay": ".agent/gameplay-audit/2026-07-14T20-58-46-04-00-client-pose-teleport-wall-bypass-loop.md",
-    "interaction": ".agent/interaction-audit/2026-07-14T20-58-46-04-00-player-update-command-result-map.md",
-    "networkMovement": ".agent/network-movement-audit/2026-07-14T20-58-46-04-00-sender-sequence-kinematic-settlement-contract.md",
-    "deploy": ".agent/deploy-audit/2026-07-14T20-58-46-04-00-network-movement-browser-fixture-gate.md",
-    "centralSync": ".agent/central-sync-audit/2026-07-14T20-58-46-04-00-repo-ledger-client-movement-reconciliation.md"
+    "architecture": ".agent/architecture-audit/2026-07-15T02-00-17-04-00-device-control-action-coverage-dsk-map.md",
+    "render": ".agent/render-audit/2026-07-15T02-00-17-04-00-touch-control-surface-visible-frame-gap.md",
+    "gameplay": ".agent/gameplay-audit/2026-07-15T02-00-17-04-00-touch-only-player-immobility-loop.md",
+    "interaction": ".agent/interaction-audit/2026-07-15T02-00-17-04-00-device-action-command-result-map.md",
+    "deviceControl": ".agent/device-control-audit/2026-07-15T02-00-17-04-00-keyboard-mouse-touch-action-coverage-contract.md",
+    "deploy": ".agent/deploy-audit/2026-07-15T02-00-17-04-00-device-control-browser-fixture-gate.md",
+    "centralSync": ".agent/central-sync-audit/2026-07-15T02-00-17-04-00-oldest-selection-device-control-reconciliation.md"
   },
   "selection": {
     "inventoryCount": 11,
@@ -23,114 +23,293 @@
     "centralLedgerMissingCount": 0,
     "rootUndocumentedCount": 0,
     "unsynchronizedCount": 0,
-    "excluded": ["LuminaryLabs-Publish/TheCavalryOfRome"],
+    "excluded": [
+      "LuminaryLabs-Publish/TheCavalryOfRome"
+    ],
     "selectedRepository": "LuminaryLabs-Publish/HorrorCorridor",
-    "reason": "Oldest eligible synchronized central timestamp after higher-priority cases were cleared."
+    "reason": "Oldest eligible synchronized central timestamp after higher-priority cases were cleared.",
+    "priorCentralTimestamp": "2026-07-14T20-58-46-04-00"
   },
   "implementedKitCount": 29,
   "implementedAdapterCount": 2,
   "implementedSurfaceCount": 31,
   "implementedKits": {
-    "corridor-application-shell-kit": ["routing", "solo/host/client entry", "loading", "pause", "completion", "exit"],
-    "corridor-session-domain-kit": ["identity", "room", "roster", "connection", "readiness", "reset"],
-    "runtime-store-snapshot-kit": ["snapshot", "pose", "view", "input flags", "readiness"],
-    "ui-pause-projection-kit": ["pause state", "reason", "overlay"],
-    "ui-completion-projection-kit": ["terminal state", "message", "timestamp", "routing"],
-    "complete-screen-presentation-kit": ["outcome presentation", "restart", "title exit"],
-    "lobby-screen-presentation-kit": ["room", "roster", "ready state", "controls"],
-    "peer-host-transport-kit": ["PeerJS host", "BroadcastChannel bridge", "connections", "broadcast", "targeted send", "disconnect", "destroy"],
-    "peer-client-transport-kit": ["PeerJS client", "BroadcastChannel bridge", "connect", "send", "status", "disconnect", "destroy"],
-    "peer-event-bus-kit": ["typed transport events", "subscription", "cleanup"],
-    "protocol-message-construction-kit": ["START_GAME", "PLAYER_UPDATE", "TRY_INTERACT", "SYNC", "LOBBY_EVENT"],
-    "protocol-serialization-kit": ["encode", "decode", "protocol version", "structural validation"],
-    "maze-snapshot-bootstrap-kit": ["seed", "maze", "players", "cubes", "anomaly", "initial snapshot"],
-    "seeded-maze-rng-kit": ["topology", "placement", "target sequence"],
-    "first-person-input-kit": ["keyboard", "pointer lock", "look", "snapshots"],
-    "movement-collision-camera-kit": ["movement", "collision", "eye pose", "shake", "camera"],
-    "network-player-update-kit": ["sequence", "cadence", "pose envelope", "host consume"],
-    "corridor-interaction-domain-kit": ["pickup", "drop", "place", "remove", "held-cube synchronization"],
-    "ordered-anomaly-sequence-kit": ["ordered slots", "validation", "victory"],
-    "ooze-trail-domain-kit": ["spawn", "decay", "variation", "spacing", "capacity", "pressure"],
-    "snapshot-outcome-routing-kit": ["snapshot state to UI outcome"],
-    "corridor-authoritative-publication-kit": ["tick", "clone", "SYNC", "broadcast"],
-    "corridor-animation-loop-kit": ["RAF start", "RAF stop", "delta", "elapsed", "successor scheduling"],
-    "corridor-render-world-kit": ["terrain", "maze", "objects", "actors", "lights", "update", "dispose"],
-    "corridor-post-processing-kit": ["composer", "bloom", "resize", "render", "dispose"],
-    "corridor-minimap-kit": ["maze", "players", "cubes", "ooze", "heading"],
-    "runtime-debug-frame-kit": ["activation", "bounded capture", "overlay", "export"],
-    "runtime-resource-cleanup-kit": ["loop", "subscriptions", "listeners", "observers", "GPU cleanup"],
-    "package-validation-kit": ["build", "lint", "harness", "visual", "live-player checks"]
+    "corridor-application-shell-kit": [
+      "routing",
+      "solo/host/client entry",
+      "loading",
+      "pause",
+      "completion",
+      "exit"
+    ],
+    "corridor-session-domain-kit": [
+      "identity",
+      "room",
+      "roster",
+      "connection",
+      "readiness",
+      "reset"
+    ],
+    "runtime-store-snapshot-kit": [
+      "snapshot",
+      "pose",
+      "view",
+      "input flags",
+      "readiness"
+    ],
+    "ui-pause-projection-kit": [
+      "pause state",
+      "reason",
+      "overlay"
+    ],
+    "ui-completion-projection-kit": [
+      "terminal state",
+      "message",
+      "timestamp",
+      "routing"
+    ],
+    "complete-screen-presentation-kit": [
+      "outcome presentation",
+      "restart",
+      "title exit"
+    ],
+    "lobby-screen-presentation-kit": [
+      "room",
+      "roster",
+      "ready state",
+      "controls"
+    ],
+    "peer-host-transport-kit": [
+      "PeerJS host",
+      "BroadcastChannel bridge",
+      "connections",
+      "broadcast",
+      "targeted send",
+      "disconnect",
+      "destroy"
+    ],
+    "peer-client-transport-kit": [
+      "PeerJS client",
+      "BroadcastChannel bridge",
+      "connect",
+      "send",
+      "status",
+      "disconnect",
+      "destroy"
+    ],
+    "peer-event-bus-kit": [
+      "typed transport events",
+      "subscription",
+      "cleanup"
+    ],
+    "protocol-message-construction-kit": [
+      "START_GAME",
+      "PLAYER_UPDATE",
+      "TRY_INTERACT",
+      "SYNC",
+      "LOBBY_EVENT"
+    ],
+    "protocol-serialization-kit": [
+      "encode",
+      "decode",
+      "protocol version",
+      "structural validation"
+    ],
+    "maze-snapshot-bootstrap-kit": [
+      "seed",
+      "maze",
+      "players",
+      "cubes",
+      "anomaly",
+      "initial snapshot"
+    ],
+    "seeded-maze-rng-kit": [
+      "topology",
+      "placement",
+      "target sequence"
+    ],
+    "first-person-input-kit": [
+      "keyboard",
+      "pointer lock",
+      "look",
+      "snapshots"
+    ],
+    "movement-collision-camera-kit": [
+      "movement",
+      "collision",
+      "eye pose",
+      "shake",
+      "camera"
+    ],
+    "network-player-update-kit": [
+      "sequence",
+      "cadence",
+      "pose envelope",
+      "host consume"
+    ],
+    "corridor-interaction-domain-kit": [
+      "pickup",
+      "drop",
+      "place",
+      "remove",
+      "held-cube synchronization"
+    ],
+    "ordered-anomaly-sequence-kit": [
+      "ordered slots",
+      "validation",
+      "victory"
+    ],
+    "ooze-trail-domain-kit": [
+      "spawn",
+      "decay",
+      "variation",
+      "spacing",
+      "capacity",
+      "pressure"
+    ],
+    "snapshot-outcome-routing-kit": [
+      "snapshot state to UI outcome"
+    ],
+    "corridor-authoritative-publication-kit": [
+      "tick",
+      "clone",
+      "SYNC",
+      "broadcast"
+    ],
+    "corridor-animation-loop-kit": [
+      "RAF start",
+      "RAF stop",
+      "delta",
+      "elapsed",
+      "successor scheduling"
+    ],
+    "corridor-render-world-kit": [
+      "terrain",
+      "maze",
+      "objects",
+      "actors",
+      "lights",
+      "update",
+      "dispose"
+    ],
+    "corridor-post-processing-kit": [
+      "composer",
+      "bloom",
+      "resize",
+      "render",
+      "dispose"
+    ],
+    "corridor-minimap-kit": [
+      "maze",
+      "players",
+      "cubes",
+      "ooze",
+      "heading"
+    ],
+    "runtime-debug-frame-kit": [
+      "activation",
+      "bounded capture",
+      "overlay",
+      "export"
+    ],
+    "runtime-resource-cleanup-kit": [
+      "loop",
+      "subscriptions",
+      "listeners",
+      "observers",
+      "GPU cleanup"
+    ],
+    "package-validation-kit": [
+      "build",
+      "lint",
+      "harness",
+      "visual",
+      "live-player checks"
+    ]
   },
   "implementedAdapters": {
-    "live-agent-runner-adapter": ["episode scheduling", "adaptive action selection", "child execution", "JSONL history", "latest summary"],
-    "live-player-browser-proof-adapter": ["server and browser admission", "route control", "debug readback", "screenshots", "image probes", "proof gates"]
+    "live-agent-runner-adapter": [
+      "episode scheduling",
+      "adaptive action selection",
+      "child execution",
+      "JSONL history",
+      "latest summary"
+    ],
+    "live-player-browser-proof-adapter": [
+      "server and browser admission",
+      "route control",
+      "debug readback",
+      "screenshots",
+      "image probes",
+      "proof gates"
+    ]
   },
   "interactionLoop": [
     "solo, host, or client route admits a bootstrap snapshot",
-    "GameCanvas initializes input, prediction, transport, simulation, world, minimap, and animation",
-    "client predicts movement and sends PLAYER_UPDATE with sequence, input, and full pose",
-    "host copies the supplied pose into the supplied player and synchronizes held cubes",
-    "host republishes authoritative state",
-    "clients project snapshots while local prediction continues",
-    "no typed kinematic admission or correction-frame acknowledgement exists"
+    "GameCanvas initializes PlayerInputState, movement, transport, world and animation",
+    "keyboard events produce movement, interact and pause buttons",
+    "pointer-lock mouse movement produces look deltas",
+    "normalized input drives movement, camera and interaction",
+    "no touch producer supplies movement, look, interact or pause",
+    "no device-control admission or first action-effect frame acknowledgement exists"
   ],
   "domainsInUse": [
     "application routing and browser lifecycle",
     "session identity room roster connection readiness and reset",
     "deterministic maze bootstrap",
     "PeerJS BroadcastChannel transport and protocol",
+    "normalized keyboard mouse and pointer-lock input",
+    "device capability control profiles and gesture arbitration",
     "client prediction and authoritative publication",
-    "peer sender and player identity binding",
-    "movement sequence ordering and deduplication",
-    "kinematic limits swept collision and maze bounds",
-    "input pointer lock pause settings and UI",
-    "interaction anomaly ooze and victory",
+    "movement collision camera and interaction",
+    "cube anomaly ooze and victory",
     "Three.js world post-processing minimap RAF and viewport",
-    "prediction correction and visible-frame evidence",
+    "semantic control projection and visible action effects",
     "debug proof validation build deployment and central tracking"
   ],
   "sourceFindings": {
-    "separateSenderAndPlayerIds": true,
-    "inputSequenceTransmitted": true,
-    "hostActorBindingExists": false,
-    "sequenceAdmissionExists": false,
-    "hostReconstructsMotionFromInput": false,
-    "suppliedPoseCopiedDirectly": true,
-    "kinematicLimitAdmissionExists": false,
-    "sweptMazeCollisionAdmissionExists": false,
-    "heldCubeFollowsUpdatedPlayer": true,
-    "typedMovementResultExists": false,
-    "predictionCorrectionReceiptExists": false,
-    "firstAuthoritativeMovementFrameAckExists": false
+    "normalizedPlayerInputStateExists": true,
+    "keyboardMovementProducerExists": true,
+    "keyboardInteractProducerExists": true,
+    "keyboardPauseProducerExists": true,
+    "pointerLockMouseLookProducerExists": true,
+    "touchMovementProducerExists": false,
+    "touchLookProducerExists": false,
+    "touchInteractProducerExists": false,
+    "touchPauseProducerExists": false,
+    "playingHudTouchControlsExist": false,
+    "deviceControlAdmissionResultExists": false,
+    "firstDeviceControlSurfaceFrameAckExists": false,
+    "firstDeviceActionEffectFrameAckExists": false
   },
-  "plannedParentDomain": "corridor-client-movement-kinematic-admission-authority-domain",
+  "plannedParentDomain": "corridor-device-control-action-coverage-authority-domain",
   "plannedKits": [
-    "movement-update-id-kit",
-    "player-movement-revision-kit",
-    "canonical-actor-binding-kit",
-    "movement-session-generation-kit",
-    "movement-sequence-admission-kit",
-    "host-time-delta-budget-kit",
-    "pose-value-admission-kit",
-    "speed-acceleration-policy-kit",
-    "rotation-pitch-policy-kit",
-    "swept-maze-collision-kit",
-    "maze-bounds-admission-kit",
-    "reachable-pose-candidate-kit",
-    "held-cube-movement-candidate-kit",
-    "atomic-movement-settlement-kit",
-    "movement-rejection-preservation-kit",
-    "client-movement-result-kit",
-    "authoritative-correction-kit",
-    "prediction-reconciliation-kit",
-    "movement-observation-journal-kit",
-    "first-authoritative-movement-frame-ack-kit",
-    "movement-fault-fixture-kit",
-    "movement-artifact-parity-kit"
+    "device-capability-snapshot-kit",
+    "control-profile-descriptor-kit",
+    "required-action-set-manifest-kit",
+    "control-generation-identity-kit",
+    "keyboard-control-profile-kit",
+    "pointer-lock-mouse-profile-kit",
+    "touch-movement-surface-kit",
+    "touch-look-surface-kit",
+    "touch-interact-surface-kit",
+    "touch-pause-surface-kit",
+    "pointer-capture-ownership-kit",
+    "gesture-dead-zone-policy-kit",
+    "look-sensitivity-policy-kit",
+    "hybrid-input-arbitration-kit",
+    "duplicate-action-suppression-kit",
+    "held-action-retirement-kit",
+    "semantic-control-projection-kit",
+    "device-control-admission-result-kit",
+    "first-device-control-surface-frame-ack-kit",
+    "first-device-action-effect-frame-ack-kit",
+    "device-control-fixture-parity-kit"
   ],
   "validation": {
     "runtimeChanged": false,
     "networkChanged": false,
+    "inputChanged": false,
     "gameplayChanged": false,
     "renderChanged": false,
     "packageChanged": false,
@@ -141,8 +320,8 @@
     "pullRequestCreated": false,
     "runtimeCommandsRun": false,
     "browserProofRun": false,
-    "movementFixtureAvailable": false,
-    "centralLedgerSynchronized": true,
-    "centralChangeLogCreated": true
+    "touchFixtureAvailable": false,
+    "centralLedgerSynchronized": false,
+    "centralChangeLogCreated": false
   }
 }

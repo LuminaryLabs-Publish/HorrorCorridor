@@ -1,80 +1,53 @@
 # HorrorCorridor Next Steps
 
-**Updated:** `2026-07-14T20-58-46-04-00`
+**Updated:** `2026-07-15T02-00-17-04-00`
 
 ## Summary
 
-Add one narrow host-side movement admission authority around the existing client prediction and snapshot publication path. It should bind transport identity to one player, order updates, validate reachable motion through the maze, commit atomically and return an authoritative correction revision.
+The next implementation should add a device-control admission boundary before adding isolated touch buttons. Every admitted device profile must cover the whole playable action set and feed the existing `PlayerInputState` rather than bypassing it.
 
 ## Plan ledger
 
-**Goal:** make multiplayer movement authoritative without replacing existing input, movement, collision, transport or renderer kits.
+**Goal:** make keyboard/mouse, touch and hybrid devices produce equivalent normalized gameplay intent without duplicate actions or gesture conflicts.
 
-### Documentation
+- [ ] Define `DeviceCapabilitySnapshot`, `ControlProfileId` and `InputMapRevision`.
+- [ ] Define the required action set: move forward/back/left/right, look, interact, pause, capture/release.
+- [ ] Add `DeviceControlAdmissionCommand` and `DeviceControlAdmissionResult`.
+- [ ] Keep keyboard and pointer-lock mouse as the desktop profile.
+- [ ] Add a semantic touch movement control with cancellation and dead-zone policy.
+- [ ] Add a touch-look region with pointer capture and bounded delta normalization.
+- [ ] Add explicit touch interact and pause controls.
+- [ ] Ensure settings/debug controls do not overlap gameplay gestures.
+- [ ] Arbitrate hybrid mouse, touch and keyboard input by pointer identity and generation.
+- [ ] Reset held actions on blur, visibility loss, route retirement and pointer cancellation.
+- [ ] Route all producers through `PlayerInputState`.
+- [ ] Publish `FirstDeviceControlSurfaceFrameAck`.
+- [ ] Publish `FirstDeviceActionEffectFrameAck` after movement, look and interaction fixtures.
+- [ ] Add desktop, touch-only and hybrid browser fixtures.
+- [ ] Validate source, production build and deployed-origin parity.
 
-- [x] Audit `PLAYER_UPDATE` construction, host consumption, `networkRules`, held-cube synchronization and client rendering.
-- [x] Preserve the 29-kit and two-adapter inventory.
-- [x] Define the parent authority and fixture gate.
-
-### Gate 1: identity and update admission
-
-- [ ] Add `MovementUpdateId`, `SessionGeneration`, `ConnectionGeneration` and `PlayerMovementRevision`.
-- [ ] Bind remote peer, envelope `senderId` and payload `playerId` to one admitted actor.
-- [ ] Require the active room and session generation.
-- [ ] Reject unknown, impersonated, stale, duplicate and superseded updates.
-
-### Gate 2: sequence and time policy
-
-- [ ] Persist the last accepted input sequence per player.
-- [ ] Reject reordered or repeated sequence values.
-- [ ] Derive an accepted movement interval from host time and bounded client cadence.
-- [ ] Cap catch-up work instead of accepting one arbitrarily large displacement.
-
-### Gate 3: kinematic admission
-
-- [ ] Validate bounded position, velocity, yaw and pitch values.
-- [ ] Enforce configured speed, acceleration and turn constraints.
-- [ ] Sweep from the last accepted pose through maze collision.
-- [ ] Reject wall crossings, out-of-maze positions and unreachable deltas.
-- [ ] Decide whether the host simulates from input or clamps a pose candidate.
-
-### Gate 4: atomic settlement
-
-- [ ] Prepare player, held-cube, game-state and snapshot candidates.
-- [ ] Commit all participants under one `PlayerMovementRevision`.
-- [ ] Preserve the predecessor on rejection.
-- [ ] Publish `ClientMovementUpdateResult` with predicate receipts.
-
-### Gate 5: prediction correction and visible proof
-
-- [ ] Send accepted pose/revision or rejection correction to the originating client.
-- [ ] Reconcile local prediction without hiding large corrections.
-- [ ] Bind world, camera, minimap and debug projection to the accepted revision.
-- [ ] Publish `FirstAuthoritativeMovementFrameAck`.
-
-### Gate 6: fixtures
-
-- [ ] Valid forward movement at normal cadence.
-- [ ] Sender/player impersonation.
-- [ ] Duplicate, stale and reordered sequences.
-- [ ] Teleport and excessive-speed update.
-- [ ] Wall-crossing and out-of-maze update.
-- [ ] Held-cube movement during rejected pose.
-- [ ] Client correction after host rejection.
-- [ ] Source, production-build and deployed-origin parity.
-
-## Dependency order
+## Checkpoints
 
 ```txt
-connection and actor binding
-  -> sequence and host-time admission
-  -> kinematic and swept-collision validation
-  -> atomic player and held-cube settlement
-  -> prediction correction
-  -> first authoritative movement frame
-  -> source/build/deployed fixtures
+Checkpoint A
+  every admitted control profile covers every required action
+
+Checkpoint B
+  no touch control mutates gameplay state outside PlayerInputState
+
+Checkpoint C
+  one gesture produces at most one accepted action
+
+Checkpoint D
+  cancelled or hidden pointers leave no held movement behind
+
+Checkpoint E
+  visible controls and resulting world effects share one revision
+
+Checkpoint F
+  desktop behavior remains unchanged
 ```
 
-## Completion boundary
+## Do not claim
 
-Do not claim host-authoritative movement, anti-teleport safety or correction convergence until the complete fixture matrix passes on `main`.
+Do not claim mobile playability, controller equivalence, hybrid-input safety or production parity until the corresponding fixtures pass.

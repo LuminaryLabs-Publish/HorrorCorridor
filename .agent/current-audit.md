@@ -1,39 +1,37 @@
 # HorrorCorridor Current Audit
 
 **Repository:** `LuminaryLabs-Publish/HorrorCorridor`  
-**Updated:** `2026-07-14T20-58-46-04-00`  
+**Updated:** `2026-07-15T02-00-17-04-00`  
 **Branch:** `main`  
-**Status:** `client-movement-kinematic-admission-authority-audited`
+**Status:** `device-control-action-coverage-authority-audited`
 
 ## Summary
 
-The repository retains 29 implemented kit surfaces and two browser-proof adapters. The current boundary is client movement admission: host-side `PLAYER_UPDATE` handling accepts a caller-selected player identity and complete pose, mutates authoritative state directly, moves any held cube with that player and republishes the result.
+The repository retains 29 implemented kit surfaces and two browser-proof adapters. The current boundary is device-control action coverage: gameplay input is normalized into `PlayerInputState`, but the browser host supplies that state only from keyboard events and pointer-lock mouse deltas.
 
 ## Plan ledger
 
-**Goal:** retain responsive prediction while making the host authoritative over actor identity, ordering, reachable motion, collision and correction.
+**Goal:** keep one input authority while making each supported device class capable of completing the same movement, interaction and pause loop.
 
 - [x] Compare the full Publish inventory, central ledgers, root `.agent` states and current heads.
 - [x] Select only HorrorCorridor by the oldest synchronized timestamp.
-- [x] Inspect `GameCanvas`, protocol construction, `networkRules`, movement, collision and publication.
+- [x] Inspect `GameCanvas`, `PointerLockGate`, the player input domain, HUD projection, package scripts and browser proof surfaces.
 - [x] Preserve all 29 kits, two adapters and services.
-- [x] Add and route the timestamped movement audit family.
+- [x] Add and route the timestamped device-control audit family.
 - [ ] Implement and prove the authority.
 
 ## Complete interaction loop
 
 ```txt
 solo/host/client route
-  -> bootstrap shared maze snapshot
-  -> GameCanvas starts input, prediction, transport, simulation and rendering
-  -> client predicts local pose
-  -> client sends PLAYER_UPDATE with senderId, playerId, sequence, input and full pose
-  -> host receives peer/message
-  -> host copies payload pose into payload playerId
-  -> held cube follows the copied player pose
-  -> host republishes authoritative SYNC
-  -> clients render snapshots while the local client continues prediction
-  -> no typed admission or correction-frame receipt exists
+  -> GameCanvas initializes PlayerInputState
+  -> window keydown/keyup produce movement, interact and pause buttons
+  -> pointer-lock mousemove produces look deltas
+  -> PointerLockGate instructs WASD + mouse + Esc
+  -> frame loop advances movement and camera from normalized input
+  -> interaction routes through local authority or TRY_INTERACT
+  -> no touch producer can set movement axes, look deltas,
+     interact, pause or an equivalent capture state
 ```
 
 ## Domains in use
@@ -43,14 +41,14 @@ application routing and browser lifecycle
 session room roster connection readiness and reset
 loading and deterministic maze bootstrap
 PeerJS BroadcastChannel transport and protocol
+keyboard mouse pointer-lock and normalized input
+device capability and viewport classification
+touch control surfaces and gesture arbitration
 client prediction and authoritative publication
-actor identity and peer/player binding
-movement sequence ordering and deduplication
-kinematic limits swept collision and maze bounds
-keyboard pointer lock pause settings and UI
-cube interaction anomaly ooze and victory
+movement collision camera and interaction
+cube anomaly ooze and victory
 Three.js world post-processing minimap RAF and viewport
-prediction correction and visible-frame convergence
+semantic control projection and visible action effects
 debug proof validation build deployment and central tracking
 ```
 
@@ -60,7 +58,7 @@ debug proof validation build deployment and central tracking
 implemented kits: 29
 proof adapters: 2
 total implemented surfaces: 31
-planned movement authority surfaces: 22
+planned device-control authority surfaces: 21
 ```
 
 The complete kit-by-kit service inventory is in `.agent/kit-registry.json` and the latest tracker.
@@ -68,38 +66,38 @@ The complete kit-by-kit service inventory is in `.agent/kit-registry.json` and t
 ## Source-backed findings
 
 ```txt
-PLAYER_UPDATE senderId and playerId are separate: yes
-input sequence is transmitted: yes
-host actor binding is enforced before mutation: no
-sequence ordering or deduplication is enforced: no
-host reconstructs motion from accepted input: no
-supplied position and velocity are copied directly: yes
-speed or acceleration admission exists: no
-swept maze collision validation exists: no
-held cube follows accepted supplied player pose: yes
-typed movement result exists: no
-client correction receipt exists: no
-FirstAuthoritativeMovementFrameAck exists: no
+normalized PlayerInputState exists: yes
+keyboard movement mapping exists: yes
+keyboard interact and pause mapping exists: yes
+pointer-lock mouse look exists: yes
+touch or pointer gesture movement producer exists: no
+touch look producer exists: no
+touch interact control exists: no
+touch pause control exists: no
+playing HUD exposes gameplay touch controls: no
+device capability admission result exists: no
+FirstDeviceControlSurfaceFrameAck exists: no
+FirstDeviceActionEffectFrameAck exists: no
 ```
 
 ## Required authority
 
 ```txt
-corridor-client-movement-kinematic-admission-authority-domain
+corridor-device-control-action-coverage-authority-domain
 ```
 
 ## Current file family
 
 ```txt
-.agent/trackers/2026-07-14T20-58-46-04-00/project-breakdown.md
-.agent/turn-ledger/2026-07-14T20-58-46-04-00.md
-.agent/architecture-audit/2026-07-14T20-58-46-04-00-client-movement-kinematic-admission-dsk-map.md
-.agent/render-audit/2026-07-14T20-58-46-04-00-authoritative-correction-visible-frame-gap.md
-.agent/gameplay-audit/2026-07-14T20-58-46-04-00-client-pose-teleport-wall-bypass-loop.md
-.agent/interaction-audit/2026-07-14T20-58-46-04-00-player-update-command-result-map.md
-.agent/network-movement-audit/2026-07-14T20-58-46-04-00-sender-sequence-kinematic-settlement-contract.md
-.agent/deploy-audit/2026-07-14T20-58-46-04-00-network-movement-browser-fixture-gate.md
-.agent/central-sync-audit/2026-07-14T20-58-46-04-00-repo-ledger-client-movement-reconciliation.md
+.agent/trackers/2026-07-15T02-00-17-04-00/project-breakdown.md
+.agent/turn-ledger/2026-07-15T02-00-17-04-00.md
+.agent/architecture-audit/2026-07-15T02-00-17-04-00-device-control-action-coverage-dsk-map.md
+.agent/render-audit/2026-07-15T02-00-17-04-00-touch-control-surface-visible-frame-gap.md
+.agent/gameplay-audit/2026-07-15T02-00-17-04-00-touch-only-player-immobility-loop.md
+.agent/interaction-audit/2026-07-15T02-00-17-04-00-device-action-command-result-map.md
+.agent/device-control-audit/2026-07-15T02-00-17-04-00-keyboard-mouse-touch-action-coverage-contract.md
+.agent/deploy-audit/2026-07-15T02-00-17-04-00-device-control-browser-fixture-gate.md
+.agent/central-sync-audit/2026-07-15T02-00-17-04-00-oldest-selection-device-control-reconciliation.md
 ```
 
 ## Validation boundary
