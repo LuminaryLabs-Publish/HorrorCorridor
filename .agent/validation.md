@@ -1,39 +1,39 @@
 # HorrorCorridor Validation
 
-**Updated:** `2026-07-15T07-00-28-04-00`  
-**Scope:** documentation-only audio event projection audit
+**Updated:** `2026-07-15T11-39-04-04-00`  
+**Scope:** documentation-only minimap backing-store DPR audit
 
 ## Summary
 
-Source inspection confirms a complete visual gameplay and proof path but no owned browser audio domain, cue registry, preference state, spatial projection, lifecycle settlement or audio fixture. No runtime code, package, workflow or deployment file changed in this run.
+Source inspection confirms that the minimap is drawn from accepted snapshot and local-pose state, but its canvas surface is sized from raw floating-point DPR products without an explicit integer descriptor, context generation, resize result or visible-frame acknowledgement. No runtime code, package, workflow or deployment file changed in this run.
 
 ## Plan ledger
 
-**Goal:** record exactly what was inspected and prevent unsupported audio or production claims.
+**Goal:** record exactly what was inspected and prevent unsupported resize, performance or production claims.
 
 - [x] Confirm the selected repository head matched its prior repo-local documentation head.
-- [x] Inspect `GameCanvas.tsx` imports and runtime ownership.
-- [x] Inspect `interactionRules.ts` semantic state transitions.
-- [x] Inspect `SettingsOverlay.tsx` preference surface.
+- [x] Inspect `GameCanvas.tsx` render-frame ownership.
+- [x] Inspect `Minimap.tsx` canvas acquisition, DPR calculation, comparison, resize and draw path.
+- [x] Inspect `animationLoop.ts` frame scheduling.
 - [x] Inspect `package.json` scripts and dependencies.
 - [x] Inspect `.agent/kit-registry.json` inventory.
-- [x] Run repository code searches for audio context, media, volume and mute surfaces.
+- [x] Search for minimap-specific DPR or backing-store fixtures.
 - [x] Update only `.agent` documentation and central tracking.
 - [ ] Run runtime and browser fixtures after implementation exists.
 
 ## Source evidence
 
 ```txt
-GameCanvas audio owner or cue dispatcher: absent
-AudioContext or OfflineAudioContext construction: absent
-HTMLAudioElement, <audio> or new Audio construction: absent
-semantic audio event type: absent
-cue descriptor registry: absent
-settings volume/mute controls: absent
-listener pose audio projection: absent
-spatial source audio projection: absent
-audio context pause/hide/route retirement: absent
-audio browser fixture: absent
+MAP_SIZE: 168
+DPR observation: window.devicePixelRatio || 1
+scaled width/height: MAP_SIZE * DPR
+canvas width/height comparison: strict inequality
+explicit integer quantization: absent
+accepted surface descriptor: absent
+context generation: absent
+dimension-write counter: absent
+FirstMinimapResizeFrameAck: absent
+fractional-DPR fixture: absent
 ```
 
 ## Change classification
@@ -44,8 +44,8 @@ runtime TypeScript changed: no
 network behavior changed: no
 input behavior changed: no
 gameplay changed: no
-render behavior changed: no
-audio behavior changed: no
+Three.js behavior changed: no
+Canvas2D behavior changed: no
 packages or dependencies changed: no
 tests or workflows changed: no
 deployment changed: no
@@ -60,18 +60,16 @@ npm install: not run
 npm run lint: not run
 npm run build: not run
 desktop browser launch: not run
-audio capability fixture: unavailable
-autoplay unlock fixture: unavailable
-accepted/rejected cue fixture: unavailable
-prediction/snapshot deduplication fixture: unavailable
-spatial listener/source fixture: unavailable
-pause/visibility/route retirement fixture: unavailable
-FirstAudibleCueAck fixture: unavailable
-FirstAudioVisualConvergenceAck fixture: unavailable
-production-build audio smoke: not run
-deployed-origin audio smoke: not run
+fractional-DPR minimap fixture: unavailable
+dimension-write trace: unavailable
+context-generation trace: unavailable
+zoom transition fixture: unavailable
+route remount fixture: unavailable
+FirstMinimapResizeFrameAck fixture: unavailable
+production-build minimap smoke: not run
+deployed-origin minimap smoke: not run
 ```
 
 ## Claim boundary
 
-No audible gameplay, browser audio support, cue correctness, preference persistence, spatial correctness, duplicate suppression, lifecycle settlement, audiovisual convergence, build parity or production readiness is claimed.
+No runtime repair, allocation reduction, context preservation, frame-time improvement, visual correctness, browser parity, deployment parity or production readiness is claimed.
