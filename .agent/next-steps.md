@@ -1,62 +1,65 @@
 # HorrorCorridor Next Steps
 
-**Updated:** `2026-07-15T21-39-15-04-00`
+**Updated:** `2026-07-16T02-40-29-04-00`
 
 ## Summary
 
-The next implementation should turn pointer-lock capture into a typed browser capability transaction. Mouse-look readiness must follow accepted ownership, while denial, unsupported capability, interruption, retry, fallback, and retirement each publish explicit results.
+The next implementation should remove ambient randomness from host-authoritative ooze evolution. A named, versioned stream must own every decay and visual-variation draw, serialize its exact next cursor and prove the first matching world/minimap frame.
 
 ## Plan ledger
 
-**Goal:** implement one complete pointer-lock admission lifecycle with visible recovery and source/build/deployed proof.
+**Goal:** implement one complete seeded ooze lifecycle with deterministic save, restore, replay and source/build/deployed proof.
 
-- [ ] Define `PointerLockPolicyRevision`, `SurfaceId`, `UserGestureId`, and `PointerLockGeneration`.
-- [ ] Observe Pointer Lock API support and permissions-policy eligibility before requesting ownership.
-- [ ] Normalize promise-returning and void-returning `requestPointerLock()` behavior.
-- [ ] Add a `pointerlockerror` observer and classify denied, unsupported, interrupted, stale, and retired outcomes.
-- [ ] Publish `PointerLockAdmissionResult` exactly once per accepted capture gesture.
-- [ ] Mark mouse-look readiness only after the mount is the observed pointer-lock owner.
-- [ ] Keep input readiness and mouse-look readiness as separate revisions.
-- [ ] Expose a visible capture-failure message and retry action when acquisition fails.
-- [ ] Provide a compatible fallback look profile or explicitly reject route admission when pointer lock is unavailable.
-- [ ] Keep keyboard movement safe while a reduced profile is active.
-- [ ] Bind consumed look deltas and camera state to the accepted pointer-lock generation.
-- [ ] Publish `FirstPointerLockFrameAck` for the first matching camera/render frame.
-- [ ] Release accepted ownership once on pause, completion, blur, hidden state, page retirement, route exit, surface replacement, and cleanup.
-- [ ] Clear held buttons and look deltas during retirement.
-- [ ] Reject late change/error callbacks from retired generations.
-- [ ] Add accepted, denied, unsupported, interrupted, retry, fallback, and retirement browser fixtures.
-- [ ] Prove source, production-build, and deployed-origin parity.
+- [ ] Define `RunGeneration`, `SeedValue`, `RngAlgorithmVersion`, `RngDerivationVersion` and `OozeStreamId`.
+- [ ] Derive an isolated `ooze-trail` stream from the accepted run seed.
+- [ ] Replace `resolveRng(input.rng ?? Math.random)` in production execution with an admitted stream provider.
+- [ ] Keep explicit RNG injection for pure unit fixtures.
+- [ ] Define `RngRevision`, `RngCursor`, `RngDrawCount` and `OozeTrailRevision`.
+- [ ] Admit each host ooze step against expected run, host-tick, trail and RNG revisions.
+- [ ] Record ordered purposes for decay-survival, spawn-height and spawn-rotation draws.
+- [ ] Publish `OozeRandomDrawResult` and `OozeSimulationStepResult`.
+- [ ] Make duplicate step commands idempotent without consuming new draws.
+- [ ] Serialize algorithm, derivation, stream, cursor, draw count and trail revision with authoritative snapshots.
+- [ ] Define a legacy-snapshot migration or explicit deterministic-replay rejection policy.
+- [ ] Restore the exact next random draw after save/load or reconnect recovery.
+- [ ] Isolate ooze draws from maze, audio, rendering, diagnostics and entity identity streams.
+- [ ] Define a canonical numeric normalization and ooze-state hash.
+- [ ] Bind world and minimap rendering to accepted trail and RNG revisions.
+- [ ] Publish `FirstSeedBoundOozeFrameAck` after the first matching visible frame.
+- [ ] Retire the stream once on completion, title exit, session replacement and runtime cleanup.
+- [ ] Reject late draws and replay work from retired run generations.
+- [ ] Add same-seed, different-seed, retry, restore, duplicate, stale, stream-isolation and retirement fixtures.
+- [ ] Prove source, production-build and deployed-origin parity.
 
 ## Checkpoints
 
 ```txt
 Checkpoint A
-  every capture gesture settles as one typed result
+  all production ooze draws use the named stream
 
 Checkpoint B
-  input readiness does not imply mouse-look readiness
+  same seed and accepted commands produce identical checkpoint hashes
 
 Checkpoint C
-  accepted ownership produces FirstPointerLockFrameAck
+  save and restore resume at the exact next cursor
 
 Checkpoint D
-  denial or unsupported capability produces visible retry/fallback state
+  unrelated random consumers cannot change ooze outcomes
 
 Checkpoint E
-  pause blur hide and route exit retire the accepted generation exactly once
+  duplicate or stale commands consume no draws
 
 Checkpoint F
-  stale callbacks cannot reactivate retired ownership
+  accepted step results produce FirstSeedBoundOozeFrameAck
 
 Checkpoint G
-  source build and deployed origin produce matching result receipts
+  source build and deployed origin produce matching hashes
 ```
 
 ## Retained work
 
-Previous active-HUD, minimap, audio, lifecycle, loading, protocol, movement, device-control, render, and deployment findings remain open. The pointer-lock authority composes with rather than replaces those boundaries.
+Previous pointer-lock, active-HUD, minimap, audio, lifecycle, loading, protocol, movement, device-control, render and deployment findings remain open. The ooze RNG authority composes with rather than replaces those boundaries.
 
 ## Do not claim
 
-Do not claim pointer-lock reliability, mouse-look completeness, fallback operability, lifecycle safety, frame convergence, or production parity until the fixture matrix passes.
+Do not claim deterministic ooze evolution, exact restore, same-seed replay, stream isolation, visible-frame convergence or production parity until the fixture matrix passes.
