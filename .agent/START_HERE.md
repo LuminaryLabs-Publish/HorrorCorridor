@@ -2,27 +2,27 @@
 
 **Repository:** `LuminaryLabs-Publish/HorrorCorridor`  
 **Branch:** `main`  
-**Updated:** `2026-07-16T02-40-29-04-00`  
-**Status:** `ooze-rng-stream-replay-authority-audited`
+**Updated:** `2026-07-16T07-03-14-04-00`  
+**Status:** `motion-preference-animation-admission-authority-audited`
 
 ## Summary
 
 HorrorCorridor is a cooperative procedural first-person maze with deterministic solo/host/client sessions, PeerJS and BroadcastChannel transport, local prediction, authoritative snapshots, cube/anomaly interactions, ooze, Three.js rendering, post-processing, a Canvas2D minimap and browser-proof tooling.
 
-The current audit isolates ooze random identity. The snapshot contains a maze seed, but the active host invokes `advanceOozeTrail()` without an RNG provider, so decay, height and rotation consume ambient `Math.random()`. The resulting trail replicates, while algorithm, stream, cursor, draw count and replay proof do not.
+The current audit isolates motion-preference ownership. Gameplay rendering continuously applies walk bob and roll to the camera and pulses scene materials, textures, exit lighting and the exit halo. No operating-system reduced-motion observer, product override, essential-versus-ornamental classifier, live preference result or first reduced-motion gameplay-frame acknowledgement exists.
 
 ## Plan ledger
 
-**Goal:** make host-authoritative ooze evolution reproducible from an explicit seed stream without moving gameplay truth to clients.
+**Goal:** preserve gameplay and network truth while making optional presentation motion consume one accepted, revision-bound policy.
 
 - [x] Compare all 11 accessible Publish repositories and ten eligible central ledgers.
 - [x] Exclude `TheCavalryOfRome`.
 - [x] Confirm no new, missing, undocumented, root-agent-missing or runtime-ahead priority case.
 - [x] Select only HorrorCorridor under the oldest synchronized rule.
 - [x] Preserve the complete 29-kit and two-adapter inventory.
-- [x] Add the timestamped ooze RNG/replay audit family.
+- [x] Add the timestamped motion-preference audit family.
 - [x] Refresh root docs and the machine registry.
-- [ ] Implement and execute deterministic source, build and deployed-origin fixtures.
+- [ ] Implement and execute source, browser, build and deployed-origin reduced-motion fixtures.
 
 ## Read first
 
@@ -30,39 +30,35 @@ The current audit isolates ooze random identity. The snapshot contains a maze se
 2. `.agent/next-steps.md`
 3. `.agent/known-gaps.md`
 4. `.agent/validation.md`
-5. `.agent/trackers/2026-07-16T02-40-29-04-00/project-breakdown.md`
-6. `.agent/architecture-audit/2026-07-16T02-40-29-04-00-ooze-rng-stream-replay-dsk-map.md`
-7. `.agent/render-audit/2026-07-16T02-40-29-04-00-unbound-ooze-rng-visible-frame-gap.md`
-8. `.agent/gameplay-audit/2026-07-16T02-40-29-04-00-ambient-ooze-randomness-replay-loop.md`
-9. `.agent/interaction-audit/2026-07-16T02-40-29-04-00-ooze-random-draw-command-result-map.md`
-10. `.agent/determinism-audit/2026-07-16T02-40-29-04-00-ooze-seed-stream-snapshot-contract.md`
-11. `.agent/deploy-audit/2026-07-16T02-40-29-04-00-same-seed-ooze-replay-fixture-gate.md`
-12. `.agent/central-sync-audit/2026-07-16T02-40-29-04-00-oldest-selection-ooze-rng-reconciliation.md`
+5. `.agent/trackers/2026-07-16T07-03-14-04-00/project-breakdown.md`
+6. `.agent/architecture-audit/2026-07-16T07-03-14-04-00-motion-preference-animation-admission-dsk-map.md`
+7. `.agent/render-audit/2026-07-16T07-03-14-04-00-continuous-motion-reduced-frame-gap.md`
+8. `.agent/gameplay-audit/2026-07-16T07-03-14-04-00-reduced-motion-essential-simulation-loop.md`
+9. `.agent/interaction-audit/2026-07-16T07-03-14-04-00-motion-preference-command-result-map.md`
+10. `.agent/motion-preference-audit/2026-07-16T07-03-14-04-00-os-override-animation-policy-contract.md`
+11. `.agent/deploy-audit/2026-07-16T07-03-14-04-00-reduced-motion-browser-fixture-gate.md`
+12. `.agent/central-sync-audit/2026-07-16T07-03-14-04-00-oldest-selection-motion-preference-reconciliation.md`
 
 ## Current authority boundary
 
 ```txt
-corridor-ooze-rng-stream-replay-authority-domain
+corridor-motion-preference-animation-admission-authority-domain
 ```
 
 ## Required transaction
 
 ```txt
-OozeSimulationStepCommand
-  -> bind run seed algorithm stream host-tick trail and RNG revisions
-  -> consume only the named ooze stream
-  -> settle decay spawn and visual parameters atomically
-  -> publish OozeSimulationStepResult
-  -> persist the next stream cursor with authoritative state
-  -> render matching world and minimap frames
-  -> publish FirstSeedBoundOozeFrameAck
-
-OozeReplayCommand
-  -> restore seed algorithm cursor trail and accepted command history
-  -> compare canonical checkpoint hashes
-  -> publish OozeReplayResult
+MotionPreferenceAdmissionCommand
+  -> bind document route preference policy runtime and frame revisions
+  -> observe operating-system preference
+  -> resolve an optional product override
+  -> classify essential simulation and ornamental presentation
+  -> adapt camera bob roll scene pulses exit-light pulses and transitions
+  -> preserve movement collision networking interaction and authoritative state
+  -> publish MotionProjectionResult
+  -> publish FirstReducedMotionGameplayFrameAck
 ```
 
 ## Validation boundary
 
-Documentation only. No deterministic ooze implementation, replay execution, snapshot migration, frame convergence, build parity, deployed parity or production readiness is claimed.
+Documentation only. No reduced-motion implementation, accessibility conformance, vestibular-safety claim, simulation parity, live preference settlement, frame convergence, build parity, deployed parity or production readiness is claimed.
