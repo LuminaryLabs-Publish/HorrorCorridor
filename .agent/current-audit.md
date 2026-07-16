@@ -1,23 +1,23 @@
 # HorrorCorridor Current Audit
 
 **Repository:** `LuminaryLabs-Publish/HorrorCorridor`  
-**Updated:** `2026-07-15T16-39-06-04-00`  
+**Updated:** `2026-07-15T21-39-15-04-00`  
 **Branch:** `main`  
-**Status:** `active-gameplay-hud-projection-mount-authority-audited`
+**Status:** `pointer-lock-acquisition-failure-fallback-authority-audited`
 
 ## Summary
 
-The repository retains 29 implemented kit surfaces and two browser-proof adapters. The current boundary is active gameplay HUD composition: accepted route, snapshot and player state reach React and the Three.js frame host, but the `PLAYING` HUD branch returns before mounting objective, sequence, held-item, player-status and minimap surfaces.
+The repository retains 29 implemented kit surfaces and two browser-proof adapters. The current boundary is browser pointer-lock acquisition: accepted user clicks can call `requestPointerLock()`, but capability, acceptance, rejection, interruption, retry, fallback, readiness, frame acknowledgement, and retirement are not represented as one versioned transaction.
 
 ## Plan ledger
 
-**Goal:** preserve simulation, networking and rendering while giving `PLAYING` one complete, route-bound HUD mount and first matching frame result.
+**Goal:** preserve simulation, networking, movement, camera, rendering, HUD, and minimap behavior while giving mouse-look capture one typed admission and fallback lifecycle.
 
-- [x] Compare the full Publish inventory, central ledgers, root `.agent` states and current heads.
+- [x] Compare the full Publish inventory, central ledgers, root `.agent` states, and current heads.
 - [x] Select only HorrorCorridor by the oldest synchronized timestamp.
-- [x] Inspect `GameShell.tsx`, `GameCanvas.tsx`, `HUDOverlay.tsx`, `Minimap.tsx`, package scripts and kit registry.
-- [x] Preserve all 29 kits, two adapters and offered services.
-- [x] Add and route the timestamped active gameplay HUD audit family.
+- [x] Inspect `GameCanvas.tsx`, `PointerLockGate.tsx`, player input state, package scripts, proof adapters, and current audit state.
+- [x] Preserve all 29 kits, two adapters, and offered services.
+- [x] Add and route the timestamped pointer-lock audit family.
 - [ ] Implement and prove the authority.
 
 ## Complete interaction loop
@@ -25,41 +25,50 @@ The repository retains 29 implemented kit surfaces and two browser-proof adapter
 ```txt
 solo/host/client route
   -> deterministic maze and session admission
-  -> GameCanvas initializes input, transport, world, minimap draw path and RAF
-  -> accepted state advances movement, cubes, anomaly, ooze and outcomes
-  -> authoritative snapshots update clients
-  -> HUDOverlay reads screen, session and snapshot state
+  -> GameCanvas initializes transport input world renderer minimap and RAF
+  -> input readiness is published
 
-PLAYING
-  -> returns SettingsOverlay and FrameDebugPanel only
-  -> gameplay panels and Minimap do not mount
-  -> GameCanvas queries runtime-minimap each frame
-  -> drawMinimapFrame receives null and returns
-  -> Three.js post-processing renders
+capture attempt
+  -> unlocked world click
+  -> requestPointerLock on the mount
+  -> no PointerLockAdmissionCommand
+  -> no accepted/rejected result
 
-COMPLETED
-  -> objective, sequence, held item, player status and Minimap mount
-  -> minimap canvas can be resolved and drawn
+accepted path
+  -> pointerlockchange observes ownership
+  -> PlayerInputState records pointerLocked=true
+  -> mousemove accumulates look deltas
+  -> frame applies look movement collision camera world minimap and post-processing
+
+failed path
+  -> denied unsupported interrupted or unaccepted request
+  -> no pointerlockerror observer
+  -> no visible failure or fallback state
+  -> mousemove is ignored while unlocked
+  -> keyboard movement and normal rendering can continue
+
+retirement
+  -> release pause blur completion route exit or cleanup
+  -> observed unlock resets input
+  -> no acquisition-generation retirement receipt
 ```
 
 ## Domains in use
 
 ```txt
 application routing and browser lifecycle
-session room roster connection readiness and reset
-loading and deterministic maze bootstrap
+session identity room roster connection readiness and reset
+deterministic maze bootstrap
 PeerJS BroadcastChannel transport and protocol
 keyboard mouse pointer-lock and normalized input
+pointer-lock capability gesture acquisition failure classification and fallback
 client prediction and authoritative publication
 movement collision camera and interaction
 cube anomaly ooze and victory
 pause settings completion and route projection
 Three.js world post-processing RAF and viewport
-HUD route policy mount generation and overlay composition
-objective sequence held-item player and hint projection
-Canvas2D minimap surface acquisition sizing transform and drawing
-active gameplay and terminal presentation separation
-HUD projection result retirement and visible-frame acknowledgement
+Canvas2D minimap and HUD projection
+pointer-lock result retirement and visible-frame acknowledgement
 debug proof validation build deployment and central tracking
 ```
 
@@ -69,7 +78,7 @@ debug proof validation build deployment and central tracking
 implemented kits: 29
 proof adapters: 2
 total implemented surfaces: 31
-planned HUD authority surfaces: 18
+planned pointer-lock authority surfaces: 18
 ```
 
 The complete kit-by-kit service inventory is in `.agent/kit-registry.json` and the latest tracker.
@@ -77,43 +86,42 @@ The complete kit-by-kit service inventory is in `.agent/kit-registry.json` and t
 ## Source-backed findings
 
 ```txt
-HUDOverlay handles PLAYING and COMPLETED: yes
-PLAYING early return: yes
-PLAYING objective projection: absent
-PLAYING anomaly sequence projection: absent
-PLAYING held-item projection: absent
-PLAYING player/session projection: absent
-PLAYING minimap component: absent
-PLAYING settings and debug surfaces: present
-COMPLETED complete HUD and minimap: present
-GameCanvas minimap DOM query per frame: present
-drawMinimapFrame null-canvas return: present
-HudMountGeneration: absent
-GameplayHudProjectionResult: absent
-FirstPlayingHudFrameAck: absent
-active-run HUD browser fixture: absent
+requestPointerLock invocation: present
+result or promise handling: absent
+pointerlockchange observer: present
+pointerlockerror observer: absent
+input readiness before accepted lock: present
+capture chrome while unlocked: hidden
+visible failed-capture state: absent
+retry result: absent
+fallback look profile: absent
+mousemove ignored while unlocked: present
+PointerLockGeneration: absent
+PointerLockAdmissionResult: absent
+FirstPointerLockFrameAck: absent
+browser denial/unsupported fixture: absent
 ```
 
 ## Required authority
 
 ```txt
-corridor-active-gameplay-hud-projection-mount-authority-domain
+corridor-pointer-lock-acquisition-failure-fallback-authority-domain
 ```
 
 ## Current file family
 
 ```txt
-.agent/trackers/2026-07-15T16-39-06-04-00/project-breakdown.md
-.agent/turn-ledger/2026-07-15T16-39-06-04-00.md
-.agent/architecture-audit/2026-07-15T16-39-06-04-00-active-gameplay-hud-projection-dsk-map.md
-.agent/render-audit/2026-07-15T16-39-06-04-00-playing-hud-canvas-absence-gap.md
-.agent/gameplay-audit/2026-07-15T16-39-06-04-00-playing-state-hud-projection-loop.md
-.agent/interaction-audit/2026-07-15T16-39-06-04-00-hud-projection-command-result-map.md
-.agent/hud-audit/2026-07-15T16-39-06-04-00-active-run-overlay-mount-contract.md
-.agent/deploy-audit/2026-07-15T16-39-06-04-00-playing-hud-browser-fixture-gate.md
-.agent/central-sync-audit/2026-07-15T16-39-06-04-00-oldest-selection-hud-projection-reconciliation.md
+.agent/trackers/2026-07-15T21-39-15-04-00/project-breakdown.md
+.agent/turn-ledger/2026-07-15T21-39-15-04-00.md
+.agent/architecture-audit/2026-07-15T21-39-15-04-00-pointer-lock-acquisition-dsk-map.md
+.agent/render-audit/2026-07-15T21-39-15-04-00-mouse-look-readiness-visible-frame-gap.md
+.agent/gameplay-audit/2026-07-15T21-39-15-04-00-capture-failure-no-look-loop.md
+.agent/interaction-audit/2026-07-15T21-39-15-04-00-pointer-lock-command-result-map.md
+.agent/pointer-lock-audit/2026-07-15T21-39-15-04-00-acquisition-failure-fallback-contract.md
+.agent/deploy-audit/2026-07-15T21-39-15-04-00-pointer-lock-browser-fixture-gate.md
+.agent/central-sync-audit/2026-07-15T21-39-15-04-00-oldest-selection-pointer-lock-reconciliation.md
 ```
 
 ## Validation boundary
 
-Documentation only. Runtime, networking, gameplay, Three.js rendering, Canvas2D behavior, scripts, dependencies, tests, workflows and deployment are unchanged.
+Documentation only. Runtime, networking, gameplay, input behavior, React, Three.js, Canvas2D, scripts, dependencies, tests, workflows, build, and deployment are unchanged.
