@@ -1,56 +1,50 @@
 # HorrorCorridor Current Audit
 
 **Repository:** `LuminaryLabs-Publish/HorrorCorridor`  
-**Updated:** `2026-07-15T21-39-15-04-00`  
+**Updated:** `2026-07-16T02-40-29-04-00`  
 **Branch:** `main`  
-**Status:** `pointer-lock-acquisition-failure-fallback-authority-audited`
+**Status:** `ooze-rng-stream-replay-authority-audited`
 
 ## Summary
 
-The repository retains 29 implemented kit surfaces and two browser-proof adapters. The current boundary is browser pointer-lock acquisition: accepted user clicks can call `requestPointerLock()`, but capability, acceptance, rejection, interruption, retry, fallback, readiness, frame acknowledgement, and retirement are not represented as one versioned transaction.
+The repository retains 29 implemented kit surfaces and two browser-proof adapters. The current boundary is ooze random identity: an explicit run seed exists, but host-authoritative ooze decay and decal variation use ambient `Math.random()` and publish no algorithm, stream, cursor, draw count, replay result or seed-bound frame acknowledgement.
 
 ## Plan ledger
 
-**Goal:** preserve simulation, networking, movement, camera, rendering, HUD, and minimap behavior while giving mouse-look capture one typed admission and fallback lifecycle.
+**Goal:** preserve host authority, networking, movement, rendering and minimap behavior while making ooze evolution reproducible and restorable.
 
-- [x] Compare the full Publish inventory, central ledgers, root `.agent` states, and current heads.
+- [x] Compare the full Publish inventory, central ledgers, root `.agent` states and current heads.
 - [x] Select only HorrorCorridor by the oldest synchronized timestamp.
-- [x] Inspect `GameCanvas.tsx`, `PointerLockGate.tsx`, player input state, package scripts, proof adapters, and current audit state.
-- [x] Preserve all 29 kits, two adapters, and offered services.
-- [x] Add and route the timestamped pointer-lock audit family.
+- [x] Inspect host cadence, ooze rules, snapshot schema, rendering, package scripts and proof surfaces.
+- [x] Preserve all 29 kits, two adapters and offered services.
+- [x] Add and route the timestamped ooze RNG/replay audit family.
 - [ ] Implement and prove the authority.
 
 ## Complete interaction loop
 
 ```txt
-solo/host/client route
-  -> deterministic maze and session admission
+solo host or client route
+  -> deterministic maze and session snapshot admission
   -> GameCanvas initializes transport input world renderer minimap and RAF
-  -> input readiness is published
+  -> accepted movement and interaction state advances
 
-capture attempt
-  -> unlocked world click
-  -> requestPointerLock on the mount
-  -> no PointerLockAdmissionCommand
-  -> no accepted/rejected result
+host or solo publication cadence
+  -> compare wall time with last network tick
+  -> call advanceOozeTrail with nowMs and player positions
+  -> omit the optional RNG provider
+  -> resolveRng falls back to Math.random
+  -> random draws decide decay survival height and rotation
+  -> publish concrete trail values in the authoritative snapshot
 
-accepted path
-  -> pointerlockchange observes ownership
-  -> PlayerInputState records pointerLocked=true
-  -> mousemove accumulates look deltas
-  -> frame applies look movement collision camera world minimap and post-processing
+client and presentation path
+  -> clients consume host snapshot values
+  -> world and minimap render accepted ooze data
+  -> no stream or draw revision accompanies the frame
 
-failed path
-  -> denied unsupported interrupted or unaccepted request
-  -> no pointerlockerror observer
-  -> no visible failure or fallback state
-  -> mousemove is ignored while unlocked
-  -> keyboard movement and normal rendering can continue
-
-retirement
-  -> release pause blur completion route exit or cleanup
-  -> observed unlock resets input
-  -> no acquisition-generation retirement receipt
+retry restore or replay
+  -> maze seed and concrete trail are available
+  -> RNG algorithm stream cursor and draw history are absent
+  -> exact same-seed ooze regeneration cannot be proven
 ```
 
 ## Domains in use
@@ -58,17 +52,17 @@ retirement
 ```txt
 application routing and browser lifecycle
 session identity room roster connection readiness and reset
-deterministic maze bootstrap
+deterministic maze bootstrap and seeded maze RNG
 PeerJS BroadcastChannel transport and protocol
 keyboard mouse pointer-lock and normalized input
-pointer-lock capability gesture acquisition failure classification and fallback
 client prediction and authoritative publication
 movement collision camera and interaction
 cube anomaly ooze and victory
+host cadence wall time and snapshot publication
+ooze RNG algorithm stream cursor replay and retirement
 pause settings completion and route projection
 Three.js world post-processing RAF and viewport
 Canvas2D minimap and HUD projection
-pointer-lock result retirement and visible-frame acknowledgement
 debug proof validation build deployment and central tracking
 ```
 
@@ -78,7 +72,7 @@ debug proof validation build deployment and central tracking
 implemented kits: 29
 proof adapters: 2
 total implemented surfaces: 31
-planned pointer-lock authority surfaces: 18
+planned ooze RNG/replay surfaces: 20
 ```
 
 The complete kit-by-kit service inventory is in `.agent/kit-registry.json` and the latest tracker.
@@ -86,42 +80,44 @@ The complete kit-by-kit service inventory is in `.agent/kit-registry.json` and t
 ## Source-backed findings
 
 ```txt
-requestPointerLock invocation: present
-result or promise handling: absent
-pointerlockchange observer: present
-pointerlockerror observer: absent
-input readiness before accepted lock: present
-capture chrome while unlocked: hidden
-visible failed-capture state: absent
-retry result: absent
-fallback look profile: absent
-mousemove ignored while unlocked: present
-PointerLockGeneration: absent
-PointerLockAdmissionResult: absent
-FirstPointerLockFrameAck: absent
-browser denial/unsupported fixture: absent
+run seed in snapshot: present
+optional RNG in OozeTrailUpdateInput: present
+host RNG argument: omitted
+ambient Math.random fallback: present
+random decay survival: present
+random trail height: present
+random trail rotation: present
+concrete ooze trail replication: present
+RNG algorithm version: absent
+named ooze stream identity: absent
+RNG cursor and draw count: absent
+canonical ooze replay hash: absent
+FirstSeedBoundOozeFrameAck: absent
+same-seed replay fixture: absent
 ```
+
+The live host remains authoritative and clients consume its snapshots. This is a replay and restoration evidence gap, not a reproduced multiplayer desynchronization claim.
 
 ## Required authority
 
 ```txt
-corridor-pointer-lock-acquisition-failure-fallback-authority-domain
+corridor-ooze-rng-stream-replay-authority-domain
 ```
 
 ## Current file family
 
 ```txt
-.agent/trackers/2026-07-15T21-39-15-04-00/project-breakdown.md
-.agent/turn-ledger/2026-07-15T21-39-15-04-00.md
-.agent/architecture-audit/2026-07-15T21-39-15-04-00-pointer-lock-acquisition-dsk-map.md
-.agent/render-audit/2026-07-15T21-39-15-04-00-mouse-look-readiness-visible-frame-gap.md
-.agent/gameplay-audit/2026-07-15T21-39-15-04-00-capture-failure-no-look-loop.md
-.agent/interaction-audit/2026-07-15T21-39-15-04-00-pointer-lock-command-result-map.md
-.agent/pointer-lock-audit/2026-07-15T21-39-15-04-00-acquisition-failure-fallback-contract.md
-.agent/deploy-audit/2026-07-15T21-39-15-04-00-pointer-lock-browser-fixture-gate.md
-.agent/central-sync-audit/2026-07-15T21-39-15-04-00-oldest-selection-pointer-lock-reconciliation.md
+.agent/trackers/2026-07-16T02-40-29-04-00/project-breakdown.md
+.agent/turn-ledger/2026-07-16T02-40-29-04-00.md
+.agent/architecture-audit/2026-07-16T02-40-29-04-00-ooze-rng-stream-replay-dsk-map.md
+.agent/render-audit/2026-07-16T02-40-29-04-00-unbound-ooze-rng-visible-frame-gap.md
+.agent/gameplay-audit/2026-07-16T02-40-29-04-00-ambient-ooze-randomness-replay-loop.md
+.agent/interaction-audit/2026-07-16T02-40-29-04-00-ooze-random-draw-command-result-map.md
+.agent/determinism-audit/2026-07-16T02-40-29-04-00-ooze-seed-stream-snapshot-contract.md
+.agent/deploy-audit/2026-07-16T02-40-29-04-00-same-seed-ooze-replay-fixture-gate.md
+.agent/central-sync-audit/2026-07-16T02-40-29-04-00-oldest-selection-ooze-rng-reconciliation.md
 ```
 
 ## Validation boundary
 
-Documentation only. Runtime, networking, gameplay, input behavior, React, Three.js, Canvas2D, scripts, dependencies, tests, workflows, build, and deployment are unchanged.
+Documentation only. Runtime, networking, gameplay, input behavior, React, Three.js, Canvas2D, scripts, dependencies, tests, workflows, build and deployment are unchanged.
