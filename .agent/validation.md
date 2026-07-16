@@ -1,43 +1,45 @@
 # HorrorCorridor Validation
 
-**Updated:** `2026-07-16T07-03-14-04-00`  
-**Scope:** documentation-only motion-preference, animation-policy and reduced-frame audit
+**Updated:** `2026-07-16T16-00-12-04-00`  
+**Scope:** documentation-only remote-actor snapshot interpolation and cross-surface projection audit
 
 ## Summary
 
-Source inspection confirms elapsed-time camera bob/roll and scene/exit pulses. No operating-system reduced-motion observer, product override, motion classifier, projection result or reduced-motion frame acknowledgement was found.
+Source inspection confirms 50 ms authoritative snapshot cadence, single-value snapshot replacement, direct Three.js remote-player pose copying and direct Canvas2D minimap pose copying. No sample buffer, interpolation clock, teleport policy, bounded extrapolation, shared projected-pose result or smoothed-frame acknowledgement was found.
 
-## Plan ledger
+## Intent
 
-**Goal:** record exactly what was inspected and prevent unsupported accessibility, simulation, visual or production claims.
+Record exactly what was inspected and prevent unsupported multiplayer-smoothing, packet-loss, parity or production claims.
+
+## What needs to happen
 
 - [x] Confirm HorrorCorridor remained the oldest eligible synchronized repository.
-- [x] Inspect `GameCanvas.tsx` camera motion and render-frame path.
-- [x] Inspect `worldBuilder.ts` scene-material and exit-light pulses.
-- [x] Inspect `animationLoop.ts` elapsed-time delivery.
-- [x] Search source and existing audits for a reduced-motion observer or policy.
-- [x] Inspect `.agent/kit-registry.json` inventory.
+- [x] Inspect `GameShell.tsx` snapshot receive and store replacement.
+- [x] Inspect `runtimeStore.ts` authoritative snapshot ownership.
+- [x] Inspect `GameCanvas.tsx` cadence and render-frame path.
+- [x] Inspect `worldBuilder.ts` remote-player mesh synchronization.
+- [x] Inspect `Minimap.tsx` remote-player marker synchronization.
+- [x] Inspect `syncSnapshot.ts` snapshot timestamps and player payload.
+- [x] Inspect `constants.ts` network cadence.
+- [x] Search source and prior audits for interpolation, extrapolation or smoothing authority.
 - [x] Update only `.agent` documentation and central tracking.
 - [ ] Run runtime and browser fixtures after implementation exists.
 
 ## Source evidence
 
 ```txt
-camera side bob: present
-camera vertical bob: present
-camera roll: present
-movement-speed scaling: present
-scene prop emissive pulse: present
-scene prop opacity pulse: present
-texture opacity pulse: present
-exit light intensity pulse: present
-exit halo opacity pulse: present
-world update and post-processing each frame: present
-prefers-reduced-motion observer: absent
-product motion override: absent
-motion classification result: absent
-FirstReducedMotionGameplayFrameAck: absent
-reduced-motion fixture: absent
+NETWORK_TICK_RATE: 50 ms
+SYNC snapshot timestamp and tick: present
+client authoritativeSnapshot replacement: present
+remote Three.js mesh position/rotation direct assignment: present
+remote minimap marker direct snapshot position: present
+per-actor sample buffer: absent
+interpolation delay policy: absent
+shortest-arc rotation policy: absent
+teleport threshold: absent
+bounded extrapolation: absent
+shared Three.js/minimap pose result: absent
+FirstSmoothedMultiplayerFrameAck: absent
 ```
 
 ## Change classification
@@ -65,15 +67,17 @@ npm install: not run
 npm run lint: not run
 npm run build: not run
 validate:live-player: not run
-OS reduced-motion fixture: unavailable
-product override fixture: unavailable
-live media-query fixture: unavailable
-normal/reduced simulation parity fixture: unavailable
-FirstReducedMotionGameplayFrameAck fixture: unavailable
+steady-cadence interpolation fixture: unavailable
+network-jitter fixture: unavailable
+packet-loss fixture: unavailable
+packet-reorder fixture: unavailable
+teleport fixture: unavailable
+actor-retirement fixture: unavailable
+3D/minimap projection parity fixture: unavailable
 production-build smoke: not run
 deployed-origin smoke: not run
 ```
 
 ## Claim boundary
 
-No reduced-motion implementation, accessibility conformance, vestibular-safety claim, preference-adoption correctness, simulation parity, visual convergence, artifact parity, deployed parity or production readiness is claimed.
+No interpolation implementation, smooth multiplayer claim, network-jitter tolerance, packet-loss resilience, teleport correctness, cross-surface convergence, artifact parity, deployed parity or production readiness is claimed.
