@@ -1,95 +1,99 @@
 # HorrorCorridor Known Gaps
 
-**Updated:** `2026-07-15T16-39-06-04-00`
+**Updated:** `2026-07-15T21-39-15-04-00`
 
 ## Summary
 
-The highest current undocumented product gap is active gameplay HUD mounting. Accepted run state contains objective, anomaly, held-item, player and minimap data, but `HUDOverlay` returns early during `PLAYING` and mounts only settings/debug surfaces. The complete gameplay HUD and minimap are deferred to `COMPLETED`.
+The highest current undocumented boundary is pointer-lock acquisition and fallback. The source can request ownership and observe successful changes, but it does not classify denied, unsupported, interrupted, stale, or retired attempts, and it publishes no visible recovery or first matching mouse-look frame result.
 
 ## Plan ledger
 
-**Goal:** prioritize a complete route-bound gameplay HUD while retaining every previous lifecycle, loading, session, transport, protocol, movement, audio, rendering, minimap and proof finding.
+**Goal:** prioritize explicit mouse-look capability admission while retaining every prior HUD, minimap, lifecycle, loading, session, transport, protocol, movement, audio, rendering, and proof finding.
 
 - [x] Preserve previous audits.
-- [x] Add and route the active gameplay HUD mount gap.
+- [x] Add and route the pointer-lock acquisition/fallback gap.
 - [ ] Implement and prove the complete authority chain.
 
 ## Primary ordered gaps
 
 ```txt
-1. GameplayHudReadModel
-2. HudPolicyRevision
-3. required PLAYING surface manifest
-4. HudSurfaceId
-5. HudMountGeneration
-6. objective projection during PLAYING
-7. anomaly sequence progress during PLAYING
-8. held-item projection during PLAYING
-9. local player/session status during PLAYING
-10. minimap mount admission during PLAYING
-11. minimap canvas generation binding
-12. settings overlay additive composition
-13. debug overlay additive composition
-14. passive/interactive pointer-event policy
-15. GameplayHudProjectionResult
-16. required-versus-mounted surface receipts
-17. stale route/snapshot rejection
-18. HUD route retirement receipt
-19. FirstPlayingHudFrameAck
-20. world/HUD revision convergence
-21. solo active-run browser fixture
-22. host active-run browser fixture
-23. client active-run browser fixture
-24. settings/debug preservation fixtures
-25. completion and route-retirement fixtures
-26. source/build/deployed-origin parity
-27. retained minimap DPR, audio, lifecycle, protocol and movement gaps
+1. PointerLockPolicyRevision
+2. SurfaceId and SurfaceGeneration
+3. UserGestureId
+4. PointerLockGeneration
+5. API capability observation
+6. permissions-policy observation
+7. request result normalization
+8. pointerlockerror observation
+9. accepted/denied/unsupported/interrupted classification
+10. stale callback rejection
+11. input readiness versus mouse-look readiness separation
+12. visible capture-failure projection
+13. retry command and receipt
+14. fallback look control profile
+15. reduced-control route policy
+16. PointerLockAdmissionResult
+17. look-input revision binding
+18. camera-frame revision binding
+19. FirstPointerLockFrameAck
+20. retirement command and receipt
+21. blur/hidden/pagehide retirement
+22. held-input and look-delta clearing
+23. accepted browser fixture
+24. denied browser fixture
+25. unsupported and permissions-policy fixtures
+26. interruption and retry fixtures
+27. fallback-profile fixture
+28. source/build/deployed-origin parity
+29. retained active-HUD, minimap, audio, lifecycle, protocol, movement, and device-control gaps
 ```
 
 ## Current coverage gap
 
 ```txt
-PLAYING objective: no
-PLAYING anomaly sequence: no
-PLAYING held item: no
-PLAYING player/session status: no
-PLAYING minimap canvas: no
-PLAYING settings/debug: yes
-COMPLETED full HUD/minimap: yes
-HUD mount generation: no
-HUD projection result: no
-first active-run HUD frame acknowledgement: no
+requestPointerLock call: yes
+pointerlockchange handling: yes
+pointerlockerror handling: no
+accepted result object: no
+denied/unsupported result object: no
+input readiness before accepted ownership: yes
+visible failure state: no
+visible retry state: no
+fallback look profile: no
+first accepted mouse-look frame acknowledgement: no
 browser fixture: no
 ```
 
 ## Failure path
 
 ```txt
-accepted PLAYING state
-  -> HUDOverlay enters PLAYING branch
-  -> early return mounts settings/debug only
-  -> gameplay surfaces are skipped
-  -> GameCanvas queries runtime-minimap
-  -> query returns null
-  -> drawMinimapFrame exits without drawing
-  -> world frame renders without a matching complete HUD result
+accepted PLAYING route
+  -> input readiness published
+  -> player clicks world
+  -> requestPointerLock invoked
+  -> browser does not accept ownership
+  -> no error observer or terminal result
+  -> mousemove remains ignored
+  -> keyboard movement and rendering can continue
+  -> no visible explanation retry fallback or reduced-profile status
 ```
 
 ## Required invariants
 
 ```txt
-PLAYING mounts every required gameplay HUD surface
-settings and debug are additive rather than substitutive
-minimap canvas exists before admitted draw work
-HUD and world frames bind the same accepted route and snapshot revisions
-terminal presentation does not define active-run surface availability
-route retirement rejects late projection and minimap work
+every capture gesture settles once
+mouse-look readiness follows accepted ownership only
+failed capture remains visible and recoverable
+unsupported capability produces an admitted fallback or explicit route rejection
+late callbacks cannot reactivate retired generations
+first mouse-look frame cites accepted ownership and look evidence
+retirement clears all input and publishes a receipt
 ```
 
 ## Retained gaps
 
-All previous minimap backing-store, page-lifecycle, settings, device-control, proof provenance, loading, host-start, WebGL recovery, cross-store transition, room identity, capacity, transport, protocol, movement, prediction, snapshot, interaction, terminal outcome, debug, audio and deployment findings remain open.
+All previous active-HUD, minimap backing-store, page-lifecycle, settings, device-control, proof provenance, loading, host-start, WebGL recovery, cross-store transition, room identity, capacity, transport, protocol, movement, prediction, snapshot, interaction, terminal outcome, debug, audio, and deployment findings remain open.
 
 ## Do not claim
 
-Do not claim a runtime fix, active HUD availability, minimap availability, gameplay guidance correctness, visual equivalence, browser parity or production readiness until implementation and fixtures pass on `main`.
+Do not claim a runtime fix, pointer-lock reliability, fallback operability, mouse-look completeness, lifecycle correctness, browser parity, or production readiness until implementation and fixtures pass on `main`.
