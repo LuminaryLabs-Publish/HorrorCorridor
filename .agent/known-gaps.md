@@ -1,93 +1,93 @@
 # HorrorCorridor Known Gaps
 
-**Updated:** `2026-07-16T07-03-14-04-00`
+**Updated:** `2026-07-16T16-00-12-04-00`
 
 ## Summary
 
-The highest current undocumented boundary is motion-preference ownership. The active renderer applies camera and environmental animation continuously, but no operating-system preference, product override or accepted motion profile reaches the frame.
+The highest current undocumented boundary is remote-player snapshot presentation. Accepted network state reaches both visual surfaces, but neither surface consumes a bounded interpolation result.
 
-## Plan ledger
+## Intent
 
-**Goal:** prioritize motion-policy admission while retaining every prior networking, input, lifecycle, rendering, audio, determinism and proof finding.
+Prioritize coherent remote-actor projection while retaining every earlier networking, input, lifecycle, rendering, motion, audio, determinism and deployment finding.
 
-- [x] Preserve previous audits.
-- [x] Add and route the motion-preference gap.
-- [ ] Implement and prove the complete authority chain.
-
-## Primary ordered gaps
+## What needs to happen
 
 ```txt
-1. prefers-reduced-motion capability observer
-2. product override: system normal reduced
-3. preference source identity
-4. DocumentRevision
-5. RouteRevision
-6. PreferenceRevision
-7. PolicyRevision
-8. FrameRevision
-9. essential versus ornamental motion classifier
-10. accepted CameraMotionProfile
-11. accepted EnvironmentalMotionProfile
-12. accepted TransitionMotionProfile
-13. camera side-bob policy
-14. camera vertical-bob policy
-15. camera-roll policy
-16. emissive-pulse policy
-17. opacity-pulse policy
-18. exit-light and halo pulse policy
-19. live media-query change settlement
-20. duplicate evidence suppression
-21. stale route/policy rejection
-22. policy retirement and listener cleanup
-23. MotionProjectionResult
-24. FirstReducedMotionGameplayFrameAck
-25. normal/reduced simulation parity hash
-26. source browser fixture
-27. production-build browser fixture
-28. deployed-origin browser fixture
-29. retained pointer-lock HUD minimap audio lifecycle protocol movement snapshot determinism and deployment gaps
+1. authoritative sample identity
+2. snapshot receive-time evidence
+3. bounded per-actor sample history
+4. stale and duplicate sample rejection
+5. actor retirement generation
+6. interpolation clock
+7. bounded interpolation delay
+8. shortest-arc yaw interpolation
+9. pitch interpolation policy
+10. position interpolation policy
+11. teleport threshold
+12. history reset after teleport
+13. bounded extrapolation duration
+14. loss timeout and freeze policy
+15. packet reorder handling
+16. late sample recovery
+17. one immutable RemoteActorPoseSet
+18. Three.js remote-player projection binding
+19. Canvas2D minimap projection binding
+20. projection revision parity
+21. RemoteActorSampleAdmissionResult
+22. RemoteActorProjectionResult
+23. FirstSmoothedMultiplayerFrameAck
+24. steady-cadence fixture
+25. jitter fixture
+26. packet-loss fixture
+27. packet-reorder fixture
+28. teleport fixture
+29. actor-retirement fixture
+30. source/build/Pages parity fixture
+31. retained motion, pointer-lock, HUD, audio, lifecycle, protocol and deployment gaps
 ```
 
 ## Current coverage gap
 
 ```txt
-camera bob/roll: present
-scene and texture pulses: present
-exit light/halo pulses: present
-per-frame world update: present
-OS motion observer: absent
-product override: absent
-motion classifier: absent
-live preference result: absent
-reduced-motion frame acknowledgement: absent
-browser fixture: absent
+host snapshot cadence: 50 ms
+client snapshot replacement: present
+remote Three.js mesh direct pose copy: present
+remote minimap direct pose copy: present
+sample history: absent
+interpolation clock: absent
+teleport policy: absent
+bounded extrapolation: absent
+shared 3D/minimap pose result: absent
+smoothed multiplayer frame acknowledgement: absent
 ```
 
 ## Failure path
 
 ```txt
-user requests reduced motion
-  -> runtime has no capability observer
-  -> renderer receives no alternate policy
-  -> elapsed-time camera and environmental motion continues
-  -> no typed result or visible-frame proof exists
+network delivery spacing varies
+  -> latest authoritative snapshot is replaced
+  -> remote mesh and marker retain the old pose
+  -> next accepted pose is copied immediately
+  -> visible motion can step or jitter
+  -> no typed projection result explains the frame
 ```
 
 ## Required invariants
 
 ```txt
-authoritative gameplay state is independent of motion preference
-movement collision interaction and networking remain semantically identical
-ornamental motion consumes one accepted policy per frame
-live preference changes do not reset the run
-retired routes publish no late motion results
-reduced-motion claims require visible source build and deployed proof
+authoritative gameplay state remains snapshot-owned
+local prediction remains independent of remote interpolation
+presentation never invents unbounded motion
+stale and reordered samples never move an actor backward
+teleports are immediate and clear incompatible history
+Three.js and minimap consume the same projection revision
+retired actors own no remaining sample buffers or visible projections
 ```
 
 ## Retained gaps
 
-All previous pointer-lock, HUD, minimap, audio, page-lifecycle, settings, device-control, loading, host-start, WebGL recovery, session, transport, protocol, movement, snapshot, interaction, terminal outcome, debug, ooze determinism and deployment findings remain open.
+All previous pointer-lock, HUD, minimap sizing, motion preference, audio, page lifecycle, settings, device-control, loading, host-start, WebGL recovery, session, transport, protocol, movement validation, snapshot acceptance, interaction, terminal outcome, debug, ooze determinism and deployment findings remain open.
 
 ## Do not claim
 
-Do not claim reduced-motion support, accessibility conformance, vestibular safety, simulation parity, frame convergence, browser parity or production readiness until implementation and fixtures pass on `main`.
+Do not claim smooth multiplayer motion, network-jitter tolerance, packet-loss resilience, 3D/minimap convergence, browser parity or production readiness until implementation and fixtures pass on `main`.
