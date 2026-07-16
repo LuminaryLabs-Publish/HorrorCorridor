@@ -1,33 +1,47 @@
 # HorrorCorridor Next Steps
 
-**Updated:** `2026-07-16T07-03-14-04-00`
+**Updated:** `2026-07-16T16-00-12-04-00`
 
 ## Summary
 
-The next implementation should resolve operating-system and product motion preferences before optional camera and environmental motion is projected. Gameplay, collision, networking and authoritative snapshots must remain unchanged.
+The next implementation should keep authoritative snapshots unchanged while introducing a presentation-only remote-actor timeline shared by the Three.js world and Canvas2D minimap.
 
-## Plan ledger
+## Intent
 
-**Goal:** implement a complete reduced-motion policy with live preference settlement and source/build/deployed proof.
+Turn irregular snapshot arrival into bounded, coherent remote-player motion without hiding teleports, accepting stale state or moving authority into the renderer.
 
-- [ ] Add a `prefers-reduced-motion` capability observer with listener cleanup.
-- [ ] Add a product override with `system`, `normal` and `reduced` values.
-- [ ] Define `DocumentRevision`, `RouteRevision`, `PreferenceRevision`, `PolicyRevision` and `FrameRevision`.
-- [ ] Classify movement, collision, camera yaw/pitch, networking, interaction and state projection as essential.
-- [ ] Classify walk bob, camera roll, scene pulses, exit-light pulses and nonessential transitions as ornamental.
-- [ ] Resolve one immutable motion profile per accepted policy revision.
-- [ ] Make `syncCameraFromPlayer` consume a camera-motion descriptor.
-- [ ] Make scene-dressing pulses consume an environmental-motion descriptor.
-- [ ] Make exit-light and halo pulses consume the same accepted profile.
-- [ ] Preserve the authoritative simulation and minimap/HUD update path.
-- [ ] Publish `MotionProjectionResult` on initial and live preference settlement.
-- [ ] Reject stale preference work from retired document and route generations.
-- [ ] Publish `FirstReducedMotionGameplayFrameAck` after the first matching frame.
-- [ ] Add normal-versus-reduced simulation parity hashes.
-- [ ] Add system/override precedence fixtures.
-- [ ] Add live media-query change and route-retirement fixtures.
-- [ ] Run source, production-build and deployed-origin screenshot/readback comparisons.
+## What needs to happen
+
+1. Add `SnapshotRevision`, `ActorRevision`, `SampleRevision`, `ProjectionRevision` and `FrameRevision`.
+2. Record authoritative tick, host timestamp and client receive timestamp for each accepted snapshot.
+3. Maintain a bounded pose history per non-local actor.
+4. Reject duplicate, older and retired samples before they enter the presentation buffer.
+5. Resolve one interpolation delay policy from observed delivery cadence.
+6. Interpolate position and pitch; rotate yaw through the shortest arc.
+7. Apply an explicit teleport threshold that clears incompatible history.
+8. Allow only bounded extrapolation when the next sample is late.
+9. Freeze or retire actors after the extrapolation budget expires.
+10. Produce one immutable `RemoteActorPoseSet` per frame.
+11. Make `worldBuilder.syncPlayerMeshes` consume the projected pose set.
+12. Make `drawMinimapFrame` consume the same projected pose set.
+13. Remove actor buffers when roster/snapshot retirement is accepted.
+14. Publish `RemoteActorSampleAdmissionResult` and `RemoteActorProjectionResult`.
+15. Publish `FirstSmoothedMultiplayerFrameAck` after both surfaces present the same projection revision.
+16. Add deterministic steady-cadence, jitter, loss, reorder, teleport and retirement fixtures.
+17. Compare source, production build and deployed Pages behavior.
+
+## Checklist
+
+- [ ] Source implementation exists.
+- [ ] Unit fixtures cover ordered and stale sample admission.
+- [ ] Jitter fixture preserves bounded visual velocity.
+- [ ] Loss fixture respects the extrapolation budget.
+- [ ] Reorder fixture rejects older samples.
+- [ ] Teleport fixture clears history immediately.
+- [ ] Actor retirement removes mesh, marker and buffer ownership.
+- [ ] Three.js and minimap projection revisions match.
+- [ ] Production build and Pages fixtures pass on `main`.
 
 ## Completion gate
 
-Do not claim reduced-motion support until browser capability, override precedence, simulation parity, live changes, cleanup and visible-frame acknowledgements pass on `main`.
+Do not claim smooth multiplayer presentation until remote actor position, rotation, loss behavior, teleport behavior, actor retirement and 3D/minimap convergence are executable and proven on `main`.
