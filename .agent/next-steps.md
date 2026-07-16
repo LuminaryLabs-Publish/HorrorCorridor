@@ -1,63 +1,62 @@
 # HorrorCorridor Next Steps
 
-**Updated:** `2026-07-15T16-39-06-04-00`
+**Updated:** `2026-07-15T21-39-15-04-00`
 
 ## Summary
 
-The next implementation should separate gameplay HUD route policy from terminal presentation. `PLAYING` must mount the objective, anomaly progress, held-item, player-status and minimap surfaces before the first admitted world/HUD frame, while settings and debug remain additive overlays.
+The next implementation should turn pointer-lock capture into a typed browser capability transaction. Mouse-look readiness must follow accepted ownership, while denial, unsupported capability, interruption, retry, fallback, and retirement each publish explicit results.
 
 ## Plan ledger
 
-**Goal:** implement one complete active-run HUD lifecycle with explicit mount generations, minimap binding, projection results and browser parity proof.
+**Goal:** implement one complete pointer-lock admission lifecycle with visible recovery and source/build/deployed proof.
 
-- [ ] Define `GameplayHudReadModel`, `HudPolicyRevision` and `HudMountGeneration`.
-- [ ] Define the required surface set for accepted `PLAYING` independently from `COMPLETED`.
-- [ ] Refactor `HUDOverlay` so the active branch does not return before required surfaces mount.
-- [ ] Project objective text during active play.
-- [ ] Project anomaly required sequence and occupied slots during active play.
-- [ ] Project held-item state during active play.
-- [ ] Project local player, room and session status during active play.
-- [ ] Mount one minimap canvas for the accepted HUD generation.
-- [ ] Bind `GameCanvas` minimap draw work to the admitted canvas generation instead of an unversioned DOM lookup.
-- [ ] Keep settings and debug overlays additive without replacing base HUD surfaces.
-- [ ] Define pointer-event policy for passive HUD and interactive controls.
-- [ ] Publish `GameplayHudProjectionResult` with required and mounted surface receipts.
-- [ ] Publish `FirstPlayingHudFrameAck` tied to route, snapshot, HUD and world-frame revisions.
-- [ ] Retire the HUD generation on completion, lobby and title transitions.
-- [ ] Reject late minimap and HUD work after route retirement.
-- [ ] Add solo, host and client active-run HUD fixtures.
-- [ ] Add settings/debug preservation rows.
-- [ ] Prove source, development, production-build and deployed-origin parity.
+- [ ] Define `PointerLockPolicyRevision`, `SurfaceId`, `UserGestureId`, and `PointerLockGeneration`.
+- [ ] Observe Pointer Lock API support and permissions-policy eligibility before requesting ownership.
+- [ ] Normalize promise-returning and void-returning `requestPointerLock()` behavior.
+- [ ] Add a `pointerlockerror` observer and classify denied, unsupported, interrupted, stale, and retired outcomes.
+- [ ] Publish `PointerLockAdmissionResult` exactly once per accepted capture gesture.
+- [ ] Mark mouse-look readiness only after the mount is the observed pointer-lock owner.
+- [ ] Keep input readiness and mouse-look readiness as separate revisions.
+- [ ] Expose a visible capture-failure message and retry action when acquisition fails.
+- [ ] Provide a compatible fallback look profile or explicitly reject route admission when pointer lock is unavailable.
+- [ ] Keep keyboard movement safe while a reduced profile is active.
+- [ ] Bind consumed look deltas and camera state to the accepted pointer-lock generation.
+- [ ] Publish `FirstPointerLockFrameAck` for the first matching camera/render frame.
+- [ ] Release accepted ownership once on pause, completion, blur, hidden state, page retirement, route exit, surface replacement, and cleanup.
+- [ ] Clear held buttons and look deltas during retirement.
+- [ ] Reject late change/error callbacks from retired generations.
+- [ ] Add accepted, denied, unsupported, interrupted, retry, fallback, and retirement browser fixtures.
+- [ ] Prove source, production-build, and deployed-origin parity.
 
 ## Checkpoints
 
 ```txt
 Checkpoint A
-  entering PLAYING mounts all required surfaces
+  every capture gesture settles as one typed result
 
 Checkpoint B
-  runtime-minimap exists before the first admitted minimap draw
+  input readiness does not imply mouse-look readiness
 
 Checkpoint C
-  objective, sequence, held item and player status match accepted state
+  accepted ownership produces FirstPointerLockFrameAck
 
 Checkpoint D
-  settings and debug toggles do not remove the base gameplay HUD
+  denial or unsupported capability produces visible retry/fallback state
 
 Checkpoint E
-  world and HUD acknowledgements reference the same route and snapshot revisions
+  pause blur hide and route exit retire the accepted generation exactly once
 
 Checkpoint F
-  completion and route exit retire the prior mount exactly once
+  stale callbacks cannot reactivate retired ownership
 
 Checkpoint G
-  source, production build and deployed origin produce matching receipts
+  source build and deployed origin produce matching result receipts
 ```
 
 ## Retained work
 
-Previous minimap DPR, audio, lifecycle, loading, protocol, movement, device-control, render and deployment findings remain open. This HUD authority must compose with rather than replace those boundaries.
+Previous active-HUD, minimap, audio, lifecycle, loading, protocol, movement, device-control, render, and deployment findings remain open. The pointer-lock authority composes with rather than replaces those boundaries.
 
 ## Do not claim
 
-Do not claim active-run HUD availability, minimap availability, visual correctness or production parity until the fixture matrix passes.
+Do not claim pointer-lock reliability, mouse-look completeness, fallback operability, lifecycle safety, frame convergence, or production parity until the fixture matrix passes.
