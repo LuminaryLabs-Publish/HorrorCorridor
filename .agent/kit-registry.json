@@ -169,7 +169,7 @@
     "runtimeCommandsRun": false,
     "browserProofRun": false,
     "networkInterpolationFixtureAvailable": false,
-    "centralLedgerSynchronized": false,
-    "centralChangeLogCreated": false
+    "centralLedgerSynchronized": true,
+    "centralChangeLogCreated": true
   }
 }
