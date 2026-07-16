@@ -2,27 +2,27 @@
 
 **Repository:** `LuminaryLabs-Publish/HorrorCorridor`  
 **Branch:** `main`  
-**Updated:** `2026-07-15T21-39-15-04-00`  
-**Status:** `pointer-lock-acquisition-failure-fallback-authority-audited`
+**Updated:** `2026-07-16T02-40-29-04-00`  
+**Status:** `ooze-rng-stream-replay-authority-audited`
 
 ## Summary
 
-HorrorCorridor is a cooperative procedural first-person maze with deterministic solo/host/client sessions, PeerJS and BroadcastChannel transport, local prediction, authoritative snapshots, cube/anomaly interactions, ooze, Three.js rendering, post-processing, a Canvas2D minimap, and browser-proof tooling.
+HorrorCorridor is a cooperative procedural first-person maze with deterministic solo/host/client sessions, PeerJS and BroadcastChannel transport, local prediction, authoritative snapshots, cube/anomaly interactions, ooze, Three.js rendering, post-processing, a Canvas2D minimap and browser-proof tooling.
 
-The current audit isolates pointer-lock acquisition. The world click directly calls `requestPointerLock()`, but no accepted/rejected result is observed, no `pointerlockerror` listener exists, input readiness is published before mouse-look ownership is accepted, capture chrome is hidden, and no visible retry, fallback, or first matching mouse-look frame acknowledgement exists.
+The current audit isolates ooze random identity. The snapshot contains a maze seed, but the active host invokes `advanceOozeTrail()` without an RNG provider, so decay, height and rotation consume ambient `Math.random()`. The resulting trail replicates, while algorithm, stream, cursor, draw count and replay proof do not.
 
 ## Plan ledger
 
-**Goal:** admit mouse-look ownership through one explicit browser capability transaction and preserve an operable, visible fallback when acquisition fails.
+**Goal:** make host-authoritative ooze evolution reproducible from an explicit seed stream without moving gameplay truth to clients.
 
 - [x] Compare all 11 accessible Publish repositories and ten eligible central ledgers.
 - [x] Exclude `TheCavalryOfRome`.
-- [x] Confirm no new, missing, undocumented, root-agent-missing, or runtime-ahead priority case.
+- [x] Confirm no new, missing, undocumented, root-agent-missing or runtime-ahead priority case.
 - [x] Select only HorrorCorridor under the oldest synchronized rule.
 - [x] Preserve the complete 29-kit and two-adapter inventory.
-- [x] Add the timestamped pointer-lock audit family.
+- [x] Add the timestamped ooze RNG/replay audit family.
 - [x] Refresh root docs and the machine registry.
-- [ ] Implement and execute pointer-lock acceptance, failure, fallback, retirement, and parity fixtures.
+- [ ] Implement and execute deterministic source, build and deployed-origin fixtures.
 
 ## Read first
 
@@ -30,36 +30,39 @@ The current audit isolates pointer-lock acquisition. The world click directly ca
 2. `.agent/next-steps.md`
 3. `.agent/known-gaps.md`
 4. `.agent/validation.md`
-5. `.agent/trackers/2026-07-15T21-39-15-04-00/project-breakdown.md`
-6. `.agent/architecture-audit/2026-07-15T21-39-15-04-00-pointer-lock-acquisition-dsk-map.md`
-7. `.agent/render-audit/2026-07-15T21-39-15-04-00-mouse-look-readiness-visible-frame-gap.md`
-8. `.agent/gameplay-audit/2026-07-15T21-39-15-04-00-capture-failure-no-look-loop.md`
-9. `.agent/interaction-audit/2026-07-15T21-39-15-04-00-pointer-lock-command-result-map.md`
-10. `.agent/pointer-lock-audit/2026-07-15T21-39-15-04-00-acquisition-failure-fallback-contract.md`
-11. `.agent/deploy-audit/2026-07-15T21-39-15-04-00-pointer-lock-browser-fixture-gate.md`
-12. `.agent/central-sync-audit/2026-07-15T21-39-15-04-00-oldest-selection-pointer-lock-reconciliation.md`
+5. `.agent/trackers/2026-07-16T02-40-29-04-00/project-breakdown.md`
+6. `.agent/architecture-audit/2026-07-16T02-40-29-04-00-ooze-rng-stream-replay-dsk-map.md`
+7. `.agent/render-audit/2026-07-16T02-40-29-04-00-unbound-ooze-rng-visible-frame-gap.md`
+8. `.agent/gameplay-audit/2026-07-16T02-40-29-04-00-ambient-ooze-randomness-replay-loop.md`
+9. `.agent/interaction-audit/2026-07-16T02-40-29-04-00-ooze-random-draw-command-result-map.md`
+10. `.agent/determinism-audit/2026-07-16T02-40-29-04-00-ooze-seed-stream-snapshot-contract.md`
+11. `.agent/deploy-audit/2026-07-16T02-40-29-04-00-same-seed-ooze-replay-fixture-gate.md`
+12. `.agent/central-sync-audit/2026-07-16T02-40-29-04-00-oldest-selection-ooze-rng-reconciliation.md`
 
 ## Current authority boundary
 
 ```txt
-corridor-pointer-lock-acquisition-failure-fallback-authority-domain
+corridor-ooze-rng-stream-replay-authority-domain
 ```
 
 ## Required transaction
 
 ```txt
-PointerLockAdmissionCommand
-  -> bind document runtime route surface gesture and policy revisions
-  -> observe API and permissions-policy capability
-  -> create one acquisition generation
-  -> classify accepted denied unsupported interrupted stale or retired
-  -> publish PointerLockAdmissionResult exactly once
-  -> mark mouse-look ready only after accepted ownership
-  -> expose visible retry or fallback controls after failure
-  -> acknowledge FirstPointerLockFrameAck after matching look evidence renders
-  -> retire ownership and clear input exactly once
+OozeSimulationStepCommand
+  -> bind run seed algorithm stream host-tick trail and RNG revisions
+  -> consume only the named ooze stream
+  -> settle decay spawn and visual parameters atomically
+  -> publish OozeSimulationStepResult
+  -> persist the next stream cursor with authoritative state
+  -> render matching world and minimap frames
+  -> publish FirstSeedBoundOozeFrameAck
+
+OozeReplayCommand
+  -> restore seed algorithm cursor trail and accepted command history
+  -> compare canonical checkpoint hashes
+  -> publish OozeReplayResult
 ```
 
 ## Validation boundary
 
-Documentation only. No runtime repair, pointer-lock failure reproduction, fallback support, visible-frame convergence, build parity, deployed parity, or production readiness is claimed.
+Documentation only. No deterministic ooze implementation, replay execution, snapshot migration, frame convergence, build parity, deployed parity or production readiness is claimed.
