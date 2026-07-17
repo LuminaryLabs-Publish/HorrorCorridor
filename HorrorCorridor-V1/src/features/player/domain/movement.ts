@@ -25,6 +25,10 @@ export const PLAYER_START_POSITION = Object.freeze({
   z: 0,
 });
 
+// Keep the gameplay path immediately responsive while letting the render layer's
+// movement-driven camera bob ease into and out of a walk.
+const CAMERA_MOTION_RESPONSE = 0.2;
+
 const clampFrameScale = (deltaMs: number): number =>
   Math.max(0, Math.min(deltaMs, 50)) / (1000 / 60);
 
@@ -37,6 +41,20 @@ const toWorldRight = (yaw: number): Readonly<{ x: number; z: number }> => ({
   x: Math.cos(yaw),
   z: -Math.sin(yaw),
 });
+
+const approachVelocity = (
+  current: WorldPosition,
+  target: WorldPosition,
+  frameScale: number,
+): WorldPosition => {
+  const blend = 1 - Math.pow(1 - CAMERA_MOTION_RESPONSE, frameScale);
+
+  return {
+    x: current.x + (target.x - current.x) * blend,
+    y: 0,
+    z: current.z + (target.z - current.z) * blend,
+  };
+};
 
 export const createPlayerPose = (position: WorldPosition = PLAYER_START_POSITION): PlayerPose => ({
   position,
@@ -87,11 +105,12 @@ export const advancePlayerMovement = (
   };
 
   const frameSeconds = frameScale / 60;
-  const velocity = {
+  const targetVelocity = {
     x: frameSeconds > 0 ? intendedVelocity.x / frameSeconds : 0,
     y: 0,
     z: frameSeconds > 0 ? intendedVelocity.z / frameSeconds : 0,
   };
+  const velocity = approachVelocity(pose.velocity, targetVelocity, frameScale);
 
   const position = {
     x: pose.position.x + intendedVelocity.x,
