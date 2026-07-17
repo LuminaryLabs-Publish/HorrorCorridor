@@ -16,11 +16,11 @@
       "items": {
         "type": "object",
         "additionalProperties": false,
-        "required": ["command", "status"],
+        "required": ["command", "status", "note"],
         "properties": {
           "command": { "type": "string" },
           "status": { "enum": ["passed", "failed", "not-run"] },
-          "note": { "type": "string" }
+          "note": { "type": ["string", "null"] }
         }
       }
     },
