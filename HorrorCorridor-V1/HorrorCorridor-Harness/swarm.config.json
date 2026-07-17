@@ -1,0 +1,40 @@
+{
+  "schemaVersion": "horror-corridor.swarm-config.v1",
+  "provider": {
+    "binary": "codex",
+    "model": "gpt-5.6-luna",
+    "reasoning": "medium",
+    "sandbox": "workspace-write",
+    "timeoutMs": 1200000
+  },
+  "controls": {
+    "taskConcurrency": 8,
+    "maxActivePredictions": 4,
+    "validationConcurrency": 2,
+    "maxContextTokens": 20000,
+    "shardCount": 16,
+    "runTimeoutMs": 14400000
+  },
+  "paths": {
+    "runRoot": "~/.codex/horror-corridor-harness/runs",
+    "worktreeRoot": "~/.codex/worktrees/HorrorCorridor-Harness"
+  },
+  "git": {
+    "workerBranchPrefix": "codex/hc-swarm",
+    "integrationBranchSuffix": "integrate",
+    "commitPrefix": "swarm",
+    "push": false,
+    "mergeDefaultBranch": false
+  },
+  "policy": {
+    "maxAttempts": 1,
+    "unknownMutationOutcome": "hold",
+    "requireCleanBase": true,
+    "requireSharedDependencies": true,
+    "requireAllowedPaths": true,
+    "rejectConcurrentScopeOverlap": true,
+    "workerMayUseGit": false,
+    "workerMayUseSubagents": false,
+    "workerMayUseNetwork": false
+  }
+}

@@ -1,0 +1,167 @@
+{
+  "schemaVersion": "harness-it.contract.v2",
+  "name": "HorrorCorridor-Luna-Swarm-Harness",
+  "goal": "Turn one validated batch of scoped HorrorCorridor change requests into isolated Luna worker commits and one validated integration branch without mutating, merging, or pushing the default branch.",
+  "authorityClass": "orchestrator",
+  "layers": [
+    "orchestrator",
+    "workflow",
+    "chain"
+  ],
+  "actors": [
+    {
+      "id": "swarm-orchestrator",
+      "kind": "deterministic",
+      "authority": "queue-lock-validate-integrate",
+      "allowedActions": [
+        "create-worktree",
+        "create-branch",
+        "schedule-worker",
+        "validate-scope",
+        "run-declared-validation",
+        "commit-validated-worker",
+        "create-integration-branch",
+        "cherry-pick-validated-worker"
+      ]
+    },
+    {
+      "id": "luna-worker",
+      "kind": "codex-cli",
+      "authority": "scoped-workspace-mutation",
+      "allowedActions": [
+        "read-isolated-worktree",
+        "edit-declared-paths",
+        "run-focused-local-checks",
+        "return-structured-result"
+      ]
+    },
+    {
+      "id": "human-promoter",
+      "kind": "human",
+      "authority": "default-branch-promotion",
+      "allowedActions": [
+        "review-integration-branch",
+        "merge-default-branch",
+        "push"
+      ]
+    }
+  ],
+  "inputs": [
+    {
+      "id": "swarm-request",
+      "schema": "HorrorCorridor-Harness/schemas/swarm-request.schema.json"
+    }
+  ],
+  "outputs": [
+    {
+      "id": "worker-commits",
+      "schema": "inline:worker-commit-ledger.v1",
+      "lifecycle": "validated"
+    },
+    {
+      "id": "integration-branch",
+      "schema": "inline:integration-result.v1",
+      "lifecycle": "accepted"
+    }
+  ],
+  "states": [
+    "inbox",
+    "ready",
+    "active",
+    "local_validated",
+    "integration_ready",
+    "integrated",
+    "promoted",
+    "retry",
+    "hold",
+    "rejected",
+    "blocked"
+  ],
+  "gates": [
+    {
+      "id": "request-contract",
+      "owner": "swarm-orchestrator",
+      "onPass": "ready",
+      "onFail": "rejected"
+    },
+    {
+      "id": "worker-path-scope",
+      "owner": "swarm-orchestrator",
+      "onPass": "local_validated",
+      "onFail": "rejected"
+    },
+    {
+      "id": "worker-validation",
+      "owner": "swarm-orchestrator",
+      "onPass": "integration_ready",
+      "onFail": "blocked"
+    },
+    {
+      "id": "integration-validation",
+      "owner": "swarm-orchestrator",
+      "onPass": "integrated",
+      "onFail": "hold"
+    },
+    {
+      "id": "default-branch-approval",
+      "owner": "human-promoter",
+      "onPass": "promoted",
+      "onFail": "hold"
+    }
+  ],
+  "retryPolicy": {
+    "maxAttempts": 1,
+    "timeoutMs": 1200000,
+    "mutationPolicy": "no-automatic-mutation-retry",
+    "onExhausted": "hold"
+  },
+  "memoryPolicy": {
+    "runState": "runs/{runId}/manifest.json",
+    "carryForward": [
+      "goal",
+      "accepted-decisions",
+      "validated-worker-commits",
+      "latest-validation"
+    ],
+    "discard": [
+      "provider-hidden-state",
+      "unvalidated-drafts",
+      "stale-worker-transcripts"
+    ]
+  },
+  "artifacts": {
+    "runRoot": "~/.codex/horror-corridor-harness/runs/{runId}",
+    "manifest": "manifest.json",
+    "events": "events.jsonl",
+    "decisions": "decisions/",
+    "validationReport": "validation-report.json",
+    "finalReport": "final-report.json"
+  },
+  "provider": {
+    "required": true,
+    "profile": "gpt-5.6-luna with medium reasoning through Codex CLI",
+    "liveProofRequired": false
+  },
+  "approvals": [
+    "Live worker execution requires the explicit --execute flag.",
+    "Default-branch merge and every push remain human-only actions."
+  ],
+  "promotion": {
+    "owner": "human-promoter",
+    "requires": [
+      "request-contract",
+      "worker-path-scope",
+      "worker-validation",
+      "integration-validation",
+      "default-branch-approval"
+    ]
+  },
+  "tests": {
+    "smoke": "Validate config, request, prompt rendering, and run initialization without invoking Codex.",
+    "happy": "Run at least two deterministic mock workers concurrently and build an integration branch.",
+    "failure": "Reject an out-of-scope change and block its dependents.",
+    "retry": "Hold a failed or timed-out mutation without automatically replaying it.",
+    "resume": "Reload terminal worker state and never repeat a validated commit or unknown mutation.",
+    "artifactInspection": "Reconstruct queue movement, commands, decisions, commits, and validation from the run ledger."
+  }
+}

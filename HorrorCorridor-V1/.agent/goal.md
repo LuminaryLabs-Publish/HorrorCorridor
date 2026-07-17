@@ -1,22 +1,23 @@
 # Goal
 
-Status: active
+Status: completed
 
 ## Objective
 
-Use the NexusRealtime ecosystem on branch family `0.0.2` to compose and build HorrorCorridor into a massive high-fidelity procedural world.
+Set up `HorrorCorridor-Harness` to batch-submit scoped change requests to Codex CLI with Luna and coordinate massive asynchronous swarm changes safely.
 
 ## Success Criteria
 
-- A target starting-scene image exists.
-- The current starting scene is captured with Playwright.
-- Differences between target and actual are listed pedantically, including semantic and visual issues.
-- The next implementation plan is sequenced, simulated, audited, re-sequenced, and partially executed.
-- Public NexusRealtime/ProtoKit capabilities are used where they fit.
-- Missing game-specific domains become local HorrorCorridor ProtoKits.
-- A NexusSimulator-backed live-player harness is designed and then built in this repo for repeatable HorrorCorridor interaction validation.
-- Human-view screenshots prove lighting, composition, and content visibility before visual work is considered complete.
+- Luna is explicitly pinned as `gpt-5.6-luna` with medium reasoning instead of inheriting user defaults.
+- Large request batches can be checked, planned, run, resumed, and inspected through one repo command.
+- Task concurrency is separate from active model-prediction and validation concurrency.
+- Every worker receives an isolated worktree, branch, allowed paths, dependency evidence, and deterministic validation commands.
+- Out-of-scope changes, dependency failures, cycles, concurrent scope overlap, malformed outputs, and unknown mutation outcomes fail closed.
+- Worker commits integrate in dependency order on a dedicated integration branch.
+- The harness never merges or pushes the default branch; human approval remains required.
+- Run manifests, JSONL ledgers, prompts, decisions, diffs, validation, and final reports reconstruct every run.
+- Structural, concurrent happy-path, scope-failure, dependency-blocking, resume, and JSONL proofs pass without using credentials.
 
 ## Current Focus
 
-Run future HorrorCorridor work from the `.agent/` control files first, refresh the repo-owned harness guide when the operating model changes, then keep driving starting-scene visual quality through per-kit preview/test surfaces, smoke proof, and live-player proof.
+The swarm harness is ready for a user-authored batch request. No live Luna workers were launched during setup; the first real batch remains explicitly gated by `--execute`.

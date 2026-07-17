@@ -6,6 +6,9 @@ import { fileURLToPath } from "node:url";
 const REPO_ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const DOCS_DIR = resolve(REPO_ROOT, "docs");
 const SOURCE_PATH = resolve(REPO_ROOT, "HorrorCorridor-Harness", "domain-service-kit-source.json");
+const SWARM_CONFIG_PATH = resolve(REPO_ROOT, "HorrorCorridor-Harness", "swarm.config.json");
+const SWARM_REQUEST_SCHEMA_PATH = resolve(REPO_ROOT, "HorrorCorridor-Harness", "schemas", "swarm-request.schema.json");
+const SWARM_WORKER_SCHEMA_PATH = resolve(REPO_ROOT, "HorrorCorridor-Harness", "schemas", "worker-result.schema.json");
 const OUTPUT_DOC_PATH = resolve(DOCS_DIR, "HorrorCorridor-Harness-Guide.md");
 const OUTPUT_MANIFEST_PATH = resolve(DOCS_DIR, "HorrorCorridor-Harness-Manifest.json");
 
@@ -61,7 +64,7 @@ function summarizeControlFile(relativePath) {
   return fallback ?? relativePath;
 }
 
-function buildGuide(source) {
+function buildGuide(source, swarmConfig) {
   const controlFileSummary = CONTROL_FILES.map((relativePath) => {
     const description = summarizeControlFile(relativePath);
     return `- \`${relativePath}\`: ${description}`;
@@ -107,6 +110,20 @@ ${sectionBulletList(source.conversationDirectives)}
 
 ${sectionBulletList(source.futureHarnessDirections)}
 
+## Luna Swarm Orchestrator
+
+- Model: \`${swarmConfig.provider.model}\` with \`${swarmConfig.provider.reasoning}\` reasoning.
+- Task concurrency: \`${swarmConfig.controls.taskConcurrency}\`; active predictions: \`${swarmConfig.controls.maxActivePredictions}\`; validation concurrency: \`${swarmConfig.controls.validationConcurrency}\`.
+- Every task uses an isolated worktree and branch, declared app-relative paths, structured output, deterministic validation, and artifact-backed decisions.
+- The harness creates a validated integration branch only. Default-branch merge and push remain human-owned.
+
+\`\`\`bash
+cd ${REPO_ROOT}
+npm run harness:swarm -- check HorrorCorridor-Harness/swarm-request.example.json
+npm run harness:swarm -- plan HorrorCorridor-Harness/swarm-request.example.json
+npm run harness:swarm -- run HorrorCorridor-Harness/my-swarm-request.json --execute
+\`\`\`
+
 ## Command
 
 \`\`\`bash
@@ -120,7 +137,7 @@ cd ${REPO_ROOT} && npm run harness:horror-corridor
 `;
 }
 
-function buildManifest(source) {
+function buildManifest(source, swarmConfig) {
   return {
     name: "HorrorCorridor-Harness",
     generatedAt: new Date().toISOString(),
@@ -135,14 +152,24 @@ function buildManifest(source) {
     })),
     definitions: source.definitions.map((entry) => entry.term),
     promotionPath: source.promotionPath,
+    swarm: {
+      config: relative(REPO_ROOT, SWARM_CONFIG_PATH),
+      requestSchema: relative(REPO_ROOT, SWARM_REQUEST_SCHEMA_PATH),
+      workerResultSchema: relative(REPO_ROOT, SWARM_WORKER_SCHEMA_PATH),
+      model: swarmConfig.provider.model,
+      reasoning: swarmConfig.provider.reasoning,
+      controls: swarmConfig.controls,
+      promotion: "validated integration branch; human-owned default-branch merge and push",
+    },
   };
 }
 
 function writeOutputs() {
   mkdirSync(DOCS_DIR, { recursive: true });
   const source = readJson(SOURCE_PATH);
-  const guide = buildGuide(source);
-  const manifest = buildManifest(source);
+  const swarmConfig = readJson(SWARM_CONFIG_PATH);
+  const guide = buildGuide(source, swarmConfig);
+  const manifest = buildManifest(source, swarmConfig);
   writeFileSync(OUTPUT_DOC_PATH, `${guide}\n`);
   writeFileSync(OUTPUT_MANIFEST_PATH, `${JSON.stringify(manifest, null, 2)}\n`);
   console.log(`Wrote ${relative(REPO_ROOT, OUTPUT_DOC_PATH)}`);
@@ -151,10 +178,16 @@ function writeOutputs() {
 
 function checkInputs() {
   const source = readJson(SOURCE_PATH);
+  readJson(SWARM_CONFIG_PATH);
+  readJson(SWARM_REQUEST_SCHEMA_PATH);
+  readJson(SWARM_WORKER_SCHEMA_PATH);
   for (const relativePath of CONTROL_FILES) {
     summarizeControlFile(relativePath);
   }
   console.log(`Source ok: ${source.title}`);
+  console.log(`Swarm config ok: ${relative(REPO_ROOT, SWARM_CONFIG_PATH)}`);
+  console.log(`Swarm request schema ok: ${relative(REPO_ROOT, SWARM_REQUEST_SCHEMA_PATH)}`);
+  console.log(`Swarm worker schema ok: ${relative(REPO_ROOT, SWARM_WORKER_SCHEMA_PATH)}`);
   for (const relativePath of CONTROL_FILES) {
     console.log(`Control ok: ${relativePath}`);
   }

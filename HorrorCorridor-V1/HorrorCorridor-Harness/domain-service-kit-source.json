@@ -33,6 +33,10 @@
     {
       "term": "Visual Match Loop",
       "body": "A visual match loop is a Codex CLI-driven reference-vs-current screenshot loop. It registers one reference image, captures current player-view screenshots, scores semantic visual deltas, and performs bounded auto-fix retries until the score reaches the configured promotion threshold."
+    },
+    {
+      "term": "Luna Swarm Run",
+      "body": "A Luna swarm run is a deterministic orchestration of many scoped Codex CLI change requests using `gpt-5.6-luna`. Every worker edits one isolated git worktree, the harness enforces declared paths and validation, and only a validated integration branch can advance to human review."
     }
   ],
   "publicKitRule": [
@@ -58,13 +62,14 @@
     "The harness/docs layer should capture durable chat intent so later runs do not have to reconstruct it from memory.",
     "The long-duration game validator should be a cumulative live agent with a screen-review loop, a bounded tool loop, and an evidence-based review loop.",
     "The reviewer that inspects logs and screenshots should remain separate from the running live-agent loop.",
-    "Reference image generation should follow the NexusDaydreamer-Codex pattern: Codex/imagegen creates the raster output, then a repo submit command registers the image before the visual loop trusts it."
+    "Reference image generation should follow the NexusDaydreamer-Codex pattern: Codex/imagegen creates the raster output, then a repo submit command registers the image before the visual loop trusts it.",
+    "Large implementation batches should use the Luna swarm harness with isolated worktrees, disjoint file scopes, bounded prediction concurrency, deterministic validation, and a human-owned default-branch promotion gate."
   ],
   "futureHarnessDirections": [
     "Add a NexusSimulator-backed interaction plane for repeatable player validation.",
     "Build the live agent as an episodic long-run operator rather than a one-pass capped harness.",
     "Use `npm run visual:match` for screenshot-vs-reference review and bounded auto-fix loops before claiming visual acceptance.",
     "Expand per-kit preview surfaces before deeper main-scene promotion.",
-    "Keep the harness linear and repo-owned rather than hiding core rules in external chat state."
+    "Keep the guidance refresh chain linear and repo-owned; use the separate orchestrator harness when many worker workflows need dependency scheduling, isolation, and integration."
   ]
 }

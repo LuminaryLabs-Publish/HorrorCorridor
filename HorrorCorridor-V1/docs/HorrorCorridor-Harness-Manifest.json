@@ -1,6 +1,6 @@
 {
   "name": "HorrorCorridor-Harness",
-  "generatedAt": "2026-06-19T22:15:30.665Z",
+  "generatedAt": "2026-07-16T23:09:13.485Z",
   "source": "HorrorCorridor-Harness/domain-service-kit-source.json",
   "outputs": [
     "docs/HorrorCorridor-Harness-Guide.md",
@@ -29,7 +29,7 @@
     },
     {
       "path": ".agent/goal.md",
-      "purpose": "Use the NexusRealtime ecosystem on branch family `0.0.2` to compose and build HorrorCorridor into a massive high-fidelity procedural world."
+      "purpose": "Set up `HorrorCorridor-Harness` to batch-submit scoped change requests to Codex CLI with Luna and coordinate massive asynchronous swarm changes safely."
     },
     {
       "path": ".agent/feedback.md",
@@ -48,12 +48,29 @@
     "Preview Surface",
     "Live Agent",
     "Reviewer Loop",
-    "Visual Match Loop"
+    "Visual Match Loop",
+    "Luna Swarm Run"
   ],
   "promotionPath": [
     "preview proof",
     "smoke proof",
     "live-player proof",
     "audit and memory update"
-  ]
+  ],
+  "swarm": {
+    "config": "HorrorCorridor-Harness/swarm.config.json",
+    "requestSchema": "HorrorCorridor-Harness/schemas/swarm-request.schema.json",
+    "workerResultSchema": "HorrorCorridor-Harness/schemas/worker-result.schema.json",
+    "model": "gpt-5.6-luna",
+    "reasoning": "medium",
+    "controls": {
+      "taskConcurrency": 8,
+      "maxActivePredictions": 4,
+      "validationConcurrency": 2,
+      "maxContextTokens": 20000,
+      "shardCount": 16,
+      "runTimeoutMs": 14400000
+    },
+    "promotion": "validated integration branch; human-owned default-branch merge and push"
+  }
 }

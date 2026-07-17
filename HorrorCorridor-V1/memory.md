@@ -30,6 +30,7 @@ HorrorCorridor-V1 is a multiplayer first-person maze horror prototype port. The 
 
 - Start every future HorrorCorridor run from `.agent/`: review `start-here.md`, `workflow.md`, `intention.md`, `live-agent.md`, `memory.md`, `goal.md`, `feedback.md`, and then skim `change-log.md` before broader repo exploration.
 - Use `npm run harness:horror-corridor` to refresh repo-owned Codex guidance whenever durable product, workflow, kit, or domain-service-kit rules are introduced through chat.
+- `HorrorCorridor-Harness` also owns the Luna swarm orchestrator at `scripts/horror-corridor-swarm.mjs`. Large change batches should use scoped requests, isolated worktrees, disjoint parallel paths, bounded `gpt-5.6-luna` predictions, deterministic validation, and an integration branch; workers never merge or push the default branch.
 - Use `npm run visual:match` for reference-vs-current visual acceptance loops. It uses the live-player harness for current screenshots, Codex CLI for semantic scoring, and bounded Codex auto-fix attempts for scores below `90`.
 - Visual reference generation should follow the NexusDaydreamer-Codex pattern: Codex/imagegen creates the raster image, then `submit-reference` registers it into the visual-match run folder before it is treated as a valid reference.
 - Keep `PLAYING` canvas-first. Persistent directions/status HUD should stay hidden unless debug or settings is explicitly opened.

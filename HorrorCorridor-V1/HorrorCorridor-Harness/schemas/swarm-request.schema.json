@@ -1,0 +1,75 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "horror-corridor.swarm-request.v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "goal", "tasks"],
+  "properties": {
+    "schemaVersion": { "const": "horror-corridor.swarm-request.v1" },
+    "runId": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]{2,80}$" },
+    "goal": { "type": "string", "minLength": 10, "maxLength": 4000 },
+    "controls": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "taskConcurrency": { "type": "integer", "minimum": 1, "maximum": 64 },
+        "maxActivePredictions": { "type": "integer", "minimum": 1, "maximum": 32 },
+        "validationConcurrency": { "type": "integer", "minimum": 1, "maximum": 16 },
+        "maxContextTokens": { "type": "integer", "minimum": 1000, "maximum": 100000 },
+        "shardCount": { "type": "integer", "minimum": 1, "maximum": 128 },
+        "runTimeoutMs": { "type": "integer", "minimum": 60000, "maximum": 86400000 }
+      }
+    },
+    "integrationValidation": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 20,
+      "items": { "$ref": "#/$defs/command" }
+    },
+    "tasks": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 256,
+      "items": { "$ref": "#/$defs/task" }
+    }
+  },
+  "$defs": {
+    "command": {
+      "oneOf": [
+        { "const": ["npx", "tsc", "--noEmit"] },
+        { "const": ["npm", "run", "lint"] },
+        { "const": ["npm", "run", "build"] },
+        { "const": ["npm", "run", "smoke:protokits"] },
+        { "const": ["node", "--version"] }
+      ]
+    },
+    "task": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "title", "request", "allowedPaths", "validation"],
+      "properties": {
+        "id": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]{1,63}$" },
+        "title": { "type": "string", "minLength": 3, "maxLength": 160 },
+        "request": { "type": "string", "minLength": 10, "maxLength": 12000 },
+        "priority": { "type": "integer", "minimum": 0, "maximum": 100 },
+        "dependsOn": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]{1,63}$" }
+        },
+        "allowedPaths": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "type": "string", "minLength": 1, "maxLength": 500 }
+        },
+        "validation": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 20,
+          "items": { "$ref": "#/$defs/command" }
+        }
+      }
+    }
+  }
+}

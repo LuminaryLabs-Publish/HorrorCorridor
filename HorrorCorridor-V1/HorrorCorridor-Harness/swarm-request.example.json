@@ -1,0 +1,63 @@
+{
+  "schemaVersion": "horror-corridor.swarm-request.v1",
+  "runId": "starting-scene-fidelity-001",
+  "goal": "Improve the HorrorCorridor starting scene through several independently scoped changes, then validate their combined integration branch.",
+  "controls": {
+    "taskConcurrency": 6,
+    "maxActivePredictions": 3,
+    "validationConcurrency": 2,
+    "maxContextTokens": 20000,
+    "shardCount": 16,
+    "runTimeoutMs": 14400000
+  },
+  "tasks": [
+    {
+      "id": "player-camera-feel",
+      "title": "Refine first-person camera feel",
+      "request": "Improve movement-driven camera embodiment without changing network cadence, controls, or idle readability.",
+      "priority": 80,
+      "dependsOn": [],
+      "allowedPaths": [
+        "src/features/player/**"
+      ],
+      "validation": [
+        ["npx", "tsc", "--noEmit"],
+        ["npm", "run", "lint"]
+      ]
+    },
+    {
+      "id": "rusted-door-kit",
+      "title": "Upgrade the rusted service door kit",
+      "request": "Improve the rusted service door mesh and material descriptors while preserving the shared wound-triangle contract.",
+      "priority": 70,
+      "dependsOn": [],
+      "allowedPaths": [
+        "src/protokits/rusted-service-door-object-kit/**"
+      ],
+      "validation": [
+        ["npx", "tsc", "--noEmit"],
+        ["npm", "run", "smoke:protokits"]
+      ]
+    },
+    {
+      "id": "generator-kit",
+      "title": "Upgrade the broken generator kit",
+      "request": "Improve the broken generator silhouette and descriptor fidelity without changing unrelated object kits.",
+      "priority": 70,
+      "dependsOn": [],
+      "allowedPaths": [
+        "src/protokits/broken-generator-object-kit/**"
+      ],
+      "validation": [
+        ["npx", "tsc", "--noEmit"],
+        ["npm", "run", "smoke:protokits"]
+      ]
+    }
+  ],
+  "integrationValidation": [
+    ["npx", "tsc", "--noEmit"],
+    ["npm", "run", "lint"],
+    ["npm", "run", "build"],
+    ["npm", "run", "smoke:protokits"]
+  ]
+}

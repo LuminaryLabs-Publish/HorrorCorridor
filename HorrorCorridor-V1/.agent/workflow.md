@@ -46,11 +46,23 @@ Status: active
 ## Harness Surfaces
 
 - `scripts/horror-corridor-harness.mjs` is the linear Codex CLI harness for turning durable chat direction into repo-owned docs.
+- `scripts/horror-corridor-swarm.mjs` is the asynchronous Luna orchestrator for large change-request batches. Independent tasks require disjoint `allowedPaths`; every worker runs in an isolated worktree; only the harness owns locks, git commits, validation, and the integration branch.
 - `scripts/horror-corridor-live-agent.mjs` is the long-duration supervisor that keeps launching bounded live-player episodes and writes cumulative logs plus per-episode artifacts.
 - `scripts/review-live-agent-run.mjs` is the separate artifact reviewer that reads saved logs/screenshots and writes notes outside the live loop.
 - `scripts/horror-corridor-visual-match.mjs` is the Codex CLI visual-match loop: generate/register one reference image, capture player-view screenshots, score semantic deltas with Codex, auto-fix below-90 results, and write inspectable attempt artifacts.
 - `HorrorCorridor-Harness/domain-service-kit-source.json` is the conversation-derived vocabulary source for kit, domain-service-kit, preset, content-pack, and promotion rules.
 - `docs/HorrorCorridor-Harness-Guide.md` and `docs/HorrorCorridor-Harness-Manifest.json` are generated artifacts. Refresh them instead of leaving important kit/process definitions trapped in chat.
+
+## Luna Swarm Loop
+
+1. Write one `horror-corridor.swarm-request.v1` batch with atomic tasks, dependencies, allowed paths, and validation commands.
+2. Run `npm run harness:swarm -- check <request.json>` and fix every cycle or path overlap.
+3. Run `npm run harness:swarm -- plan <request.json>` to inspect prompts and budgets without model calls.
+4. Start live work only with `npm run harness:swarm -- run <request.json> --execute` from a clean base worktree.
+5. Treat each Luna worker as a scoped implementation actor, never as a git owner or promoter.
+6. Hold unknown or timed-out mutations; never replay them automatically.
+7. Accept combined work only after integration validation passes on the generated integration branch.
+8. Keep merging and pushing the default branch human-owned.
 
 ## Quality Gate
 
