@@ -1,87 +1,79 @@
 # HorrorCorridor Current Audit
 
 **Repository:** `LuminaryLabs-Publish/HorrorCorridor`  
-**Updated:** `2026-07-16T22-00-47-04-00`  
+**Updated:** `2026-07-17T03-58-09-04-00`  
 **Branch:** `main`  
-**Status:** `runtime-frame-fault-containment-retirement-authority-audited`
+**Status:** `debug-preference-storage-fault-isolation-authority-audited`
 
 ## Summary
 
-The repository retains 29 implemented kit surfaces and two browser-proof adapters. The current boundary is terminal asynchronous frame failure: the RAF controller schedules its successor only after the complete GameCanvas frame callback returns, while no fault latch, phase receipt, scheduler generation, retirement result or explicit restart transaction exists.
+The repository retains 29 implemented kit surfaces and two browser-proof adapters. The current boundary is optional debug-preference persistence: `runtimeDebugStore.ts` reads and writes browser storage directly without a capability result, exception classification or memory-only settlement, and `GameCanvas` invokes debug initialization before renderer/world construction.
 
 ## Plan ledger
 
-**Goal:** preserve accepted gameplay state while preventing a failed frame generation from continuing to own input, network, world or presentation resources.
+**Goal:** keep debug preferences useful while ensuring browser storage denial cannot block the playable runtime or interrupt an accepted toggle.
 
 - [x] Compare the full Publish inventory, central ledgers and root `.agent` states.
 - [x] Select only HorrorCorridor by the oldest synchronized timestamp.
-- [x] Inspect `animationLoop.ts`, `GameCanvas.tsx`, movement, collision, ooze and package validation surfaces.
+- [x] Inspect `runtimeDebugStore.ts`, `GameCanvas.tsx` and package validation scripts.
 - [x] Preserve all 29 kits, two adapters and offered services.
-- [x] Confirm successor scheduling occurs after the unguarded frame callback.
-- [x] Confirm cleanup is React-teardown-owned and not frame-fault-owned.
-- [x] Add and route the timestamped runtime-fault audit family.
-- [ ] Implement scheduler generation and named phase receipts.
-- [ ] Implement exact-once terminal fault retirement.
-- [ ] Implement explicit restart admission.
-- [ ] Execute injected source, build and deployed-origin failures.
+- [x] Confirm two unguarded preference reads and two unguarded writes.
+- [x] Confirm debug initialization precedes renderer/world creation.
+- [x] Confirm no typed capability/read/write result or memory-only fallback exists.
+- [x] Add and route the timestamped debug-storage audit family.
+- [ ] Implement host-storage capability classification.
+- [ ] Implement safe read/write settlement and in-memory fallback.
+- [ ] Execute storage-denial, quota, malformed-value, build and deployed-origin fixtures.
 
-## Current frame path
+## Current bootstrap path
 
 ```txt
-RAF step
-  -> calculate delta and elapsed
-  -> call GameCanvas frame
-    -> simulation or prediction
-    -> network publication or send
-    -> store synchronization
-    -> camera and world update
-    -> minimap draw
-    -> optional debug capture
-    -> post-processing render
-  -> request successor RAF
+authoritative snapshot admitted
+  -> GameCanvas.initializeRuntime
+  -> initializeRuntimeDebug
+     -> localStorage.getItem(enabled)
+     -> localStorage.getItem(overlay)
+     -> optional setEnabled/setOverlayVisible
+     -> attach debug window API
+  -> create renderer, scene, camera and post-processing
+  -> build maze world
+  -> patch readiness
+  -> start RAF
 ```
 
 ## Main finding
 
 ```txt
-any GameCanvas phase throws
-  -> control never reaches successor requestAnimationFrame
-  -> loop.running remains true
-  -> no terminal fault state is published
-  -> cleanupRuntime is not invoked
-  -> listeners and transport subscription remain registered
-  -> pointer lock and held input have no fault retirement path
-  -> partial gameplay or visual mutations have no phase receipt
-  -> no visible fault surface or bounded restart transaction exists
+storage read throws
+  -> debug initialization exits by exception
+  -> renderer/world/listeners/RAF are not created
+  -> no typed storage failure is published
+  -> no memory-only default is selected
+  -> no first playable frame acknowledgement exists
+
+storage write throws during a toggle
+  -> store action exits before normal settlement
+  -> no durable or memory-only result exists
+  -> no status explains the failed persistence
 ```
 
 ## Required authority
 
 ```txt
-corridor-runtime-frame-fault-containment-retirement-authority-domain
+corridor-debug-preference-storage-fault-isolation-authority-domain
 ```
 
-## Required result
+## Required results
 
 ```txt
-RuntimeFrameFaultResult
-  failedPhase
-  sessionRevision
-  runtimeGeneration
-  schedulerGeneration
-  frameRevision
-  appliedPhaseReceipts
-  inputRetired
-  pointerLockReleased
-  publicationSuspended
-  subscriptionsRetired
-  resourcesSettled
-  faultSurfaceRevision
-
-FirstFaultFrameAck
-RuntimeRestartAdmissionResult
+DebugPreferenceCapabilityResult
+DebugPreferenceReadResult
+DebugPreferenceWriteResult
+DebugBootstrapSettlementResult
+FirstPlayableFrameAck
+FirstDebugPreferenceStatusFrameAck
 ```
 
 ## Claim boundary
 
-Documentation only. The source-backed risk is an unclassified frozen runtime with partially applied frame work after an asynchronous exception. No player-facing crash was reproduced and no containment implementation is claimed.
+Documentation only. The source-backed risk is that optional debug persistence can control startup or toggle availability in storage-restricted contexts. No browser storage failure was reproduced and no runtime implementation is claimed.
