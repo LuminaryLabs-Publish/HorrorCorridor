@@ -1,64 +1,61 @@
 # HorrorCorridor Next Steps
 
-**Updated:** `2026-07-16T22-00-47-04-00`
+**Updated:** `2026-07-17T03-58-09-04-00`
 
 ## Summary
 
-The next implementation should preserve accepted host and client state while making any asynchronous frame failure terminal, observable, idempotent and explicitly restartable.
+The next implementation should isolate optional debug-preference persistence behind one host-storage capability boundary and allow renderer/world startup to continue with safe in-memory defaults whenever storage is denied or unavailable.
 
 ## Plan ledger
 
-**Goal:** add the smallest authority layer that binds RAF scheduling, named frame phases, runtime retirement and fault presentation without restructuring gameplay domains.
+**Goal:** add the smallest storage adapter and result layer without restructuring gameplay, rendering or the existing debug capture schema.
 
-- [ ] Add `SessionRevision`, `RuntimeGeneration`, `SchedulerGeneration`, `FrameRevision` and `FaultRevision`.
-- [ ] Change the RAF controller so every callback validates its scheduler generation.
-- [ ] Wrap frame execution in one fault boundary that always settles successor scheduling or retirement.
-- [ ] Split the frame into named simulation, publication, store, camera, world, minimap, debug and present phases.
-- [ ] Publish a receipt for each started, completed, skipped or failed phase.
-- [ ] Latch only the first terminal failure for a runtime generation.
-- [ ] Reject duplicate faults and callbacks from retired generations.
-- [ ] Record which authoritative or predicted mutations completed before failure.
-- [ ] Clear held movement, interaction, pause and look state.
-- [ ] Release pointer lock and disable gameplay controls.
-- [ ] Suspend host publication and client sends before another network cadence.
-- [ ] Retire transport subscriptions owned by the failed runtime.
-- [ ] Stop world, minimap, debug and post-processing projection.
-- [ ] Dispose or quarantine GPU resources idempotently.
-- [ ] Patch readiness to an explicit failed state.
-- [ ] Publish `RuntimeFrameFaultResult`.
-- [ ] Present a DOM-owned terminal fault surface and publish `FirstFaultFrameAck`.
-- [ ] Add `RuntimeRestartAdmissionCommand` for clean restart or reload.
-- [ ] Create deterministic failure injection for every named phase.
+- [ ] Add `DebugPreferenceSchemaVersion`, `RuntimeGeneration`, `BuildChannel` and `PreferenceRevision`.
+- [ ] Introduce a browser storage adapter that never throws across its public boundary.
+- [ ] Classify available, read-only, denied, unavailable, quota, malformed and indeterminate states.
+- [ ] Make `initializeRuntimeDebug()` consume `DebugPreferenceReadResult` rather than direct `localStorage` reads.
+- [ ] Keep safe in-memory defaults when reads fail.
+- [ ] Ensure persisted values cannot elevate debug capability or data tier.
+- [ ] Make `setEnabled` and `setOverlayVisible` update accepted in-memory state independently of durable persistence.
+- [ ] Publish `DebugPreferenceWriteResult` as persisted, memory-only, unavailable or failed.
+- [ ] Reuse the same command/result path for Backquote and the window debug API.
+- [ ] Reject stale results after runtime, schema or build-channel replacement.
+- [ ] Publish bounded readiness/diagnostic state without exposing privileged debug data.
+- [ ] Publish `DebugBootstrapSettlementResult`.
+- [ ] Publish `FirstPlayableFrameAck` after the first renderer frame.
+- [ ] Publish `FirstDebugPreferenceStatusFrameAck` after the storage status is visible.
+- [ ] Add deterministic getter/setter exception injection.
+- [ ] Add quota, missing-storage and malformed-value fixtures.
 - [ ] Compare source, production build and deployed-origin behavior.
 
 ## Required implementation boundary
 
 ```txt
-createAnimationLoop
-  -> owns scheduler generation and callback admission
+browser debug preference adapter
+  -> owns localStorage access and exception classification
 
-GameCanvas frame executor
-  -> owns named phase execution and receipts
+runtime debug preference authority
+  -> owns policy, validation, in-memory truth and results
 
-runtime fault authority
-  -> owns terminal latch and retirement
+GameCanvas bootstrap
+  -> consumes settlement
+  -> must continue when optional persistence fails
 
-React/UI projection
-  -> consumes immutable fault state
-  -> owns accessible restart gesture
+React/debug projection
+  -> consumes immutable preference and storage status
 ```
 
 ## Completion checklist
 
-- [ ] A thrown phase cannot leave `isRunning()` true without a pending accepted callback.
-- [ ] No input is consumed after retirement.
-- [ ] No network message is emitted after retirement.
-- [ ] Cleanup can run more than once without double disposal.
-- [ ] Only one terminal result is published.
-- [ ] The fault surface receives focus and has a usable restart action.
-- [ ] Restart creates fresh generations and listeners.
+- [ ] A storage getter exception cannot block renderer/world initialization.
+- [ ] A storage setter exception cannot interrupt the active frame loop.
+- [ ] Accepted in-memory preferences survive failed durable writes.
+- [ ] Persisted values cannot elevate debug capability.
+- [ ] Malformed values fall back safely.
+- [ ] Stale storage results cannot mutate a replacement runtime.
+- [ ] First playable frame and preference-status acknowledgements converge.
 - [ ] Source, build and deployed fixtures pass on `main`.
 
 ## Completion gate
 
-Do not claim crash containment or recoverability until every named phase can fail under a deterministic fixture and the runtime proves exact retirement, visible fault acknowledgement and clean restart on `main`.
+Do not claim storage-fault isolation or deployment parity until denied, unavailable, quota and malformed-value fixtures prove a playable first frame and bounded memory-only behavior on `main`.
