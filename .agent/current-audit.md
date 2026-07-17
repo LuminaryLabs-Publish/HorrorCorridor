@@ -1,71 +1,87 @@
 # HorrorCorridor Current Audit
 
 **Repository:** `LuminaryLabs-Publish/HorrorCorridor`  
-**Updated:** `2026-07-16T16-00-12-04-00`  
+**Updated:** `2026-07-16T22-00-47-04-00`  
 **Branch:** `main`  
-**Status:** `remote-actor-snapshot-interpolation-projection-authority-audited`
+**Status:** `runtime-frame-fault-containment-retirement-authority-audited`
 
 ## Summary
 
-The repository retains 29 implemented kit surfaces and two browser-proof adapters. The current boundary is remote-player presentation: authoritative snapshots are replaced as single current values, and remote poses are copied directly into Three.js meshes and Canvas2D minimap markers without an interpolation timeline or shared projected-pose result.
+The repository retains 29 implemented kit surfaces and two browser-proof adapters. The current boundary is terminal asynchronous frame failure: the RAF controller schedules its successor only after the complete GameCanvas frame callback returns, while no fault latch, phase receipt, scheduler generation, retirement result or explicit restart transaction exists.
 
-## Intent
+## Plan ledger
 
-Keep host authority and local prediction unchanged while giving every remote actor a bounded, deterministic visual timeline.
-
-## What needs to happen
-
-```txt
-host receives client pose
-  -> host publishes authoritative snapshot on NETWORK_TICK_RATE
-  -> client replaces authoritativeSnapshot
-  -> Three.js mesh copies snapshot position and rotation
-  -> minimap marker copies snapshot position
-  -> no pose history or interpolation clock exists
-```
-
-The host cadence is `50 ms`. A remote actor can therefore remain fixed between accepted snapshots and step to the next pose when a new snapshot arrives. Variable transport delay, loss or reordering has no presentation-specific settlement path.
-
-## Checklist
+**Goal:** preserve accepted gameplay state while preventing a failed frame generation from continuing to own input, network, world or presentation resources.
 
 - [x] Compare the full Publish inventory, central ledgers and root `.agent` states.
 - [x] Select only HorrorCorridor by the oldest synchronized timestamp.
-- [x] Inspect `GameShell.tsx`, `runtimeStore.ts`, `GameCanvas.tsx`, `worldBuilder.ts`, `Minimap.tsx`, protocol snapshots and cadence constants.
+- [x] Inspect `animationLoop.ts`, `GameCanvas.tsx`, movement, collision, ooze and package validation surfaces.
 - [x] Preserve all 29 kits, two adapters and offered services.
-- [x] Confirm direct remote-pose copying in both render surfaces.
-- [x] Confirm no interpolation/extrapolation implementation or audit already exists.
-- [x] Add and route the timestamped remote-actor interpolation audit family.
-- [ ] Implement ordered sample admission and bounded pose history.
-- [ ] Implement interpolation, rotation, teleport and loss policies.
-- [ ] Publish one pose set to Three.js and Canvas2D.
-- [ ] Execute source, browser, build and deployed-origin fixtures.
+- [x] Confirm successor scheduling occurs after the unguarded frame callback.
+- [x] Confirm cleanup is React-teardown-owned and not frame-fault-owned.
+- [x] Add and route the timestamped runtime-fault audit family.
+- [ ] Implement scheduler generation and named phase receipts.
+- [ ] Implement exact-once terminal fault retirement.
+- [ ] Implement explicit restart admission.
+- [ ] Execute injected source, build and deployed-origin failures.
+
+## Current frame path
+
+```txt
+RAF step
+  -> calculate delta and elapsed
+  -> call GameCanvas frame
+    -> simulation or prediction
+    -> network publication or send
+    -> store synchronization
+    -> camera and world update
+    -> minimap draw
+    -> optional debug capture
+    -> post-processing render
+  -> request successor RAF
+```
 
 ## Main finding
 
 ```txt
-accepted snapshot N
-  -> remote actor shown at pose N
-  -> every RAF repeats pose N
-
-accepted snapshot N+1
-  -> remote actor immediately snaps to pose N+1
-  -> minimap marker independently snaps to pose N+1
-
-missing authority
-  -> no interpolation delay
-  -> no sample buffer
-  -> no shortest-arc rotation
-  -> no teleport threshold
-  -> no bounded extrapolation
-  -> no 3D/minimap convergence result
+any GameCanvas phase throws
+  -> control never reaches successor requestAnimationFrame
+  -> loop.running remains true
+  -> no terminal fault state is published
+  -> cleanupRuntime is not invoked
+  -> listeners and transport subscription remain registered
+  -> pointer lock and held input have no fault retirement path
+  -> partial gameplay or visual mutations have no phase receipt
+  -> no visible fault surface or bounded restart transaction exists
 ```
 
 ## Required authority
 
 ```txt
-corridor-remote-actor-snapshot-interpolation-projection-authority-domain
+corridor-runtime-frame-fault-containment-retirement-authority-domain
+```
+
+## Required result
+
+```txt
+RuntimeFrameFaultResult
+  failedPhase
+  sessionRevision
+  runtimeGeneration
+  schedulerGeneration
+  frameRevision
+  appliedPhaseReceipts
+  inputRetired
+  pointerLockReleased
+  publicationSuspended
+  subscriptionsRetired
+  resourcesSettled
+  faultSurfaceRevision
+
+FirstFaultFrameAck
+RuntimeRestartAdmissionResult
 ```
 
 ## Claim boundary
 
-Documentation only. The source-backed risk is stepwise or jittery remote presentation under real transport cadence. No player-facing defect was reproduced and no smoothing implementation is claimed.
+Documentation only. The source-backed risk is an unclassified frozen runtime with partially applied frame work after an asynchronous exception. No player-facing crash was reproduced and no containment implementation is claimed.
