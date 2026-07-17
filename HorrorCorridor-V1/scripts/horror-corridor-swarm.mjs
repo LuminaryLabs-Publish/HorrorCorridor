@@ -616,7 +616,9 @@ async function runValidationCommands(context, commands, cwd, artifactDir, label)
     const command = commands[index];
     const executableCommand = command[0] === "npx" && command[1] === "tsc"
       ? [resolve(cwd, "node_modules", ".bin", "tsc"), ...command.slice(2)]
-      : command;
+      : command[0] === "npm" && command[1] === "run" && command[2] === "build"
+        ? [...command, "--", "--webpack"]
+        : command;
     const result = await context.validationSemaphore.use(() => runProcess(executableCommand[0], executableCommand.slice(1), {
       cwd,
       timeoutMs: context.config.provider.timeoutMs,
