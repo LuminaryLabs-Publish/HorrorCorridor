@@ -9,6 +9,8 @@ const SOURCE_PATH = resolve(REPO_ROOT, "HorrorCorridor-Harness", "domain-service
 const SWARM_CONFIG_PATH = resolve(REPO_ROOT, "HorrorCorridor-Harness", "swarm.config.json");
 const SWARM_REQUEST_SCHEMA_PATH = resolve(REPO_ROOT, "HorrorCorridor-Harness", "schemas", "swarm-request.schema.json");
 const SWARM_WORKER_SCHEMA_PATH = resolve(REPO_ROOT, "HorrorCorridor-Harness", "schemas", "worker-result.schema.json");
+const LIVE_AGENT_JUDGMENT_SCHEMA_PATH = resolve(REPO_ROOT, "HorrorCorridor-Harness", "schemas", "live-agent-judgment.schema.json");
+const LIVE_AGENT_PROMPT_PATH = resolve(REPO_ROOT, "HorrorCorridor-Harness", "prompts", "live-agent-judge.md");
 const OUTPUT_DOC_PATH = resolve(DOCS_DIR, "HorrorCorridor-Harness-Guide.md");
 const OUTPUT_MANIFEST_PATH = resolve(DOCS_DIR, "HorrorCorridor-Harness-Manifest.json");
 
@@ -124,6 +126,20 @@ npm run harness:swarm -- plan HorrorCorridor-Harness/swarm-request.example.json
 npm run harness:swarm -- run HorrorCorridor-Harness/my-swarm-request.json --execute
 \`\`\`
 
+## Sequential Live Agent
+
+- Every browser episode is followed by exactly one read-only Luna judgment with prediction concurrency fixed at one, low reasoning, and the Codex priority service tier.
+- Each judgment sees the original goal, the current compact episode, and a bounded recent window of structured outputs and reasoning summaries.
+- The judgment chooses the next action profile and records an over-time trend; malformed or missing output fails closed.
+- There is no artificial delay between episodes; each call records duration plus the completion-to-next-start gap.
+- Full prompts, provider events, structured judgments, screenshots, timing, logs, and loop state remain inspectable in the external run directory.
+
+\`\`\`bash
+cd ${REPO_ROOT}
+npm run live-agent:sample
+npm run review:live-agent -- <run-directory>
+\`\`\`
+
 ## Command
 
 \`\`\`bash
@@ -161,6 +177,19 @@ function buildManifest(source, swarmConfig) {
       controls: swarmConfig.controls,
       promotion: "validated integration branch; human-owned default-branch merge and push",
     },
+    liveAgent: {
+      runner: "scripts/horror-corridor-live-agent.mjs",
+      reviewer: "scripts/review-live-agent-run.mjs",
+      prompt: relative(REPO_ROOT, LIVE_AGENT_PROMPT_PATH),
+      judgmentSchema: relative(REPO_ROOT, LIVE_AGENT_JUDGMENT_SCHEMA_PATH),
+      model: "gpt-5.6-luna",
+      reasoning: "low",
+      serviceTier: "priority",
+      historyWindow: 3,
+      predictionConcurrency: 1,
+      waitBetweenEpisodesMs: 0,
+      policy: "one read-only judgment after every live browser episode",
+    },
   };
 }
 
@@ -181,6 +210,8 @@ function checkInputs() {
   readJson(SWARM_CONFIG_PATH);
   readJson(SWARM_REQUEST_SCHEMA_PATH);
   readJson(SWARM_WORKER_SCHEMA_PATH);
+  readJson(LIVE_AGENT_JUDGMENT_SCHEMA_PATH);
+  readText(LIVE_AGENT_PROMPT_PATH);
   for (const relativePath of CONTROL_FILES) {
     summarizeControlFile(relativePath);
   }
@@ -188,6 +219,8 @@ function checkInputs() {
   console.log(`Swarm config ok: ${relative(REPO_ROOT, SWARM_CONFIG_PATH)}`);
   console.log(`Swarm request schema ok: ${relative(REPO_ROOT, SWARM_REQUEST_SCHEMA_PATH)}`);
   console.log(`Swarm worker schema ok: ${relative(REPO_ROOT, SWARM_WORKER_SCHEMA_PATH)}`);
+  console.log(`Live-agent judgment schema ok: ${relative(REPO_ROOT, LIVE_AGENT_JUDGMENT_SCHEMA_PATH)}`);
+  console.log(`Live-agent prompt ok: ${relative(REPO_ROOT, LIVE_AGENT_PROMPT_PATH)}`);
   for (const relativePath of CONTROL_FILES) {
     console.log(`Control ok: ${relativePath}`);
   }

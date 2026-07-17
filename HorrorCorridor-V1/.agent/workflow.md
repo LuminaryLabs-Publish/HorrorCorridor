@@ -47,7 +47,7 @@ Status: active
 
 - `scripts/horror-corridor-harness.mjs` is the linear Codex CLI harness for turning durable chat direction into repo-owned docs.
 - `scripts/horror-corridor-swarm.mjs` is the asynchronous Luna orchestrator for large change-request batches. Independent tasks require disjoint `allowedPaths`; every worker runs in an isolated worktree; only the harness owns locks, git commits, validation, and the integration branch.
-- `scripts/horror-corridor-live-agent.mjs` is the long-duration supervisor that keeps launching bounded live-player episodes and writes cumulative logs plus per-episode artifacts.
+- `scripts/horror-corridor-live-agent.mjs` is the long-duration supervisor that runs bounded live-player episodes and then makes one read-only Luna judgment call at a time. Each call receives the original goal, current episode, and a bounded window of recent call outputs/reasoning summaries before choosing the next action.
 - `scripts/review-live-agent-run.mjs` is the separate artifact reviewer that reads saved logs/screenshots and writes notes outside the live loop.
 - `scripts/horror-corridor-visual-match.mjs` is the Codex CLI visual-match loop: generate/register one reference image, capture player-view screenshots, score semantic deltas with Codex, auto-fix below-90 results, and write inspectable attempt artifacts.
 - `HorrorCorridor-Harness/domain-service-kit-source.json` is the conversation-derived vocabulary source for kit, domain-service-kit, preset, content-pack, and promotion rules.

@@ -92,6 +92,9 @@ The supervisor may keep launching new episodes forever until interrupted, but th
 
 After each episode:
 
+- run exactly one read-only sequential judgment call
+- give it the original goal, current episode artifacts, and the bounded recent-call window
+- persist its observation, trend, evidence, concise reasoning summary, confidence, and next action
 - compare expected outcome to actual outcome
 - identify which assumption held and which failed
 - record candidate lessons
@@ -102,7 +105,8 @@ After each episode:
 
 ## Separate Reviewer
 
-- The reviewer is not the live agent.
+- The in-loop sequential judge chooses the next bounded action but does not edit the repo or promote durable memory.
+- The post-run reviewer is not the live agent or its in-loop judge.
 - The reviewer runs after artifacts exist.
 - The reviewer reads logs, reports, and screenshots from the live-agent run and writes notes separately.
 - Reviewer notes should not be mixed into the live-agent episode log itself.
@@ -122,7 +126,7 @@ After each episode:
 - `validate:live-player` harness:
   - owns short-form player-view proof
 - `live-agent` harness:
-  - owns longer interactive exploration and cumulative evidence gathering
+  - owns longer interactive exploration, one-at-a-time Luna judgments, bounded recent-call context, and cumulative evidence gathering
 - `review-live-agent` harness:
   - owns artifact review and note generation after the live loop has already produced evidence
 
@@ -162,3 +166,15 @@ The future live-agent system should:
 - record episode logs and screenshots continuously while running
 - support a separate review pass that can inspect those logs and screenshots outside the live loop
 - support NexusSimulator-backed long-run play validation once that interaction plane is built
+
+## Sequential Judgment Contract
+
+- Model calls are serialized with prediction concurrency fixed at one.
+- The live lane defaults to `gpt-5.6-luna`, low reasoning, Codex `priority` service tier, and no artificial wait between episodes.
+- Call one judges the first live episode without claiming a trend.
+- Every later call sees the original goal, current episode, and the last three call outputs/reasoning summaries by default.
+- The saved `reasoningSummary` is a concise evidence explanation, not hidden chain-of-thought.
+- Structured output chooses the next action profile and states whether the run should continue, stop, or block.
+- Malformed output, provider failure, unknown actions, or mismatched history ids fail closed.
+- Every call logs its duration, start-to-start interval, and completion-to-next-start `timeBetweenCallsMs` gap.
+- The post-run reviewer remains separate and may inspect the complete artifact chain without mutating it.

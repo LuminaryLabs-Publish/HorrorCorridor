@@ -1,6 +1,6 @@
 {
   "name": "HorrorCorridor-Harness",
-  "generatedAt": "2026-07-16T23:09:13.485Z",
+  "generatedAt": "2026-07-17T00:36:33.226Z",
   "source": "HorrorCorridor-Harness/domain-service-kit-source.json",
   "outputs": [
     "docs/HorrorCorridor-Harness-Guide.md",
@@ -29,7 +29,7 @@
     },
     {
       "path": ".agent/goal.md",
-      "purpose": "Set up `HorrorCorridor-Harness` to batch-submit scoped change requests to Codex CLI with Luna and coordinate massive asynchronous swarm changes safely."
+      "purpose": "Upgrade the HorrorCorridor live-agent harness into a real sequential Luna judgment chain that accumulates bounded evidence over time."
     },
     {
       "path": ".agent/feedback.md",
@@ -72,5 +72,18 @@
       "runTimeoutMs": 14400000
     },
     "promotion": "validated integration branch; human-owned default-branch merge and push"
+  },
+  "liveAgent": {
+    "runner": "scripts/horror-corridor-live-agent.mjs",
+    "reviewer": "scripts/review-live-agent-run.mjs",
+    "prompt": "HorrorCorridor-Harness/prompts/live-agent-judge.md",
+    "judgmentSchema": "HorrorCorridor-Harness/schemas/live-agent-judgment.schema.json",
+    "model": "gpt-5.6-luna",
+    "reasoning": "low",
+    "serviceTier": "priority",
+    "historyWindow": 3,
+    "predictionConcurrency": 1,
+    "waitBetweenEpisodesMs": 0,
+    "policy": "one read-only judgment after every live browser episode"
   }
 }

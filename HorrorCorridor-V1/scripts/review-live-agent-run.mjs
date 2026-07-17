@@ -73,18 +73,22 @@ function buildReview(manifest, episodes, runDir) {
   const completed = episodes.filter((episode) => episode.status === "completed");
   const failed = episodes.filter((episode) => episode.status !== "completed");
   const latestEpisode = episodes[episodes.length - 1] ?? null;
+  const judgedCalls = episodes.filter((episode) => episode.judgment);
 
   const episodeLines = episodes.map((episode) => {
-    const reportStatus = episode.report?.status ?? "missing-report";
     const movementDelta = episode.report?.validation?.movementDelta ?? null;
     const darkRatio = episode.report?.luminance?.darkRatio ?? null;
     const lightRatio = episode.report?.luminance?.lightRatio ?? null;
-    return `- episode ${episode.episodeIndex}: action=${episode.actionProfile}, process=${episode.status}, report=${reportStatus}, movementDelta=${movementDelta}, darkRatio=${darkRatio}, lightRatio=${lightRatio}, dir=${episode.episodeDir}`;
+    return `- episode ${episode.episodeIndex}: call=${episode.callId ?? "legacy"}, action=${episode.actionProfile}, process=${episode.status}, provider=${episode.providerStatus ?? "legacy"}, judgment=${episode.judgment?.judgment ?? "none"}, next=${episode.judgment?.nextActionProfile ?? "none"}, movementDelta=${movementDelta}, darkRatio=${darkRatio}, lightRatio=${lightRatio}, dir=${episode.episodeDir}`;
   });
+
+  const callLines = judgedCalls.map((episode) =>
+    `- ${episode.callId}: durationMs=${episode.judgeTiming?.callDurationMs ?? "unknown"}, timeBetweenCallsMs=${episode.judgeTiming?.timeBetweenCallsMs ?? "first-call"}, history=${JSON.stringify(episode.judgment.historyCallIds)}, confidence=${episode.judgment.confidence}, trend=${episode.judgment.trend}, reasoningSummary=${episode.judgment.reasoningSummary}`,
+  );
 
   const failureLines =
     failures.length === 0
-      ? "- none"
+      ? ["- none"]
       : failures.map(([gate, count]) => `- ${gate}: ${count}`);
 
   const screenshotLines = episodes
@@ -109,6 +113,9 @@ Status: generated
 - episodeCount: ${episodes.length}
 - completedEpisodes: ${completed.length}
 - nonCompletedEpisodes: ${failed.length}
+- judgedCalls: ${judgedCalls.length}
+- serviceTier: ${manifest.provider?.serviceTier ?? "legacy"}
+- reasoning: ${manifest.provider?.reasoning ?? "legacy"}
 
 ## Summary
 
@@ -122,6 +129,10 @@ ${failureLines.join("\n")}
 
 ${episodeLines.join("\n")}
 
+## Sequential Judgment Chain
+
+${callLines.length === 0 ? "- none" : callLines.join("\n")}
+
 ## Screenshot Artifacts
 
 ${screenshotLines.length === 0 ? "- none" : screenshotLines.join("\n")}
@@ -129,6 +140,7 @@ ${screenshotLines.length === 0 ? "- none" : screenshotLines.join("\n")}
 ## Analyst Notes
 
 - Review these screenshots separately from the live loop.
+- Treat \`reasoningSummary\` as the auditable judgment explanation; hidden model chain-of-thought is neither requested nor persisted.
 - Compare repeated gate failures against the actual images before changing durable memory.
 - Promote only repeated findings into \`.agent/memory.md\`, \`memory.md\`, or the parity audit.
 `;

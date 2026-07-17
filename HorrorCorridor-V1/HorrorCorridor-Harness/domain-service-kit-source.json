@@ -24,11 +24,11 @@
     },
     {
       "term": "Live Agent",
-      "body": "A live agent is a cumulative episodic game operator. It may run indefinitely under supervision, but it still reviews the current screen, chooses bounded actions, executes through tools or harnesses, verifies the result, and promotes only repeated durable lessons into repo memory or audits."
+      "body": "A live agent is a cumulative episodic game operator. It may run indefinitely under supervision, but it still reviews the current screen, chooses bounded actions, executes through tools or harnesses, and verifies the result. The current implementation runs one read-only Luna judgment after each episode in the Codex priority service tier with low reasoning and no artificial inter-episode delay; every later judgment sees the original goal and the last three call outputs/reasoning summaries by default before selecting the next action."
     },
     {
       "term": "Reviewer Loop",
-      "body": "A reviewer loop is separate from the live agent. It reads saved logs, reports, and screenshots after or beside the live run, then writes notes without mutating the live-agent episode log."
+      "body": "A reviewer loop is separate from both the live agent and its in-loop sequential judge. It reads saved logs, structured judgments, reports, and screenshots after or beside the live run, then writes notes without mutating the live-agent episode log."
     },
     {
       "term": "Visual Match Loop",
@@ -67,7 +67,7 @@
   ],
   "futureHarnessDirections": [
     "Add a NexusSimulator-backed interaction plane for repeatable player validation.",
-    "Build the live agent as an episodic long-run operator rather than a one-pass capped harness.",
+    "Extend the fast sequential live agent with more bounded action profiles and long-run convergence policies without raising prediction concurrency above one.",
     "Use `npm run visual:match` for screenshot-vs-reference review and bounded auto-fix loops before claiming visual acceptance.",
     "Expand per-kit preview surfaces before deeper main-scene promotion.",
     "Keep the guidance refresh chain linear and repo-owned; use the separate orchestrator harness when many worker workflows need dependency scheduling, isolation, and integration."

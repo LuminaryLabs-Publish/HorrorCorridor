@@ -4,20 +4,18 @@ Status: completed
 
 ## Objective
 
-Set up `HorrorCorridor-Harness` to batch-submit scoped change requests to Codex CLI with Luna and coordinate massive asynchronous swarm changes safely.
+Upgrade the HorrorCorridor live-agent harness into a real sequential Luna judgment chain that accumulates bounded evidence over time.
 
 ## Success Criteria
 
-- Luna is explicitly pinned as `gpt-5.6-luna` with medium reasoning instead of inheriting user defaults.
-- Large request batches can be checked, planned, run, resumed, and inspected through one repo command.
-- Task concurrency is separate from active model-prediction and validation concurrency.
-- Every worker receives an isolated worktree, branch, allowed paths, dependency evidence, and deterministic validation commands.
-- Out-of-scope changes, dependency failures, cycles, concurrent scope overlap, malformed outputs, and unknown mutation outcomes fail closed.
-- Worker commits integrate in dependency order on a dedicated integration branch.
-- The harness never merges or pushes the default branch; human approval remains required.
-- Run manifests, JSONL ledgers, prompts, decisions, diffs, validation, and final reports reconstruct every run.
-- Structural, concurrent happy-path, scope-failure, dependency-blocking, resume, and JSONL proofs pass without using credentials.
+- Every bounded browser episode is followed by exactly one read-only Luna judgment call.
+- Calls run one after another with prediction concurrency fixed at one.
+- Each judgment receives the original goal, the current live episode, and a bounded window of recent call outputs and reasoning summaries.
+- Structured judgments select the next action, state an over-time trend, and fail closed on malformed or missing provider output.
+- Run artifacts include manifests, JSONL episode/call records, prompts, provider events, structured judgments, screenshots, and explicit loop state.
+- A bounded two-call live proof demonstrates that call two acknowledges and reasons over call one's output.
+- The default live lane uses Luna with low reasoning, Codex priority service, no artificial delay, and persists call timing including the gap between calls.
 
 ## Current Focus
 
-The swarm harness is ready for a user-authored batch request. No live Luna workers were launched during setup; the first real batch remains explicitly gated by `--execute`.
+Delivered and proven with a fresh two-call live run: Luna used low reasoning and Codex priority service with zero artificial delay; calls completed in 25,635 ms and 22,633 ms, and call two logged a 47,504 ms completion-to-next-start gap while consuming call one's selected action and judgment history.

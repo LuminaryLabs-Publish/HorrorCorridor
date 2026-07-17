@@ -1,0 +1,42 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "horror-corridor.live-agent-judgment.v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "status",
+    "judgment",
+    "observation",
+    "trend",
+    "reasoningSummary",
+    "evidence",
+    "historyCallIds",
+    "nextActionProfile",
+    "nextHypothesis",
+    "confidence",
+    "stopReason"
+  ],
+  "properties": {
+    "status": { "enum": ["continue", "stop", "blocked"] },
+    "judgment": { "enum": ["confirmed", "partially-confirmed", "inconclusive", "regressed", "blocked"] },
+    "observation": { "type": "string", "minLength": 1, "maxLength": 2000 },
+    "trend": { "type": "string", "minLength": 1, "maxLength": 2000 },
+    "reasoningSummary": { "type": "string", "minLength": 1, "maxLength": 3000 },
+    "evidence": {
+      "type": "array",
+      "items": { "type": "string" },
+      "maxItems": 12
+    },
+    "historyCallIds": {
+      "type": "array",
+      "items": { "type": "string" },
+      "maxItems": 12
+    },
+    "nextActionProfile": {
+      "enum": ["forward", "backward", "strafe-left", "strafe-right", "forward-left", "forward-right"]
+    },
+    "nextHypothesis": { "type": "string", "minLength": 1, "maxLength": 2000 },
+    "confidence": { "type": "number", "minimum": 0, "maximum": 1 },
+    "stopReason": { "type": ["string", "null"], "maxLength": 2000 }
+  }
+}
