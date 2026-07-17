@@ -34,7 +34,7 @@ const waitForServer = async () => {
 
 const server = spawn(
   "npm",
-  ["run", "dev", "--", "--hostname", host, "--port", String(port)],
+  ["run", "dev", "--", "--webpack", "--hostname", host, "--port", String(port)],
   {
     env: {
       ...process.env,

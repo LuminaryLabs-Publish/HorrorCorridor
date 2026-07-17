@@ -1,6 +1,6 @@
 {
   "schemaVersion": "horror-corridor.swarm-request.v1",
-  "runId": "starting-scene-fidelity-003",
+  "runId": "starting-scene-fidelity-004",
   "goal": "Improve the HorrorCorridor starting scene through several independently scoped changes, then validate their combined integration branch.",
   "controls": {
     "taskConcurrency": 6,

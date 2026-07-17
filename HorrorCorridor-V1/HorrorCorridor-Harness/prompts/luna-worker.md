@@ -23,7 +23,7 @@ AUTHORITY
 VALIDATION
 The orchestrator will run these authoritative commands after your work:
 {{VALIDATION_COMMANDS}}
-You may run focused local checks, but do not weaken or replace the declared gates.
+Do not run the declared commands yourself; network-backed checks cannot bind ports inside your worker sandbox. You may run focused static checks that do not start servers, but do not weaken or replace the declared gates.
 
 OUTPUT
 Return only the structured result required by the provided output schema. Do not claim completion if the requested change is blocked.
