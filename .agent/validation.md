@@ -1,45 +1,41 @@
 # HorrorCorridor Validation
 
-**Updated:** `2026-07-16T16-00-12-04-00`  
-**Scope:** documentation-only remote-actor snapshot interpolation and cross-surface projection audit
+**Updated:** `2026-07-16T22-00-47-04-00`  
+**Scope:** documentation-only runtime frame-fault containment, retirement and restart audit
 
 ## Summary
 
-Source inspection confirms 50 ms authoritative snapshot cadence, single-value snapshot replacement, direct Three.js remote-player pose copying and direct Canvas2D minimap pose copying. No sample buffer, interpolation clock, teleport policy, bounded extrapolation, shared projected-pose result or smoothed-frame acknowledgement was found.
+Source inspection confirms that successor RAF scheduling occurs after the complete frame callback, the callback is not guarded by a terminal fault boundary, and cleanup is invoked only from React effect teardown. No scheduler generation, named phase receipts, terminal fault latch, stale-callback rejection, fault-owned input/network/resource retirement, visible fault acknowledgement or explicit restart transaction was found.
 
-## Intent
+## Plan ledger
 
-Record exactly what was inspected and prevent unsupported multiplayer-smoothing, packet-loss, parity or production claims.
-
-## What needs to happen
+**Goal:** record exactly what was inspected and prevent unsupported crash-containment, clean-restart, parity or production claims.
 
 - [x] Confirm HorrorCorridor remained the oldest eligible synchronized repository.
-- [x] Inspect `GameShell.tsx` snapshot receive and store replacement.
-- [x] Inspect `runtimeStore.ts` authoritative snapshot ownership.
-- [x] Inspect `GameCanvas.tsx` cadence and render-frame path.
-- [x] Inspect `worldBuilder.ts` remote-player mesh synchronization.
-- [x] Inspect `Minimap.tsx` remote-player marker synchronization.
-- [x] Inspect `syncSnapshot.ts` snapshot timestamps and player payload.
-- [x] Inspect `constants.ts` network cadence.
-- [x] Search source and prior audits for interpolation, extrapolation or smoothing authority.
+- [x] Inspect `animationLoop.ts` callback and successor ordering.
+- [x] Inspect `GameCanvas.tsx` host, client, replay and idle frame branches.
+- [x] Inspect world, minimap, debug and post-processing phase ordering.
+- [x] Inspect effect-owned cleanup, listener removal and GPU disposal.
+- [x] Inspect movement, collision and ooze mutation boundaries.
+- [x] Inspect package scripts and available browser-proof tooling.
+- [x] Search source and prior audits for frame-fault containment authority.
 - [x] Update only `.agent` documentation and central tracking.
 - [ ] Run runtime and browser fixtures after implementation exists.
 
 ## Source evidence
 
 ```txt
-NETWORK_TICK_RATE: 50 ms
-SYNC snapshot timestamp and tick: present
-client authoritativeSnapshot replacement: present
-remote Three.js mesh position/rotation direct assignment: present
-remote minimap marker direct snapshot position: present
-per-actor sample buffer: absent
-interpolation delay policy: absent
-shortest-arc rotation policy: absent
-teleport threshold: absent
-bounded extrapolation: absent
-shared Three.js/minimap pose result: absent
-FirstSmoothedMultiplayerFrameAck: absent
+onFrame called before successor RAF request: present
+try/catch around frame execution: absent
+scheduler generation: absent
+named phase receipts: absent
+terminal fault latch: absent
+stale callback rejection: absent
+fault-owned cleanup: absent
+fault-owned input retirement: absent
+fault-owned publication suspension: absent
+fault surface and FirstFaultFrameAck: absent
+explicit restart admission: absent
 ```
 
 ## Change classification
@@ -67,17 +63,18 @@ npm install: not run
 npm run lint: not run
 npm run build: not run
 validate:live-player: not run
-steady-cadence interpolation fixture: unavailable
-network-jitter fixture: unavailable
-packet-loss fixture: unavailable
-packet-reorder fixture: unavailable
-teleport fixture: unavailable
-actor-retirement fixture: unavailable
-3D/minimap projection parity fixture: unavailable
+simulation failure fixture: unavailable
+network publication failure fixture: unavailable
+world update failure fixture: unavailable
+minimap failure fixture: unavailable
+post-processing failure fixture: unavailable
+duplicate fault fixture: unavailable
+stale callback fixture: unavailable
+clean restart fixture: unavailable
 production-build smoke: not run
 deployed-origin smoke: not run
 ```
 
 ## Claim boundary
 
-No interpolation implementation, smooth multiplayer claim, network-jitter tolerance, packet-loss resilience, teleport correctness, cross-surface convergence, artifact parity, deployed parity or production readiness is claimed.
+No runtime fault containment, clean restart, exact retirement, stale-callback safety, partial-frame integrity, resource settlement, artifact parity, deployed parity or production readiness is claimed.
