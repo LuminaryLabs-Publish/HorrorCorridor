@@ -1,40 +1,46 @@
 # HorrorCorridor Validation
 
-**Updated:** `2026-07-17T03-58-09-04-00`  
-**Scope:** documentation-only debug-preference host-storage fault-isolation audit
+**Updated:** `2026-07-17T09-17-19-04-00`  
+**Scope:** documentation-only PeerJS signalling reconnect admission and settlement audit
 
 ## Summary
 
-Source inspection confirms two direct `localStorage.getItem` calls during debug initialization and two direct `localStorage.setItem` calls during preference updates. None is guarded by a typed storage boundary. `GameCanvas` invokes debug initialization before renderer, scene, camera, post-processing and world construction. No capability result, exception classification, in-memory fallback settlement, first playable frame acknowledgement or storage-denial fixture was found.
+Source inspection confirms that host and client adapters handle PeerJS `disconnected` by changing status to `reconnecting`. Neither adapter invokes `peer.reconnect()`, exposes a reconnect operation, allocates an attempt identity, applies bounded retry policy, or publishes a recovery settlement. `GameShell` maps the status directly into session state.
+
+PeerJS documentation distinguishes signalling loss from existing DataConnection loss and identifies `peer.reconnect()` as the explicit recovery operation. No signalling-loss browser fixture, recovered-message acknowledgement or recovered remote-player frame acknowledgement was found.
 
 ## Plan ledger
 
-**Goal:** record exactly what was inspected and prevent unsupported storage resilience, first-frame, parity or production claims.
+**Goal:** record exactly what was inspected and prevent unsupported reconnect, continuity, frame, parity or production claims.
 
 - [x] Confirm HorrorCorridor remained the oldest eligible synchronized repository.
-- [x] Inspect `runtimeDebugStore.ts` preference reads and writes.
-- [x] Inspect `GameCanvas.tsx` initialization ordering and debug toggle source.
-- [x] Inspect existing debug capability/redaction audit state.
-- [x] Inspect package scripts and browser-proof tooling.
-- [x] Search prior audits for an existing storage-fault isolation authority.
+- [x] Inspect host and client signalling-disconnect handlers.
+- [x] Inspect public transport adapter types.
+- [x] Inspect session status mapping in `GameShell`.
+- [x] Confirm no explicit reconnect command or attempt result exists.
+- [x] Confirm no recovered-message or recovered-frame acknowledgement exists.
+- [x] Search prior audits for an existing signalling-reconnect authority.
 - [x] Update only `.agent` documentation and central tracking.
 - [ ] Run runtime and browser fixtures after implementation exists.
 
 ## Source evidence
 
 ```txt
-localStorage.getItem calls: 2
-localStorage.setItem calls: 2
-try/catch around debug storage access: absent
-storage capability result: absent
-storage exception classifier: absent
-in-memory fallback settlement: absent
-initializeRuntimeDebug before renderer construction: yes
-DebugPreferenceReadResult: absent
-DebugPreferenceWriteResult: absent
-DebugBootstrapSettlementResult: absent
-FirstPlayableFrameAck: absent
-storage-denial browser fixture: absent
+PeerTransportStatus reconnecting: present
+host peer disconnected listener: present
+client peer disconnected listener: present
+host sets reconnecting: yes
+client sets reconnecting: yes
+peer.reconnect invocation: absent
+public reconnect adapter method: absent
+attempt identity/generation: absent
+retry/backoff/deadline: absent
+explicit-close arbitration: absent
+ReconnectAdmissionResult: absent
+ReconnectSettlementResult: absent
+FirstRecoveredMessageAck: absent
+FirstRecoveredRemotePlayerFrameAck: absent
+signalling-loss browser fixture: absent
 ```
 
 ## Change classification
@@ -48,7 +54,6 @@ input behavior changed: no
 gameplay changed: no
 Three.js behavior changed: no
 Canvas2D behavior changed: no
-localStorage behavior changed: no
 packages or dependencies changed: no
 tests or workflows changed: no
 deployment changed: no
@@ -63,16 +68,17 @@ npm install: not run
 npm run lint: not run
 npm run build: not run
 validate:live-player: not run
-storage getter denial fixture: unavailable
-storage setter denial fixture: unavailable
-quota fixture: unavailable
-storage unavailable fixture: unavailable
-malformed preference fixture: unavailable
-first playable frame under fallback fixture: unavailable
+host signalling-loss fixture: unavailable
+client signalling-loss fixture: unavailable
+explicit-disconnect race fixture: unavailable
+bounded retry fixture: unavailable
+stale event fixture: unavailable
+recovered message fixture: unavailable
+recovered remote-player frame fixture: unavailable
 production-build smoke: not run
 deployed-origin smoke: not run
 ```
 
 ## Claim boundary
 
-No storage-fault isolation, safe memory-only fallback, first-frame convergence, artifact parity, deployed parity or production readiness is claimed.
+No reconnect correctness, multiplayer continuity, terminal-close correctness, recovered-message convergence, recovered-frame convergence, artifact parity, deployed parity or production readiness is claimed.
