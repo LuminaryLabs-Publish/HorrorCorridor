@@ -1,89 +1,90 @@
 # HorrorCorridor Known Gaps
 
-**Updated:** `2026-07-17T09-17-19-04-00`
+**Updated:** `2026-07-17T20-41-29-04-00`
 
 ## Summary
 
-The highest current undocumented boundary is PeerJS signalling reconnect admission and settlement. Both adapters publish `reconnecting` after signalling loss without starting an explicit attempt or proving recovery.
+The highest current focused boundary is real PeerJS DataConnection open admission. The host adapter can emit `peer/connection-open` while the channel is still pending, and downstream session/UI code treats that event as accepted membership.
 
 ## Plan ledger
 
-**Goal:** add a bounded signalling-recovery contract without weakening earlier transport-mode, protocol, lifecycle or frame-proof authorities.
+**Goal:** add mode-correct connection-open settlement without weakening earlier signalling, protocol, lifecycle or frame-proof authorities.
 
-- [ ] Signalling-disconnect classification.
-- [ ] Active DataConnection liveness result.
-- [ ] Reconnect policy and attempt budget.
-- [ ] `ReconnectAttemptId` and generation.
-- [ ] Explicit PeerJS reconnect adapter.
-- [ ] Retry backoff and deadline.
-- [ ] Cancellation and terminal-intent arbitration.
-- [ ] Stale event/result rejection.
-- [ ] Host acceptance-readiness result.
-- [ ] Client new-connection-readiness result.
-- [ ] Existing-data-channel continuity policy.
-- [ ] Explicit disconnect/destroy terminal settlement.
-- [ ] `SignallingDisconnectResult`.
-- [ ] `ReconnectAdmissionResult`.
-- [ ] `ReconnectAttemptResult`.
-- [ ] `ReconnectSettlementResult`.
-- [ ] `FirstRecoveredMessageAck`.
-- [ ] `FirstRecoveredRemotePlayerFrameAck`.
-- [ ] Signalling-loss and explicit-close browser fixtures.
-- [ ] Source/build/deployed reconnect parity fixture.
-- [ ] Retained debug-storage, frame-fault and all earlier authority gaps.
+- [ ] Connection candidate identity and generation.
+- [ ] Explicit real-versus-local transport-mode policy.
+- [ ] Actual real DataConnection open evidence.
+- [ ] Pending connection state.
+- [ ] Open deadline and timeout.
+- [ ] Cancellation on route/transport replacement.
+- [ ] Close-before-open settlement.
+- [ ] Error-before-open settlement.
+- [ ] Duplicate and stale event rejection.
+- [ ] `ConnectionOpenAdmissionResult`.
+- [ ] `ConnectionOpenSettlementResult`.
+- [ ] `LobbyMembershipCommitResult`.
+- [ ] `PlayerJoinedPublicationResult`.
+- [ ] Send-readiness correlation.
+- [ ] `FirstAcceptedPeerMessageAck`.
+- [ ] `FirstAcceptedGuestLobbyFrameAck`.
+- [ ] Delayed-open browser fixture.
+- [ ] Close/error-before-open browser fixtures.
+- [ ] Source/build/deployed connection parity fixture.
+- [ ] Retain peer signalling reconnect and all earlier authority gaps.
 
 ## Current coverage gap
 
 ```txt
-PeerTransportStatus reconnecting: present
-host disconnected listener: present
-client disconnected listener: present
-explicit reconnect invocation: absent
-public reconnect command: absent
-attempt identity/generation: absent
-retry budget/backoff/deadline: absent
-terminal-intent arbitration: absent
-stale event rejection: absent
-recovery settlement result: absent
-recovered message acknowledgement: absent
-recovered remote-player frame acknowledgement: absent
-browser reconnect fixture: absent
+host candidate storage: present
+host open listener: present
+host already-open check: present
+host unconditional open emission: present
+client unconditional real-open emission: absent
+connection generation: absent
+pending result: absent
+open admission result: absent
+open settlement result: absent
+open timeout: absent
+close/error-before-open result: absent
+stale replacement rejection: absent
+roster commit result: absent
+first accepted message acknowledgement: absent
+first guest lobby frame acknowledgement: absent
+browser delayed-open fixture: absent
 ```
 
 ## Failure paths
 
 ```txt
-involuntary signalling loss
-  -> status changes to reconnecting
-  -> no attempt starts
-  -> status has no bounded settlement
+real connection remains pending
+  -> host emits connection-open anyway
+  -> guest enters roster and lobby
+  -> later actual open event is suppressed
 
-explicit client disconnect
-  -> peer.disconnect emits disconnected
-  -> adapter also writes closed
-  -> no terminal-intent generation orders competing events
+real connection closes or errors before open
+  -> membership may already exist
+  -> removal depends on later close handling
+  -> no explicit rejected settlement exists
 
-route replacement during future retry
-  -> no attempt generation exists
-  -> late open/error/close evidence would have no stale-result gate
+transport replaced while pending
+  -> no connection generation exists
+  -> late evidence has no stale-result gate
 ```
 
 ## Required invariants
 
 ```txt
-reconnecting requires an admitted active attempt
-signalling health and data-channel health remain separate
-explicit closure is terminal for its transport generation
-only matching events settle an attempt
-retry work is bounded and cancellable
-recovered status requires protocol and visible-frame proof
-source, build and deployed routes use one policy
+real connection membership requires actual open evidence
+local bridge readiness is explicitly mode-owned
+one generation settles exactly once
+pending/closed/errored/timed-out/stale candidates cannot enter the roster
+send readiness and membership cite one accepted generation
+a visible guest row cites an accepted roster commit
 ```
 
 ## Retained gaps
 
-All previous debug-storage, frame-fault, remote interpolation, pointer-lock, HUD, minimap, motion, audio, page lifecycle, settings, device-control, loading, host-start, WebGL recovery, session, transport-mode, protocol, movement, interaction, ooze determinism and deployment findings remain open.
+All previous signalling reconnect, debug-storage, frame-fault, remote interpolation, pointer-lock, HUD, minimap, motion, audio, page lifecycle, settings, device-control, loading, host-start, WebGL recovery, session, protocol, movement, interaction, ooze determinism and deployment findings remain open.
 
 ## Do not claim
 
-Do not claim signalling recovery, multiplayer continuity, explicit-close correctness, first recovered frame, artifact parity, deployed parity or production readiness until implementation and browser fixtures pass on `main`.
+Do not claim corrected connection admission, lobby membership correctness, accepted-message convergence, guest-frame convergence, artifact parity, deployed parity or production readiness until implementation and browser fixtures pass on `main`.
