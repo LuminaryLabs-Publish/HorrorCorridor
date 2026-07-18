@@ -1,59 +1,71 @@
 # HorrorCorridor Next Steps
 
-**Updated:** `2026-07-17T20-41-29-04-00`
+**Updated:** `2026-07-18T04-41-15-04-00`
 
 ## Summary
 
-The next implementation should separate PeerJS connection-candidate observation from actual open settlement and lobby membership.
+The next documentation-governance step is to make the relationship between the root audit state and the nested canonical product architecture machine-verifiable.
 
-## Plan ledger
+## Immediate work
 
-**Goal:** add the smallest connection-open command/result layer without restructuring protocol, gameplay or rendering.
+- [ ] Add a generated root `.agent/canonical-generation.json` settlement artifact.
+- [ ] Record the canonical domain-tree path and SHA-256.
+- [ ] Record the generated blueprint path and SHA-256.
+- [ ] Record the pinned NexusEngine revision.
+- [ ] Record the runtime install-order digest and exact kit strata.
+- [ ] Record the registered-domain-path digest.
+- [ ] Record the behavior-coverage generation and classification totals.
+- [ ] Require `359` natural owners, `428` contracts, `132` closed and `296` open for the current admitted generation.
+- [ ] Keep state-owner installation separate from behavior implementation.
+- [ ] Give every accepted proof report a canonical-source, blueprint and runtime-generation identity.
+- [ ] Classify proof artifacts as accepted, rejected, comparison-only, superseded, incomplete or stale-generation.
+- [ ] Project the admitted generation into root `.agent` automatically.
+- [ ] Settle the central ledger from the final repo-local documentation head.
 
-- [ ] Add `ConnectionGeneration` and `ConnectionCandidateId`.
-- [ ] Classify real PeerJS and same-origin local-bridge transport modes.
-- [ ] Keep real DataConnections pending until actual `open` evidence arrives.
-- [ ] Remove the unconditional host `emitConnectionOpen()` call.
-- [ ] Add open deadline, timeout and cancellation.
-- [ ] Settle close/error-before-open explicitly.
-- [ ] Reject stale events after transport or route replacement.
-- [ ] Publish `ConnectionOpenAdmissionResult`.
-- [ ] Publish `ConnectionOpenSettlementResult` as opened, closed-before-open, errored, timed-out, cancelled or stale.
-- [ ] Commit lobby membership only from an opened settlement.
-- [ ] Bind send readiness and roster membership to the same connection generation.
-- [ ] Publish `LobbyMembershipCommitResult` and `PlayerJoinedPublicationResult`.
-- [ ] Publish `FirstAcceptedPeerMessageAck`.
-- [ ] Publish `FirstAcceptedGuestLobbyFrameAck`.
-- [ ] Add delayed-open, close-before-open and error-before-open fixtures.
-- [ ] Test duplicate open callbacks and transport replacement.
-- [ ] Compare source, production build and deployed-origin behavior.
+## Runtime and product follow-up
 
-## Required implementation boundary
+- [ ] Continue implementing the 296 open behavior contracts one bounded player-facing slice at a time.
+- [ ] Reconcile the 12 legacy-cutover contracts behind their canonical natural owners.
+- [ ] Audit the nine public NexusEngine candidates before installation or rejection.
+- [ ] Preserve the eight deliberately uninstalled cores until a real player flow consumes them.
+- [ ] Retain and separately address the PeerJS DataConnection open-admission issue.
+
+## Required command/result chain
 
 ```txt
-PeerJS/local bridge adapters
-  -> raw candidate/open/close/error evidence
+CanonicalDomainSourceAdmissionCommand
+  -> CanonicalDomainSourceAdmissionResult
 
-connection-open authority
-  -> mode policy, generation, admission, timeout and settlement
+DomainBlueprintGenerationCommand
+  -> DomainBlueprintGenerationResult
 
-session authority
-  -> roster commit from accepted settlement only
+RuntimeCompositionCensusCommand
+  -> RuntimeCompositionCensusResult
 
-lobby projection
-  -> matching accepted membership revision and frame acknowledgement
+BehaviorCoverageClassificationCommand
+  -> BehaviorCoverageClassificationResult
+
+ProofEvidenceAdmissionCommand
+  -> ProofEvidenceAdmissionResult
+
+RootAgentProjectionCommitCommand
+  -> RootAgentProjectionCommitResult
+
+CentralLedgerCommitCommand
+  -> CentralLedgerCommitResult
 ```
 
 ## Completion checklist
 
-- [ ] No real DataConnection enters the roster before actual open evidence.
-- [ ] Local bridge readiness remains explicitly mode-owned.
-- [ ] One generation settles exactly once.
-- [ ] Close/error/timeout before open cannot create a player.
-- [ ] Stale connection events cannot mutate a replacement session.
-- [ ] First accepted message and guest frame cite the same generation.
-- [ ] Source, build and deployed fixtures pass on `main`.
+- [ ] One canonical source hash identifies one natural-domain generation.
+- [ ] The blueprint cites that source hash.
+- [ ] Runtime install and path digests cite the same blueprint generation.
+- [ ] The coverage ledger totals exactly 428 contracts.
+- [ ] Proof evidence cites the runtime generation exercised.
+- [ ] Root `.agent` cites the same admitted generation.
+- [ ] The central ledger cites the final repo-local documentation head.
+- [ ] Source, build, browser artifact and deployed-origin fixtures pass on `main`.
 
-## Completion gate
+## Claim boundary
 
-Do not claim connection-open correctness or lobby membership correctness until the full fixture matrix passes on `main`.
+This file plans future work. It does not claim that generation settlement, proof admission, remaining behavior contracts or retained networking gaps are implemented.
