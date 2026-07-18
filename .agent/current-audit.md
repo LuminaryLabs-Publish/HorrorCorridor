@@ -1,67 +1,64 @@
 # HorrorCorridor Current Audit
 
 **Repository:** `LuminaryLabs-Publish/HorrorCorridor`  
-**Updated:** `2026-07-17T09-17-19-04-00`  
+**Updated:** `2026-07-17T20-41-29-04-00`  
 **Branch:** `main`  
-**Status:** `peer-signalling-reconnect-admission-settlement-authority-audited`
+**Status:** `peer-data-connection-open-admission-settlement-authority-audited`
 
 ## Summary
 
-The repository retains 29 implemented kit surfaces and two browser-proof adapters. The current boundary is PeerJS signalling recovery: host and client adapters handle `disconnected` by publishing `reconnecting`, while no reconnect command, attempt identity, retry policy, deadline, cancellation, stale-result rejection or recovery settlement exists.
+The repository retains 29 implemented kit surfaces and two browser-proof adapters. The current boundary is real PeerJS host DataConnection admission: `createHost()` registers an `open` listener and checks `connection.open`, then calls the same one-shot open emitter unconditionally. A pending channel can therefore publish `peer/connection-open`; the guard then blocks the later actual `open` event from adding corrective evidence.
 
 ## Plan ledger
 
-**Goal:** make signalling recovery truthful and bounded without treating active DataConnections as failed merely because signalling is unavailable.
+**Goal:** admit room membership only after mode-correct connection-open settlement.
 
-- [x] Compare the full Publish inventory, central ledgers and root `.agent` states.
+- [x] Compare the Publish inventory, central ledgers and root `.agent` states.
 - [x] Select only HorrorCorridor by the oldest synchronized timestamp.
-- [x] Inspect `createHost.ts`, `createClient.ts`, `peerTypes.ts` and `GameShell.tsx`.
+- [x] Inspect `createHost.ts`, `createClient.ts`, `GameShell.tsx` and `sessionStore.ts`.
 - [x] Preserve all 29 kits, two adapters and offered services.
-- [x] Confirm both adapters publish `reconnecting` on signalling disconnection.
-- [x] Confirm neither adapter invokes or exposes an explicit reconnect attempt.
-- [x] Confirm no attempt/result or recovered-frame proof exists.
-- [x] Add and route the timestamped transport-reconnect audit family.
-- [ ] Implement reconnect admission and explicit PeerJS recovery.
-- [ ] Execute signalling-loss, terminal-close, build and deployed-origin fixtures.
+- [x] Confirm the unconditional host open emission.
+- [x] Confirm the client real path waits for actual/already-open evidence.
+- [x] Confirm roster mutation and joined publication consume the raw host event.
+- [x] Add and route the timestamped connection-open audit family.
+- [ ] Implement connection admission, settlement, timeout and cancellation.
+- [ ] Execute delayed-open, close-before-open, error-before-open, stale-replacement and deployed-origin fixtures.
 
-## Current disconnect path
+## Current host path
 
 ```txt
-PeerJS disconnected
-  -> currentStatus = reconnecting
-  -> peer/status event
-  -> GameShell maps to session reconnecting
-  -> no peer.reconnect call
-  -> no attempt budget, deadline or cancellation
-  -> no settled recovered or failed result
-  -> no first recovered message/frame acknowledgement
+PeerJS connection candidate
+  -> store connection
+  -> attach open callback
+  -> if connection.open, emit connection-open
+  -> unconditionally emit connection-open
+  -> connectionOpenEmitted = true
+  -> later actual open callback becomes a no-op
+  -> GameShell upserts guest
+  -> room roster and visible lobby accept the guest
 ```
 
 ## Main finding
 
-PeerJS separates signalling availability from active DataConnections. Existing connections may continue carrying gameplay while the peer cannot accept or create new connections. HorrorCorridor currently projects only one `reconnecting` label and does not own the policy needed to distinguish retained data-path operation, bounded recovery, terminal closure or failed recovery.
-
-An explicit client disconnect also calls `peer.disconnect()` and writes `closed`, while the same PeerJS operation emits `disconnected`. No terminal-intent generation prevents a late status event from competing with closure state.
+Candidate observation, actual data-channel readiness, lobby membership and visible guest projection are collapsed into one raw event. The same-origin BroadcastChannel bridge intentionally models synchronous readiness, but the real PeerJS path requires actual `open` evidence. No transport-mode policy, connection generation, open result, timeout, close/error-before-open settlement, first accepted message acknowledgement or first accepted guest frame acknowledgement exists.
 
 ## Required authority
 
 ```txt
-corridor-peer-signalling-reconnect-admission-settlement-authority-domain
+corridor-peer-data-connection-open-admission-settlement-authority-domain
 ```
 
 ## Required results
 
 ```txt
-SignallingDisconnectResult
-DataChannelLivenessResult
-ReconnectAdmissionResult
-ReconnectAttemptResult
-ReconnectSettlementResult
-RecoveredTransportProjectionResult
-FirstRecoveredMessageAck
-FirstRecoveredRemotePlayerFrameAck
+ConnectionOpenAdmissionResult
+ConnectionOpenSettlementResult
+LobbyMembershipCommitResult
+PlayerJoinedPublicationResult
+FirstAcceptedPeerMessageAck
+FirstAcceptedGuestLobbyFrameAck
 ```
 
 ## Claim boundary
 
-Documentation only. No signalling-loss incident was reproduced and no reconnect implementation, continuity guarantee, recovered frame or deployment parity is claimed.
+Documentation only. No runtime incident was reproduced and no corrected connection admission, roster guarantee, accepted-message proof, guest-frame proof or deployment parity is claimed.
