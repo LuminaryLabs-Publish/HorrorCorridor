@@ -1,57 +1,64 @@
 # HorrorCorridor Validation
 
-**Updated:** `2026-07-17T20-41-29-04-00`  
-**Scope:** documentation-only PeerJS DataConnection open admission and settlement audit
+**Updated:** `2026-07-18T04-41-15-04-00`  
+**Scope:** documentation-only natural-domain execution and root/nested authority reconciliation
 
 ## Summary
 
-Source inspection confirms that the real host transport path attaches an `open` listener, checks `connection.open`, and then invokes its one-shot connection-open emitter unconditionally. The callback marks itself emitted, so the later actual `open` event supplies no new admission evidence. `GameShell` consumes the raw event by adding a guest to the room roster and broadcasting `player-joined`.
+The repository was confirmed 12 commits ahead of its previous documented repo-local head. Source inspection identified the nested canonical natural-domain tree, generated blueprint, runtime installer, domain-service coverage ledger and existing browser proof corpus.
 
-The real client path waits for the `open` event or an already-open connection. The BroadcastChannel path models synchronous local readiness and remains a separate transport mode.
-
-## Plan ledger
-
-**Goal:** record exactly what was inspected and prevent unsupported connection, roster, frame, parity or production claims.
-
-- [x] Confirm HorrorCorridor was the oldest eligible synchronized repository.
-- [x] Inspect host and client connection hooks.
-- [x] Inspect session roster mutation and lobby event publication.
-- [x] Confirm the unconditional host open emission.
-- [x] Confirm no connection generation, pending result, timeout or settlement exists.
-- [x] Confirm no first accepted message or first guest lobby frame acknowledgement exists.
-- [x] Update only `.agent` documentation and central tracking.
-- [ ] Run runtime and browser fixtures after implementation exists.
-
-## Source evidence
+The reviewed evidence reports:
 
 ```txt
-host open listener: present
-host already-open check: present
-host unconditional emitConnectionOpen call: present
-host one-shot emission guard: present
-client unconditional real-open call: absent
-GameShell roster upsert on raw connection-open: present
-player-joined broadcast on raw connection-open: present
-ConnectionOpenAdmissionResult: absent
-ConnectionOpenSettlementResult: absent
-connection timeout/cancellation: absent
-stale replacement rejection: absent
-FirstAcceptedPeerMessageAck: absent
-FirstAcceptedGuestLobbyFrameAck: absent
-browser delayed-open fixture: absent
+359 natural-domain owners
+59 services
+428 target behavior contracts
+132 closed / 296 open
+36 NexusEngine core kits
+73 local descriptor kits
+6 composition kits
+474 total runtime installs
+405 registered paths
+4 hosts
+6 proof surfaces
+```
+
+## Inspected evidence
+
+- `HorrorCorridor-V1/.agent/horror-corridor-domain-tree.md`
+- `HorrorCorridor-V1/src/engine/generated/horrorCorridorDomainBlueprint.json`
+- `HorrorCorridor-V1/src/engine/horrorCorridorNexusRuntime.ts`
+- `HorrorCorridor-V1/src/protokits/`
+- `HorrorCorridor-V1/.agent/domain-service-coverage.md`
+- `HorrorCorridor-V1/docs/HorrorCorridor-Natural-Domain-Execution-Reconciliation-2026-07-17.md`
+- existing live-player, reset/replay, reconnect and focused visual proof artifacts
+
+## Confirmed source facts
+
+```txt
+canonical natural composition: root plus five top-level domains
+natural-domain owners: 359
+canonical services: 59
+target behavior contracts: 428
+contract classifications total: 428
+closed/open: 132 / 296
+runtime strata total: 36 + 359 + 73 + 6 = 474
+registered paths: 405
+pinned NexusEngine revision: d41992636de2752f1ad9047b80701e6313f19b87
 ```
 
 ## Change classification
 
 ```txt
-documentation changed: yes
+root .agent documentation changed: yes
+central tracking changed: yes
+nested canonical source changed by this audit: no
+generated blueprint changed by this audit: no
 runtime TypeScript changed: no
 React or CSS changed: no
 network behavior changed: no
-input behavior changed: no
 gameplay changed: no
-Three.js behavior changed: no
-Canvas2D behavior changed: no
+Three.js or Canvas2D behavior changed: no
 packages or dependencies changed: no
 tests or workflows changed: no
 deployment changed: no
@@ -63,20 +70,24 @@ pull request created: no
 
 ```txt
 npm install: not run
+npm run typecheck: not run
 npm run lint: not run
 npm run build: not run
-validate:live-player: not run
-delayed-open fixture: unavailable
-close-before-open fixture: unavailable
-error-before-open fixture: unavailable
-duplicate-open fixture: unavailable
-transport-replacement fixture: unavailable
-first accepted message fixture: unavailable
-first guest lobby frame fixture: unavailable
+npm run domain:check: not rerun
+npm run domain:coverage:check: not rerun
+reset/replay fixture: existing report inspected; not rerun
+live-player fixture: existing report inspected; not rerun
+success/loss/restart fixtures: existing reports inspected; not rerun
+reconnect fixture: existing report inspected; not rerun
+focused visual fixtures: existing reports inspected; not rerun
 production-build smoke: not run
 deployed-origin smoke: not run
 ```
 
+## Existing evidence boundary
+
+The nested coverage ledger states that its referenced domain checks, reset/replay evidence and browser reports passed. This audit records those existing repository claims without re-executing them.
+
 ## Claim boundary
 
-No connection-open correctness, roster correctness, accepted-message convergence, guest-frame convergence, artifact parity, deployed parity or production readiness is claimed.
+No new runtime correctness, gameplay completeness, networking correctness, render parity, performance, artifact parity, deployed parity or production readiness is claimed. The completed work is documentation and central-ledger reconciliation only.
