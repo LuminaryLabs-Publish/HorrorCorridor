@@ -176,7 +176,7 @@
     "runtimeCommandsRun": false,
     "browserProofRun": false,
     "connectionOpenFixtureAvailable": false,
-    "centralLedgerSynchronized": false,
-    "centralChangeLogCreated": false
+    "centralLedgerSynchronized": true,
+    "centralChangeLogCreated": true
   }
 }
