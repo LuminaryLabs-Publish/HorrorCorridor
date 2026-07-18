@@ -2,40 +2,30 @@
 
 **Repository:** `LuminaryLabs-Publish/HorrorCorridor`  
 **Branch:** `main`  
-**Updated:** `2026-07-16T16-00-12-04-00`  
-**Status:** `remote-actor-snapshot-interpolation-projection-authority-audited`
+**Updated:** `2026-07-17T20-41-29-04-00`  
+**Status:** `peer-data-connection-open-admission-settlement-authority-audited`
 
 ## Summary
 
 HorrorCorridor is a cooperative procedural first-person maze with deterministic solo/host/client sessions, PeerJS and BroadcastChannel transport, authoritative snapshots, client prediction, cube/anomaly interactions, ooze, Three.js rendering, post-processing, a Canvas2D minimap and browser-proof tooling.
 
-The current audit isolates remote-player presentation. The host publishes snapshots on a 50 ms cadence, the client store replaces the current snapshot, and both Three.js remote-player meshes and minimap markers consume the latest pose directly. No sample history, interpolation clock, bounded delay, teleport policy, shortest-arc rotation, packet-jitter policy, shared 3D/minimap projection result or first smoothed multiplayer-frame acknowledgement exists.
+The current audit isolates DataConnection open admission. The real PeerJS host path attaches an `open` listener and checks `connection.open`, but then calls its one-shot `emitConnectionOpen()` function unconditionally. A pending channel can therefore enter the room roster and visible lobby before actual open evidence exists, while the later real `open` callback is suppressed by the guard.
 
-## Intent
+## Plan ledger
 
-Preserve authoritative snapshots and local prediction while making remote actors consume one bounded, revision-bound presentation timeline.
+**Goal:** separate connection-candidate observation, mode-correct open evidence, roster membership and visible lobby proof.
 
-## What needs to happen
-
-- Admit ordered authoritative pose samples with receive-time evidence.
-- Buffer a bounded remote-player history per actor.
-- Render remote actors against one interpolation clock.
-- Apply shortest-arc rotation and explicit teleport thresholds.
-- Bound or disable extrapolation after missing samples.
-- Feed the same projected remote pose set to Three.js and the minimap.
-- Retire removed actors and stale snapshot generations.
-- Publish `RemoteActorProjectionResult` and `FirstSmoothedMultiplayerFrameAck`.
-
-## Checklist
-
-- [x] Compare all 11 accessible Publish repositories and ten eligible central ledgers.
-- [x] Exclude `TheCavalryOfRome`.
-- [x] Confirm no new, missing, undocumented, root-agent-missing or runtime-ahead priority case.
-- [x] Select only HorrorCorridor under the oldest synchronized rule.
-- [x] Preserve the complete 29-kit and two-adapter inventory.
-- [x] Add the timestamped remote-actor interpolation audit family.
-- [x] Refresh root docs and the machine registry.
-- [ ] Implement and execute jitter, loss, reorder, teleport, retirement and source/build/Pages fixtures.
+- [x] Compare all 11 Publish repositories and ten eligible central ledgers.
+- [x] Exclude `LuminaryLabs-Publish/TheCavalryOfRome`.
+- [x] Confirm no new, missing, root-agent-missing, undocumented or runtime-ahead priority case.
+- [x] Select only HorrorCorridor by the oldest synchronized timestamp.
+- [x] Preserve the complete 29-kit and two-adapter service inventory.
+- [x] Confirm the host real-transport path emits connection-open unconditionally.
+- [x] Confirm the client real-transport path waits for actual/already-open evidence.
+- [x] Confirm `GameShell` turns the host event into roster membership and a joined broadcast.
+- [x] Add and route the timestamped connection-open audit family.
+- [ ] Implement connection-open admission, settlement, timeout and stale-event rejection.
+- [ ] Execute delayed-open, close-before-open, error-before-open, replacement and deployed-origin fixtures.
 
 ## Read first
 
@@ -43,41 +33,39 @@ Preserve authoritative snapshots and local prediction while making remote actors
 2. `.agent/next-steps.md`
 3. `.agent/known-gaps.md`
 4. `.agent/validation.md`
-5. `.agent/trackers/2026-07-16T16-00-12-04-00/project-breakdown.md`
-6. `.agent/architecture-audit/2026-07-16T16-00-12-04-00-remote-actor-interpolation-dsk-map.md`
-7. `.agent/render-audit/2026-07-16T16-00-12-04-00-snapshot-step-visible-actor-gap.md`
-8. `.agent/gameplay-audit/2026-07-16T16-00-12-04-00-network-jitter-remote-actor-loop.md`
-9. `.agent/interaction-audit/2026-07-16T16-00-12-04-00-remote-pose-command-result-map.md`
-10. `.agent/network-presentation-audit/2026-07-16T16-00-12-04-00-snapshot-buffer-interpolation-contract.md`
-11. `.agent/deploy-audit/2026-07-16T16-00-12-04-00-network-jitter-browser-fixture-gate.md`
-12. `.agent/central-sync-audit/2026-07-16T16-00-12-04-00-oldest-selection-remote-interpolation-reconciliation.md`
+5. `.agent/trackers/2026-07-17T20-41-29-04-00/project-breakdown.md`
+6. `.agent/architecture-audit/2026-07-17T20-41-29-04-00-data-connection-open-admission-dsk-map.md`
+7. `.agent/render-audit/2026-07-17T20-41-29-04-00-premature-guest-lobby-frame-gap.md`
+8. `.agent/gameplay-audit/2026-07-17T20-41-29-04-00-connection-candidate-roster-loop.md`
+9. `.agent/interaction-audit/2026-07-17T20-41-29-04-00-connection-open-command-result-map.md`
+10. `.agent/transport-connection-audit/2026-07-17T20-41-29-04-00-peer-data-connection-open-contract.md`
+11. `.agent/deploy-audit/2026-07-17T20-41-29-04-00-connection-open-browser-fixture-gate.md`
+12. `.agent/central-sync-audit/2026-07-17T20-41-29-04-00-oldest-selection-connection-open-reconciliation.md`
 
 ## Current authority boundary
 
 ```txt
-corridor-remote-actor-snapshot-interpolation-projection-authority-domain
+corridor-peer-data-connection-open-admission-settlement-authority-domain
 ```
 
 ## Required transaction
 
 ```txt
-RemoteActorSampleAdmissionCommand
-  -> bind session, snapshot, actor and projection revisions
-  -> admit ordered authoritative pose samples
-  -> normalize host time and client receive time
-  -> retain bounded per-actor history
-  -> reject duplicate, stale and retired samples
-  -> publish RemoteActorSampleAdmissionResult
+ConnectionCandidateObserved
+  -> ConnectionOpenAdmissionCommand
+  -> ConnectionOpenAdmissionResult
 
-RemoteActorProjectionCommand
-  -> evaluate one interpolation clock
-  -> apply bounded delay, shortest-arc rotation and teleport policy
-  -> bound missing-sample extrapolation
-  -> project one matching pose set into Three.js and Canvas2D
-  -> publish RemoteActorProjectionResult
-  -> publish FirstSmoothedMultiplayerFrameAck
+actual real open or admitted local-bridge readiness
+  -> ConnectionOpenSettlementCommand
+  -> ConnectionOpenSettlementResult
+
+opened settlement
+  -> LobbyMembershipCommitCommand
+  -> LobbyMembershipCommitResult
+  -> FirstAcceptedPeerMessageAck
+  -> FirstAcceptedGuestLobbyFrameAck
 ```
 
 ## Validation boundary
 
-Documentation only. No interpolation, jitter tolerance, packet-loss behavior, 3D/minimap convergence, browser parity, deployed parity or production readiness is claimed.
+Documentation only. No runtime fix, connection timeout, accepted-message proof, guest-frame proof, artifact parity, deployed parity or production readiness is claimed.

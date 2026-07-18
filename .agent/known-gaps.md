@@ -1,93 +1,90 @@
 # HorrorCorridor Known Gaps
 
-**Updated:** `2026-07-16T16-00-12-04-00`
+**Updated:** `2026-07-17T20-41-29-04-00`
 
 ## Summary
 
-The highest current undocumented boundary is remote-player snapshot presentation. Accepted network state reaches both visual surfaces, but neither surface consumes a bounded interpolation result.
+The highest current focused boundary is real PeerJS DataConnection open admission. The host adapter can emit `peer/connection-open` while the channel is still pending, and downstream session/UI code treats that event as accepted membership.
 
-## Intent
+## Plan ledger
 
-Prioritize coherent remote-actor projection while retaining every earlier networking, input, lifecycle, rendering, motion, audio, determinism and deployment finding.
+**Goal:** add mode-correct connection-open settlement without weakening earlier signalling, protocol, lifecycle or frame-proof authorities.
 
-## What needs to happen
-
-```txt
-1. authoritative sample identity
-2. snapshot receive-time evidence
-3. bounded per-actor sample history
-4. stale and duplicate sample rejection
-5. actor retirement generation
-6. interpolation clock
-7. bounded interpolation delay
-8. shortest-arc yaw interpolation
-9. pitch interpolation policy
-10. position interpolation policy
-11. teleport threshold
-12. history reset after teleport
-13. bounded extrapolation duration
-14. loss timeout and freeze policy
-15. packet reorder handling
-16. late sample recovery
-17. one immutable RemoteActorPoseSet
-18. Three.js remote-player projection binding
-19. Canvas2D minimap projection binding
-20. projection revision parity
-21. RemoteActorSampleAdmissionResult
-22. RemoteActorProjectionResult
-23. FirstSmoothedMultiplayerFrameAck
-24. steady-cadence fixture
-25. jitter fixture
-26. packet-loss fixture
-27. packet-reorder fixture
-28. teleport fixture
-29. actor-retirement fixture
-30. source/build/Pages parity fixture
-31. retained motion, pointer-lock, HUD, audio, lifecycle, protocol and deployment gaps
-```
+- [ ] Connection candidate identity and generation.
+- [ ] Explicit real-versus-local transport-mode policy.
+- [ ] Actual real DataConnection open evidence.
+- [ ] Pending connection state.
+- [ ] Open deadline and timeout.
+- [ ] Cancellation on route/transport replacement.
+- [ ] Close-before-open settlement.
+- [ ] Error-before-open settlement.
+- [ ] Duplicate and stale event rejection.
+- [ ] `ConnectionOpenAdmissionResult`.
+- [ ] `ConnectionOpenSettlementResult`.
+- [ ] `LobbyMembershipCommitResult`.
+- [ ] `PlayerJoinedPublicationResult`.
+- [ ] Send-readiness correlation.
+- [ ] `FirstAcceptedPeerMessageAck`.
+- [ ] `FirstAcceptedGuestLobbyFrameAck`.
+- [ ] Delayed-open browser fixture.
+- [ ] Close/error-before-open browser fixtures.
+- [ ] Source/build/deployed connection parity fixture.
+- [ ] Retain peer signalling reconnect and all earlier authority gaps.
 
 ## Current coverage gap
 
 ```txt
-host snapshot cadence: 50 ms
-client snapshot replacement: present
-remote Three.js mesh direct pose copy: present
-remote minimap direct pose copy: present
-sample history: absent
-interpolation clock: absent
-teleport policy: absent
-bounded extrapolation: absent
-shared 3D/minimap pose result: absent
-smoothed multiplayer frame acknowledgement: absent
+host candidate storage: present
+host open listener: present
+host already-open check: present
+host unconditional open emission: present
+client unconditional real-open emission: absent
+connection generation: absent
+pending result: absent
+open admission result: absent
+open settlement result: absent
+open timeout: absent
+close/error-before-open result: absent
+stale replacement rejection: absent
+roster commit result: absent
+first accepted message acknowledgement: absent
+first guest lobby frame acknowledgement: absent
+browser delayed-open fixture: absent
 ```
 
-## Failure path
+## Failure paths
 
 ```txt
-network delivery spacing varies
-  -> latest authoritative snapshot is replaced
-  -> remote mesh and marker retain the old pose
-  -> next accepted pose is copied immediately
-  -> visible motion can step or jitter
-  -> no typed projection result explains the frame
+real connection remains pending
+  -> host emits connection-open anyway
+  -> guest enters roster and lobby
+  -> later actual open event is suppressed
+
+real connection closes or errors before open
+  -> membership may already exist
+  -> removal depends on later close handling
+  -> no explicit rejected settlement exists
+
+transport replaced while pending
+  -> no connection generation exists
+  -> late evidence has no stale-result gate
 ```
 
 ## Required invariants
 
 ```txt
-authoritative gameplay state remains snapshot-owned
-local prediction remains independent of remote interpolation
-presentation never invents unbounded motion
-stale and reordered samples never move an actor backward
-teleports are immediate and clear incompatible history
-Three.js and minimap consume the same projection revision
-retired actors own no remaining sample buffers or visible projections
+real connection membership requires actual open evidence
+local bridge readiness is explicitly mode-owned
+one generation settles exactly once
+pending/closed/errored/timed-out/stale candidates cannot enter the roster
+send readiness and membership cite one accepted generation
+a visible guest row cites an accepted roster commit
 ```
 
 ## Retained gaps
 
-All previous pointer-lock, HUD, minimap sizing, motion preference, audio, page lifecycle, settings, device-control, loading, host-start, WebGL recovery, session, transport, protocol, movement validation, snapshot acceptance, interaction, terminal outcome, debug, ooze determinism and deployment findings remain open.
+All previous signalling reconnect, debug-storage, frame-fault, remote interpolation, pointer-lock, HUD, minimap, motion, audio, page lifecycle, settings, device-control, loading, host-start, WebGL recovery, session, protocol, movement, interaction, ooze determinism and deployment findings remain open.
 
 ## Do not claim
 
-Do not claim smooth multiplayer motion, network-jitter tolerance, packet-loss resilience, 3D/minimap convergence, browser parity or production readiness until implementation and fixtures pass on `main`.
+Do not claim corrected connection admission, lobby membership correctness, accepted-message convergence, guest-frame convergence, artifact parity, deployed parity or production readiness until implementation and browser fixtures pass on `main`.

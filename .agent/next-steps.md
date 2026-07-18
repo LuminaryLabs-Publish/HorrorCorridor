@@ -1,47 +1,59 @@
 # HorrorCorridor Next Steps
 
-**Updated:** `2026-07-16T16-00-12-04-00`
+**Updated:** `2026-07-17T20-41-29-04-00`
 
 ## Summary
 
-The next implementation should keep authoritative snapshots unchanged while introducing a presentation-only remote-actor timeline shared by the Three.js world and Canvas2D minimap.
+The next implementation should separate PeerJS connection-candidate observation from actual open settlement and lobby membership.
 
-## Intent
+## Plan ledger
 
-Turn irregular snapshot arrival into bounded, coherent remote-player motion without hiding teleports, accepting stale state or moving authority into the renderer.
+**Goal:** add the smallest connection-open command/result layer without restructuring protocol, gameplay or rendering.
 
-## What needs to happen
+- [ ] Add `ConnectionGeneration` and `ConnectionCandidateId`.
+- [ ] Classify real PeerJS and same-origin local-bridge transport modes.
+- [ ] Keep real DataConnections pending until actual `open` evidence arrives.
+- [ ] Remove the unconditional host `emitConnectionOpen()` call.
+- [ ] Add open deadline, timeout and cancellation.
+- [ ] Settle close/error-before-open explicitly.
+- [ ] Reject stale events after transport or route replacement.
+- [ ] Publish `ConnectionOpenAdmissionResult`.
+- [ ] Publish `ConnectionOpenSettlementResult` as opened, closed-before-open, errored, timed-out, cancelled or stale.
+- [ ] Commit lobby membership only from an opened settlement.
+- [ ] Bind send readiness and roster membership to the same connection generation.
+- [ ] Publish `LobbyMembershipCommitResult` and `PlayerJoinedPublicationResult`.
+- [ ] Publish `FirstAcceptedPeerMessageAck`.
+- [ ] Publish `FirstAcceptedGuestLobbyFrameAck`.
+- [ ] Add delayed-open, close-before-open and error-before-open fixtures.
+- [ ] Test duplicate open callbacks and transport replacement.
+- [ ] Compare source, production build and deployed-origin behavior.
 
-1. Add `SnapshotRevision`, `ActorRevision`, `SampleRevision`, `ProjectionRevision` and `FrameRevision`.
-2. Record authoritative tick, host timestamp and client receive timestamp for each accepted snapshot.
-3. Maintain a bounded pose history per non-local actor.
-4. Reject duplicate, older and retired samples before they enter the presentation buffer.
-5. Resolve one interpolation delay policy from observed delivery cadence.
-6. Interpolate position and pitch; rotate yaw through the shortest arc.
-7. Apply an explicit teleport threshold that clears incompatible history.
-8. Allow only bounded extrapolation when the next sample is late.
-9. Freeze or retire actors after the extrapolation budget expires.
-10. Produce one immutable `RemoteActorPoseSet` per frame.
-11. Make `worldBuilder.syncPlayerMeshes` consume the projected pose set.
-12. Make `drawMinimapFrame` consume the same projected pose set.
-13. Remove actor buffers when roster/snapshot retirement is accepted.
-14. Publish `RemoteActorSampleAdmissionResult` and `RemoteActorProjectionResult`.
-15. Publish `FirstSmoothedMultiplayerFrameAck` after both surfaces present the same projection revision.
-16. Add deterministic steady-cadence, jitter, loss, reorder, teleport and retirement fixtures.
-17. Compare source, production build and deployed Pages behavior.
+## Required implementation boundary
 
-## Checklist
+```txt
+PeerJS/local bridge adapters
+  -> raw candidate/open/close/error evidence
 
-- [ ] Source implementation exists.
-- [ ] Unit fixtures cover ordered and stale sample admission.
-- [ ] Jitter fixture preserves bounded visual velocity.
-- [ ] Loss fixture respects the extrapolation budget.
-- [ ] Reorder fixture rejects older samples.
-- [ ] Teleport fixture clears history immediately.
-- [ ] Actor retirement removes mesh, marker and buffer ownership.
-- [ ] Three.js and minimap projection revisions match.
-- [ ] Production build and Pages fixtures pass on `main`.
+connection-open authority
+  -> mode policy, generation, admission, timeout and settlement
+
+session authority
+  -> roster commit from accepted settlement only
+
+lobby projection
+  -> matching accepted membership revision and frame acknowledgement
+```
+
+## Completion checklist
+
+- [ ] No real DataConnection enters the roster before actual open evidence.
+- [ ] Local bridge readiness remains explicitly mode-owned.
+- [ ] One generation settles exactly once.
+- [ ] Close/error/timeout before open cannot create a player.
+- [ ] Stale connection events cannot mutate a replacement session.
+- [ ] First accepted message and guest frame cite the same generation.
+- [ ] Source, build and deployed fixtures pass on `main`.
 
 ## Completion gate
 
-Do not claim smooth multiplayer presentation until remote actor position, rotation, loss behavior, teleport behavior, actor retirement and 3D/minimap convergence are executable and proven on `main`.
+Do not claim connection-open correctness or lobby membership correctness until the full fixture matrix passes on `main`.

@@ -1,45 +1,44 @@
 # HorrorCorridor Validation
 
-**Updated:** `2026-07-16T16-00-12-04-00`  
-**Scope:** documentation-only remote-actor snapshot interpolation and cross-surface projection audit
+**Updated:** `2026-07-17T20-41-29-04-00`  
+**Scope:** documentation-only PeerJS DataConnection open admission and settlement audit
 
 ## Summary
 
-Source inspection confirms 50 ms authoritative snapshot cadence, single-value snapshot replacement, direct Three.js remote-player pose copying and direct Canvas2D minimap pose copying. No sample buffer, interpolation clock, teleport policy, bounded extrapolation, shared projected-pose result or smoothed-frame acknowledgement was found.
+Source inspection confirms that the real host transport path attaches an `open` listener, checks `connection.open`, and then invokes its one-shot connection-open emitter unconditionally. The callback marks itself emitted, so the later actual `open` event supplies no new admission evidence. `GameShell` consumes the raw event by adding a guest to the room roster and broadcasting `player-joined`.
 
-## Intent
+The real client path waits for the `open` event or an already-open connection. The BroadcastChannel path models synchronous local readiness and remains a separate transport mode.
 
-Record exactly what was inspected and prevent unsupported multiplayer-smoothing, packet-loss, parity or production claims.
+## Plan ledger
 
-## What needs to happen
+**Goal:** record exactly what was inspected and prevent unsupported connection, roster, frame, parity or production claims.
 
-- [x] Confirm HorrorCorridor remained the oldest eligible synchronized repository.
-- [x] Inspect `GameShell.tsx` snapshot receive and store replacement.
-- [x] Inspect `runtimeStore.ts` authoritative snapshot ownership.
-- [x] Inspect `GameCanvas.tsx` cadence and render-frame path.
-- [x] Inspect `worldBuilder.ts` remote-player mesh synchronization.
-- [x] Inspect `Minimap.tsx` remote-player marker synchronization.
-- [x] Inspect `syncSnapshot.ts` snapshot timestamps and player payload.
-- [x] Inspect `constants.ts` network cadence.
-- [x] Search source and prior audits for interpolation, extrapolation or smoothing authority.
+- [x] Confirm HorrorCorridor was the oldest eligible synchronized repository.
+- [x] Inspect host and client connection hooks.
+- [x] Inspect session roster mutation and lobby event publication.
+- [x] Confirm the unconditional host open emission.
+- [x] Confirm no connection generation, pending result, timeout or settlement exists.
+- [x] Confirm no first accepted message or first guest lobby frame acknowledgement exists.
 - [x] Update only `.agent` documentation and central tracking.
 - [ ] Run runtime and browser fixtures after implementation exists.
 
 ## Source evidence
 
 ```txt
-NETWORK_TICK_RATE: 50 ms
-SYNC snapshot timestamp and tick: present
-client authoritativeSnapshot replacement: present
-remote Three.js mesh position/rotation direct assignment: present
-remote minimap marker direct snapshot position: present
-per-actor sample buffer: absent
-interpolation delay policy: absent
-shortest-arc rotation policy: absent
-teleport threshold: absent
-bounded extrapolation: absent
-shared Three.js/minimap pose result: absent
-FirstSmoothedMultiplayerFrameAck: absent
+host open listener: present
+host already-open check: present
+host unconditional emitConnectionOpen call: present
+host one-shot emission guard: present
+client unconditional real-open call: absent
+GameShell roster upsert on raw connection-open: present
+player-joined broadcast on raw connection-open: present
+ConnectionOpenAdmissionResult: absent
+ConnectionOpenSettlementResult: absent
+connection timeout/cancellation: absent
+stale replacement rejection: absent
+FirstAcceptedPeerMessageAck: absent
+FirstAcceptedGuestLobbyFrameAck: absent
+browser delayed-open fixture: absent
 ```
 
 ## Change classification
@@ -67,17 +66,17 @@ npm install: not run
 npm run lint: not run
 npm run build: not run
 validate:live-player: not run
-steady-cadence interpolation fixture: unavailable
-network-jitter fixture: unavailable
-packet-loss fixture: unavailable
-packet-reorder fixture: unavailable
-teleport fixture: unavailable
-actor-retirement fixture: unavailable
-3D/minimap projection parity fixture: unavailable
+delayed-open fixture: unavailable
+close-before-open fixture: unavailable
+error-before-open fixture: unavailable
+duplicate-open fixture: unavailable
+transport-replacement fixture: unavailable
+first accepted message fixture: unavailable
+first guest lobby frame fixture: unavailable
 production-build smoke: not run
 deployed-origin smoke: not run
 ```
 
 ## Claim boundary
 
-No interpolation implementation, smooth multiplayer claim, network-jitter tolerance, packet-loss resilience, teleport correctness, cross-surface convergence, artifact parity, deployed parity or production readiness is claimed.
+No connection-open correctness, roster correctness, accepted-message convergence, guest-frame convergence, artifact parity, deployed parity or production readiness is claimed.
