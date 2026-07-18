@@ -1,0 +1,15 @@
+
+> horrorcorridor-v1@0.1.0 dev
+> next dev --hostname 127.0.0.1 --port 3000
+
+▲ Next.js 16.2.1 (Turbopack)
+- Local:         http://127.0.0.1:3000
+- Network:       http://127.0.0.1:3000
+✓ Ready in 753ms
+
+ GET /?debug=frames&liveAgent=1 200 in 1446ms (next.js: 895ms, application-code: 551ms)
+ GET /?debug=frames&liveAgent=1 200 in 78ms (next.js: 9ms, application-code: 70ms)
+ GET /?debug=frames 200 in 292ms (next.js: 101ms, application-code: 191ms)
+ GET /?debug=frames&liveAgent=1 200 in 132ms (next.js: 86ms, application-code: 46ms)
+ GET /?debug=frames&liveAgent=1 200 in 68ms (next.js: 14ms, application-code: 54ms)
+[?25h

@@ -5,6 +5,7 @@ type CompleteOutcome = "victory" | "failure";
 type CompleteScreenProps = Readonly<{
   outcome: CompleteOutcome;
   message: string | null;
+  restartLabel: string;
   onRestart: () => void;
   onQuitToTitle: () => void;
 }>;
@@ -12,6 +13,7 @@ type CompleteScreenProps = Readonly<{
 export default function CompleteScreen({
   outcome,
   message,
+  restartLabel,
   onRestart,
   onQuitToTitle,
 }: CompleteScreenProps) {
@@ -28,7 +30,7 @@ export default function CompleteScreen({
         ].join(" ")}
       >
         <p className="font-mono text-[10px] uppercase tracking-[0.42em] text-[#b8ffbf]/70">
-          Complete
+          {isVictory ? "Expedition complete" : "Expedition over"}
         </p>
         <h2 className="mt-3 text-3xl font-semibold uppercase tracking-[0.2em] text-white">
           {isVictory ? "Run complete" : "Run failed"}
@@ -43,7 +45,7 @@ export default function CompleteScreen({
             onClick={onRestart}
             className="rounded-[1.15rem] border border-[#7aff86]/22 bg-[rgba(122,255,134,0.08)] px-5 py-3 text-sm font-semibold uppercase tracking-[0.2em] text-white transition hover:border-[#9effac]/45 hover:bg-[rgba(122,255,134,0.14)]"
           >
-            Return to lobby
+            {restartLabel}
           </button>
           <button
             type="button"

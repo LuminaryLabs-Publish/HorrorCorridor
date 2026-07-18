@@ -16,6 +16,17 @@ export type TerrainShaderDomainKitConfig = Readonly<{
   blendSharpness: number;
   puddleStrength: number;
   mossStrength: number;
+  concreteIdentity: Readonly<{
+    slabScale: number;
+    slabJointWidth: number;
+    crackScale: number;
+    crackWidth: number;
+    crackDensity: number;
+    aggregateScale: number;
+    aggregateExposure: number;
+    repairStrength: number;
+    surfaceRelief: number;
+  }>;
 }>;
 
 export const createTerrainShaderDomainKit = (
@@ -29,7 +40,7 @@ export const createTerrainShaderDomainKit = (
       TerrainShaderProfiles: "terrainShader.profiles",
     },
     metadata: {
-      purpose: "Generic terrain shader profile descriptors for soil, grass, concrete, and wetness layers.",
+      purpose: "Generic terrain shader profile descriptors for soil, grass, weathered concrete identity, and wetness layers.",
       config,
     },
   });

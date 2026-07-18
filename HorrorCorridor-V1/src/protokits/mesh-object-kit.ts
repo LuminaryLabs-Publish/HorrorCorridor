@@ -2,24 +2,40 @@ import { createHorrorDomainToken, type HorrorDomainKit } from "./domainKit";
 import { createSceneObjectDomainKit, type SceneObjectDomainKitConfig } from "./scene-object-kit";
 import {
   createWoundBoxMeshPart,
+  createWoundConvexSlabMeshPart,
+  createWoundCylinderMeshPart,
   createWoundTrapezoidMeshPart,
+  type WoundMeshAxis,
   type WoundMeshObjectDescriptor,
   type WoundMeshPartDescriptor,
   type WoundMeshVector3,
 } from "./wound-triangle-mesh-domain-kit";
 
-export type MeshObjectPartShape = "box" | "trapezoid";
+export type MeshObjectPartShape = "box" | "convex-slab" | "cylinder" | "trapezoid";
 
-export type MeshObjectPartSpec = Readonly<{
+type MeshObjectPartBase = Readonly<{
   id: string;
   label: string;
-  shape: MeshObjectPartShape;
-  size: WoundMeshVector3;
-  center: WoundMeshVector3;
   materialFamily?: string;
-  topScale?: number;
   tags?: readonly string[];
 }>;
+
+export type MeshObjectPartSpec = MeshObjectPartBase &
+  (
+    | Readonly<{
+        shape: "box" | "cylinder" | "trapezoid";
+        size: WoundMeshVector3;
+        center: WoundMeshVector3;
+        axis?: WoundMeshAxis;
+        radialSegments?: number;
+        topScale?: number;
+      }>
+    | Readonly<{
+        shape: "convex-slab";
+        topFace: readonly WoundMeshVector3[];
+        thickness: number;
+      }>
+  );
 
 export type MeshObjectProfile = Readonly<{
   kitId: string;
@@ -69,6 +85,30 @@ const createMeshPart = (
 ): WoundMeshPartDescriptor => {
   const materialFamily = part.materialFamily ?? profile.materialFamilies[0] ?? "rusted-metal";
   const tags = ["mesh-object-kit", profile.kitId, ...(part.tags ?? [])];
+
+  if (part.shape === "convex-slab") {
+    return createWoundConvexSlabMeshPart(
+      `${profile.kitId}-${part.id}`,
+      part.label,
+      part.topFace,
+      part.thickness,
+      materialFamily,
+      tags,
+    );
+  }
+
+  if (part.shape === "cylinder") {
+    return createWoundCylinderMeshPart(
+      `${profile.kitId}-${part.id}`,
+      part.label,
+      part.size,
+      part.center,
+      part.axis ?? "y",
+      part.radialSegments ?? 12,
+      materialFamily,
+      tags,
+    );
+  }
 
   if (part.shape === "trapezoid") {
     return createWoundTrapezoidMeshPart(

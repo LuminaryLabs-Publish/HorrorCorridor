@@ -1,0 +1,6016 @@
+{
+  "schemaVersion": 1,
+  "source": {
+    "file": ".agent/horror-corridor-domain-tree.md",
+    "sha256": "f33efb09c9d402ad236724d358043d64d58def7f3b0ec92df051c1bf772b526a"
+  },
+  "counts": {
+    "domains": 358,
+    "states": 1085,
+    "kits": 433,
+    "uniqueKits": 428,
+    "domainKits": 402,
+    "hostKits": 31,
+    "services": 59,
+    "hosts": 4,
+    "proofs": 6,
+    "maxCompositionDepth": 24
+  },
+  "root": {
+    "name": "Horror Corridor Expedition",
+    "slug": "horror-corridor",
+    "path": "n:horror-corridor",
+    "parentPath": null,
+    "sourceDepth": -1,
+    "states": [],
+    "kits": [
+      "horror-corridor-game-kit"
+    ],
+    "services": []
+  },
+  "domains": [
+    {
+      "name": "Expedition",
+      "slug": "expedition",
+      "path": "n:horror-corridor:expedition",
+      "parentPath": "n:horror-corridor",
+      "sourceDepth": 0,
+      "states": [
+        "current phase",
+        "elapsed journey",
+        "completion status",
+        "encounters survived"
+      ],
+      "kits": [
+        "n-core-composition-kit",
+        "n-core-data-kit",
+        "n-core-persistence-kit",
+        "n-core-simulation-kit",
+        "horror-expedition-kit",
+        "run-expedition-kit",
+        "continue-expedition-kit"
+      ],
+      "services": [
+        "expedition-service"
+      ]
+    },
+    {
+      "name": "Departure",
+      "slug": "departure",
+      "path": "n:horror-corridor:expedition:departure",
+      "parentPath": "n:horror-corridor:expedition",
+      "sourceDepth": 1,
+      "states": [
+        "chosen entrance",
+        "gathered party",
+        "chosen world seed",
+        "departure time"
+      ],
+      "kits": [
+        "begin-expedition-kit"
+      ],
+      "services": [
+        "begin-expedition"
+      ]
+    },
+    {
+      "name": "Delve",
+      "slug": "delve",
+      "path": "n:horror-corridor:expedition:delve",
+      "parentPath": "n:horror-corridor:expedition",
+      "sourceDepth": 1,
+      "states": [
+        "current depth",
+        "farthest depth",
+        "current destination",
+        "current building",
+        "buildings crossed"
+      ],
+      "kits": [
+        "advance-delve-kit",
+        "open-endless-delve-kit"
+      ],
+      "services": [
+        "read-delve"
+      ]
+    },
+    {
+      "name": "Wayfinding",
+      "slug": "wayfinding",
+      "path": "n:horror-corridor:expedition:delve:wayfinding",
+      "parentPath": "n:horror-corridor:expedition:delve",
+      "sourceDepth": 2,
+      "states": [
+        "current heading",
+        "route confidence",
+        "return confidence"
+      ],
+      "kits": [
+        "landmark-guidance-kit",
+        "choose-way-kit"
+      ],
+      "services": [
+        "query-known-way"
+      ]
+    },
+    {
+      "name": "Known Places",
+      "slug": "known-places",
+      "path": "n:horror-corridor:expedition:delve:wayfinding:known-places",
+      "parentPath": "n:horror-corridor:expedition:delve:wayfinding",
+      "sourceDepth": 3,
+      "states": [
+        "remembered places",
+        "last-seen times",
+        "place confidence"
+      ],
+      "kits": [
+        "remember-place-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Known Ways",
+      "slug": "known-ways",
+      "path": "n:horror-corridor:expedition:delve:wayfinding:known-ways",
+      "parentPath": "n:horror-corridor:expedition:delve:wayfinding",
+      "sourceDepth": 3,
+      "states": [
+        "remembered paths",
+        "remembered blocks",
+        "path confidence"
+      ],
+      "kits": [
+        "remember-way-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Return Way",
+      "slug": "return-way",
+      "path": "n:horror-corridor:expedition:delve:wayfinding:return-way",
+      "parentPath": "n:horror-corridor:expedition:delve:wayfinding",
+      "sourceDepth": 3,
+      "states": [
+        "origin",
+        "current return path",
+        "broken links",
+        "uncertainty"
+      ],
+      "kits": [
+        "trace-return-way-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Discovery",
+      "slug": "discovery",
+      "path": "n:horror-corridor:expedition:delve:discovery",
+      "parentPath": "n:horror-corridor:expedition:delve",
+      "sourceDepth": 2,
+      "states": [
+        "newly found places",
+        "newly found landmarks",
+        "newly found relics"
+      ],
+      "kits": [
+        "reveal-discovery-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Sightings",
+      "slug": "sightings",
+      "path": "n:horror-corridor:expedition:delve:discovery:sightings",
+      "parentPath": "n:horror-corridor:expedition:delve:discovery",
+      "sourceDepth": 3,
+      "states": [
+        "sighted subjects",
+        "sighting positions",
+        "sighting times"
+      ],
+      "kits": [
+        "record-sighting-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Understanding",
+      "slug": "understanding",
+      "path": "n:horror-corridor:expedition:delve:discovery:understanding",
+      "parentPath": "n:horror-corridor:expedition:delve:discovery",
+      "sourceDepth": 3,
+      "states": [
+        "identified subjects",
+        "unresolved subjects",
+        "learned relationships"
+      ],
+      "kits": [
+        "connect-discoveries-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Journey Traces",
+      "slug": "journey-traces",
+      "path": "n:horror-corridor:expedition:delve:journey-traces",
+      "parentPath": "n:horror-corridor:expedition:delve",
+      "sourceDepth": 2,
+      "states": [
+        "personal trail",
+        "shared trail",
+        "trail ages"
+      ],
+      "kits": [
+        "remember-trail-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Personal Trail",
+      "slug": "personal-trail",
+      "path": "n:horror-corridor:expedition:delve:journey-traces:personal-trail",
+      "parentPath": "n:horror-corridor:expedition:delve:journey-traces",
+      "sourceDepth": 3,
+      "states": [
+        "owned marks",
+        "continuity",
+        "confidence"
+      ],
+      "kits": [
+        "follow-personal-trail-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Shared Trail",
+      "slug": "shared-trail",
+      "path": "n:horror-corridor:expedition:delve:journey-traces:shared-trail",
+      "parentPath": "n:horror-corridor:expedition:delve:journey-traces",
+      "sourceDepth": 3,
+      "states": [
+        "contributed marks",
+        "shared continuity",
+        "conflicting marks"
+      ],
+      "kits": [
+        "reconcile-shared-trail-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Fate",
+      "slug": "fate",
+      "path": "n:horror-corridor:expedition:fate",
+      "parentPath": "n:horror-corridor:expedition",
+      "sourceDepth": 1,
+      "states": [
+        "current resolution",
+        "failure cause",
+        "return status"
+      ],
+      "kits": [
+        "resolve-expedition-kit"
+      ],
+      "services": [
+        "resolve-expedition"
+      ]
+    },
+    {
+      "name": "Chronicle",
+      "slug": "chronicle",
+      "path": "n:horror-corridor:expedition:chronicle",
+      "parentPath": "n:horror-corridor:expedition",
+      "sourceDepth": 1,
+      "states": [
+        "journey record",
+        "party record",
+        "relic record",
+        "dread record",
+        "outcome record"
+      ],
+      "kits": [
+        "n-core-transaction-ledger-kit",
+        "record-expedition-kit"
+      ],
+      "services": [
+        "read-expedition-record"
+      ]
+    },
+    {
+      "name": "Monster Index",
+      "slug": "monster-index",
+      "path": "n:horror-corridor:expedition:chronicle:monster-index",
+      "parentPath": "n:horror-corridor:expedition:chronicle",
+      "sourceDepth": 2,
+      "states": [
+        "known monsters",
+        "learned scares",
+        "collected monsters"
+      ],
+      "kits": [
+        "remember-monster-scare-kit"
+      ],
+      "services": [
+        "read-monster-index"
+      ]
+    },
+    {
+      "name": "Monster Record",
+      "slug": "monster-record",
+      "path": "n:horror-corridor:expedition:chronicle:monster-index:monster-record",
+      "parentPath": "n:horror-corridor:expedition:chronicle:monster-index",
+      "sourceDepth": 3,
+      "states": [
+        "monster identity",
+        "encounter history",
+        "scare understanding",
+        "collection mark"
+      ],
+      "kits": [
+        "keep-monster-record-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Sighting",
+      "slug": "sighting",
+      "path": "n:horror-corridor:expedition:chronicle:monster-index:monster-record:sighting",
+      "parentPath": "n:horror-corridor:expedition:chronicle:monster-index:monster-record",
+      "sourceDepth": 4,
+      "states": [
+        "first sighting",
+        "recent sighting"
+      ],
+      "kits": [
+        "remember-monster-sighting-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Scare Lesson",
+      "slug": "scare-lesson",
+      "path": "n:horror-corridor:expedition:chronicle:monster-index:monster-record:scare-lesson",
+      "parentPath": "n:horror-corridor:expedition:chronicle:monster-index:monster-record",
+      "sourceDepth": 4,
+      "states": [
+        "witnessed scare",
+        "learned response"
+      ],
+      "kits": [
+        "learn-from-monster-scare-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Collection Mark",
+      "slug": "collection-mark",
+      "path": "n:horror-corridor:expedition:chronicle:monster-index:monster-record:collection-mark",
+      "parentPath": "n:horror-corridor:expedition:chronicle:monster-index:monster-record",
+      "sourceDepth": 4,
+      "states": [
+        "earned at encounter",
+        "survived response"
+      ],
+      "kits": [
+        "mark-collected-monster-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Corridor",
+      "slug": "corridor",
+      "path": "n:horror-corridor:corridor",
+      "parentPath": "n:horror-corridor",
+      "sourceDepth": 0,
+      "states": [
+        "world identity",
+        "world seed",
+        "active region"
+      ],
+      "kits": [
+        "n-core-spatial-kit",
+        "n-core-scene-kit",
+        "n-core-physics-kit",
+        "n-core-object-kit",
+        "core-world-domain",
+        "horror-corridor-world-kit",
+        "shape-seeded-corridor-kit"
+      ],
+      "services": [
+        "world-service"
+      ]
+    },
+    {
+      "name": "Maze",
+      "slug": "maze",
+      "path": "n:horror-corridor:corridor:maze",
+      "parentPath": "n:horror-corridor:corridor",
+      "sourceDepth": 1,
+      "states": [
+        "topology",
+        "entrance",
+        "destination"
+      ],
+      "kits": [
+        "route-field-kit",
+        "carve-corridor-maze-kit"
+      ],
+      "services": [
+        "query-maze"
+      ]
+    },
+    {
+      "name": "Ways",
+      "slug": "ways",
+      "path": "n:horror-corridor:corridor:maze:ways",
+      "parentPath": "n:horror-corridor:corridor:maze",
+      "sourceDepth": 2,
+      "states": [
+        "connected ways",
+        "branching ways",
+        "closed ways"
+      ],
+      "kits": [
+        "weave-ways-kit"
+      ],
+      "services": [
+        "query-way"
+      ]
+    },
+    {
+      "name": "Main Way",
+      "slug": "main-way",
+      "path": "n:horror-corridor:corridor:maze:ways:main-way",
+      "parentPath": "n:horror-corridor:corridor:maze:ways",
+      "sourceDepth": 3,
+      "states": [
+        "route",
+        "continuity",
+        "destination reach"
+      ],
+      "kits": [
+        "establish-main-way-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Side Ways",
+      "slug": "side-ways",
+      "path": "n:horror-corridor:corridor:maze:ways:side-ways",
+      "parentPath": "n:horror-corridor:corridor:maze:ways",
+      "sourceDepth": 3,
+      "states": [
+        "branches",
+        "branch depths",
+        "reconnections"
+      ],
+      "kits": [
+        "branch-side-ways-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Return Ways",
+      "slug": "return-ways",
+      "path": "n:horror-corridor:corridor:maze:ways:return-ways",
+      "parentPath": "n:horror-corridor:corridor:maze:ways",
+      "sourceDepth": 3,
+      "states": [
+        "return routes",
+        "return costs",
+        "return continuity"
+      ],
+      "kits": [
+        "preserve-return-way-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Closed Ways",
+      "slug": "closed-ways",
+      "path": "n:horror-corridor:corridor:maze:ways:closed-ways",
+      "parentPath": "n:horror-corridor:corridor:maze:ways",
+      "sourceDepth": 3,
+      "states": [
+        "blocked routes",
+        "block causes",
+        "alternate routes"
+      ],
+      "kits": [
+        "close-way-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Places",
+      "slug": "places",
+      "path": "n:horror-corridor:corridor:maze:places",
+      "parentPath": "n:horror-corridor:corridor:maze",
+      "sourceDepth": 2,
+      "states": [
+        "known place identities",
+        "place relationships"
+      ],
+      "kits": [
+        "recognize-place-kit"
+      ],
+      "services": [
+        "inspect-place"
+      ]
+    },
+    {
+      "name": "Entrance",
+      "slug": "entrance",
+      "path": "n:horror-corridor:corridor:maze:places:entrance",
+      "parentPath": "n:horror-corridor:corridor:maze:places",
+      "sourceDepth": 3,
+      "states": [
+        "threshold",
+        "arrival area",
+        "return landmark"
+      ],
+      "kits": [
+        "establish-entrance-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Passages",
+      "slug": "passages",
+      "path": "n:horror-corridor:corridor:maze:places:passages",
+      "parentPath": "n:horror-corridor:corridor:maze:places",
+      "sourceDepth": 3,
+      "states": [
+        "passage membership",
+        "passage continuity"
+      ],
+      "kits": [
+        "lay-passage-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Passage",
+      "slug": "passage",
+      "path": "n:horror-corridor:corridor:maze:places:passages:passage",
+      "parentPath": "n:horror-corridor:corridor:maze:places:passages",
+      "sourceDepth": 4,
+      "states": [
+        "span",
+        "width",
+        "height",
+        "condition"
+      ],
+      "kits": [
+        "shape-passage-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Junctions",
+      "slug": "junctions",
+      "path": "n:horror-corridor:corridor:maze:places:junctions",
+      "parentPath": "n:horror-corridor:corridor:maze:places",
+      "sourceDepth": 3,
+      "states": [
+        "junction membership",
+        "connected directions"
+      ],
+      "kits": [
+        "join-passages-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Junction",
+      "slug": "junction",
+      "path": "n:horror-corridor:corridor:maze:places:junctions:junction",
+      "parentPath": "n:horror-corridor:corridor:maze:places:junctions",
+      "sourceDepth": 4,
+      "states": [
+        "approaches",
+        "exits",
+        "visibility"
+      ],
+      "kits": [
+        "resolve-junction-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Dead Ends",
+      "slug": "dead-ends",
+      "path": "n:horror-corridor:corridor:maze:places:dead-ends",
+      "parentPath": "n:horror-corridor:corridor:maze:places",
+      "sourceDepth": 3,
+      "states": [
+        "dead-end membership",
+        "terminal depth"
+      ],
+      "kits": [
+        "finish-dead-end-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Dead End",
+      "slug": "dead-end",
+      "path": "n:horror-corridor:corridor:maze:places:dead-ends:dead-end",
+      "parentPath": "n:horror-corridor:corridor:maze:places:dead-ends",
+      "sourceDepth": 4,
+      "states": [
+        "approach",
+        "terminal wall",
+        "concealed contents"
+      ],
+      "kits": [
+        "dress-dead-end-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Thresholds",
+      "slug": "thresholds",
+      "path": "n:horror-corridor:corridor:maze:places:thresholds",
+      "parentPath": "n:horror-corridor:corridor:maze:places",
+      "sourceDepth": 3,
+      "states": [
+        "threshold membership",
+        "crossings"
+      ],
+      "kits": [
+        "place-threshold-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Threshold",
+      "slug": "threshold",
+      "path": "n:horror-corridor:corridor:maze:places:thresholds:threshold",
+      "parentPath": "n:horror-corridor:corridor:maze:places:thresholds",
+      "sourceDepth": 4,
+      "states": [
+        "near side",
+        "far side",
+        "passage status",
+        "condition"
+      ],
+      "kits": [
+        "resolve-threshold-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Buildings",
+      "slug": "buildings",
+      "path": "n:horror-corridor:corridor:maze:places:buildings",
+      "parentPath": "n:horror-corridor:corridor:maze:places",
+      "sourceDepth": 3,
+      "states": [
+        "building membership",
+        "building succession"
+      ],
+      "kits": [
+        "open-building-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Building",
+      "slug": "building",
+      "path": "n:horror-corridor:corridor:maze:places:buildings:building",
+      "parentPath": "n:horror-corridor:corridor:maze:places:buildings",
+      "sourceDepth": 4,
+      "states": [
+        "identity",
+        "bounds",
+        "entrances",
+        "condition"
+      ],
+      "kits": [
+        "shape-building-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Chambers",
+      "slug": "chambers",
+      "path": "n:horror-corridor:corridor:maze:places:buildings:building:chambers",
+      "parentPath": "n:horror-corridor:corridor:maze:places:buildings:building",
+      "sourceDepth": 5,
+      "states": [
+        "chamber membership",
+        "chamber roles"
+      ],
+      "kits": [
+        "open-chamber-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Chamber",
+      "slug": "chamber",
+      "path": "n:horror-corridor:corridor:maze:places:buildings:building:chambers:chamber",
+      "parentPath": "n:horror-corridor:corridor:maze:places:buildings:building:chambers",
+      "sourceDepth": 6,
+      "states": [
+        "bounds",
+        "entrances",
+        "contents",
+        "atmosphere"
+      ],
+      "kits": [
+        "furnish-chamber-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Offering",
+      "slug": "offering",
+      "path": "n:horror-corridor:corridor:maze:places:buildings:building:chambers:chamber:offering",
+      "parentPath": "n:horror-corridor:corridor:maze:places:buildings:building:chambers:chamber",
+      "sourceDepth": 7,
+      "states": [
+        "boon",
+        "claim status",
+        "consequence"
+      ],
+      "kits": [
+        "offer-room-boon-kit"
+      ],
+      "services": [
+        "claim-room-offer"
+      ]
+    },
+    {
+      "name": "Heart",
+      "slug": "heart",
+      "path": "n:horror-corridor:corridor:maze:places:heart",
+      "parentPath": "n:horror-corridor:corridor:maze:places",
+      "sourceDepth": 3,
+      "states": [
+        "destination place",
+        "arrival status",
+        "return access"
+      ],
+      "kits": [
+        "reveal-corridor-heart-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Regions",
+      "slug": "regions",
+      "path": "n:horror-corridor:corridor:maze:regions",
+      "parentPath": "n:horror-corridor:corridor:maze",
+      "sourceDepth": 2,
+      "states": [
+        "region membership",
+        "region adjacency"
+      ],
+      "kits": [
+        "divide-corridor-regions-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Verge",
+      "slug": "verge",
+      "path": "n:horror-corridor:corridor:maze:regions:verge",
+      "parentPath": "n:horror-corridor:corridor:maze:regions",
+      "sourceDepth": 3,
+      "states": [
+        "entrance reach",
+        "safety residue",
+        "route familiarity"
+      ],
+      "kits": [
+        "shape-verge-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Depths",
+      "slug": "depths",
+      "path": "n:horror-corridor:corridor:maze:regions:depths",
+      "parentPath": "n:horror-corridor:corridor:maze:regions",
+      "sourceDepth": 3,
+      "states": [
+        "depth bands",
+        "route density",
+        "dread pressure"
+      ],
+      "kits": [
+        "deepen-corridor-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Inner Reach",
+      "slug": "inner-reach",
+      "path": "n:horror-corridor:corridor:maze:regions:inner-reach",
+      "parentPath": "n:horror-corridor:corridor:maze:regions",
+      "sourceDepth": 3,
+      "states": [
+        "destination proximity",
+        "restricted paths",
+        "anomaly influence"
+      ],
+      "kits": [
+        "shape-inner-reach-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Ground",
+      "slug": "ground",
+      "path": "n:horror-corridor:corridor:ground",
+      "parentPath": "n:horror-corridor:corridor",
+      "sourceDepth": 1,
+      "states": [
+        "walkable surface",
+        "wetness",
+        "damage",
+        "growth cover"
+      ],
+      "kits": [
+        "terrain",
+        "surface-placement-kit",
+        "ground-contact-kit"
+      ],
+      "services": [
+        "inspect-ground"
+      ]
+    },
+    {
+      "name": "Surface",
+      "slug": "surface",
+      "path": "n:horror-corridor:corridor:ground:surface",
+      "parentPath": "n:horror-corridor:corridor:ground",
+      "sourceDepth": 2,
+      "states": [
+        "surface materials",
+        "surface continuity",
+        "surface grip"
+      ],
+      "kits": [
+        "compose-ground-surface-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Paving",
+      "slug": "paving",
+      "path": "n:horror-corridor:corridor:ground:surface:paving",
+      "parentPath": "n:horror-corridor:corridor:ground:surface",
+      "sourceDepth": 3,
+      "states": [
+        "paved areas",
+        "missing areas",
+        "settled areas"
+      ],
+      "kits": [
+        "lay-broken-paving-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Concrete",
+      "slug": "concrete",
+      "path": "n:horror-corridor:corridor:ground:surface:paving:concrete",
+      "parentPath": "n:horror-corridor:corridor:ground:surface:paving",
+      "sourceDepth": 4,
+      "states": [
+        "concrete areas",
+        "aggregate exposure",
+        "moisture"
+      ],
+      "kits": [
+        "weather-concrete-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Slabs",
+      "slug": "slabs",
+      "path": "n:horror-corridor:corridor:ground:surface:paving:concrete:slabs",
+      "parentPath": "n:horror-corridor:corridor:ground:surface:paving:concrete",
+      "sourceDepth": 5,
+      "states": [
+        "slab membership",
+        "slab alignment"
+      ],
+      "kits": [
+        "settle-slabs-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Slab",
+      "slug": "slab",
+      "path": "n:horror-corridor:corridor:ground:surface:paving:concrete:slabs:slab",
+      "parentPath": "n:horror-corridor:corridor:ground:surface:paving:concrete:slabs",
+      "sourceDepth": 6,
+      "states": [
+        "body",
+        "cracks",
+        "displacement",
+        "wetness"
+      ],
+      "kits": [
+        "crack-slab-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Brickwork",
+      "slug": "brickwork",
+      "path": "n:horror-corridor:corridor:ground:surface:paving:brickwork",
+      "parentPath": "n:horror-corridor:corridor:ground:surface:paving",
+      "sourceDepth": 4,
+      "states": [
+        "laid courses",
+        "missing courses",
+        "mortar condition"
+      ],
+      "kits": [
+        "weather-brickwork-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Bricks",
+      "slug": "bricks",
+      "path": "n:horror-corridor:corridor:ground:surface:paving:brickwork:bricks",
+      "parentPath": "n:horror-corridor:corridor:ground:surface:paving:brickwork",
+      "sourceDepth": 5,
+      "states": [
+        "brick membership",
+        "course alignment"
+      ],
+      "kits": [
+        "lay-bricks-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Brick",
+      "slug": "brick",
+      "path": "n:horror-corridor:corridor:ground:surface:paving:brickwork:bricks:brick",
+      "parentPath": "n:horror-corridor:corridor:ground:surface:paving:brickwork:bricks",
+      "sourceDepth": 6,
+      "states": [
+        "body",
+        "chips",
+        "saturation"
+      ],
+      "kits": [
+        "age-brick-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Earth",
+      "slug": "earth",
+      "path": "n:horror-corridor:corridor:ground:surface:earth",
+      "parentPath": "n:horror-corridor:corridor:ground:surface",
+      "sourceDepth": 3,
+      "states": [
+        "exposed areas",
+        "compaction",
+        "moisture"
+      ],
+      "kits": [
+        "expose-earth-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Mud",
+      "slug": "mud",
+      "path": "n:horror-corridor:corridor:ground:surface:mud",
+      "parentPath": "n:horror-corridor:corridor:ground:surface",
+      "sourceDepth": 3,
+      "states": [
+        "muddy areas",
+        "depth",
+        "softness",
+        "tracks"
+      ],
+      "kits": [
+        "form-mud-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Rubble",
+      "slug": "rubble",
+      "path": "n:horror-corridor:corridor:ground:rubble",
+      "parentPath": "n:horror-corridor:corridor:ground",
+      "sourceDepth": 2,
+      "states": [
+        "rubble areas",
+        "pile heights",
+        "passability"
+      ],
+      "kits": [
+        "scatter-rubble-kit"
+      ],
+      "services": [
+        "inspect-rubble"
+      ]
+    },
+    {
+      "name": "Fallen Masonry",
+      "slug": "fallen-masonry",
+      "path": "n:horror-corridor:corridor:ground:rubble:fallen-masonry",
+      "parentPath": "n:horror-corridor:corridor:ground:rubble",
+      "sourceDepth": 3,
+      "states": [
+        "fallen masonry",
+        "source structures",
+        "settlement"
+      ],
+      "kits": [
+        "collapse-masonry-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Fallen Bricks",
+      "slug": "fallen-bricks",
+      "path": "n:horror-corridor:corridor:ground:rubble:fallen-masonry:fallen-bricks",
+      "parentPath": "n:horror-corridor:corridor:ground:rubble:fallen-masonry",
+      "sourceDepth": 4,
+      "states": [
+        "brick pieces",
+        "distribution"
+      ],
+      "kits": [
+        "scatter-bricks-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Fallen Stone",
+      "slug": "fallen-stone",
+      "path": "n:horror-corridor:corridor:ground:rubble:fallen-masonry:fallen-stone",
+      "parentPath": "n:horror-corridor:corridor:ground:rubble:fallen-masonry",
+      "sourceDepth": 4,
+      "states": [
+        "stone pieces",
+        "distribution"
+      ],
+      "kits": [
+        "cluster-stone-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Broken Concrete",
+      "slug": "broken-concrete",
+      "path": "n:horror-corridor:corridor:ground:rubble:fallen-masonry:broken-concrete",
+      "parentPath": "n:horror-corridor:corridor:ground:rubble:fallen-masonry",
+      "sourceDepth": 4,
+      "states": [
+        "concrete pieces",
+        "exposed reinforcement"
+      ],
+      "kits": [
+        "break-concrete-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Scrap",
+      "slug": "scrap",
+      "path": "n:horror-corridor:corridor:ground:rubble:scrap",
+      "parentPath": "n:horror-corridor:corridor:ground:rubble",
+      "sourceDepth": 3,
+      "states": [
+        "metal pieces",
+        "sharpness",
+        "corrosion"
+      ],
+      "kits": [
+        "scatter-scrap-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Loose Slabs",
+      "slug": "loose-slabs",
+      "path": "n:horror-corridor:corridor:ground:rubble:loose-slabs",
+      "parentPath": "n:horror-corridor:corridor:ground:rubble",
+      "sourceDepth": 3,
+      "states": [
+        "slab pieces",
+        "tilt",
+        "stability"
+      ],
+      "kits": [
+        "displace-slab-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Water",
+      "slug": "water",
+      "path": "n:horror-corridor:corridor:ground:water",
+      "parentPath": "n:horror-corridor:corridor:ground",
+      "sourceDepth": 2,
+      "states": [
+        "water bodies",
+        "total coverage",
+        "drainage trend"
+      ],
+      "kits": [
+        "water-surface-kit"
+      ],
+      "services": [
+        "inspect-water"
+      ]
+    },
+    {
+      "name": "Puddles",
+      "slug": "puddles",
+      "path": "n:horror-corridor:corridor:ground:water:puddles",
+      "parentPath": "n:horror-corridor:corridor:ground:water",
+      "sourceDepth": 3,
+      "states": [
+        "puddle membership",
+        "pooled volume"
+      ],
+      "kits": [
+        "gather-puddles-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Puddle",
+      "slug": "puddle",
+      "path": "n:horror-corridor:corridor:ground:water:puddles:puddle",
+      "parentPath": "n:horror-corridor:corridor:ground:water:puddles",
+      "sourceDepth": 4,
+      "states": [
+        "footprint",
+        "depth",
+        "surface motion",
+        "reflections"
+      ],
+      "kits": [
+        "ripple-puddle-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Pools",
+      "slug": "pools",
+      "path": "n:horror-corridor:corridor:ground:water:pools",
+      "parentPath": "n:horror-corridor:corridor:ground:water",
+      "sourceDepth": 3,
+      "states": [
+        "pool membership",
+        "connected volume"
+      ],
+      "kits": [
+        "gather-pools-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Pool",
+      "slug": "pool",
+      "path": "n:horror-corridor:corridor:ground:water:pools:pool",
+      "parentPath": "n:horror-corridor:corridor:ground:water:pools",
+      "sourceDepth": 4,
+      "states": [
+        "bounds",
+        "depth",
+        "contamination"
+      ],
+      "kits": [
+        "settle-pool-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Floodwater",
+      "slug": "floodwater",
+      "path": "n:horror-corridor:corridor:ground:water:floodwater",
+      "parentPath": "n:horror-corridor:corridor:ground:water",
+      "sourceDepth": 3,
+      "states": [
+        "occupied places",
+        "depth",
+        "flow",
+        "traversability"
+      ],
+      "kits": [
+        "raise-floodwater-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Ruin",
+      "slug": "ruin",
+      "path": "n:horror-corridor:corridor:ruin",
+      "parentPath": "n:horror-corridor:corridor",
+      "sourceDepth": 1,
+      "states": [
+        "structural age",
+        "occupied places",
+        "overall stability"
+      ],
+      "kits": [
+        "age-ruin-kit"
+      ],
+      "services": [
+        "inspect-ruin"
+      ]
+    },
+    {
+      "name": "Structure",
+      "slug": "structure",
+      "path": "n:horror-corridor:corridor:ruin:structure",
+      "parentPath": "n:horror-corridor:corridor:ruin",
+      "sourceDepth": 2,
+      "states": [
+        "structural bodies",
+        "load paths",
+        "failed spans"
+      ],
+      "kits": [
+        "assemble-ruin-structure-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Foundations",
+      "slug": "foundations",
+      "path": "n:horror-corridor:corridor:ruin:structure:foundations",
+      "parentPath": "n:horror-corridor:corridor:ruin:structure",
+      "sourceDepth": 3,
+      "states": [
+        "foundation lines",
+        "settlement",
+        "exposure"
+      ],
+      "kits": [
+        "settle-foundation-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Floors",
+      "slug": "floors",
+      "path": "n:horror-corridor:corridor:ruin:structure:floors",
+      "parentPath": "n:horror-corridor:corridor:ruin:structure",
+      "sourceDepth": 3,
+      "states": [
+        "floor spans",
+        "openings",
+        "load condition"
+      ],
+      "kits": [
+        "break-floor-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Walls",
+      "slug": "walls",
+      "path": "n:horror-corridor:corridor:ruin:structure:walls",
+      "parentPath": "n:horror-corridor:corridor:ruin:structure",
+      "sourceDepth": 3,
+      "states": [
+        "wall membership",
+        "wall continuity"
+      ],
+      "kits": [
+        "raise-wall-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Wall",
+      "slug": "wall",
+      "path": "n:horror-corridor:corridor:ruin:structure:walls:wall",
+      "parentPath": "n:horror-corridor:corridor:ruin:structure:walls",
+      "sourceDepth": 4,
+      "states": [
+        "span",
+        "height",
+        "stability"
+      ],
+      "kits": [
+        "weather-wall-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Wall Face",
+      "slug": "wall-face",
+      "path": "n:horror-corridor:corridor:ruin:structure:walls:wall:wall-face",
+      "parentPath": "n:horror-corridor:corridor:ruin:structure:walls:wall",
+      "sourceDepth": 5,
+      "states": [
+        "exposed material",
+        "grime",
+        "growth cover"
+      ],
+      "kits": [
+        "stain-wall-face-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Wall Core",
+      "slug": "wall-core",
+      "path": "n:horror-corridor:corridor:ruin:structure:walls:wall:wall-core",
+      "parentPath": "n:horror-corridor:corridor:ruin:structure:walls:wall",
+      "sourceDepth": 5,
+      "states": [
+        "masonry body",
+        "voids",
+        "reinforcement"
+      ],
+      "kits": [
+        "fracture-wall-core-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Wall Wounds",
+      "slug": "wall-wounds",
+      "path": "n:horror-corridor:corridor:ruin:structure:walls:wall:wall-wounds",
+      "parentPath": "n:horror-corridor:corridor:ruin:structure:walls:wall",
+      "sourceDepth": 5,
+      "states": [
+        "cracks",
+        "holes",
+        "spalls"
+      ],
+      "kits": [
+        "widen-wall-wound-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Ceilings",
+      "slug": "ceilings",
+      "path": "n:horror-corridor:corridor:ruin:structure:ceilings",
+      "parentPath": "n:horror-corridor:corridor:ruin:structure",
+      "sourceDepth": 3,
+      "states": [
+        "ceiling membership",
+        "ceiling continuity"
+      ],
+      "kits": [
+        "span-ceiling-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Ceiling",
+      "slug": "ceiling",
+      "path": "n:horror-corridor:corridor:ruin:structure:ceilings:ceiling",
+      "parentPath": "n:horror-corridor:corridor:ruin:structure:ceilings",
+      "sourceDepth": 4,
+      "states": [
+        "span",
+        "height",
+        "stability",
+        "surface"
+      ],
+      "kits": [
+        "break-ceiling-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Openings",
+      "slug": "openings",
+      "path": "n:horror-corridor:corridor:ruin:structure:ceilings:ceiling:openings",
+      "parentPath": "n:horror-corridor:corridor:ruin:structure:ceilings:ceiling",
+      "sourceDepth": 5,
+      "states": [
+        "opening bounds",
+        "sky exposure",
+        "falling debris"
+      ],
+      "kits": [
+        "open-ceiling-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Supports",
+      "slug": "supports",
+      "path": "n:horror-corridor:corridor:ruin:structure:ceilings:ceiling:supports",
+      "parentPath": "n:horror-corridor:corridor:ruin:structure:ceilings:ceiling",
+      "sourceDepth": 5,
+      "states": [
+        "beams",
+        "service ribs",
+        "remaining strength"
+      ],
+      "kits": [
+        "expose-support-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Facades",
+      "slug": "facades",
+      "path": "n:horror-corridor:corridor:ruin:structure:facades",
+      "parentPath": "n:horror-corridor:corridor:ruin:structure",
+      "sourceDepth": 3,
+      "states": [
+        "facade membership",
+        "openings",
+        "remaining identity"
+      ],
+      "kits": [
+        "erode-facade-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Decay",
+      "slug": "decay",
+      "path": "n:horror-corridor:corridor:ruin:decay",
+      "parentPath": "n:horror-corridor:corridor:ruin",
+      "sourceDepth": 2,
+      "states": [
+        "decay age",
+        "active causes",
+        "spread"
+      ],
+      "kits": [
+        "combine-decay-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Damp",
+      "slug": "damp",
+      "path": "n:horror-corridor:corridor:ruin:decay:damp",
+      "parentPath": "n:horror-corridor:corridor:ruin:decay",
+      "sourceDepth": 3,
+      "states": [
+        "wet surfaces",
+        "saturation",
+        "drying rate"
+      ],
+      "kits": [
+        "spread-damp-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Cracking",
+      "slug": "cracking",
+      "path": "n:horror-corridor:corridor:ruin:decay:cracking",
+      "parentPath": "n:horror-corridor:corridor:ruin:decay",
+      "sourceDepth": 3,
+      "states": [
+        "crack paths",
+        "crack widths",
+        "active movement"
+      ],
+      "kits": [
+        "propagate-crack-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Spalling",
+      "slug": "spalling",
+      "path": "n:horror-corridor:corridor:ruin:decay:spalling",
+      "parentPath": "n:horror-corridor:corridor:ruin:decay",
+      "sourceDepth": 3,
+      "states": [
+        "loosened faces",
+        "fallen faces",
+        "exposed cores"
+      ],
+      "kits": [
+        "shed-surface-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Corrosion",
+      "slug": "corrosion",
+      "path": "n:horror-corridor:corridor:ruin:decay:corrosion",
+      "parentPath": "n:horror-corridor:corridor:ruin:decay",
+      "sourceDepth": 3,
+      "states": [
+        "corroded metal",
+        "corrosion depth",
+        "lost strength"
+      ],
+      "kits": [
+        "corrode-metal-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Utilities",
+      "slug": "utilities",
+      "path": "n:horror-corridor:corridor:ruin:utilities",
+      "parentPath": "n:horror-corridor:corridor:ruin",
+      "sourceDepth": 2,
+      "states": [
+        "surviving utilities",
+        "failed utilities",
+        "cross-connections"
+      ],
+      "kits": [
+        "age-utilities-kit"
+      ],
+      "services": [
+        "inspect-utility"
+      ]
+    },
+    {
+      "name": "Electricity",
+      "slug": "electricity",
+      "path": "n:horror-corridor:corridor:ruin:utilities:electricity",
+      "parentPath": "n:horror-corridor:corridor:ruin:utilities",
+      "sourceDepth": 3,
+      "states": [
+        "powered places",
+        "failed places",
+        "live circuits"
+      ],
+      "kits": [
+        "carry-electricity-kit"
+      ],
+      "services": [
+        "switch-power"
+      ]
+    },
+    {
+      "name": "Supply",
+      "slug": "supply",
+      "path": "n:horror-corridor:corridor:ruin:utilities:electricity:supply",
+      "parentPath": "n:horror-corridor:corridor:ruin:utilities:electricity",
+      "sourceDepth": 4,
+      "states": [
+        "available sources",
+        "active source",
+        "reserve"
+      ],
+      "kits": [
+        "select-power-source-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Generator",
+      "slug": "generator",
+      "path": "n:horror-corridor:corridor:ruin:utilities:electricity:supply:generator",
+      "parentPath": "n:horror-corridor:corridor:ruin:utilities:electricity:supply",
+      "sourceDepth": 5,
+      "states": [
+        "body",
+        "fuel",
+        "output",
+        "condition"
+      ],
+      "kits": [
+        "broken-generator-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Circuits",
+      "slug": "circuits",
+      "path": "n:horror-corridor:corridor:ruin:utilities:electricity:circuits",
+      "parentPath": "n:horror-corridor:corridor:ruin:utilities:electricity",
+      "sourceDepth": 4,
+      "states": [
+        "circuit membership",
+        "circuit continuity"
+      ],
+      "kits": [
+        "connect-circuit-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Circuit",
+      "slug": "circuit",
+      "path": "n:horror-corridor:corridor:ruin:utilities:electricity:circuits:circuit",
+      "parentPath": "n:horror-corridor:corridor:ruin:utilities:electricity:circuits",
+      "sourceDepth": 5,
+      "states": [
+        "source",
+        "loads",
+        "faults"
+      ],
+      "kits": [
+        "trip-circuit-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Wiring",
+      "slug": "wiring",
+      "path": "n:horror-corridor:corridor:ruin:utilities:electricity:wiring",
+      "parentPath": "n:horror-corridor:corridor:ruin:utilities:electricity",
+      "sourceDepth": 4,
+      "states": [
+        "connected runs",
+        "broken runs"
+      ],
+      "kits": [
+        "route-wiring-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Cable",
+      "slug": "cable",
+      "path": "n:horror-corridor:corridor:ruin:utilities:electricity:wiring:cable",
+      "parentPath": "n:horror-corridor:corridor:ruin:utilities:electricity:wiring",
+      "sourceDepth": 5,
+      "states": [
+        "path",
+        "slack",
+        "insulation"
+      ],
+      "kits": [
+        "hang-cable-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Lamps",
+      "slug": "lamps",
+      "path": "n:horror-corridor:corridor:ruin:utilities:electricity:lamps",
+      "parentPath": "n:horror-corridor:corridor:ruin:utilities:electricity",
+      "sourceDepth": 4,
+      "states": [
+        "lamp membership",
+        "lit lamps",
+        "failed lamps"
+      ],
+      "kits": [
+        "place-practical-lamps-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Lamp",
+      "slug": "lamp",
+      "path": "n:horror-corridor:corridor:ruin:utilities:electricity:lamps:lamp",
+      "parentPath": "n:horror-corridor:corridor:ruin:utilities:electricity:lamps",
+      "sourceDepth": 5,
+      "states": [
+        "body",
+        "power",
+        "warmth",
+        "flicker"
+      ],
+      "kits": [
+        "corridor-lamp-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Drainage",
+      "slug": "drainage",
+      "path": "n:horror-corridor:corridor:ruin:utilities:drainage",
+      "parentPath": "n:horror-corridor:corridor:ruin:utilities",
+      "sourceDepth": 3,
+      "states": [
+        "drainage reach",
+        "flow direction",
+        "blocked reach"
+      ],
+      "kits": [
+        "drain-water-kit"
+      ],
+      "services": [
+        "query-drainage"
+      ]
+    },
+    {
+      "name": "Channels",
+      "slug": "channels",
+      "path": "n:horror-corridor:corridor:ruin:utilities:drainage:channels",
+      "parentPath": "n:horror-corridor:corridor:ruin:utilities:drainage",
+      "sourceDepth": 4,
+      "states": [
+        "channel membership",
+        "connected flow"
+      ],
+      "kits": [
+        "carve-channel-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Channel",
+      "slug": "channel",
+      "path": "n:horror-corridor:corridor:ruin:utilities:drainage:channels:channel",
+      "parentPath": "n:horror-corridor:corridor:ruin:utilities:drainage:channels",
+      "sourceDepth": 5,
+      "states": [
+        "path",
+        "slope",
+        "flow"
+      ],
+      "kits": [
+        "carry-runoff-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Drains",
+      "slug": "drains",
+      "path": "n:horror-corridor:corridor:ruin:utilities:drainage:drains",
+      "parentPath": "n:horror-corridor:corridor:ruin:utilities:drainage",
+      "sourceDepth": 4,
+      "states": [
+        "drain membership",
+        "intake capacity"
+      ],
+      "kits": [
+        "place-drain-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Drain",
+      "slug": "drain",
+      "path": "n:horror-corridor:corridor:ruin:utilities:drainage:drains:drain",
+      "parentPath": "n:horror-corridor:corridor:ruin:utilities:drainage:drains",
+      "sourceDepth": 5,
+      "states": [
+        "mouth",
+        "throat",
+        "blockage"
+      ],
+      "kits": [
+        "swallow-runoff-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Culverts",
+      "slug": "culverts",
+      "path": "n:horror-corridor:corridor:ruin:utilities:drainage:culverts",
+      "parentPath": "n:horror-corridor:corridor:ruin:utilities:drainage",
+      "sourceDepth": 4,
+      "states": [
+        "culvert membership",
+        "linked reaches"
+      ],
+      "kits": [
+        "place-culvert-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Culvert",
+      "slug": "culvert",
+      "path": "n:horror-corridor:corridor:ruin:utilities:drainage:culverts:culvert",
+      "parentPath": "n:horror-corridor:corridor:ruin:utilities:drainage:culverts",
+      "sourceDepth": 5,
+      "states": [
+        "span",
+        "water level",
+        "passability"
+      ],
+      "kits": [
+        "fill-culvert-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Blockages",
+      "slug": "blockages",
+      "path": "n:horror-corridor:corridor:ruin:utilities:drainage:blockages",
+      "parentPath": "n:horror-corridor:corridor:ruin:utilities:drainage",
+      "sourceDepth": 4,
+      "states": [
+        "blockage membership",
+        "retained debris",
+        "backed-up water"
+      ],
+      "kits": [
+        "clog-drainage-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Ventilation",
+      "slug": "ventilation",
+      "path": "n:horror-corridor:corridor:ruin:utilities:ventilation",
+      "parentPath": "n:horror-corridor:corridor:ruin:utilities",
+      "sourceDepth": 3,
+      "states": [
+        "air routes",
+        "open routes",
+        "stalled routes"
+      ],
+      "kits": [
+        "move-corridor-air-kit"
+      ],
+      "services": [
+        "query-air-route"
+      ]
+    },
+    {
+      "name": "Ducts",
+      "slug": "ducts",
+      "path": "n:horror-corridor:corridor:ruin:utilities:ventilation:ducts",
+      "parentPath": "n:horror-corridor:corridor:ruin:utilities:ventilation",
+      "sourceDepth": 4,
+      "states": [
+        "duct membership",
+        "duct continuity"
+      ],
+      "kits": [
+        "route-ducts-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Duct",
+      "slug": "duct",
+      "path": "n:horror-corridor:corridor:ruin:utilities:ventilation:ducts:duct",
+      "parentPath": "n:horror-corridor:corridor:ruin:utilities:ventilation:ducts",
+      "sourceDepth": 5,
+      "states": [
+        "span",
+        "section",
+        "obstruction"
+      ],
+      "kits": [
+        "carry-air-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Vents",
+      "slug": "vents",
+      "path": "n:horror-corridor:corridor:ruin:utilities:ventilation:vents",
+      "parentPath": "n:horror-corridor:corridor:ruin:utilities:ventilation",
+      "sourceDepth": 4,
+      "states": [
+        "vent membership",
+        "open vents"
+      ],
+      "kits": [
+        "place-vent-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Vent",
+      "slug": "vent",
+      "path": "n:horror-corridor:corridor:ruin:utilities:ventilation:vents:vent",
+      "parentPath": "n:horror-corridor:corridor:ruin:utilities:ventilation:vents",
+      "sourceDepth": 5,
+      "states": [
+        "mouth",
+        "airflow",
+        "noise"
+      ],
+      "kits": [
+        "breathe-vent-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Drafts",
+      "slug": "drafts",
+      "path": "n:horror-corridor:corridor:ruin:utilities:ventilation:drafts",
+      "parentPath": "n:horror-corridor:corridor:ruin:utilities:ventilation",
+      "sourceDepth": 4,
+      "states": [
+        "draft paths",
+        "direction",
+        "strength"
+      ],
+      "kits": [
+        "drift-draft-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Access",
+      "slug": "access",
+      "path": "n:horror-corridor:corridor:ruin:access",
+      "parentPath": "n:horror-corridor:corridor:ruin",
+      "sourceDepth": 2,
+      "states": [
+        "open routes",
+        "closed routes",
+        "obstructed routes"
+      ],
+      "kits": [
+        "resolve-access-kit"
+      ],
+      "services": [
+        "resolve-access"
+      ]
+    },
+    {
+      "name": "Doors",
+      "slug": "doors",
+      "path": "n:horror-corridor:corridor:ruin:access:doors",
+      "parentPath": "n:horror-corridor:corridor:ruin:access",
+      "sourceDepth": 3,
+      "states": [
+        "door membership",
+        "open doors",
+        "sealed doors"
+      ],
+      "kits": [
+        "hang-doors-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Door",
+      "slug": "door",
+      "path": "n:horror-corridor:corridor:ruin:access:doors:door",
+      "parentPath": "n:horror-corridor:corridor:ruin:access:doors",
+      "sourceDepth": 4,
+      "states": [
+        "threshold",
+        "swing",
+        "latch",
+        "corrosion"
+      ],
+      "kits": [
+        "rusted-door-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Fences",
+      "slug": "fences",
+      "path": "n:horror-corridor:corridor:ruin:access:fences",
+      "parentPath": "n:horror-corridor:corridor:ruin:access",
+      "sourceDepth": 3,
+      "states": [
+        "fence membership",
+        "fenced reaches"
+      ],
+      "kits": [
+        "stretch-fence-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Fence",
+      "slug": "fence",
+      "path": "n:horror-corridor:corridor:ruin:access:fences:fence",
+      "parentPath": "n:horror-corridor:corridor:ruin:access:fences",
+      "sourceDepth": 4,
+      "states": [
+        "span",
+        "openings",
+        "deformation"
+      ],
+      "kits": [
+        "chain-link-fence-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Barricades",
+      "slug": "barricades",
+      "path": "n:horror-corridor:corridor:ruin:access:barricades",
+      "parentPath": "n:horror-corridor:corridor:ruin:access",
+      "sourceDepth": 3,
+      "states": [
+        "barricade membership",
+        "blocked thresholds",
+        "stability"
+      ],
+      "kits": [
+        "build-barricade-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Remnants",
+      "slug": "remnants",
+      "path": "n:horror-corridor:corridor:ruin:remnants",
+      "parentPath": "n:horror-corridor:corridor:ruin",
+      "sourceDepth": 2,
+      "states": [
+        "remaining contents",
+        "abandoned purpose",
+        "disturbance"
+      ],
+      "kits": [
+        "place-ruin-remnants-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Storage",
+      "slug": "storage",
+      "path": "n:horror-corridor:corridor:ruin:remnants:storage",
+      "parentPath": "n:horror-corridor:corridor:ruin:remnants",
+      "sourceDepth": 3,
+      "states": [
+        "stored remains",
+        "accessible remains"
+      ],
+      "kits": [
+        "arrange-storage-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Shelves",
+      "slug": "shelves",
+      "path": "n:horror-corridor:corridor:ruin:remnants:storage:shelves",
+      "parentPath": "n:horror-corridor:corridor:ruin:remnants:storage",
+      "sourceDepth": 4,
+      "states": [
+        "shelf membership",
+        "occupied tiers"
+      ],
+      "kits": [
+        "industrial-shelving-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Crates",
+      "slug": "crates",
+      "path": "n:horror-corridor:corridor:ruin:remnants:storage:crates",
+      "parentPath": "n:horror-corridor:corridor:ruin:remnants:storage",
+      "sourceDepth": 4,
+      "states": [
+        "crate membership",
+        "stacked crates"
+      ],
+      "kits": [
+        "storage-crate-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Barrels",
+      "slug": "barrels",
+      "path": "n:horror-corridor:corridor:ruin:remnants:storage:barrels",
+      "parentPath": "n:horror-corridor:corridor:ruin:remnants:storage",
+      "sourceDepth": 4,
+      "states": [
+        "barrel membership",
+        "barrel clusters"
+      ],
+      "kits": [
+        "cluster-barrels-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Workplaces",
+      "slug": "workplaces",
+      "path": "n:horror-corridor:corridor:ruin:remnants:workplaces",
+      "parentPath": "n:horror-corridor:corridor:ruin:remnants",
+      "sourceDepth": 3,
+      "states": [
+        "work areas",
+        "remaining equipment"
+      ],
+      "kits": [
+        "arrange-workplace-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Tables",
+      "slug": "tables",
+      "path": "n:horror-corridor:corridor:ruin:remnants:workplaces:tables",
+      "parentPath": "n:horror-corridor:corridor:ruin:remnants:workplaces",
+      "sourceDepth": 4,
+      "states": [
+        "table membership",
+        "usable surfaces"
+      ],
+      "kits": [
+        "corroded-table-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Service Equipment",
+      "slug": "service-equipment",
+      "path": "n:horror-corridor:corridor:ruin:remnants:workplaces:service-equipment",
+      "parentPath": "n:horror-corridor:corridor:ruin:remnants:workplaces",
+      "sourceDepth": 4,
+      "states": [
+        "equipment membership",
+        "remaining function"
+      ],
+      "kits": [
+        "abandon-equipment-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Hanging Remains",
+      "slug": "hanging-remains",
+      "path": "n:horror-corridor:corridor:ruin:remnants:hanging-remains",
+      "parentPath": "n:horror-corridor:corridor:ruin:remnants",
+      "sourceDepth": 3,
+      "states": [
+        "hanging objects",
+        "anchor points",
+        "sway"
+      ],
+      "kits": [
+        "hang-remains-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Chains",
+      "slug": "chains",
+      "path": "n:horror-corridor:corridor:ruin:remnants:hanging-remains:chains",
+      "parentPath": "n:horror-corridor:corridor:ruin:remnants:hanging-remains",
+      "sourceDepth": 4,
+      "states": [
+        "chain membership",
+        "links",
+        "tension"
+      ],
+      "kits": [
+        "hanging-chain-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Hooks",
+      "slug": "hooks",
+      "path": "n:horror-corridor:corridor:ruin:remnants:hanging-remains:hooks",
+      "parentPath": "n:horror-corridor:corridor:ruin:remnants:hanging-remains",
+      "sourceDepth": 4,
+      "states": [
+        "hook membership",
+        "points",
+        "load"
+      ],
+      "kits": [
+        "hanging-hook-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Cloth",
+      "slug": "cloth",
+      "path": "n:horror-corridor:corridor:ruin:remnants:hanging-remains:cloth",
+      "parentPath": "n:horror-corridor:corridor:ruin:remnants:hanging-remains",
+      "sourceDepth": 4,
+      "states": [
+        "cloth pieces",
+        "tears",
+        "wetness"
+      ],
+      "kits": [
+        "torn-cloth-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Overgrowth",
+      "slug": "overgrowth",
+      "path": "n:horror-corridor:corridor:overgrowth",
+      "parentPath": "n:horror-corridor:corridor",
+      "sourceDepth": 1,
+      "states": [
+        "ecological age",
+        "moisture availability",
+        "light exposure",
+        "disturbance",
+        "claimed surfaces",
+        "total cover"
+      ],
+      "kits": [
+        "n-core-vegetation-kit",
+        "forest-placement-kit",
+        "reclaim-surface-kit"
+      ],
+      "services": [
+        "inspect-overgrowth"
+      ]
+    },
+    {
+      "name": "Habitat",
+      "slug": "habitat",
+      "path": "n:horror-corridor:corridor:overgrowth:habitat",
+      "parentPath": "n:horror-corridor:corridor:overgrowth",
+      "sourceDepth": 2,
+      "states": [
+        "habitable surfaces",
+        "carrying capacity",
+        "active pressures"
+      ],
+      "kits": [
+        "balance-habitat-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Moisture",
+      "slug": "moisture",
+      "path": "n:horror-corridor:corridor:overgrowth:habitat:moisture",
+      "parentPath": "n:horror-corridor:corridor:overgrowth:habitat",
+      "sourceDepth": 3,
+      "states": [
+        "available water",
+        "retention",
+        "drying"
+      ],
+      "kits": [
+        "feed-moisture-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Shade",
+      "slug": "shade",
+      "path": "n:horror-corridor:corridor:overgrowth:habitat:shade",
+      "parentPath": "n:horror-corridor:corridor:overgrowth:habitat",
+      "sourceDepth": 3,
+      "states": [
+        "shaded places",
+        "shade depth",
+        "shade duration"
+      ],
+      "kits": [
+        "cast-habitat-shade-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Disturbance",
+      "slug": "disturbance",
+      "path": "n:horror-corridor:corridor:overgrowth:habitat:disturbance",
+      "parentPath": "n:horror-corridor:corridor:overgrowth:habitat",
+      "sourceDepth": 3,
+      "states": [
+        "disturbed places",
+        "disturbance age",
+        "recovery"
+      ],
+      "kits": [
+        "recover-habitat-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Ground Growth",
+      "slug": "ground-growth",
+      "path": "n:horror-corridor:corridor:overgrowth:ground-growth",
+      "parentPath": "n:horror-corridor:corridor:overgrowth",
+      "sourceDepth": 2,
+      "states": [
+        "covered ground",
+        "cover density",
+        "cover health"
+      ],
+      "kits": [
+        "spread-ground-growth-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Grass",
+      "slug": "grass",
+      "path": "n:horror-corridor:corridor:overgrowth:ground-growth:grass",
+      "parentPath": "n:horror-corridor:corridor:overgrowth:ground-growth",
+      "sourceDepth": 3,
+      "states": [
+        "grass reach",
+        "grass health",
+        "seed reserve"
+      ],
+      "kits": [
+        "spread-grass-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Tufts",
+      "slug": "tufts",
+      "path": "n:horror-corridor:corridor:overgrowth:ground-growth:grass:tufts",
+      "parentPath": "n:horror-corridor:corridor:overgrowth:ground-growth:grass",
+      "sourceDepth": 4,
+      "states": [
+        "tuft membership",
+        "tuft spacing"
+      ],
+      "kits": [
+        "gather-grass-tufts-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Tuft",
+      "slug": "tuft",
+      "path": "n:horror-corridor:corridor:overgrowth:ground-growth:grass:tufts:tuft",
+      "parentPath": "n:horror-corridor:corridor:overgrowth:ground-growth:grass:tufts",
+      "sourceDepth": 5,
+      "states": [
+        "blade membership",
+        "age",
+        "health",
+        "disturbance"
+      ],
+      "kits": [
+        "grow-grass-tuft-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Blades",
+      "slug": "blades",
+      "path": "n:horror-corridor:corridor:overgrowth:ground-growth:grass:tufts:tuft:blades",
+      "parentPath": "n:horror-corridor:corridor:overgrowth:ground-growth:grass:tufts:tuft",
+      "sourceDepth": 6,
+      "states": [
+        "blade membership",
+        "blade spread"
+      ],
+      "kits": [
+        "arrange-grass-blades-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Blade",
+      "slug": "blade",
+      "path": "n:horror-corridor:corridor:overgrowth:ground-growth:grass:tufts:tuft:blades:blade",
+      "parentPath": "n:horror-corridor:corridor:overgrowth:ground-growth:grass:tufts:tuft:blades",
+      "sourceDepth": 7,
+      "states": [
+        "length",
+        "bend",
+        "moisture",
+        "damage"
+      ],
+      "kits": [
+        "grow-grass-blade-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Seed Heads",
+      "slug": "seed-heads",
+      "path": "n:horror-corridor:corridor:overgrowth:ground-growth:grass:seed-heads",
+      "parentPath": "n:horror-corridor:corridor:overgrowth:ground-growth:grass",
+      "sourceDepth": 4,
+      "states": [
+        "seed-head membership",
+        "maturity",
+        "seed load"
+      ],
+      "kits": [
+        "ripen-grass-seed-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Moss",
+      "slug": "moss",
+      "path": "n:horror-corridor:corridor:overgrowth:ground-growth:moss",
+      "parentPath": "n:horror-corridor:corridor:overgrowth:ground-growth",
+      "sourceDepth": 3,
+      "states": [
+        "moss reach",
+        "moisture",
+        "health"
+      ],
+      "kits": [
+        "spread-moss-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Patches",
+      "slug": "patches",
+      "path": "n:horror-corridor:corridor:overgrowth:ground-growth:moss:patches",
+      "parentPath": "n:horror-corridor:corridor:overgrowth:ground-growth:moss",
+      "sourceDepth": 4,
+      "states": [
+        "patch membership",
+        "overlap"
+      ],
+      "kits": [
+        "gather-moss-patches-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Patch",
+      "slug": "patch",
+      "path": "n:horror-corridor:corridor:overgrowth:ground-growth:moss:patches:patch",
+      "parentPath": "n:horror-corridor:corridor:overgrowth:ground-growth:moss:patches",
+      "sourceDepth": 5,
+      "states": [
+        "footprint",
+        "coverage",
+        "age"
+      ],
+      "kits": [
+        "grow-moss-patch-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Heart",
+      "slug": "heart",
+      "path": "n:horror-corridor:corridor:overgrowth:ground-growth:moss:patches:patch:heart",
+      "parentPath": "n:horror-corridor:corridor:overgrowth:ground-growth:moss:patches:patch",
+      "sourceDepth": 6,
+      "states": [
+        "established cover",
+        "retained moisture",
+        "density"
+      ],
+      "kits": [
+        "thicken-moss-heart-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Edge",
+      "slug": "edge",
+      "path": "n:horror-corridor:corridor:overgrowth:ground-growth:moss:patches:patch:edge",
+      "parentPath": "n:horror-corridor:corridor:overgrowth:ground-growth:moss:patches:patch",
+      "sourceDepth": 6,
+      "states": [
+        "frontier",
+        "available surface",
+        "growth direction"
+      ],
+      "kits": [
+        "advance-moss-edge-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Spores",
+      "slug": "spores",
+      "path": "n:horror-corridor:corridor:overgrowth:ground-growth:moss:spores",
+      "parentPath": "n:horror-corridor:corridor:overgrowth:ground-growth:moss",
+      "sourceDepth": 4,
+      "states": [
+        "spore reserve",
+        "carried spores",
+        "viable spores"
+      ],
+      "kits": [
+        "shed-moss-spores-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Mold",
+      "slug": "mold",
+      "path": "n:horror-corridor:corridor:overgrowth:ground-growth:mold",
+      "parentPath": "n:horror-corridor:corridor:overgrowth:ground-growth",
+      "sourceDepth": 3,
+      "states": [
+        "mold reach",
+        "damp hosts",
+        "spore load"
+      ],
+      "kits": [
+        "spread-mold-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Colony",
+      "slug": "colony",
+      "path": "n:horror-corridor:corridor:overgrowth:ground-growth:mold:colony",
+      "parentPath": "n:horror-corridor:corridor:overgrowth:ground-growth:mold",
+      "sourceDepth": 4,
+      "states": [
+        "body",
+        "frontier",
+        "age",
+        "vitality"
+      ],
+      "kits": [
+        "grow-mold-colony-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Creepers",
+      "slug": "creepers",
+      "path": "n:horror-corridor:corridor:overgrowth:creepers",
+      "parentPath": "n:horror-corridor:corridor:overgrowth",
+      "sourceDepth": 2,
+      "states": [
+        "claimed surfaces",
+        "total reach",
+        "anchor places"
+      ],
+      "kits": [
+        "spread-creepers-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Wild Roots",
+      "slug": "wild-roots",
+      "path": "n:horror-corridor:corridor:overgrowth:creepers:wild-roots",
+      "parentPath": "n:horror-corridor:corridor:overgrowth:creepers",
+      "sourceDepth": 3,
+      "states": [
+        "root reach",
+        "active tips",
+        "cracked surfaces"
+      ],
+      "kits": [
+        "push-wild-roots-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Root Mats",
+      "slug": "root-mats",
+      "path": "n:horror-corridor:corridor:overgrowth:creepers:wild-roots:root-mats",
+      "parentPath": "n:horror-corridor:corridor:overgrowth:creepers:wild-roots",
+      "sourceDepth": 4,
+      "states": [
+        "mat membership",
+        "mat overlap"
+      ],
+      "kits": [
+        "weave-root-mats-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Root Mat",
+      "slug": "root-mat",
+      "path": "n:horror-corridor:corridor:overgrowth:creepers:wild-roots:root-mats:root-mat",
+      "parentPath": "n:horror-corridor:corridor:overgrowth:creepers:wild-roots:root-mats",
+      "sourceDepth": 5,
+      "states": [
+        "footprint",
+        "thickness",
+        "active edge"
+      ],
+      "kits": [
+        "thicken-root-mat-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Vines",
+      "slug": "vines",
+      "path": "n:horror-corridor:corridor:overgrowth:creepers:vines",
+      "parentPath": "n:horror-corridor:corridor:overgrowth:creepers",
+      "sourceDepth": 3,
+      "states": [
+        "vine membership",
+        "shared reach"
+      ],
+      "kits": [
+        "spread-vines-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Vine",
+      "slug": "vine",
+      "path": "n:horror-corridor:corridor:overgrowth:creepers:vines:vine",
+      "parentPath": "n:horror-corridor:corridor:overgrowth:creepers:vines",
+      "sourceDepth": 4,
+      "states": [
+        "origin",
+        "reach",
+        "health"
+      ],
+      "kits": [
+        "grow-vine-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Stem",
+      "slug": "stem",
+      "path": "n:horror-corridor:corridor:overgrowth:creepers:vines:vine:stem",
+      "parentPath": "n:horror-corridor:corridor:overgrowth:creepers:vines:vine",
+      "sourceDepth": 5,
+      "states": [
+        "path",
+        "thickness",
+        "flexibility"
+      ],
+      "kits": [
+        "extend-vine-stem-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Anchors",
+      "slug": "anchors",
+      "path": "n:horror-corridor:corridor:overgrowth:creepers:vines:vine:anchors",
+      "parentPath": "n:horror-corridor:corridor:overgrowth:creepers:vines:vine",
+      "sourceDepth": 5,
+      "states": [
+        "anchor membership",
+        "attached surfaces",
+        "grip"
+      ],
+      "kits": [
+        "grip-vine-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Vine Leaves",
+      "slug": "vine-leaves",
+      "path": "n:horror-corridor:corridor:overgrowth:creepers:vines:vine:vine-leaves",
+      "parentPath": "n:horror-corridor:corridor:overgrowth:creepers:vines:vine",
+      "sourceDepth": 5,
+      "states": [
+        "leaf membership",
+        "light exposure",
+        "health"
+      ],
+      "kits": [
+        "grow-vine-leaves-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Grove",
+      "slug": "grove",
+      "path": "n:horror-corridor:corridor:overgrowth:grove",
+      "parentPath": "n:horror-corridor:corridor:overgrowth",
+      "sourceDepth": 2,
+      "states": [
+        "tree membership",
+        "spacing",
+        "canopy cover",
+        "shared resources"
+      ],
+      "kits": [
+        "seed-grove-kit"
+      ],
+      "services": [
+        "inspect-grove"
+      ]
+    },
+    {
+      "name": "Trees",
+      "slug": "trees",
+      "path": "n:horror-corridor:corridor:overgrowth:grove:trees",
+      "parentPath": "n:horror-corridor:corridor:overgrowth:grove",
+      "sourceDepth": 3,
+      "states": [
+        "tree membership",
+        "age spread",
+        "health spread"
+      ],
+      "kits": [
+        "balance-trees-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Tree",
+      "slug": "tree",
+      "path": "n:horror-corridor:corridor:overgrowth:grove:trees:tree",
+      "parentPath": "n:horror-corridor:corridor:overgrowth:grove:trees",
+      "sourceDepth": 4,
+      "states": [
+        "age",
+        "health",
+        "water reserve",
+        "energy reserve",
+        "damage"
+      ],
+      "kits": [
+        "grow-tree-kit",
+        "age-tree-kit"
+      ],
+      "services": [
+        "inspect-tree"
+      ]
+    },
+    {
+      "name": "Roots",
+      "slug": "roots",
+      "path": "n:horror-corridor:corridor:overgrowth:grove:trees:tree:roots",
+      "parentPath": "n:horror-corridor:corridor:overgrowth:grove:trees:tree",
+      "sourceDepth": 5,
+      "states": [
+        "root extent",
+        "root health",
+        "water intake",
+        "anchorage"
+      ],
+      "kits": [
+        "balance-root-system-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Root System",
+      "slug": "root-system",
+      "path": "n:horror-corridor:corridor:overgrowth:grove:trees:tree:roots:root-system",
+      "parentPath": "n:horror-corridor:corridor:overgrowth:grove:trees:tree:roots",
+      "sourceDepth": 6,
+      "states": [
+        "root membership",
+        "branching order",
+        "shared flow"
+      ],
+      "kits": [
+        "branch-root-system-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Root",
+      "slug": "root",
+      "path": "n:horror-corridor:corridor:overgrowth:grove:trees:tree:roots:root-system:root",
+      "parentPath": "n:horror-corridor:corridor:overgrowth:grove:trees:tree:roots:root-system",
+      "sourceDepth": 7,
+      "states": [
+        "body",
+        "age",
+        "health",
+        "branches",
+        "flow"
+      ],
+      "kits": [
+        "grow-root-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Root Tip",
+      "slug": "root-tip",
+      "path": "n:horror-corridor:corridor:overgrowth:grove:trees:tree:roots:root-system:root:root-tip",
+      "parentPath": "n:horror-corridor:corridor:overgrowth:grove:trees:tree:roots:root-system:root",
+      "sourceDepth": 8,
+      "states": [
+        "heading",
+        "growth rate",
+        "obstacle contact"
+      ],
+      "kits": [
+        "steer-root-tip-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Root Cap",
+      "slug": "root-cap",
+      "path": "n:horror-corridor:corridor:overgrowth:grove:trees:tree:roots:root-system:root:root-tip:root-cap",
+      "parentPath": "n:horror-corridor:corridor:overgrowth:grove:trees:tree:roots:root-system:root:root-tip",
+      "sourceDepth": 9,
+      "states": [
+        "cap body",
+        "wear",
+        "soil contact"
+      ],
+      "kits": [
+        "protect-root-tip-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Growth Zone",
+      "slug": "growth-zone",
+      "path": "n:horror-corridor:corridor:overgrowth:grove:trees:tree:roots:root-system:root:root-tip:growth-zone",
+      "parentPath": "n:horror-corridor:corridor:overgrowth:grove:trees:tree:roots:root-system:root:root-tip",
+      "sourceDepth": 9,
+      "states": [
+        "zone length",
+        "growth activity"
+      ],
+      "kits": [
+        "extend-root-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Meristem",
+      "slug": "meristem",
+      "path": "n:horror-corridor:corridor:overgrowth:grove:trees:tree:roots:root-system:root:root-tip:growth-zone:meristem",
+      "parentPath": "n:horror-corridor:corridor:overgrowth:grove:trees:tree:roots:root-system:root:root-tip:growth-zone",
+      "sourceDepth": 10,
+      "states": [
+        "dividing cells",
+        "division rate",
+        "damage"
+      ],
+      "kits": [
+        "divide-root-cells-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Elongation Zone",
+      "slug": "elongation-zone",
+      "path": "n:horror-corridor:corridor:overgrowth:grove:trees:tree:roots:root-system:root:root-tip:growth-zone:elongation-zone",
+      "parentPath": "n:horror-corridor:corridor:overgrowth:grove:trees:tree:roots:root-system:root:root-tip:growth-zone",
+      "sourceDepth": 10,
+      "states": [
+        "elongating cells",
+        "extension rate",
+        "water pressure"
+      ],
+      "kits": [
+        "elongate-root-cells-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Maturation Zone",
+      "slug": "maturation-zone",
+      "path": "n:horror-corridor:corridor:overgrowth:grove:trees:tree:roots:root-system:root:root-tip:growth-zone:maturation-zone",
+      "parentPath": "n:horror-corridor:corridor:overgrowth:grove:trees:tree:roots:root-system:root:root-tip:growth-zone",
+      "sourceDepth": 10,
+      "states": [
+        "mature tissue",
+        "absorption reach"
+      ],
+      "kits": [
+        "mature-root-tissue-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Root Hairs",
+      "slug": "root-hairs",
+      "path": "n:horror-corridor:corridor:overgrowth:grove:trees:tree:roots:root-system:root:root-tip:growth-zone:maturation-zone:root-hairs",
+      "parentPath": "n:horror-corridor:corridor:overgrowth:grove:trees:tree:roots:root-system:root:root-tip:growth-zone:maturation-zone",
+      "sourceDepth": 11,
+      "states": [
+        "hair membership",
+        "absorption area"
+      ],
+      "kits": [
+        "sprout-root-hairs-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Root Hair",
+      "slug": "root-hair",
+      "path": "n:horror-corridor:corridor:overgrowth:grove:trees:tree:roots:root-system:root:root-tip:growth-zone:maturation-zone:root-hairs:root-hair",
+      "parentPath": "n:horror-corridor:corridor:overgrowth:grove:trees:tree:roots:root-system:root:root-tip:growth-zone:maturation-zone:root-hairs",
+      "sourceDepth": 12,
+      "states": [
+        "length",
+        "soil contact",
+        "water uptake"
+      ],
+      "kits": [
+        "absorb-through-root-hair-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Root Interior",
+      "slug": "root-interior",
+      "path": "n:horror-corridor:corridor:overgrowth:grove:trees:tree:roots:root-system:root:root-interior",
+      "parentPath": "n:horror-corridor:corridor:overgrowth:grove:trees:tree:roots:root-system:root",
+      "sourceDepth": 8,
+      "states": [
+        "internal flow",
+        "stored resources"
+      ],
+      "kits": [
+        "carry-root-resources-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Vascular Core",
+      "slug": "vascular-core",
+      "path": "n:horror-corridor:corridor:overgrowth:grove:trees:tree:roots:root-system:root:root-interior:vascular-core",
+      "parentPath": "n:horror-corridor:corridor:overgrowth:grove:trees:tree:roots:root-system:root:root-interior",
+      "sourceDepth": 9,
+      "states": [
+        "water flow",
+        "sugar flow",
+        "continuity"
+      ],
+      "kits": [
+        "circulate-root-sap-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Xylem",
+      "slug": "xylem",
+      "path": "n:horror-corridor:corridor:overgrowth:grove:trees:tree:roots:root-system:root:root-interior:vascular-core:xylem",
+      "parentPath": "n:horror-corridor:corridor:overgrowth:grove:trees:tree:roots:root-system:root:root-interior:vascular-core",
+      "sourceDepth": 10,
+      "states": [
+        "vessel continuity",
+        "upward flow",
+        "cavitation"
+      ],
+      "kits": [
+        "lift-root-water-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Phloem",
+      "slug": "phloem",
+      "path": "n:horror-corridor:corridor:overgrowth:grove:trees:tree:roots:root-system:root:root-interior:vascular-core:phloem",
+      "parentPath": "n:horror-corridor:corridor:overgrowth:grove:trees:tree:roots:root-system:root:root-interior:vascular-core",
+      "sourceDepth": 10,
+      "states": [
+        "sieve continuity",
+        "sugar flow",
+        "pressure"
+      ],
+      "kits": [
+        "feed-root-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Root Skin",
+      "slug": "root-skin",
+      "path": "n:horror-corridor:corridor:overgrowth:grove:trees:tree:roots:root-system:root:root-skin",
+      "parentPath": "n:horror-corridor:corridor:overgrowth:grove:trees:tree:roots:root-system:root",
+      "sourceDepth": 8,
+      "states": [
+        "outer tissue",
+        "permeability",
+        "wounds"
+      ],
+      "kits": [
+        "seal-root-skin-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Trunk",
+      "slug": "trunk",
+      "path": "n:horror-corridor:corridor:overgrowth:grove:trees:tree:trunk",
+      "parentPath": "n:horror-corridor:corridor:overgrowth:grove:trees:tree",
+      "sourceDepth": 5,
+      "states": [
+        "height",
+        "girth",
+        "lean",
+        "strength"
+      ],
+      "kits": [
+        "thicken-trunk-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Wood",
+      "slug": "wood",
+      "path": "n:horror-corridor:corridor:overgrowth:grove:trees:tree:trunk:wood",
+      "parentPath": "n:horror-corridor:corridor:overgrowth:grove:trees:tree:trunk",
+      "sourceDepth": 6,
+      "states": [
+        "woody body",
+        "moisture",
+        "structural load"
+      ],
+      "kits": [
+        "harden-wood-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Heartwood",
+      "slug": "heartwood",
+      "path": "n:horror-corridor:corridor:overgrowth:grove:trees:tree:trunk:wood:heartwood",
+      "parentPath": "n:horror-corridor:corridor:overgrowth:grove:trees:tree:trunk:wood",
+      "sourceDepth": 7,
+      "states": [
+        "dead core",
+        "density",
+        "decay"
+      ],
+      "kits": [
+        "preserve-heartwood-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Sapwood",
+      "slug": "sapwood",
+      "path": "n:horror-corridor:corridor:overgrowth:grove:trees:tree:trunk:wood:sapwood",
+      "parentPath": "n:horror-corridor:corridor:overgrowth:grove:trees:tree:trunk:wood",
+      "sourceDepth": 7,
+      "states": [
+        "living rings",
+        "water flow",
+        "active width"
+      ],
+      "kits": [
+        "carry-trunk-water-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Vessels",
+      "slug": "vessels",
+      "path": "n:horror-corridor:corridor:overgrowth:grove:trees:tree:trunk:wood:sapwood:vessels",
+      "parentPath": "n:horror-corridor:corridor:overgrowth:grove:trees:tree:trunk:wood:sapwood",
+      "sourceDepth": 8,
+      "states": [
+        "vessel membership",
+        "connected flow"
+      ],
+      "kits": [
+        "connect-sapwood-vessels-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Vessel",
+      "slug": "vessel",
+      "path": "n:horror-corridor:corridor:overgrowth:grove:trees:tree:trunk:wood:sapwood:vessels:vessel",
+      "parentPath": "n:horror-corridor:corridor:overgrowth:grove:trees:tree:trunk:wood:sapwood:vessels",
+      "sourceDepth": 9,
+      "states": [
+        "bore",
+        "flow",
+        "blockage"
+      ],
+      "kits": [
+        "conduct-trunk-water-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Growth Rings",
+      "slug": "growth-rings",
+      "path": "n:horror-corridor:corridor:overgrowth:grove:trees:tree:trunk:wood:growth-rings",
+      "parentPath": "n:horror-corridor:corridor:overgrowth:grove:trees:tree:trunk:wood",
+      "sourceDepth": 7,
+      "states": [
+        "ring membership",
+        "annual history",
+        "damage history"
+      ],
+      "kits": [
+        "lay-growth-ring-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Ring",
+      "slug": "ring",
+      "path": "n:horror-corridor:corridor:overgrowth:grove:trees:tree:trunk:wood:growth-rings:ring",
+      "parentPath": "n:horror-corridor:corridor:overgrowth:grove:trees:tree:trunk:wood:growth-rings",
+      "sourceDepth": 8,
+      "states": [
+        "year",
+        "width",
+        "density",
+        "scars"
+      ],
+      "kits": [
+        "record-growth-year-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Bark",
+      "slug": "bark",
+      "path": "n:horror-corridor:corridor:overgrowth:grove:trees:tree:trunk:bark",
+      "parentPath": "n:horror-corridor:corridor:overgrowth:grove:trees:tree:trunk",
+      "sourceDepth": 6,
+      "states": [
+        "bark coverage",
+        "thickness",
+        "damage"
+      ],
+      "kits": [
+        "grow-bark-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Inner Bark",
+      "slug": "inner-bark",
+      "path": "n:horror-corridor:corridor:overgrowth:grove:trees:tree:trunk:bark:inner-bark",
+      "parentPath": "n:horror-corridor:corridor:overgrowth:grove:trees:tree:trunk:bark",
+      "sourceDepth": 7,
+      "states": [
+        "living tissue",
+        "sugar flow",
+        "wounds"
+      ],
+      "kits": [
+        "feed-trunk-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Outer Bark",
+      "slug": "outer-bark",
+      "path": "n:horror-corridor:corridor:overgrowth:grove:trees:tree:trunk:bark:outer-bark",
+      "parentPath": "n:horror-corridor:corridor:overgrowth:grove:trees:tree:trunk:bark",
+      "sourceDepth": 7,
+      "states": [
+        "protective plates",
+        "fissures",
+        "shedding"
+      ],
+      "kits": [
+        "weather-bark-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Wounds",
+      "slug": "wounds",
+      "path": "n:horror-corridor:corridor:overgrowth:grove:trees:tree:trunk:wounds",
+      "parentPath": "n:horror-corridor:corridor:overgrowth:grove:trees:tree:trunk",
+      "sourceDepth": 6,
+      "states": [
+        "wound membership",
+        "open area",
+        "healing"
+      ],
+      "kits": [
+        "heal-tree-wound-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Scar",
+      "slug": "scar",
+      "path": "n:horror-corridor:corridor:overgrowth:grove:trees:tree:trunk:wounds:scar",
+      "parentPath": "n:horror-corridor:corridor:overgrowth:grove:trees:tree:trunk:wounds",
+      "sourceDepth": 7,
+      "states": [
+        "sealed tissue",
+        "age",
+        "weakness"
+      ],
+      "kits": [
+        "thicken-scar-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Rot Pocket",
+      "slug": "rot-pocket",
+      "path": "n:horror-corridor:corridor:overgrowth:grove:trees:tree:trunk:wounds:rot-pocket",
+      "parentPath": "n:horror-corridor:corridor:overgrowth:grove:trees:tree:trunk:wounds",
+      "sourceDepth": 7,
+      "states": [
+        "occupied wood",
+        "spread",
+        "lost strength"
+      ],
+      "kits": [
+        "spread-tree-rot-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Crown",
+      "slug": "crown",
+      "path": "n:horror-corridor:corridor:overgrowth:grove:trees:tree:crown",
+      "parentPath": "n:horror-corridor:corridor:overgrowth:grove:trees:tree",
+      "sourceDepth": 5,
+      "states": [
+        "crown reach",
+        "crown balance",
+        "light exposure",
+        "wind load"
+      ],
+      "kits": [
+        "balance-crown-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Boughs",
+      "slug": "boughs",
+      "path": "n:horror-corridor:corridor:overgrowth:grove:trees:tree:crown:boughs",
+      "parentPath": "n:horror-corridor:corridor:overgrowth:grove:trees:tree:crown",
+      "sourceDepth": 6,
+      "states": [
+        "bough membership",
+        "bough distribution"
+      ],
+      "kits": [
+        "arrange-boughs-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Bough",
+      "slug": "bough",
+      "path": "n:horror-corridor:corridor:overgrowth:grove:trees:tree:crown:boughs:bough",
+      "parentPath": "n:horror-corridor:corridor:overgrowth:grove:trees:tree:crown:boughs",
+      "sourceDepth": 7,
+      "states": [
+        "body",
+        "load",
+        "health"
+      ],
+      "kits": [
+        "grow-bough-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Branches",
+      "slug": "branches",
+      "path": "n:horror-corridor:corridor:overgrowth:grove:trees:tree:crown:boughs:bough:branches",
+      "parentPath": "n:horror-corridor:corridor:overgrowth:grove:trees:tree:crown:boughs:bough",
+      "sourceDepth": 8,
+      "states": [
+        "branch membership",
+        "branch distribution"
+      ],
+      "kits": [
+        "arrange-branches-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Branch",
+      "slug": "branch",
+      "path": "n:horror-corridor:corridor:overgrowth:grove:trees:tree:crown:boughs:bough:branches:branch",
+      "parentPath": "n:horror-corridor:corridor:overgrowth:grove:trees:tree:crown:boughs:bough:branches",
+      "sourceDepth": 9,
+      "states": [
+        "body",
+        "heading",
+        "health",
+        "growth record"
+      ],
+      "kits": [
+        "grow-branch-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Twigs",
+      "slug": "twigs",
+      "path": "n:horror-corridor:corridor:overgrowth:grove:trees:tree:crown:boughs:bough:branches:branch:twigs",
+      "parentPath": "n:horror-corridor:corridor:overgrowth:grove:trees:tree:crown:boughs:bough:branches:branch",
+      "sourceDepth": 10,
+      "states": [
+        "twig membership",
+        "twig distribution"
+      ],
+      "kits": [
+        "arrange-twigs-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Twig",
+      "slug": "twig",
+      "path": "n:horror-corridor:corridor:overgrowth:grove:trees:tree:crown:boughs:bough:branches:branch:twigs:twig",
+      "parentPath": "n:horror-corridor:corridor:overgrowth:grove:trees:tree:crown:boughs:bough:branches:branch:twigs",
+      "sourceDepth": 11,
+      "states": [
+        "body",
+        "heading",
+        "health",
+        "growth record"
+      ],
+      "kits": [
+        "grow-twig-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Buds",
+      "slug": "buds",
+      "path": "n:horror-corridor:corridor:overgrowth:grove:trees:tree:crown:boughs:bough:branches:branch:twigs:twig:buds",
+      "parentPath": "n:horror-corridor:corridor:overgrowth:grove:trees:tree:crown:boughs:bough:branches:branch:twigs:twig",
+      "sourceDepth": 12,
+      "states": [
+        "bud membership",
+        "bud spacing"
+      ],
+      "kits": [
+        "arrange-buds-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Bud",
+      "slug": "bud",
+      "path": "n:horror-corridor:corridor:overgrowth:grove:trees:tree:crown:boughs:bough:branches:branch:twigs:twig:buds:bud",
+      "parentPath": "n:horror-corridor:corridor:overgrowth:grove:trees:tree:crown:boughs:bough:branches:branch:twigs:twig:buds",
+      "sourceDepth": 13,
+      "states": [
+        "age",
+        "health",
+        "dormancy",
+        "stored resources"
+      ],
+      "kits": [
+        "develop-bud-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Leaf Cluster",
+      "slug": "leaf-cluster",
+      "path": "n:horror-corridor:corridor:overgrowth:grove:trees:tree:crown:boughs:bough:branches:branch:twigs:twig:buds:bud:leaf-cluster",
+      "parentPath": "n:horror-corridor:corridor:overgrowth:grove:trees:tree:crown:boughs:bough:branches:branch:twigs:twig:buds:bud",
+      "sourceDepth": 14,
+      "states": [
+        "leaf membership",
+        "opening stage",
+        "cluster health"
+      ],
+      "kits": [
+        "open-leaf-cluster-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Leaves",
+      "slug": "leaves",
+      "path": "n:horror-corridor:corridor:overgrowth:grove:trees:tree:crown:boughs:bough:branches:branch:twigs:twig:buds:bud:leaf-cluster:leaves",
+      "parentPath": "n:horror-corridor:corridor:overgrowth:grove:trees:tree:crown:boughs:bough:branches:branch:twigs:twig:buds:bud:leaf-cluster",
+      "sourceDepth": 15,
+      "states": [
+        "leaf membership",
+        "leaf spacing",
+        "shared light"
+      ],
+      "kits": [
+        "arrange-leaves-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Leaf",
+      "slug": "leaf",
+      "path": "n:horror-corridor:corridor:overgrowth:grove:trees:tree:crown:boughs:bough:branches:branch:twigs:twig:buds:bud:leaf-cluster:leaves:leaf",
+      "parentPath": "n:horror-corridor:corridor:overgrowth:grove:trees:tree:crown:boughs:bough:branches:branch:twigs:twig:buds:bud:leaf-cluster:leaves",
+      "sourceDepth": 16,
+      "states": [
+        "age",
+        "health",
+        "water",
+        "sugar",
+        "damage"
+      ],
+      "kits": [
+        "unfurl-leaf-kit",
+        "age-leaf-kit"
+      ],
+      "services": [
+        "inspect-leaf"
+      ]
+    },
+    {
+      "name": "Stalk",
+      "slug": "stalk",
+      "path": "n:horror-corridor:corridor:overgrowth:grove:trees:tree:crown:boughs:bough:branches:branch:twigs:twig:buds:bud:leaf-cluster:leaves:leaf:stalk",
+      "parentPath": "n:horror-corridor:corridor:overgrowth:grove:trees:tree:crown:boughs:bough:branches:branch:twigs:twig:buds:bud:leaf-cluster:leaves:leaf",
+      "sourceDepth": 17,
+      "states": [
+        "length",
+        "angle",
+        "flexibility",
+        "flow"
+      ],
+      "kits": [
+        "orient-leaf-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Blade",
+      "slug": "blade",
+      "path": "n:horror-corridor:corridor:overgrowth:grove:trees:tree:crown:boughs:bough:branches:branch:twigs:twig:buds:bud:leaf-cluster:leaves:leaf:blade",
+      "parentPath": "n:horror-corridor:corridor:overgrowth:grove:trees:tree:crown:boughs:bough:branches:branch:twigs:twig:buds:bud:leaf-cluster:leaves:leaf",
+      "sourceDepth": 17,
+      "states": [
+        "outline",
+        "area",
+        "curl",
+        "tears"
+      ],
+      "kits": [
+        "shape-leaf-blade-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Veins",
+      "slug": "veins",
+      "path": "n:horror-corridor:corridor:overgrowth:grove:trees:tree:crown:boughs:bough:branches:branch:twigs:twig:buds:bud:leaf-cluster:leaves:leaf:blade:veins",
+      "parentPath": "n:horror-corridor:corridor:overgrowth:grove:trees:tree:crown:boughs:bough:branches:branch:twigs:twig:buds:bud:leaf-cluster:leaves:leaf:blade",
+      "sourceDepth": 18,
+      "states": [
+        "vein membership",
+        "connected flow"
+      ],
+      "kits": [
+        "connect-leaf-veins-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Midrib",
+      "slug": "midrib",
+      "path": "n:horror-corridor:corridor:overgrowth:grove:trees:tree:crown:boughs:bough:branches:branch:twigs:twig:buds:bud:leaf-cluster:leaves:leaf:blade:veins:midrib",
+      "parentPath": "n:horror-corridor:corridor:overgrowth:grove:trees:tree:crown:boughs:bough:branches:branch:twigs:twig:buds:bud:leaf-cluster:leaves:leaf:blade:veins",
+      "sourceDepth": 19,
+      "states": [
+        "path",
+        "thickness",
+        "flow"
+      ],
+      "kits": [
+        "support-leaf-blade-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Side Veins",
+      "slug": "side-veins",
+      "path": "n:horror-corridor:corridor:overgrowth:grove:trees:tree:crown:boughs:bough:branches:branch:twigs:twig:buds:bud:leaf-cluster:leaves:leaf:blade:veins:side-veins",
+      "parentPath": "n:horror-corridor:corridor:overgrowth:grove:trees:tree:crown:boughs:bough:branches:branch:twigs:twig:buds:bud:leaf-cluster:leaves:leaf:blade:veins",
+      "sourceDepth": 19,
+      "states": [
+        "vein membership",
+        "branching order"
+      ],
+      "kits": [
+        "branch-leaf-veins-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Vein",
+      "slug": "vein",
+      "path": "n:horror-corridor:corridor:overgrowth:grove:trees:tree:crown:boughs:bough:branches:branch:twigs:twig:buds:bud:leaf-cluster:leaves:leaf:blade:veins:side-veins:vein",
+      "parentPath": "n:horror-corridor:corridor:overgrowth:grove:trees:tree:crown:boughs:bough:branches:branch:twigs:twig:buds:bud:leaf-cluster:leaves:leaf:blade:veins:side-veins",
+      "sourceDepth": 20,
+      "states": [
+        "path",
+        "diameter",
+        "flow"
+      ],
+      "kits": [
+        "circulate-leaf-sap-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Vessels",
+      "slug": "vessels",
+      "path": "n:horror-corridor:corridor:overgrowth:grove:trees:tree:crown:boughs:bough:branches:branch:twigs:twig:buds:bud:leaf-cluster:leaves:leaf:blade:veins:side-veins:vein:vessels",
+      "parentPath": "n:horror-corridor:corridor:overgrowth:grove:trees:tree:crown:boughs:bough:branches:branch:twigs:twig:buds:bud:leaf-cluster:leaves:leaf:blade:veins:side-veins:vein",
+      "sourceDepth": 21,
+      "states": [
+        "vessel membership",
+        "exchange"
+      ],
+      "kits": [
+        "connect-leaf-vessels-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Xylem",
+      "slug": "xylem",
+      "path": "n:horror-corridor:corridor:overgrowth:grove:trees:tree:crown:boughs:bough:branches:branch:twigs:twig:buds:bud:leaf-cluster:leaves:leaf:blade:veins:side-veins:vein:vessels:xylem",
+      "parentPath": "n:horror-corridor:corridor:overgrowth:grove:trees:tree:crown:boughs:bough:branches:branch:twigs:twig:buds:bud:leaf-cluster:leaves:leaf:blade:veins:side-veins:vein:vessels",
+      "sourceDepth": 22,
+      "states": [
+        "water flow",
+        "continuity",
+        "blockage"
+      ],
+      "kits": [
+        "hydrate-leaf-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Phloem",
+      "slug": "phloem",
+      "path": "n:horror-corridor:corridor:overgrowth:grove:trees:tree:crown:boughs:bough:branches:branch:twigs:twig:buds:bud:leaf-cluster:leaves:leaf:blade:veins:side-veins:vein:vessels:phloem",
+      "parentPath": "n:horror-corridor:corridor:overgrowth:grove:trees:tree:crown:boughs:bough:branches:branch:twigs:twig:buds:bud:leaf-cluster:leaves:leaf:blade:veins:side-veins:vein:vessels",
+      "sourceDepth": 22,
+      "states": [
+        "sugar flow",
+        "continuity",
+        "pressure"
+      ],
+      "kits": [
+        "export-leaf-sugar-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Surface",
+      "slug": "surface",
+      "path": "n:horror-corridor:corridor:overgrowth:grove:trees:tree:crown:boughs:bough:branches:branch:twigs:twig:buds:bud:leaf-cluster:leaves:leaf:blade:surface",
+      "parentPath": "n:horror-corridor:corridor:overgrowth:grove:trees:tree:crown:boughs:bough:branches:branch:twigs:twig:buds:bud:leaf-cluster:leaves:leaf:blade",
+      "sourceDepth": 18,
+      "states": [
+        "pigment",
+        "wetness",
+        "grime",
+        "decay"
+      ],
+      "kits": [
+        "weather-leaf-surface-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Cuticle",
+      "slug": "cuticle",
+      "path": "n:horror-corridor:corridor:overgrowth:grove:trees:tree:crown:boughs:bough:branches:branch:twigs:twig:buds:bud:leaf-cluster:leaves:leaf:blade:surface:cuticle",
+      "parentPath": "n:horror-corridor:corridor:overgrowth:grove:trees:tree:crown:boughs:bough:branches:branch:twigs:twig:buds:bud:leaf-cluster:leaves:leaf:blade:surface",
+      "sourceDepth": 19,
+      "states": [
+        "wax coverage",
+        "permeability",
+        "abrasion"
+      ],
+      "kits": [
+        "seal-leaf-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Pores",
+      "slug": "pores",
+      "path": "n:horror-corridor:corridor:overgrowth:grove:trees:tree:crown:boughs:bough:branches:branch:twigs:twig:buds:bud:leaf-cluster:leaves:leaf:blade:surface:pores",
+      "parentPath": "n:horror-corridor:corridor:overgrowth:grove:trees:tree:crown:boughs:bough:branches:branch:twigs:twig:buds:bud:leaf-cluster:leaves:leaf:blade:surface",
+      "sourceDepth": 19,
+      "states": [
+        "pore membership",
+        "open fraction"
+      ],
+      "kits": [
+        "balance-leaf-pores-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Stoma",
+      "slug": "stoma",
+      "path": "n:horror-corridor:corridor:overgrowth:grove:trees:tree:crown:boughs:bough:branches:branch:twigs:twig:buds:bud:leaf-cluster:leaves:leaf:blade:surface:pores:stoma",
+      "parentPath": "n:horror-corridor:corridor:overgrowth:grove:trees:tree:crown:boughs:bough:branches:branch:twigs:twig:buds:bud:leaf-cluster:leaves:leaf:blade:surface:pores",
+      "sourceDepth": 20,
+      "states": [
+        "aperture",
+        "gas exchange",
+        "water loss"
+      ],
+      "kits": [
+        "breathe-through-stoma-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Guard Cells",
+      "slug": "guard-cells",
+      "path": "n:horror-corridor:corridor:overgrowth:grove:trees:tree:crown:boughs:bough:branches:branch:twigs:twig:buds:bud:leaf-cluster:leaves:leaf:blade:surface:pores:stoma:guard-cells",
+      "parentPath": "n:horror-corridor:corridor:overgrowth:grove:trees:tree:crown:boughs:bough:branches:branch:twigs:twig:buds:bud:leaf-cluster:leaves:leaf:blade:surface:pores:stoma",
+      "sourceDepth": 21,
+      "states": [
+        "cell pressure",
+        "opening force",
+        "stress"
+      ],
+      "kits": [
+        "regulate-stoma-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Leaf Life",
+      "slug": "leaf-life",
+      "path": "n:horror-corridor:corridor:overgrowth:grove:trees:tree:crown:boughs:bough:branches:branch:twigs:twig:buds:bud:leaf-cluster:leaves:leaf:leaf-life",
+      "parentPath": "n:horror-corridor:corridor:overgrowth:grove:trees:tree:crown:boughs:bough:branches:branch:twigs:twig:buds:bud:leaf-cluster:leaves:leaf",
+      "sourceDepth": 17,
+      "states": [
+        "emergence stage",
+        "growth stage",
+        "mature stage",
+        "senescence stage",
+        "damage history"
+      ],
+      "kits": [
+        "progress-leaf-life-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Growth Memory",
+      "slug": "growth-memory",
+      "path": "n:horror-corridor:corridor:overgrowth:grove:trees:tree:crown:boughs:bough:branches:branch:twigs:twig:buds:bud:leaf-cluster:leaves:leaf:leaf-life:growth-memory",
+      "parentPath": "n:horror-corridor:corridor:overgrowth:grove:trees:tree:crown:boughs:bough:branches:branch:twigs:twig:buds:bud:leaf-cluster:leaves:leaf:leaf-life",
+      "sourceDepth": 18,
+      "states": [
+        "stage history",
+        "seasonal history",
+        "disturbance history"
+      ],
+      "kits": [
+        "remember-leaf-growth-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Nourishment",
+      "slug": "nourishment",
+      "path": "n:horror-corridor:corridor:overgrowth:grove:trees:tree:crown:boughs:bough:branches:branch:twigs:twig:buds:bud:leaf-cluster:leaves:leaf:leaf-life:nourishment",
+      "parentPath": "n:horror-corridor:corridor:overgrowth:grove:trees:tree:crown:boughs:bough:branches:branch:twigs:twig:buds:bud:leaf-cluster:leaves:leaf:leaf-life",
+      "sourceDepth": 18,
+      "states": [
+        "water balance",
+        "sugar balance",
+        "light intake"
+      ],
+      "kits": [
+        "balance-leaf-resources-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Canopy",
+      "slug": "canopy",
+      "path": "n:horror-corridor:corridor:overgrowth:grove:trees:tree:crown:canopy",
+      "parentPath": "n:horror-corridor:corridor:overgrowth:grove:trees:tree:crown",
+      "sourceDepth": 6,
+      "states": [
+        "total cover",
+        "gaps",
+        "layered depth",
+        "light interception"
+      ],
+      "kits": [
+        "shape-canopy-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Atmosphere",
+      "slug": "atmosphere",
+      "path": "n:horror-corridor:corridor:atmosphere",
+      "parentPath": "n:horror-corridor:corridor",
+      "sourceDepth": 1,
+      "states": [
+        "ambient condition",
+        "visibility",
+        "acoustic reach"
+      ],
+      "kits": [
+        "n-core-skybox-kit",
+        "blend-corridor-atmosphere-kit"
+      ],
+      "services": [
+        "inspect-atmosphere"
+      ]
+    },
+    {
+      "name": "Air",
+      "slug": "air",
+      "path": "n:horror-corridor:corridor:atmosphere:air",
+      "parentPath": "n:horror-corridor:corridor:atmosphere",
+      "sourceDepth": 2,
+      "states": [
+        "temperature",
+        "humidity",
+        "movement"
+      ],
+      "kits": [
+        "move-corridor-air-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Dampness",
+      "slug": "dampness",
+      "path": "n:horror-corridor:corridor:atmosphere:air:dampness",
+      "parentPath": "n:horror-corridor:corridor:atmosphere:air",
+      "sourceDepth": 3,
+      "states": [
+        "humidity",
+        "condensation",
+        "saturation"
+      ],
+      "kits": [
+        "condense-damp-air-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Fog",
+      "slug": "fog",
+      "path": "n:horror-corridor:corridor:atmosphere:air:fog",
+      "parentPath": "n:horror-corridor:corridor:atmosphere:air",
+      "sourceDepth": 3,
+      "states": [
+        "total body",
+        "visibility loss",
+        "persistence"
+      ],
+      "kits": [
+        "form-fog-kit"
+      ],
+      "services": [
+        "inspect-fog"
+      ]
+    },
+    {
+      "name": "Fog Banks",
+      "slug": "fog-banks",
+      "path": "n:horror-corridor:corridor:atmosphere:air:fog:fog-banks",
+      "parentPath": "n:horror-corridor:corridor:atmosphere:air:fog",
+      "sourceDepth": 4,
+      "states": [
+        "bank membership",
+        "overlap"
+      ],
+      "kits": [
+        "gather-fog-banks-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Fog Bank",
+      "slug": "fog-bank",
+      "path": "n:horror-corridor:corridor:atmosphere:air:fog:fog-banks:fog-bank",
+      "parentPath": "n:horror-corridor:corridor:atmosphere:air:fog:fog-banks",
+      "sourceDepth": 5,
+      "states": [
+        "body",
+        "density",
+        "color",
+        "edge"
+      ],
+      "kits": [
+        "shape-fog-bank-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Fog Drift",
+      "slug": "fog-drift",
+      "path": "n:horror-corridor:corridor:atmosphere:air:fog:fog-drift",
+      "parentPath": "n:horror-corridor:corridor:atmosphere:air:fog",
+      "sourceDepth": 4,
+      "states": [
+        "direction",
+        "speed",
+        "turbulence"
+      ],
+      "kits": [
+        "drift-fog-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Fog Wake",
+      "slug": "fog-wake",
+      "path": "n:horror-corridor:corridor:atmosphere:air:fog:fog-wake",
+      "parentPath": "n:horror-corridor:corridor:atmosphere:air:fog",
+      "sourceDepth": 4,
+      "states": [
+        "disturbed paths",
+        "dissipation",
+        "history"
+      ],
+      "kits": [
+        "remember-fog-wake-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Drafts",
+      "slug": "drafts",
+      "path": "n:horror-corridor:corridor:atmosphere:air:drafts",
+      "parentPath": "n:horror-corridor:corridor:atmosphere:air",
+      "sourceDepth": 3,
+      "states": [
+        "draft paths",
+        "direction",
+        "strength"
+      ],
+      "kits": [
+        "carry-draft-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Illumination",
+      "slug": "illumination",
+      "path": "n:horror-corridor:corridor:atmosphere:illumination",
+      "parentPath": "n:horror-corridor:corridor:atmosphere",
+      "sourceDepth": 2,
+      "states": [
+        "ambient level",
+        "route visibility",
+        "landmark visibility",
+        "contrast"
+      ],
+      "kits": [
+        "reveal-with-light-kit"
+      ],
+      "services": [
+        "query-visibility"
+      ]
+    },
+    {
+      "name": "Darkness",
+      "slug": "darkness",
+      "path": "n:horror-corridor:corridor:atmosphere:illumination:darkness",
+      "parentPath": "n:horror-corridor:corridor:atmosphere:illumination",
+      "sourceDepth": 3,
+      "states": [
+        "dark places",
+        "depth",
+        "adaptation"
+      ],
+      "kits": [
+        "settle-darkness-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Lamp Pools",
+      "slug": "lamp-pools",
+      "path": "n:horror-corridor:corridor:atmosphere:illumination:lamp-pools",
+      "parentPath": "n:horror-corridor:corridor:atmosphere:illumination",
+      "sourceDepth": 3,
+      "states": [
+        "lit places",
+        "warmth",
+        "falloff"
+      ],
+      "kits": [
+        "cast-practical-light-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Daylight Leaks",
+      "slug": "daylight-leaks",
+      "path": "n:horror-corridor:corridor:atmosphere:illumination:daylight-leaks",
+      "parentPath": "n:horror-corridor:corridor:atmosphere:illumination",
+      "sourceDepth": 3,
+      "states": [
+        "openings",
+        "cool reach",
+        "time variation"
+      ],
+      "kits": [
+        "leak-daylight-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Anomaly Glow",
+      "slug": "anomaly-glow",
+      "path": "n:horror-corridor:corridor:atmosphere:illumination:anomaly-glow",
+      "parentPath": "n:horror-corridor:corridor:atmosphere:illumination",
+      "sourceDepth": 3,
+      "states": [
+        "glow sources",
+        "sickly reach",
+        "pulse"
+      ],
+      "kits": [
+        "pulse-anomaly-glow-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Flashlight Beam",
+      "slug": "flashlight-beam",
+      "path": "n:horror-corridor:corridor:atmosphere:illumination:flashlight-beam",
+      "parentPath": "n:horror-corridor:corridor:atmosphere:illumination",
+      "sourceDepth": 3,
+      "states": [
+        "origin",
+        "direction",
+        "reach",
+        "interruption",
+        "revealed subjects"
+      ],
+      "kits": [
+        "cast-flashlight-beam-kit"
+      ],
+      "services": [
+        "query-beam-contact"
+      ]
+    },
+    {
+      "name": "Sightlines",
+      "slug": "sightlines",
+      "path": "n:horror-corridor:corridor:atmosphere:illumination:sightlines",
+      "parentPath": "n:horror-corridor:corridor:atmosphere:illumination",
+      "sourceDepth": 3,
+      "states": [
+        "visible routes",
+        "occluded routes",
+        "visible landmarks"
+      ],
+      "kits": [
+        "preserve-sightline-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Acoustics",
+      "slug": "acoustics",
+      "path": "n:horror-corridor:corridor:atmosphere:acoustics",
+      "parentPath": "n:horror-corridor:corridor:atmosphere",
+      "sourceDepth": 2,
+      "states": [
+        "sound reach",
+        "reverberation",
+        "obstruction"
+      ],
+      "kits": [
+        "carry-spatial-sound-kit"
+      ],
+      "services": [
+        "query-audibility"
+      ]
+    },
+    {
+      "name": "Room Tone",
+      "slug": "room-tone",
+      "path": "n:horror-corridor:corridor:atmosphere:acoustics:room-tone",
+      "parentPath": "n:horror-corridor:corridor:atmosphere:acoustics",
+      "sourceDepth": 3,
+      "states": [
+        "ruin ambience",
+        "water ambience",
+        "wind ambience"
+      ],
+      "kits": [
+        "sustain-room-tone-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Echoes",
+      "slug": "echoes",
+      "path": "n:horror-corridor:corridor:atmosphere:acoustics:echoes",
+      "parentPath": "n:horror-corridor:corridor:atmosphere:acoustics",
+      "sourceDepth": 3,
+      "states": [
+        "echo paths",
+        "delay",
+        "decay"
+      ],
+      "kits": [
+        "return-echo-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Footfalls",
+      "slug": "footfalls",
+      "path": "n:horror-corridor:corridor:atmosphere:acoustics:footfalls",
+      "parentPath": "n:horror-corridor:corridor:atmosphere:acoustics",
+      "sourceDepth": 3,
+      "states": [
+        "recent steps",
+        "surface response",
+        "audible reach"
+      ],
+      "kits": [
+        "sound-footfall-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Silence",
+      "slug": "silence",
+      "path": "n:horror-corridor:corridor:atmosphere:acoustics:silence",
+      "parentPath": "n:horror-corridor:corridor:atmosphere:acoustics",
+      "sourceDepth": 3,
+      "states": [
+        "silent places",
+        "duration",
+        "contrast"
+      ],
+      "kits": [
+        "hold-silence-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Landmarks",
+      "slug": "landmarks",
+      "path": "n:horror-corridor:corridor:atmosphere:landmarks",
+      "parentPath": "n:horror-corridor:corridor:atmosphere",
+      "sourceDepth": 2,
+      "states": [
+        "landmark identities",
+        "landmark positions",
+        "landmark salience"
+      ],
+      "kits": [
+        "landmark-guidance-kit"
+      ],
+      "services": [
+        "query-landmark"
+      ]
+    },
+    {
+      "name": "Structural Signs",
+      "slug": "structural-signs",
+      "path": "n:horror-corridor:corridor:atmosphere:landmarks:structural-signs",
+      "parentPath": "n:horror-corridor:corridor:atmosphere:landmarks",
+      "sourceDepth": 3,
+      "states": [
+        "prominent structures",
+        "silhouettes",
+        "visibility"
+      ],
+      "kits": [
+        "establish-structural-sign-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Living Signs",
+      "slug": "living-signs",
+      "path": "n:horror-corridor:corridor:atmosphere:landmarks:living-signs",
+      "parentPath": "n:horror-corridor:corridor:atmosphere:landmarks",
+      "sourceDepth": 3,
+      "states": [
+        "prominent growth",
+        "silhouettes",
+        "seasonal change"
+      ],
+      "kits": [
+        "establish-living-sign-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Anomaly Signs",
+      "slug": "anomaly-signs",
+      "path": "n:horror-corridor:corridor:atmosphere:landmarks:anomaly-signs",
+      "parentPath": "n:horror-corridor:corridor:atmosphere:landmarks",
+      "sourceDepth": 3,
+      "states": [
+        "glow signs",
+        "disturbance signs",
+        "reliability"
+      ],
+      "kits": [
+        "reveal-anomaly-sign-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Trail Signs",
+      "slug": "trail-signs",
+      "path": "n:horror-corridor:corridor:atmosphere:landmarks:trail-signs",
+      "parentPath": "n:horror-corridor:corridor:atmosphere:landmarks",
+      "sourceDepth": 3,
+      "states": [
+        "mark signs",
+        "blood signs",
+        "creature signs"
+      ],
+      "kits": [
+        "read-trail-sign-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Traces",
+      "slug": "traces",
+      "path": "n:horror-corridor:corridor:traces",
+      "parentPath": "n:horror-corridor:corridor",
+      "sourceDepth": 1,
+      "states": [
+        "trace ownership",
+        "trace continuity",
+        "trace age"
+      ],
+      "kits": [
+        "preserve-world-traces-kit"
+      ],
+      "services": [
+        "read-trace"
+      ]
+    },
+    {
+      "name": "Explorer Marks",
+      "slug": "explorer-marks",
+      "path": "n:horror-corridor:corridor:traces:explorer-marks",
+      "parentPath": "n:horror-corridor:corridor:traces",
+      "sourceDepth": 2,
+      "states": [
+        "mark membership",
+        "mark positions",
+        "mark ages",
+        "mark condition"
+      ],
+      "kits": [
+        "leave-explorer-mark-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Mark",
+      "slug": "mark",
+      "path": "n:horror-corridor:corridor:traces:explorer-marks:mark",
+      "parentPath": "n:horror-corridor:corridor:traces:explorer-marks",
+      "sourceDepth": 3,
+      "states": [
+        "author",
+        "sign",
+        "position",
+        "age"
+      ],
+      "kits": [
+        "age-explorer-mark-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Blood Trails",
+      "slug": "blood-trails",
+      "path": "n:horror-corridor:corridor:traces:blood-trails",
+      "parentPath": "n:horror-corridor:corridor:traces",
+      "sourceDepth": 2,
+      "states": [
+        "trail membership",
+        "trail continuity"
+      ],
+      "kits": [
+        "lay-blood-trail-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Blood Trail",
+      "slug": "blood-trail",
+      "path": "n:horror-corridor:corridor:traces:blood-trails:blood-trail",
+      "parentPath": "n:horror-corridor:corridor:traces:blood-trails",
+      "sourceDepth": 3,
+      "states": [
+        "origin",
+        "continuity",
+        "age"
+      ],
+      "kits": [
+        "age-blood-trail-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Stains",
+      "slug": "stains",
+      "path": "n:horror-corridor:corridor:traces:blood-trails:blood-trail:stains",
+      "parentPath": "n:horror-corridor:corridor:traces:blood-trails:blood-trail",
+      "sourceDepth": 4,
+      "states": [
+        "stain membership",
+        "stain spacing"
+      ],
+      "kits": [
+        "scatter-blood-stains-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Stain",
+      "slug": "stain",
+      "path": "n:horror-corridor:corridor:traces:blood-trails:blood-trail:stains:stain",
+      "parentPath": "n:horror-corridor:corridor:traces:blood-trails:blood-trail:stains",
+      "sourceDepth": 5,
+      "states": [
+        "position",
+        "shape",
+        "wetness",
+        "age",
+        "condition"
+      ],
+      "kits": [
+        "age-stain-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Creature Signs",
+      "slug": "creature-signs",
+      "path": "n:horror-corridor:corridor:traces:creature-signs",
+      "parentPath": "n:horror-corridor:corridor:traces",
+      "sourceDepth": 2,
+      "states": [
+        "sign membership",
+        "sign positions",
+        "sign freshness",
+        "sign certainty"
+      ],
+      "kits": [
+        "leave-creature-sign-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Party",
+      "slug": "party",
+      "path": "n:horror-corridor:party",
+      "parentPath": "n:horror-corridor",
+      "sourceDepth": 0,
+      "states": [
+        "party identity",
+        "party readiness"
+      ],
+      "kits": [
+        "n-core-character-kit",
+        "n-core-player-kit",
+        "n-core-motion-kit",
+        "horror-party-kit",
+        "keep-party-kit"
+      ],
+      "services": [
+        "party-service"
+      ]
+    },
+    {
+      "name": "Gathering",
+      "slug": "gathering",
+      "path": "n:horror-corridor:party:gathering",
+      "parentPath": "n:horror-corridor:party",
+      "sourceDepth": 1,
+      "states": [
+        "members",
+        "roles",
+        "connection presence",
+        "readiness"
+      ],
+      "kits": [
+        "gather-party-kit"
+      ],
+      "services": [
+        "change-party-membership"
+      ]
+    },
+    {
+      "name": "Explorers",
+      "slug": "explorers",
+      "path": "n:horror-corridor:party:explorers",
+      "parentPath": "n:horror-corridor:party",
+      "sourceDepth": 1,
+      "states": [
+        "explorer membership",
+        "active explorers"
+      ],
+      "kits": [
+        "keep-explorers-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Explorer",
+      "slug": "explorer",
+      "path": "n:horror-corridor:party:explorers:explorer",
+      "parentPath": "n:horror-corridor:party:explorers",
+      "sourceDepth": 2,
+      "states": [
+        "identity",
+        "role",
+        "active status"
+      ],
+      "kits": [
+        "sustain-explorer-kit"
+      ],
+      "services": [
+        "inspect-explorer"
+      ]
+    },
+    {
+      "name": "Body",
+      "slug": "body",
+      "path": "n:horror-corridor:party:explorers:explorer:body",
+      "parentPath": "n:horror-corridor:party:explorers:explorer",
+      "sourceDepth": 3,
+      "states": [
+        "position",
+        "facing",
+        "posture",
+        "grounded status"
+      ],
+      "kits": [
+        "character-movement-kit",
+        "first-person-body-kit"
+      ],
+      "services": [
+        "move-explorer"
+      ]
+    },
+    {
+      "name": "Stance",
+      "slug": "stance",
+      "path": "n:horror-corridor:party:explorers:explorer:body:stance",
+      "parentPath": "n:horror-corridor:party:explorers:explorer:body",
+      "sourceDepth": 4,
+      "states": [
+        "height",
+        "balance",
+        "movement freedom"
+      ],
+      "kits": [
+        "settle-stance-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Footing",
+      "slug": "footing",
+      "path": "n:horror-corridor:party:explorers:explorer:body:footing",
+      "parentPath": "n:horror-corridor:party:explorers:explorer:body",
+      "sourceDepth": 4,
+      "states": [
+        "contact surface",
+        "grip",
+        "stability"
+      ],
+      "kits": [
+        "resolve-footing-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Gaze",
+      "slug": "gaze",
+      "path": "n:horror-corridor:party:explorers:explorer:gaze",
+      "parentPath": "n:horror-corridor:party:explorers:explorer",
+      "sourceDepth": 3,
+      "states": [
+        "direction",
+        "focus",
+        "comfort",
+        "occlusion"
+      ],
+      "kits": [
+        "character-camera-kit",
+        "camera-occlusion-kit"
+      ],
+      "services": [
+        "turn-gaze"
+      ]
+    },
+    {
+      "name": "Hands",
+      "slug": "hands",
+      "path": "n:horror-corridor:party:explorers:explorer:hands",
+      "parentPath": "n:horror-corridor:party:explorers:explorer",
+      "sourceDepth": 3,
+      "states": [
+        "visible hands",
+        "carry posture",
+        "interaction posture"
+      ],
+      "kits": [
+        "show-first-person-hands-kit",
+        "pose-carrying-hands-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Condition",
+      "slug": "condition",
+      "path": "n:horror-corridor:party:explorers:explorer:condition",
+      "parentPath": "n:horror-corridor:party:explorers:explorer",
+      "sourceDepth": 3,
+      "states": [
+        "overall state",
+        "worsening causes",
+        "recovery causes"
+      ],
+      "kits": [
+        "combine-explorer-condition-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Stress",
+      "slug": "stress",
+      "path": "n:horror-corridor:party:explorers:explorer:condition:stress",
+      "parentPath": "n:horror-corridor:party:explorers:explorer:condition",
+      "sourceDepth": 4,
+      "states": [
+        "current stress",
+        "stress trend",
+        "stress history"
+      ],
+      "kits": [
+        "raise-explorer-stress-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Exposure",
+      "slug": "exposure",
+      "path": "n:horror-corridor:party:explorers:explorer:condition:exposure",
+      "parentPath": "n:horror-corridor:party:explorers:explorer:condition",
+      "sourceDepth": 4,
+      "states": [
+        "active exposures",
+        "accumulated exposure",
+        "recovery"
+      ],
+      "kits": [
+        "accumulate-exposure-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Injury",
+      "slug": "injury",
+      "path": "n:horror-corridor:party:explorers:explorer:condition:injury",
+      "parentPath": "n:horror-corridor:party:explorers:explorer:condition",
+      "sourceDepth": 4,
+      "states": [
+        "wounds",
+        "impairment",
+        "stability"
+      ],
+      "kits": [
+        "resolve-injury-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Orientation",
+      "slug": "orientation",
+      "path": "n:horror-corridor:party:explorers:explorer:condition:orientation",
+      "parentPath": "n:horror-corridor:party:explorers:explorer:condition",
+      "sourceDepth": 4,
+      "states": [
+        "heading confidence",
+        "place confidence",
+        "return confidence"
+      ],
+      "kits": [
+        "update-orientation-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Carry",
+      "slug": "carry",
+      "path": "n:horror-corridor:party:explorers:explorer:carry",
+      "parentPath": "n:horror-corridor:party:explorers:explorer",
+      "sourceDepth": 3,
+      "states": [
+        "carried subject",
+        "carry capacity",
+        "carry posture"
+      ],
+      "kits": [
+        "single-carry-kit"
+      ],
+      "services": [
+        "change-carry"
+      ]
+    },
+    {
+      "name": "Empty Hands",
+      "slug": "empty-hands",
+      "path": "n:horror-corridor:party:explorers:explorer:carry:empty-hands",
+      "parentPath": "n:horror-corridor:party:explorers:explorer:carry",
+      "sourceDepth": 4,
+      "states": [
+        "availability",
+        "interaction freedom"
+      ],
+      "kits": [
+        "free-hands-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Held Relic",
+      "slug": "held-relic",
+      "path": "n:horror-corridor:party:explorers:explorer:carry:held-relic",
+      "parentPath": "n:horror-corridor:party:explorers:explorer:carry",
+      "sourceDepth": 4,
+      "states": [
+        "relic identity",
+        "grip",
+        "visible presence"
+      ],
+      "kits": [
+        "hold-relic-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Memory",
+      "slug": "memory",
+      "path": "n:horror-corridor:party:explorers:explorer:memory",
+      "parentPath": "n:horror-corridor:party:explorers:explorer",
+      "sourceDepth": 3,
+      "states": [
+        "remembered world",
+        "confidence",
+        "forgetting"
+      ],
+      "kits": [
+        "sustain-explorer-memory-kit"
+      ],
+      "services": [
+        "recall-explorer-memory"
+      ]
+    },
+    {
+      "name": "Known Places",
+      "slug": "known-places",
+      "path": "n:horror-corridor:party:explorers:explorer:memory:known-places",
+      "parentPath": "n:horror-corridor:party:explorers:explorer:memory",
+      "sourceDepth": 4,
+      "states": [
+        "places",
+        "visit history",
+        "confidence"
+      ],
+      "kits": [
+        "remember-visited-place-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Known Ways",
+      "slug": "known-ways",
+      "path": "n:horror-corridor:party:explorers:explorer:memory:known-ways",
+      "parentPath": "n:horror-corridor:party:explorers:explorer:memory",
+      "sourceDepth": 4,
+      "states": [
+        "ways",
+        "traversal history",
+        "confidence"
+      ],
+      "kits": [
+        "remember-traveled-way-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Known Landmarks",
+      "slug": "known-landmarks",
+      "path": "n:horror-corridor:party:explorers:explorer:memory:known-landmarks",
+      "parentPath": "n:horror-corridor:party:explorers:explorer:memory",
+      "sourceDepth": 4,
+      "states": [
+        "landmarks",
+        "sighting history",
+        "confidence"
+      ],
+      "kits": [
+        "remember-landmark-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Personal Trail",
+      "slug": "personal-trail",
+      "path": "n:horror-corridor:party:explorers:explorer:memory:personal-trail",
+      "parentPath": "n:horror-corridor:party:explorers:explorer:memory",
+      "sourceDepth": 4,
+      "states": [
+        "marks",
+        "continuity",
+        "age"
+      ],
+      "kits": [
+        "remember-personal-trail-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Presence",
+      "slug": "presence",
+      "path": "n:horror-corridor:party:explorers:explorer:presence",
+      "parentPath": "n:horror-corridor:party:explorers:explorer",
+      "sourceDepth": 3,
+      "states": [
+        "local presence",
+        "remote presence",
+        "visibility",
+        "audibility"
+      ],
+      "kits": [
+        "share-explorer-presence-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Visible Presence",
+      "slug": "visible-presence",
+      "path": "n:horror-corridor:party:explorers:explorer:presence:visible-presence",
+      "parentPath": "n:horror-corridor:party:explorers:explorer:presence",
+      "sourceDepth": 4,
+      "states": [
+        "visible body",
+        "occlusion",
+        "distance"
+      ],
+      "kits": [
+        "show-remote-explorer-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Audible Presence",
+      "slug": "audible-presence",
+      "path": "n:horror-corridor:party:explorers:explorer:presence:audible-presence",
+      "parentPath": "n:horror-corridor:party:explorers:explorer:presence",
+      "sourceDepth": 4,
+      "states": [
+        "audible actions",
+        "sound reach",
+        "direction"
+      ],
+      "kits": [
+        "sound-remote-explorer-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Remote Presence",
+      "slug": "remote-presence",
+      "path": "n:horror-corridor:party:explorers:explorer:presence:remote-presence",
+      "parentPath": "n:horror-corridor:party:explorers:explorer:presence",
+      "sourceDepth": 4,
+      "states": [
+        "connection",
+        "latest pose",
+        "latest action"
+      ],
+      "kits": [
+        "receive-remote-presence-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Togetherness",
+      "slug": "togetherness",
+      "path": "n:horror-corridor:party:togetherness",
+      "parentPath": "n:horror-corridor:party",
+      "sourceDepth": 1,
+      "states": [
+        "party proximity",
+        "party separation",
+        "coordination",
+        "shared knowledge"
+      ],
+      "kits": [
+        "keep-party-together-kit"
+      ],
+      "services": [
+        "inspect-togetherness"
+      ]
+    },
+    {
+      "name": "Nearness",
+      "slug": "nearness",
+      "path": "n:horror-corridor:party:togetherness:nearness",
+      "parentPath": "n:horror-corridor:party:togetherness",
+      "sourceDepth": 2,
+      "states": [
+        "nearby pairs",
+        "group center",
+        "visual contact"
+      ],
+      "kits": [
+        "measure-party-nearness-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Separation",
+      "slug": "separation",
+      "path": "n:horror-corridor:party:togetherness:separation",
+      "parentPath": "n:horror-corridor:party:togetherness",
+      "sourceDepth": 2,
+      "states": [
+        "separated members",
+        "separation distance",
+        "separation duration"
+      ],
+      "kits": [
+        "measure-party-separation-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Coordination",
+      "slug": "coordination",
+      "path": "n:horror-corridor:party:togetherness:coordination",
+      "parentPath": "n:horror-corridor:party:togetherness",
+      "sourceDepth": 2,
+      "states": [
+        "shared intent",
+        "assigned roles",
+        "conflicting actions"
+      ],
+      "kits": [
+        "coordinate-party-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Shared Knowledge",
+      "slug": "shared-knowledge",
+      "path": "n:horror-corridor:party:togetherness:shared-knowledge",
+      "parentPath": "n:horror-corridor:party:togetherness",
+      "sourceDepth": 2,
+      "states": [
+        "shared places",
+        "shared ways",
+        "shared relic knowledge"
+      ],
+      "kits": [
+        "share-party-knowledge-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Signals",
+      "slug": "signals",
+      "path": "n:horror-corridor:party:signals",
+      "parentPath": "n:horror-corridor:party",
+      "sourceDepth": 1,
+      "states": [
+        "active signals",
+        "signal authors",
+        "signal meanings"
+      ],
+      "kits": [
+        "exchange-party-signals-kit"
+      ],
+      "services": [
+        "emit-party-signal"
+      ]
+    },
+    {
+      "name": "World Marks",
+      "slug": "world-marks",
+      "path": "n:horror-corridor:party:signals:world-marks",
+      "parentPath": "n:horror-corridor:party:signals",
+      "sourceDepth": 2,
+      "states": [
+        "placed marks",
+        "mark meanings",
+        "mark ages"
+      ],
+      "kits": [
+        "place-world-mark-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Carry Signals",
+      "slug": "carry-signals",
+      "path": "n:horror-corridor:party:signals:carry-signals",
+      "parentPath": "n:horror-corridor:party:signals",
+      "sourceDepth": 2,
+      "states": [
+        "visible carried relics",
+        "carry intentions",
+        "acknowledgements"
+      ],
+      "kits": [
+        "signal-carry-state-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Objective Signals",
+      "slug": "objective-signals",
+      "path": "n:horror-corridor:party:signals:objective-signals",
+      "parentPath": "n:horror-corridor:party:signals",
+      "sourceDepth": 2,
+      "states": [
+        "search signals",
+        "return signals",
+        "offering signals"
+      ],
+      "kits": [
+        "signal-objective-state-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Dread",
+      "slug": "dread",
+      "path": "n:horror-corridor:dread",
+      "parentPath": "n:horror-corridor",
+      "sourceDepth": 0,
+      "states": [
+        "current pressure",
+        "pressure trend"
+      ],
+      "kits": [
+        "n-core-creature-kit",
+        "n-core-audio-kit",
+        "n-core-spatial-kit",
+        "n-core-interaction-kit",
+        "n-core-simulation-kit",
+        "n-core-graphics-kit",
+        "horror-dread-kit",
+        "resource-pressure-kit",
+        "raise-dread-kit"
+      ],
+      "services": [
+        "dread-service"
+      ]
+    },
+    {
+      "name": "Tension",
+      "slug": "tension",
+      "path": "n:horror-corridor:dread:tension",
+      "parentPath": "n:horror-corridor:dread",
+      "sourceDepth": 1,
+      "states": [
+        "current tension",
+        "current movement",
+        "history"
+      ],
+      "kits": [
+        "pace-tension-kit"
+      ],
+      "services": [
+        "read-tension"
+      ]
+    },
+    {
+      "name": "Baseline",
+      "slug": "baseline",
+      "path": "n:horror-corridor:dread:tension:baseline",
+      "parentPath": "n:horror-corridor:dread:tension",
+      "sourceDepth": 2,
+      "states": [
+        "resting pressure",
+        "environmental unease",
+        "party unease"
+      ],
+      "kits": [
+        "establish-dread-baseline-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Omens",
+      "slug": "omens",
+      "path": "n:horror-corridor:dread:tension:omens",
+      "parentPath": "n:horror-corridor:dread:tension",
+      "sourceDepth": 2,
+      "states": [
+        "active omens",
+        "perceived omens",
+        "omen credibility"
+      ],
+      "kits": [
+        "foreshadow-danger-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Escalation",
+      "slug": "escalation",
+      "path": "n:horror-corridor:dread:tension:escalation",
+      "parentPath": "n:horror-corridor:dread:tension",
+      "sourceDepth": 2,
+      "states": [
+        "current rise",
+        "rise causes",
+        "peak approach"
+      ],
+      "kits": [
+        "escalate-tension-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Reprieve",
+      "slug": "reprieve",
+      "path": "n:horror-corridor:dread:tension:reprieve",
+      "parentPath": "n:horror-corridor:dread:tension",
+      "sourceDepth": 2,
+      "states": [
+        "current relief",
+        "relief cause",
+        "relief duration"
+      ],
+      "kits": [
+        "release-tension-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Crescendo",
+      "slug": "crescendo",
+      "path": "n:horror-corridor:dread:tension:crescendo",
+      "parentPath": "n:horror-corridor:dread:tension",
+      "sourceDepth": 2,
+      "states": [
+        "peak pressure",
+        "peak cause",
+        "resolution"
+      ],
+      "kits": [
+        "crest-tension-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Lostness",
+      "slug": "lostness",
+      "path": "n:horror-corridor:dread:lostness",
+      "parentPath": "n:horror-corridor:dread",
+      "sourceDepth": 1,
+      "states": [
+        "orientation confidence",
+        "route uncertainty",
+        "return uncertainty",
+        "landmark doubt"
+      ],
+      "kits": [
+        "deepen-lostness-kit"
+      ],
+      "services": [
+        "read-lostness"
+      ]
+    },
+    {
+      "name": "Orientation",
+      "slug": "orientation",
+      "path": "n:horror-corridor:dread:lostness:orientation",
+      "parentPath": "n:horror-corridor:dread:lostness",
+      "sourceDepth": 2,
+      "states": [
+        "believed heading",
+        "actual heading",
+        "mismatch"
+      ],
+      "kits": [
+        "unsettle-orientation-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Way Doubt",
+      "slug": "way-doubt",
+      "path": "n:horror-corridor:dread:lostness:way-doubt",
+      "parentPath": "n:horror-corridor:dread:lostness",
+      "sourceDepth": 2,
+      "states": [
+        "doubted ways",
+        "conflicting evidence",
+        "confidence loss"
+      ],
+      "kits": [
+        "seed-way-doubt-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Return Doubt",
+      "slug": "return-doubt",
+      "path": "n:horror-corridor:dread:lostness:return-doubt",
+      "parentPath": "n:horror-corridor:dread:lostness",
+      "sourceDepth": 2,
+      "states": [
+        "believed return way",
+        "broken return links",
+        "confidence loss"
+      ],
+      "kits": [
+        "obscure-return-way-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Landmark Doubt",
+      "slug": "landmark-doubt",
+      "path": "n:horror-corridor:dread:lostness:landmark-doubt",
+      "parentPath": "n:horror-corridor:dread:lostness",
+      "sourceDepth": 2,
+      "states": [
+        "doubted landmarks",
+        "false matches",
+        "confidence loss"
+      ],
+      "kits": [
+        "blur-landmark-memory-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Isolation",
+      "slug": "isolation",
+      "path": "n:horror-corridor:dread:isolation",
+      "parentPath": "n:horror-corridor:dread",
+      "sourceDepth": 1,
+      "states": [
+        "party separation",
+        "visibility separation",
+        "knowledge separation",
+        "communication loss"
+      ],
+      "kits": [
+        "deepen-isolation-kit"
+      ],
+      "services": [
+        "read-isolation"
+      ]
+    },
+    {
+      "name": "Distance",
+      "slug": "distance",
+      "path": "n:horror-corridor:dread:isolation:distance",
+      "parentPath": "n:horror-corridor:dread:isolation",
+      "sourceDepth": 2,
+      "states": [
+        "separated pairs",
+        "distance",
+        "duration"
+      ],
+      "kits": [
+        "stretch-party-distance-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Occlusion",
+      "slug": "occlusion",
+      "path": "n:horror-corridor:dread:isolation:occlusion",
+      "parentPath": "n:horror-corridor:dread:isolation",
+      "sourceDepth": 2,
+      "states": [
+        "hidden party members",
+        "blocking geometry",
+        "last visual contact"
+      ],
+      "kits": [
+        "break-visual-contact-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Silence",
+      "slug": "silence",
+      "path": "n:horror-corridor:dread:isolation:silence",
+      "parentPath": "n:horror-corridor:dread:isolation",
+      "sourceDepth": 2,
+      "states": [
+        "unheard party members",
+        "silent duration",
+        "last sound contact"
+      ],
+      "kits": [
+        "break-audible-contact-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Knowledge Gap",
+      "slug": "knowledge-gap",
+      "path": "n:horror-corridor:dread:isolation:knowledge-gap",
+      "parentPath": "n:horror-corridor:dread:isolation",
+      "sourceDepth": 2,
+      "states": [
+        "unshared discoveries",
+        "conflicting knowledge",
+        "unknown member intent"
+      ],
+      "kits": [
+        "widen-knowledge-gap-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Hazards",
+      "slug": "hazards",
+      "path": "n:horror-corridor:dread:hazards",
+      "parentPath": "n:horror-corridor:dread",
+      "sourceDepth": 1,
+      "states": [
+        "active hazards",
+        "exposed explorers",
+        "blocked places"
+      ],
+      "kits": [
+        "hazard-field-kit"
+      ],
+      "services": [
+        "inspect-hazard"
+      ]
+    },
+    {
+      "name": "Collapse",
+      "slug": "collapse",
+      "path": "n:horror-corridor:dread:hazards:collapse",
+      "parentPath": "n:horror-corridor:dread:hazards",
+      "sourceDepth": 2,
+      "states": [
+        "unstable structures",
+        "active collapse",
+        "new obstruction"
+      ],
+      "kits": [
+        "trigger-collapse-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Warning",
+      "slug": "warning",
+      "path": "n:horror-corridor:dread:hazards:collapse:warning",
+      "parentPath": "n:horror-corridor:dread:hazards:collapse",
+      "sourceDepth": 3,
+      "states": [
+        "sounds",
+        "falling dust",
+        "visible movement"
+      ],
+      "kits": [
+        "warn-collapse-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Fall",
+      "slug": "fall",
+      "path": "n:horror-corridor:dread:hazards:collapse:fall",
+      "parentPath": "n:horror-corridor:dread:hazards:collapse",
+      "sourceDepth": 3,
+      "states": [
+        "falling pieces",
+        "fall path",
+        "impact"
+      ],
+      "kits": [
+        "drop-collapse-debris-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Obstruction",
+      "slug": "obstruction",
+      "path": "n:horror-corridor:dread:hazards:collapse:obstruction",
+      "parentPath": "n:horror-corridor:dread:hazards:collapse",
+      "sourceDepth": 3,
+      "states": [
+        "blocked span",
+        "debris body",
+        "passability"
+      ],
+      "kits": [
+        "settle-collapse-obstruction-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Flood",
+      "slug": "flood",
+      "path": "n:horror-corridor:dread:hazards:flood",
+      "parentPath": "n:horror-corridor:dread:hazards",
+      "sourceDepth": 2,
+      "states": [
+        "water body",
+        "occupied places",
+        "depth",
+        "traversability"
+      ],
+      "kits": [
+        "advance-flood-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Rise",
+      "slug": "rise",
+      "path": "n:horror-corridor:dread:hazards:flood:rise",
+      "parentPath": "n:horror-corridor:dread:hazards:flood",
+      "sourceDepth": 3,
+      "states": [
+        "waterline",
+        "rise rate",
+        "source"
+      ],
+      "kits": [
+        "raise-waterline-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Current",
+      "slug": "current",
+      "path": "n:horror-corridor:dread:hazards:flood:current",
+      "parentPath": "n:horror-corridor:dread:hazards:flood",
+      "sourceDepth": 3,
+      "states": [
+        "direction",
+        "strength",
+        "carried debris"
+      ],
+      "kits": [
+        "push-flood-current-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Passage",
+      "slug": "passage",
+      "path": "n:horror-corridor:dread:hazards:flood:passage",
+      "parentPath": "n:horror-corridor:dread:hazards:flood",
+      "sourceDepth": 3,
+      "states": [
+        "passable spans",
+        "dangerous spans",
+        "closed spans"
+      ],
+      "kits": [
+        "resolve-flood-passage-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Contamination",
+      "slug": "contamination",
+      "path": "n:horror-corridor:dread:hazards:contamination",
+      "parentPath": "n:horror-corridor:dread:hazards",
+      "sourceDepth": 2,
+      "states": [
+        "contaminated places",
+        "contaminated growth",
+        "exposed explorers"
+      ],
+      "kits": [
+        "spread-contamination-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Blight",
+      "slug": "blight",
+      "path": "n:horror-corridor:dread:hazards:contamination:blight",
+      "parentPath": "n:horror-corridor:dread:hazards:contamination",
+      "sourceDepth": 3,
+      "states": [
+        "blighted growth",
+        "spread",
+        "severity"
+      ],
+      "kits": [
+        "blight-overgrowth-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Exposure",
+      "slug": "exposure",
+      "path": "n:horror-corridor:dread:hazards:contamination:exposure",
+      "parentPath": "n:horror-corridor:dread:hazards:contamination",
+      "sourceDepth": 3,
+      "states": [
+        "exposed explorers",
+        "dose",
+        "duration"
+      ],
+      "kits": [
+        "accumulate-contamination-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Consequence",
+      "slug": "consequence",
+      "path": "n:horror-corridor:dread:hazards:contamination:consequence",
+      "parentPath": "n:horror-corridor:dread:hazards:contamination",
+      "sourceDepth": 3,
+      "states": [
+        "active effects",
+        "persistence",
+        "recovery"
+      ],
+      "kits": [
+        "resolve-contamination-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Haunting",
+      "slug": "haunting",
+      "path": "n:horror-corridor:dread:haunting",
+      "parentPath": "n:horror-corridor:dread",
+      "sourceDepth": 1,
+      "states": [
+        "active hauntings",
+        "witnessed hauntings",
+        "haunting history"
+      ],
+      "kits": [
+        "schedule-haunting-kit"
+      ],
+      "services": [
+        "invoke-haunting"
+      ]
+    },
+    {
+      "name": "Apparitions",
+      "slug": "apparitions",
+      "path": "n:horror-corridor:dread:haunting:apparitions",
+      "parentPath": "n:horror-corridor:dread:haunting",
+      "sourceDepth": 2,
+      "states": [
+        "false landmarks",
+        "fog figures",
+        "light figures"
+      ],
+      "kits": [
+        "show-apparition-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Whispers",
+      "slug": "whispers",
+      "path": "n:horror-corridor:dread:haunting:whispers",
+      "parentPath": "n:horror-corridor:dread:haunting",
+      "sourceDepth": 2,
+      "states": [
+        "phantom sounds",
+        "false directions",
+        "delayed echoes"
+      ],
+      "kits": [
+        "cast-whisper-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Shifting Ways",
+      "slug": "shifting-ways",
+      "path": "n:horror-corridor:dread:haunting:shifting-ways",
+      "parentPath": "n:horror-corridor:dread:haunting",
+      "sourceDepth": 2,
+      "states": [
+        "doubted routes",
+        "false thresholds",
+        "changed places"
+      ],
+      "kits": [
+        "seem-to-shift-way-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Hunter",
+      "slug": "hunter",
+      "path": "n:horror-corridor:dread:hunter",
+      "parentPath": "n:horror-corridor:dread",
+      "sourceDepth": 1,
+      "states": [
+        "presence",
+        "intent",
+        "pursuit"
+      ],
+      "kits": [
+        "pursuit-pressure-kit",
+        "sustain-hunter-kit"
+      ],
+      "services": [
+        "inspect-hunter"
+      ]
+    },
+    {
+      "name": "Creature",
+      "slug": "creature",
+      "path": "n:horror-corridor:dread:hunter:creature",
+      "parentPath": "n:horror-corridor:dread:hunter",
+      "sourceDepth": 2,
+      "states": [
+        "identity",
+        "body",
+        "condition",
+        "location"
+      ],
+      "kits": [
+        "embody-hunter-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Presence",
+      "slug": "presence",
+      "path": "n:horror-corridor:dread:hunter:presence",
+      "parentPath": "n:horror-corridor:dread:hunter",
+      "sourceDepth": 2,
+      "states": [
+        "direction",
+        "distance",
+        "pressure"
+      ],
+      "kits": [
+        "approach-from-unseen-kit"
+      ],
+      "services": [
+        "read-hunter-presence"
+      ]
+    },
+    {
+      "name": "Signs",
+      "slug": "signs",
+      "path": "n:horror-corridor:dread:hunter:presence:signs",
+      "parentPath": "n:horror-corridor:dread:hunter:presence",
+      "sourceDepth": 3,
+      "states": [
+        "audible signs",
+        "sign direction",
+        "sign intensity"
+      ],
+      "kits": [
+        "signal-monster-nearness-kit"
+      ],
+      "services": [
+        "hear-monster-sign"
+      ]
+    },
+    {
+      "name": "Nearness",
+      "slug": "nearness",
+      "path": "n:horror-corridor:dread:hunter:presence:nearness",
+      "parentPath": "n:horror-corridor:dread:hunter:presence",
+      "sourceDepth": 3,
+      "states": [
+        "current distance",
+        "closest approach",
+        "arrival status"
+      ],
+      "kits": [
+        "close-hunter-distance-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Awareness",
+      "slug": "awareness",
+      "path": "n:horror-corridor:dread:hunter:awareness",
+      "parentPath": "n:horror-corridor:dread:hunter",
+      "sourceDepth": 2,
+      "states": [
+        "awareness level",
+        "known explorers",
+        "last evidence"
+      ],
+      "kits": [
+        "perceive-explorer-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Attention",
+      "slug": "attention",
+      "path": "n:horror-corridor:dread:hunter:awareness:attention",
+      "parentPath": "n:horror-corridor:dread:hunter:awareness",
+      "sourceDepth": 3,
+      "states": [
+        "current focus",
+        "competing stimuli",
+        "persistence"
+      ],
+      "kits": [
+        "turn-hunter-attention-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Certainty",
+      "slug": "certainty",
+      "path": "n:horror-corridor:dread:hunter:awareness:certainty",
+      "parentPath": "n:horror-corridor:dread:hunter:awareness",
+      "sourceDepth": 3,
+      "states": [
+        "target certainty",
+        "evidence weight",
+        "decay"
+      ],
+      "kits": [
+        "update-hunter-certainty-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Memory",
+      "slug": "memory",
+      "path": "n:horror-corridor:dread:hunter:awareness:memory",
+      "parentPath": "n:horror-corridor:dread:hunter:awareness",
+      "sourceDepth": 3,
+      "states": [
+        "remembered explorers",
+        "remembered places",
+        "remembered trails"
+      ],
+      "kits": [
+        "remember-hunter-evidence-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Intent",
+      "slug": "intent",
+      "path": "n:horror-corridor:dread:hunter:intent",
+      "parentPath": "n:horror-corridor:dread:hunter",
+      "sourceDepth": 2,
+      "states": [
+        "current purpose",
+        "chosen target",
+        "commitment"
+      ],
+      "kits": [
+        "choose-hunter-intent-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Stalking",
+      "slug": "stalking",
+      "path": "n:horror-corridor:dread:hunter:intent:stalking",
+      "parentPath": "n:horror-corridor:dread:hunter:intent",
+      "sourceDepth": 3,
+      "states": [
+        "stalking target",
+        "concealment",
+        "approach"
+      ],
+      "kits": [
+        "stalk-explorer-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Searching",
+      "slug": "searching",
+      "path": "n:horror-corridor:dread:hunter:intent:searching",
+      "parentPath": "n:horror-corridor:dread:hunter:intent",
+      "sourceDepth": 3,
+      "states": [
+        "search places",
+        "search route",
+        "search progress"
+      ],
+      "kits": [
+        "search-for-explorer-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Chasing",
+      "slug": "chasing",
+      "path": "n:horror-corridor:dread:hunter:intent:chasing",
+      "parentPath": "n:horror-corridor:dread:hunter:intent",
+      "sourceDepth": 3,
+      "states": [
+        "chased explorer",
+        "chase route",
+        "closing speed"
+      ],
+      "kits": [
+        "chase-explorer-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Territory",
+      "slug": "territory",
+      "path": "n:horror-corridor:dread:hunter:territory",
+      "parentPath": "n:horror-corridor:dread:hunter",
+      "sourceDepth": 2,
+      "states": [
+        "claimed places",
+        "patrol reach",
+        "intrusion"
+      ],
+      "kits": [
+        "defend-hunter-territory-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Lair",
+      "slug": "lair",
+      "path": "n:horror-corridor:dread:hunter:territory:lair",
+      "parentPath": "n:horror-corridor:dread:hunter:territory",
+      "sourceDepth": 3,
+      "states": [
+        "place",
+        "occupancy",
+        "stored signs"
+      ],
+      "kits": [
+        "establish-hunter-lair-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Patrol",
+      "slug": "patrol",
+      "path": "n:horror-corridor:dread:hunter:territory:patrol",
+      "parentPath": "n:horror-corridor:dread:hunter:territory",
+      "sourceDepth": 3,
+      "states": [
+        "patrol ways",
+        "current circuit",
+        "interruptions"
+      ],
+      "kits": [
+        "patrol-territory-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Intrusion",
+      "slug": "intrusion",
+      "path": "n:horror-corridor:dread:hunter:territory:intrusion",
+      "parentPath": "n:horror-corridor:dread:hunter:territory",
+      "sourceDepth": 3,
+      "states": [
+        "intruding explorers",
+        "intrusion depth",
+        "response"
+      ],
+      "kits": [
+        "answer-territory-intrusion-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Pursuit",
+      "slug": "pursuit",
+      "path": "n:horror-corridor:dread:hunter:pursuit",
+      "parentPath": "n:horror-corridor:dread:hunter",
+      "sourceDepth": 2,
+      "states": [
+        "target",
+        "pursuit path",
+        "distance",
+        "momentum"
+      ],
+      "kits": [
+        "pursue-explorer-kit"
+      ],
+      "services": [
+        "resolve-pursuit"
+      ]
+    },
+    {
+      "name": "Encounter",
+      "slug": "encounter",
+      "path": "n:horror-corridor:dread:hunter:encounter",
+      "parentPath": "n:horror-corridor:dread:hunter",
+      "sourceDepth": 2,
+      "states": [
+        "participants",
+        "place",
+        "proximity",
+        "beam contact",
+        "outcome"
+      ],
+      "kits": [
+        "resolve-hunter-encounter-kit"
+      ],
+      "services": [
+        "resolve-encounter"
+      ]
+    },
+    {
+      "name": "Approach",
+      "slug": "approach",
+      "path": "n:horror-corridor:dread:hunter:encounter:approach",
+      "parentPath": "n:horror-corridor:dread:hunter:encounter",
+      "sourceDepth": 3,
+      "states": [
+        "approach direction",
+        "approach distance",
+        "warning signs"
+      ],
+      "kits": [
+        "stage-stalker-approach-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Repulse",
+      "slug": "repulse",
+      "path": "n:horror-corridor:dread:hunter:encounter:repulse",
+      "parentPath": "n:horror-corridor:dread:hunter:encounter",
+      "sourceDepth": 3,
+      "states": [
+        "beam contact",
+        "held exposure",
+        "retreat distance"
+      ],
+      "kits": [
+        "repel-monster-with-beam-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Blackout",
+      "slug": "blackout",
+      "path": "n:horror-corridor:dread:hunter:encounter:blackout",
+      "parentPath": "n:horror-corridor:dread:hunter:encounter",
+      "sourceDepth": 3,
+      "states": [
+        "cause",
+        "remaining darkness",
+        "completed darkness"
+      ],
+      "kits": [
+        "force-monster-blackout-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Last Chance",
+      "slug": "last-chance",
+      "path": "n:horror-corridor:dread:hunter:encounter:last-chance",
+      "parentPath": "n:horror-corridor:dread:hunter:encounter",
+      "sourceDepth": 3,
+      "states": [
+        "remaining response",
+        "restored beam",
+        "response outcome"
+      ],
+      "kits": [
+        "open-last-chance-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Capture",
+      "slug": "capture",
+      "path": "n:horror-corridor:dread:hunter:encounter:capture",
+      "parentPath": "n:horror-corridor:dread:hunter:encounter",
+      "sourceDepth": 3,
+      "states": [
+        "capture status",
+        "jumpscare",
+        "expedition loss"
+      ],
+      "kits": [
+        "resolve-monster-capture-kit"
+      ],
+      "services": []
+    },
+    {
+      "name": "Shared Expedition",
+      "slug": "shared-expedition",
+      "path": "n:horror-corridor:shared-expedition",
+      "parentPath": "n:horror-corridor",
+      "sourceDepth": 0,
+      "states": [
+        "session identity"
+      ],
+      "kits": [
+        "n-core-network-kit",
+        "horror-shared-expedition-kit",
+        "peer-session-kit",
+        "sustain-shared-expedition-kit"
+      ],
+      "services": [
+        "session-service"
+      ]
+    },
+    {
+      "name": "Shared Departure",
+      "slug": "shared-departure",
+      "path": "n:horror-corridor:shared-expedition:shared-departure",
+      "parentPath": "n:horror-corridor:shared-expedition",
+      "sourceDepth": 1,
+      "states": [
+        "room identity",
+        "membership",
+        "readiness"
+      ],
+      "kits": [
+        "gather-shared-party-kit"
+      ],
+      "services": [
+        "join-gathering"
+      ]
+    },
+    {
+      "name": "Shared Journey",
+      "slug": "shared-journey",
+      "path": "n:horror-corridor:shared-expedition:shared-journey",
+      "parentPath": "n:horror-corridor:shared-expedition",
+      "sourceDepth": 1,
+      "states": [
+        "lobby",
+        "loading",
+        "playing",
+        "paused",
+        "complete"
+      ],
+      "kits": [
+        "lifecycle-progression-kit"
+      ],
+      "services": [
+        "change-session-phase"
+      ]
+    },
+    {
+      "name": "Stewardship",
+      "slug": "stewardship",
+      "path": "n:horror-corridor:shared-expedition:stewardship",
+      "parentPath": "n:horror-corridor:shared-expedition",
+      "sourceDepth": 1,
+      "states": [
+        "host truth",
+        "participant views",
+        "transfer readiness"
+      ],
+      "kits": [
+        "steward-session-truth-kit"
+      ],
+      "services": [
+        "resolve-session-truth"
+      ]
+    },
+    {
+      "name": "Shared World",
+      "slug": "shared-world",
+      "path": "n:horror-corridor:shared-expedition:shared-world",
+      "parentPath": "n:horror-corridor:shared-expedition",
+      "sourceDepth": 1,
+      "states": [
+        "expedition view",
+        "corridor view",
+        "party view",
+        "anomaly view",
+        "dread view"
+      ],
+      "kits": [
+        "share-world-snapshot-kit",
+        "reconcile-world-snapshot-kit"
+      ],
+      "services": [
+        "read-shared-world"
+      ]
+    },
+    {
+      "name": "Rejoining",
+      "slug": "rejoining",
+      "path": "n:horror-corridor:shared-expedition:rejoining",
+      "parentPath": "n:horror-corridor:shared-expedition",
+      "sourceDepth": 1,
+      "states": [
+        "connection",
+        "disconnection",
+        "recovery",
+        "restored place"
+      ],
+      "kits": [
+        "rejoin-party-kit"
+      ],
+      "services": [
+        "restore-participant"
+      ]
+    },
+    {
+      "name": "Shared Chronicle",
+      "slug": "shared-chronicle",
+      "path": "n:horror-corridor:shared-expedition:shared-chronicle",
+      "parentPath": "n:horror-corridor:shared-expedition",
+      "sourceDepth": 1,
+      "states": [
+        "snapshots",
+        "event history",
+        "recovery history"
+      ],
+      "kits": [
+        "record-shared-session-kit"
+      ],
+      "services": [
+        "read-session-record"
+      ]
+    }
+  ],
+  "hosts": [
+    {
+      "name": "browser-game-host",
+      "slug": "browser-game-host",
+      "kits": [
+        "core-startup-domain",
+        "n-core-platform-kit",
+        "n-core-input-kit",
+        "n-core-ui-kit",
+        "core-ui-scale-kit",
+        "core-presentation-domain",
+        "core-presentation-output-kit",
+        "input-intent-kit",
+        "pointer-lock-input-kit",
+        "menu-flow-kit",
+        "minimal-play-hud-kit"
+      ]
+    },
+    {
+      "name": "three-world-host",
+      "slug": "three-world-host",
+      "kits": [
+        "n-core-assets-kit",
+        "n-core-graphics-kit",
+        "n-core-camera-kit",
+        "core-camera-framing-kit",
+        "core-object-shape-domain",
+        "core-object-fidelity-domain",
+        "render-descriptor-kit",
+        "terrain-shader-kit",
+        "procedural-material-kit",
+        "scene-bundle-kit",
+        "post-process-kit"
+      ]
+    },
+    {
+      "name": "peerjs-transport-host",
+      "slug": "peerjs-transport-host",
+      "kits": [
+        "peer-transport-kit",
+        "protocol-serialization-kit",
+        "snapshot-transport-kit"
+      ]
+    },
+    {
+      "name": "headless-proof-host",
+      "slug": "headless-proof-host",
+      "kits": [
+        "n-core-diagnostics-kit",
+        "n-core-debug-kit",
+        "core-capture-domain",
+        "render-validation-kit",
+        "object-review-kit",
+        "visual-match-kit"
+      ]
+    }
+  ],
+  "proofs": [
+    {
+      "name": "domain-blueprint-proof",
+      "slug": "domain-blueprint-proof"
+    },
+    {
+      "name": "protokit-smoke-proof",
+      "slug": "protokit-smoke-proof"
+    },
+    {
+      "name": "reset-snapshot-proof",
+      "slug": "reset-snapshot-proof"
+    },
+    {
+      "name": "live-player-proof",
+      "slug": "live-player-proof"
+    },
+    {
+      "name": "object-review-proof",
+      "slug": "object-review-proof"
+    },
+    {
+      "name": "visual-match-proof",
+      "slug": "visual-match-proof"
+    }
+  ]
+}

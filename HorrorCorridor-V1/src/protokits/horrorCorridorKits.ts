@@ -11,6 +11,7 @@ import { createCableRunObjectKit } from "./cable-run-object-kit";
 import { createCeilingServiceStripObjectKit } from "./ceiling-service-strip-object-kit";
 import { createChainLinkFenceObjectKit } from "./chain-link-fence-object-kit";
 import { createCollapsedSignpostObjectKit } from "./collapsed-signpost-object-kit";
+import { createCollapsedCeilingObjectKit } from "./collapsed-ceiling-object-kit";
 import { createConcreteJerseyBarrierObjectKit } from "./concrete-jersey-barrier-object-kit";
 import { createCorrodedTableObjectKit } from "./corroded-table-object-kit";
 import {
@@ -29,6 +30,7 @@ import { createCorridorTileDomainKit } from "./corridor-tile-domain-kit";
 import { createDampMudTextureKit } from "./damp-mud-texture-kit";
 import { createDebrisScatterObjectKit } from "./debris-scatter-object-kit";
 import { createFlashlightDomainKit } from "./flashlight-domain-kit";
+import { createFurnishChamberKit } from "./furnish-chamber-kit";
 import { createGrassObjectSpawnDomainKit } from "./grass-object-spawn-kit";
 import { createHangingChainHookObjectKit } from "./hanging-chain-hook-object-kit";
 import { createIndustrialShelvingObjectKit } from "./industrial-shelving-object-kit";
@@ -65,6 +67,7 @@ import { createUtilityCrateObjectKit } from "./utility-crate-object-kit";
 import { createVentObjectKit } from "./vent-object-kit";
 import { createWalkthroughDomainKit } from "./walkthrough-domain-kit";
 import { createWallPanelObjectKit } from "./wall-panel-object-kit";
+import { createWaterSurfaceDomainKit } from "./water-surface-domain-kit";
 import { createWetConcreteTextureKit } from "./wet-concrete-texture-kit";
 import { createWoundTriangleMeshDomainKit } from "./wound-triangle-mesh-domain-kit";
 import { createSocketGraphDomainKit } from "./socket-graph-domain-kit";
@@ -115,6 +118,7 @@ export const createHorrorCorridorDomainKits = (input: HorrorCorridorDomainKitInp
     createCorridorTileDomainKit(preset.corridorTile),
     createTerrainFieldDomainKit(preset.terrainField),
     createTerrainShaderDomainKit(preset.terrainShader),
+    createWaterSurfaceDomainKit(preset.waterSurface),
     createRaymarchSamplingDomainKit(preset.raymarchSampling),
     createTriangleSurfaceSamplerDomainKit(preset.triangleSurfaceSampler),
     createSocketGraphDomainKit(preset.socketGraph),
@@ -173,7 +177,7 @@ export const createHorrorCorridorDomainKits = (input: HorrorCorridorDomainKitInp
       objectKitConfig(preset, ["rock-cluster"], ["broken-rubble"], preset.smallObjectKits.looseFloorSlab.palette, 28),
     ),
     createOvergrowthObjectKit(
-      objectKitConfig(preset, ["grass-clump", "root-strip"], ["muddy-grass", "root-fiber"], preset.terrainShader.grassPalette, 40),
+      objectKitConfig(preset, ["grass-clump", "root-strip", "hanging-vine"], ["muddy-grass", "root-fiber"], preset.terrainShader.grassPalette, 40),
     ),
     createPedestalDressingObjectKit(
       objectKitConfig(preset, ["pedestal-dressing"], ["painted-utility"], preset.smallObjectKits.utilityCrateStack.palette, 6),
@@ -184,6 +188,7 @@ export const createHorrorCorridorDomainKits = (input: HorrorCorridorDomainKitInp
     createConcreteJerseyBarrierObjectKit(),
     createStormDrainCulvertObjectKit(),
     createCollapsedSignpostObjectKit(),
+    createCollapsedCeilingObjectKit(),
     createIndustrialShelvingObjectKit(),
     createHangingChainHookObjectKit(),
     createBarrelClusterObjectKit(),
@@ -216,6 +221,7 @@ export const createHorrorCorridorDomainKits = (input: HorrorCorridorDomainKitInp
     createWalkthroughDomainKit(preset.walkthrough),
     createRenderValidationDomainKit(preset.renderValidation),
     createSceneGenerationDomainKit(preset.sceneGeneration),
+    createFurnishChamberKit(preset.chamberFurnishing),
   ];
 
   return Object.freeze({

@@ -9,7 +9,7 @@ Define how HorrorCorridor should use a long-duration in-game live agent that can
 ## Core Model
 
 - The live agent is not a one-shot screenshot checker.
-- The live agent can run indefinitely until interrupted by the operator.
+- The live agent continues until the authoritative game reports jumpscare defeat or the operator interrupts it.
 - The live agent is a cumulative episodic operator:
   - each episode is bounded
   - each episode gathers evidence
@@ -86,7 +86,7 @@ Episode shape:
 6. record the episode judgment
 7. decide whether to continue, retry, narrow, or stop
 
-The supervisor may keep launching new episodes forever until interrupted, but the episode boundary must stay explicit in the logs and artifacts.
+The supervisor keeps one browser run alive across explicit episodes. Model-thinking time may hold the supervised simulation, but it must not reload or silently replace the expedition between calls.
 
 ## Review Loop
 
@@ -145,14 +145,9 @@ It means:
 
 ## Stop Conditions
 
-Stop or hand off when:
+The normal stop condition is the game-owned `caught` state after the monster's jumpscare. A judge may choose the next action or report evidence quality, but a semantic `stop` judgment must not end a healthy live run before defeat. Infrastructure failure, explicit operator interruption, or user redirection may still abort and must be labeled separately from a game loss.
 
-- the same blocker repeats without new evidence
-- the tool surface cannot perform the next needed action
-- the game state is too unstable for valid inference
-- the current micro-goal is complete
-- a narrower subgoal is needed
-- the user redirects the priority
+The action vocabulary must support movement, listening without movement, turning left/right, and holding the current flashlight aim. Later calls must inspect encounter bearing, distance, flashlight state, blackout time, last-chance time, beam contact, encounter score, and Monster Index progress from the bounded debug report.
 
 ## Expected Future Build
 
@@ -174,7 +169,18 @@ The future live-agent system should:
 - Call one judges the first live episode without claiming a trend.
 - Every later call sees the original goal, current episode, and the last three call outputs/reasoning summaries by default.
 - The saved `reasoningSummary` is a concise evidence explanation, not hidden chain-of-thought.
-- Structured output chooses the next action profile and states whether the run should continue, stop, or block.
+- Structured output chooses the next action profile. The harness continues until authoritative jumpscare defeat; judge `stop` is advisory before that state.
 - Malformed output, provider failure, unknown actions, or mismatched history ids fail closed.
 - Every call logs its duration, start-to-start interval, and completion-to-next-start `timeBetweenCallsMs` gap.
 - The post-run reviewer remains separate and may inspect the complete artifact chain without mutating it.
+
+## Current Live Proof
+
+The completed real run is `docs/live-agent/runs/2026-07-17T18-42-11-807Z`; its concise game-facing report is `docs/HorrorCorridor-Live-Luna-Run-2026-07-17.md`.
+
+- Seven serialized `gpt-5.6-luna` calls ran at low reasoning and priority service tier with no configured wait.
+- One browser page and expedition persisted from intro through defeat.
+- The judge used prior bearing evidence to turn toward the Still Guest over successive calls.
+- The game then proved a monster-owned exact `3,000 ms` blackout, restored-beam last chance, jumpscare, and authoritative `caught` state.
+- The manifest stopped because of authoritative game loss after zero survived encounters, not a duration or episode cap.
+- Calls averaged `35,648 ms`; completion-to-next-call-start gaps averaged `22,238 ms` and include browser/action/report work rather than artificial sleep.

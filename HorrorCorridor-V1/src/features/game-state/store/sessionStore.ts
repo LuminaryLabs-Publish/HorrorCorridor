@@ -1,6 +1,17 @@
 import { create } from "zustand";
 
 import type { LobbyPlayer, PlayerId, RoomState } from "@/types/shared";
+import {
+  beginSharedRecovery,
+  completeSharedRecovery,
+  createSharedRecoveryState,
+  markSharedConnection,
+  recordSharedDisconnection,
+  type BeginSharedRecoveryInput,
+  type CompleteSharedRecoveryInput,
+  type RecordSharedDisconnectionInput,
+  type SharedRecoveryState,
+} from "@/features/networking/domain/sharedRecovery";
 
 export type SessionMode = "solo" | "host" | "client";
 
@@ -25,6 +36,7 @@ export type SessionState = Readonly<{
   sessionMode: SessionMode;
   connectionStatus: SessionConnectionStatus;
   lobbyPlayers: readonly LobbyPlayer[];
+  recovery: SharedRecoveryState;
 }>;
 
 export type SessionActions = Readonly<{
@@ -36,6 +48,11 @@ export type SessionActions = Readonly<{
   setLobbyPlayers: (lobbyPlayers: readonly LobbyPlayer[]) => void;
   upsertLobbyPlayer: (player: LobbyPlayer) => void;
   removeLobbyPlayer: (playerId: PlayerId) => void;
+  markRecoveryConnection: (connection: "idle" | "connected") => void;
+  recordRecoveryDisconnection: (input: RecordSharedDisconnectionInput) => void;
+  beginRecovery: (input: BeginSharedRecoveryInput) => void;
+  completeRecovery: (input: CompleteSharedRecoveryInput) => void;
+  resetRecovery: () => void;
   clearSession: () => void;
 }>;
 
@@ -52,6 +69,7 @@ const initialState: SessionState = {
   sessionMode: "client",
   connectionStatus: "idle",
   lobbyPlayers: [],
+  recovery: createSharedRecoveryState(),
 };
 
 export const useSessionStore = create<SessionStore>((set) => ({
@@ -123,6 +141,26 @@ export const useSessionStore = create<SessionStore>((set) => ({
           : state.room,
       };
     }),
+  markRecoveryConnection: (connection) =>
+    set((state) => ({
+      recovery: markSharedConnection(state.recovery, connection),
+    })),
+  recordRecoveryDisconnection: (input) =>
+    set((state) => ({
+      recovery: recordSharedDisconnection(state.recovery, input),
+    })),
+  beginRecovery: (input) =>
+    set((state) => ({
+      recovery: beginSharedRecovery(state.recovery, input),
+    })),
+  completeRecovery: (input) =>
+    set((state) => ({
+      recovery: completeSharedRecovery(state.recovery, input),
+    })),
+  resetRecovery: () =>
+    set(() => ({
+      recovery: createSharedRecoveryState(),
+    })),
   clearSession: () =>
     set(() => ({
       ...initialState,

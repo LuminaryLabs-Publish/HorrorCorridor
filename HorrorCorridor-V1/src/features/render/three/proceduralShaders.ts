@@ -1,6 +1,7 @@
 import { Color, MeshStandardMaterial } from "three";
 
 import type { HorrorCorridorPreset } from "@/protokits";
+import type { ConcretePavingState } from "@/features/corridor/domain/concretePaving";
 
 import type { ScenePropDescriptor } from "./sceneDressingDescriptors";
 
@@ -29,6 +30,8 @@ type PropObjectProfile = Readonly<{
 }>;
 
 type TerrainShaderConfig = HorrorCorridorPreset["terrainShader"];
+type CeilingSurfaceConfig =
+  HorrorCorridorPreset["chamberFurnishing"]["ceilingSurface"];
 type PropShaderConfig = HorrorCorridorPreset["proceduralPbrMaterial"];
 type PropFidelityConfig = HorrorCorridorPreset["propMaterialFidelity"];
 
@@ -38,13 +41,14 @@ const TERRAIN_VARIANT_TUNING: Readonly<Record<TerrainVariant, Readonly<{
   brickBias: number;
   wetBias: number;
   emissiveStrength: number;
+  concreteIdentityStrength: number;
 }>>> = {
-  "main-floor": { grassBias: 0.16, concreteBias: 0.48, brickBias: 0.08, wetBias: 0.42, emissiveStrength: 0 },
-  "branch-floor": { grassBias: 0.32, concreteBias: 0.22, brickBias: 0.05, wetBias: 0.54, emissiveStrength: 0 },
-  wall: { grassBias: 0.08, concreteBias: 0.42, brickBias: 0.52, wetBias: 0.14, emissiveStrength: 0 },
-  ceiling: { grassBias: 0.02, concreteBias: 0.52, brickBias: 0.18, wetBias: 0.1, emissiveStrength: 0 },
-  trim: { grassBias: 0.01, concreteBias: 0.24, brickBias: 0.12, wetBias: 0.06, emissiveStrength: 0 },
-  "end-wall": { grassBias: 0.04, concreteBias: 0.36, brickBias: 0.2, wetBias: 0.18, emissiveStrength: 0.08 },
+  "main-floor": { grassBias: 0.12, concreteBias: 0.56, brickBias: 0.08, wetBias: 0.42, emissiveStrength: 0, concreteIdentityStrength: 1 },
+  "branch-floor": { grassBias: 0.26, concreteBias: 0.3, brickBias: 0.05, wetBias: 0.54, emissiveStrength: 0, concreteIdentityStrength: 0.82 },
+  wall: { grassBias: 0.08, concreteBias: 0.42, brickBias: 0.52, wetBias: 0.14, emissiveStrength: 0, concreteIdentityStrength: 0 },
+  ceiling: { grassBias: 0.06, concreteBias: 0.62, brickBias: 0.24, wetBias: 0.2, emissiveStrength: 0, concreteIdentityStrength: 0.86 },
+  trim: { grassBias: 0.01, concreteBias: 0.24, brickBias: 0.12, wetBias: 0.06, emissiveStrength: 0, concreteIdentityStrength: 0 },
+  "end-wall": { grassBias: 0.04, concreteBias: 0.36, brickBias: 0.2, wetBias: 0.18, emissiveStrength: 0.08, concreteIdentityStrength: 0 },
 };
 
 const clampColor = (hex: number, multiplier: number): number => {
@@ -128,6 +132,18 @@ uniform float uTerrainConcreteBias;
 uniform float uTerrainBrickBias;
 uniform float uTerrainWetBias;
 uniform float uTerrainEmissiveStrength;
+uniform float uTerrainConcreteIdentityStrength;
+uniform float uTerrainIdentitySeed;
+uniform float uTerrainSlabScale;
+uniform float uTerrainSlabJointWidth;
+uniform float uTerrainCrackScale;
+uniform float uTerrainCrackWidth;
+uniform float uTerrainCrackDensity;
+uniform float uTerrainAggregateScale;
+uniform float uTerrainAggregateExposure;
+uniform float uTerrainRepairStrength;
+uniform float uTerrainSurfaceRelief;
+uniform float uTerrainCeilingMode;
 
 float procHash12(vec2 p) {
   vec3 p3 = fract(vec3(p.xyx) * 0.1031);
@@ -155,6 +171,132 @@ float procFbm(vec2 p) {
     amplitude *= 0.52;
   }
   return total;
+}
+
+vec2 procHash22(vec2 p) {
+  vec2 q = vec2(
+    dot(p, vec2(127.1, 311.7)),
+    dot(p, vec2(269.5, 183.3))
+  );
+  return fract(sin(q) * 43758.5453123);
+}
+
+float concreteSlabJoint(vec2 worldPosition) {
+  vec2 warpSample = worldPosition * 0.11 + vec2(uTerrainIdentitySeed * 7.0, 3.1);
+  vec2 warped = worldPosition + vec2(
+    procNoise(warpSample) - 0.5,
+    procNoise(warpSample + vec2(9.2, 4.7)) - 0.5
+  ) * 0.52;
+  vec2 slabUv = warped * uTerrainSlabScale;
+  float row = floor(slabUv.y);
+  slabUv.x += mod(row, 2.0) * 0.47;
+  slabUv.x += (procHash12(vec2(row, uTerrainIdentitySeed * 13.0)) - 0.5) * 0.15;
+  vec2 cell = fract(slabUv);
+  vec2 edgeDistance = min(cell, 1.0 - cell);
+  float nearestEdge = min(edgeDistance.x, edgeDistance.y);
+  float chippedWidth = uTerrainSlabJointWidth * mix(
+    0.62,
+    1.24,
+    procNoise(worldPosition * 1.7 + uTerrainIdentitySeed * 5.0)
+  );
+  float wornEdge = 1.0 - smoothstep(chippedWidth, chippedWidth * 2.8, nearestEdge);
+  float continuity = smoothstep(
+    0.22,
+    0.68,
+    procNoise(worldPosition * 0.31 + floor(slabUv) * 0.13 + uTerrainIdentitySeed * 9.0)
+  );
+  return wornEdge * mix(0.32, 1.0, continuity);
+}
+
+float concreteCrackMask(vec2 worldPosition) {
+  vec2 crackUv = worldPosition * uTerrainCrackScale + uTerrainIdentitySeed * 17.0;
+  float warp = procNoise(crackUv * 0.61 + vec2(2.3, 8.1)) - 0.5;
+  float primary = abs(procNoise(crackUv * 1.37 + warp * 1.8) - 0.5);
+  float secondary = abs(
+    procNoise(crackUv.yx * 2.11 + vec2(11.7, 1.9) - warp * 1.4) - 0.5
+  );
+  float lineDistance = min(primary, secondary * 1.22);
+  float lineWidth = 0.005 + uTerrainCrackWidth * 0.2;
+  float line = 1.0 - smoothstep(lineWidth, lineWidth * 2.7, lineDistance);
+  float fractureShadow = 1.0 - smoothstep(lineWidth * 2.2, lineWidth * 6.4, lineDistance);
+  float activity = smoothstep(
+    1.0 - uTerrainCrackDensity,
+    min(1.0, 1.18 - uTerrainCrackDensity * 0.18),
+    procNoise(worldPosition * 0.19 + vec2(19.0, 7.0) + uTerrainIdentitySeed)
+  );
+  return clamp((line + fractureShadow * 0.16) * activity, 0.0, 1.0);
+}
+
+float concreteAggregateMask(vec2 worldPosition) {
+  vec2 aggregateUv = worldPosition * uTerrainAggregateScale;
+  vec2 cell = floor(aggregateUv);
+  vec2 local = fract(aggregateUv);
+  vec2 center = 0.2 + procHash22(cell + uTerrainIdentitySeed * 23.0) * 0.6;
+  float grain = procHash12(cell + uTerrainIdentitySeed * 29.0);
+  float pebble = 1.0 - smoothstep(0.018, 0.06, distance(local, center));
+  return pebble * smoothstep(1.0 - uTerrainAggregateExposure, 1.0, grain);
+}
+
+float concreteRepairMask(vec2 worldPosition) {
+  float repairField = procNoise(worldPosition * 0.2 + vec2(31.0, 17.0) + uTerrainIdentitySeed * 4.0);
+  float cut = procNoise(worldPosition * 0.47 + vec2(6.0, 14.0));
+  return smoothstep(0.58, 0.78, repairField + cut * 0.12) * uTerrainRepairStrength;
+}
+
+float concreteSurfaceHeight(vec2 worldPosition) {
+  if (uTerrainConcreteIdentityStrength <= 0.0) {
+    return 0.0;
+  }
+  float joint = concreteSlabJoint(worldPosition);
+  if (uTerrainCeilingMode > 0.5) {
+    float mineralGrain = procFbm(
+      worldPosition * (uTerrainAggregateScale * 0.045) +
+      vec2(uTerrainIdentitySeed * 11.0, 4.7)
+    );
+    float pitting = smoothstep(
+      0.68,
+      0.9,
+      procNoise(worldPosition * 2.8 + vec2(17.0, 31.0))
+    );
+    float spall = smoothstep(
+      0.62,
+      0.86,
+      procFbm(worldPosition * 0.42 + vec2(9.0, 23.0))
+    );
+    return (
+      (mineralGrain - 0.5) * 0.052 -
+      joint * 0.022 -
+      pitting * 0.022 -
+      spall * 0.034
+    ) * uTerrainConcreteIdentityStrength;
+  }
+  float crack = concreteCrackMask(worldPosition);
+  float aggregate = concreteAggregateMask(worldPosition);
+  float repair = concreteRepairMask(worldPosition);
+  return (
+    aggregate * 0.012 +
+    repair * 0.035 -
+    joint * 0.045 -
+    crack * 0.2
+  ) * uTerrainConcreteIdentityStrength;
+}
+
+vec3 terrainSurfaceNormal(vec3 baseNormal) {
+  if (uTerrainConcreteIdentityStrength <= 0.0) {
+    return baseNormal;
+  }
+  float height = concreteSurfaceHeight(vProcWorldPosition.xz);
+  vec3 positionDx = dFdx(vProcWorldPosition);
+  vec3 positionDy = dFdy(vProcWorldPosition);
+  float heightDx = dFdx(height);
+  float heightDy = dFdy(height);
+  vec3 tangentX = cross(positionDy, baseNormal);
+  vec3 tangentY = cross(baseNormal, positionDx);
+  float determinant = dot(positionDx, tangentX);
+  vec3 gradient = sign(determinant) * (heightDx * tangentX + heightDy * tangentY);
+  return normalize(
+    abs(determinant) * baseNormal - gradient * uTerrainSurfaceRelief
+  );
 }
 
 vec3 procBlendWeights(vec3 n) {
@@ -212,6 +354,74 @@ vec3 terrainAlbedo() {
   base *= 0.62 + detail * 0.24;
   base = mix(base, base * 0.82 + uTerrainGrassB * 0.18, moss * uTerrainMossStrength * (1.0 - concrete * 0.55));
 
+  if (uTerrainConcreteIdentityStrength > 0.0) {
+    vec2 floorPosition = vProcWorldPosition.xz;
+    float joint = concreteSlabJoint(floorPosition);
+    float aggregate = concreteAggregateMask(floorPosition);
+    float repair = concreteRepairMask(floorPosition);
+    if (uTerrainCeilingMode > 0.5) {
+      float spall = smoothstep(
+        0.58,
+        0.86,
+        procFbm(floorPosition * 0.38 + vec2(13.0, 29.0)) + macro * 0.14
+      );
+      float mineral = smoothstep(
+        0.5,
+        0.88,
+        detail * 0.7 + macro * 0.32 + repair * 0.2
+      );
+      float dampPatch = smoothstep(
+        0.45,
+        0.9,
+        puddle * 0.68 + macro * 0.34 + uTerrainWetnessResponse * 0.3
+      );
+      vec3 ceilingConcrete = mix(uTerrainConcreteA, uTerrainConcreteB, detail);
+      ceilingConcrete = mix(
+        ceilingConcrete,
+        uTerrainConcreteC,
+        mineral * uTerrainRepairStrength * 0.52 + aggregate * 0.2
+      );
+      ceilingConcrete = mix(
+        ceilingConcrete,
+        mix(uTerrainSoilB, uTerrainConcreteA, 0.34),
+        dampPatch * 0.36
+      );
+      ceilingConcrete = mix(
+        ceilingConcrete,
+        uTerrainSoilC,
+        spall * 0.2
+      );
+      ceilingConcrete = mix(
+        ceilingConcrete,
+        mix(uTerrainGrassA, uTerrainGrassB, moss),
+        moss * uTerrainMossStrength * 0.22
+      );
+      ceilingConcrete *= 0.64 + detail * 0.27;
+      base = mix(base, ceilingConcrete, uTerrainConcreteIdentityStrength);
+      base = mix(
+        base,
+        uTerrainSoilA * 0.62,
+        joint * uTerrainConcreteIdentityStrength * 0.12
+      );
+    } else {
+      float crack = concreteCrackMask(floorPosition);
+      vec3 repairColor = mix(uTerrainConcreteA, uTerrainConcreteB, 0.42);
+      vec3 wornConcrete = mix(concreteColor, repairColor, repair * 0.58);
+      wornConcrete = mix(wornConcrete, uTerrainConcreteC, aggregate * 0.42);
+      wornConcrete *= 0.82 + detail * 0.34 + max(n.y, 0.0) * 0.08;
+      float concreteIdentity = uTerrainConcreteIdentityStrength * (0.68 + concrete * 0.18);
+      base = mix(base, wornConcrete, concreteIdentity);
+      base = mix(base, uTerrainSoilA * 0.7, joint * uTerrainConcreteIdentityStrength * 0.17);
+      base = mix(base, uTerrainSoilA * 0.42, crack * uTerrainConcreteIdentityStrength * 0.7);
+      base = mix(base, uTerrainConcreteC * 1.05, aggregate * uTerrainConcreteIdentityStrength * 0.07);
+      base = mix(
+        base,
+        base * 0.7 + uTerrainAccent * 0.08,
+        wetness * uTerrainConcreteIdentityStrength * uTerrainPuddleStrength * 0.46
+      );
+    }
+  }
+
   return base;
 }
 
@@ -222,13 +432,40 @@ float terrainRoughness() {
   float concrete = procTriplanarFbm(vProcWorldPosition + vec3(0.0, 5.0, 0.0), n, uTerrainConcreteScale);
   float wetness = smoothstep(0.45, 0.94, puddle + macro * 0.28 + uTerrainWetBias);
   float detail = smoothstep(0.18, 0.92, concrete * 0.65 + macro * 0.22);
-  return mix(uTerrainRoughnessRange.x, uTerrainRoughnessRange.y, clamp(detail - wetness * 0.34 + 0.36, 0.0, 1.0));
+  float baseRoughness = mix(uTerrainRoughnessRange.x, uTerrainRoughnessRange.y, clamp(detail - wetness * 0.34 + 0.36, 0.0, 1.0));
+  if (uTerrainConcreteIdentityStrength <= 0.0) {
+    return baseRoughness;
+  }
+  float roughVariation = procNoise(vProcWorldPosition.xz * 0.44 + uTerrainIdentitySeed * 5.0);
+  if (uTerrainCeilingMode > 0.5) {
+    float dampPatch = smoothstep(
+      0.46,
+      0.9,
+      puddle * 0.7 + macro * 0.3 + uTerrainWetnessResponse * 0.28
+    );
+    return clamp(
+      mix(
+        uTerrainRoughnessRange.x,
+        uTerrainRoughnessRange.y,
+        0.4 + roughVariation * 0.52
+      ) - dampPatch * 0.12,
+      0.18,
+      1.0
+    );
+  }
+  float concreteRoughness = clamp(
+    0.72 + roughVariation * 0.14 - wetness * 0.42,
+    0.16,
+    0.96
+  );
+  return mix(baseRoughness, concreteRoughness, uTerrainConcreteIdentityStrength);
 }
 
 float terrainMetalness() {
   vec3 n = normalize(vProcLocalNormal);
   float concrete = procTriplanarFbm(vProcWorldPosition + vec3(-6.0, 3.0, 4.0), n, uTerrainConcreteScale);
-  return clamp(concrete * 0.06 + uTerrainConcreteBias * 0.02, 0.0, 0.12);
+  float baseMetalness = clamp(concrete * 0.06 + uTerrainConcreteBias * 0.02, 0.0, 0.12);
+  return mix(baseMetalness, 0.012, uTerrainConcreteIdentityStrength);
 }
 
 vec3 terrainEmissive() {
@@ -382,9 +619,51 @@ vec3 propAlbedo() {
   } else if (uPropPatternMode < 8.5) {
     darkened = mix(darkened, uPropAccentColor, detail * 0.16);
     darkened = mix(darkened, uPropDarkColor, seam * 0.34 + edge * 0.46);
-  } else {
+  } else if (uPropPatternMode < 9.5) {
     darkened = mix(darkened, uPropAccentColor, detail * 0.12);
     darkened = mix(darkened, uPropDarkColor, edge * 0.4 + grime * 0.46);
+  } else if (uPropPatternMode < 10.5) {
+    float dampRise = (1.0 - smoothstep(0.05, 0.78, uv.y)) * (0.24 + macro * 0.28);
+    float mineralBloom = smoothstep(0.58, 0.9, detail + macro * 0.32);
+    darkened = mix(darkened, uPropAccentColor, mineralBloom * 0.13);
+    darkened = mix(
+      darkened,
+      uPropDarkColor,
+      grime * 0.52 + dampRise * 0.34 + edge * 0.12
+    );
+  } else {
+    float mineralBloom = smoothstep(
+      0.48,
+      0.88,
+      detail * 0.7 + macro * 0.38
+    );
+    float exposedAggregate = smoothstep(
+      0.84,
+      0.97,
+      propNoise(
+        vProcLocalPosition.xz * (uPropDetailScale * 0.72) +
+        vec2(uPropSeed * 5.0, 17.0)
+      )
+    );
+    float shallowSpall = smoothstep(
+      0.58,
+      0.88,
+      propTriplanarFbm(
+        vProcLocalPosition + vec3(9.0, uPropSeed, 23.0),
+        localNormal,
+        uPropDetailScale * 0.12
+      ) + macro * 0.2
+    );
+    darkened = mix(
+      darkened,
+      uPropAccentColor,
+      mineralBloom * 0.24 + exposedAggregate * 0.3
+    );
+    darkened = mix(
+      darkened,
+      uPropDarkColor,
+      grime * 0.44 + shallowSpall * 0.22 + edge * 0.2
+    );
   }
 
   darkened *= 0.68 + detail * 0.18 + max(localNormal.y, 0.0) * 0.04;
@@ -402,6 +681,45 @@ float propMetalness() {
   vec2 detailUv = vProcUv * uPropDetailScale + vProcLocalPosition.zy * 0.08;
   float detail = propFbm(detailUv);
   return clamp(0.08 + uPropMetalnessBias + detail * 0.08, 0.0, 0.92);
+}
+
+float propSurfaceHeight() {
+  if (uPropPatternMode < 10.5) {
+    return 0.0;
+  }
+  vec3 localNormal = normalize(vProcLocalNormal);
+  float wornBody = propTriplanarFbm(
+    vProcLocalPosition + vec3(uPropSeed, 7.0, 13.0),
+    localNormal,
+    uPropDetailScale * 0.18
+  );
+  float pitting = smoothstep(
+    0.68,
+    0.92,
+    propTriplanarFbm(
+      vProcLocalPosition + vec3(19.0, uPropSeed, 3.0),
+      localNormal,
+      uPropDetailScale * 0.42
+    )
+  );
+  return (wornBody - 0.5) * 0.055 - pitting * 0.03;
+}
+
+vec3 propSurfaceNormal(vec3 baseNormal) {
+  if (uPropPatternMode < 10.5) {
+    return baseNormal;
+  }
+  float height = propSurfaceHeight();
+  vec3 positionDx = dFdx(vProcWorldPosition);
+  vec3 positionDy = dFdy(vProcWorldPosition);
+  float heightDx = dFdx(height);
+  float heightDy = dFdy(height);
+  vec3 tangentX = cross(positionDy, baseNormal);
+  vec3 tangentY = cross(baseNormal, positionDx);
+  float determinant = dot(positionDx, tangentX);
+  vec3 gradient = sign(determinant) *
+    (heightDx * tangentX + heightDy * tangentY);
+  return normalize(abs(determinant) * baseNormal - gradient * 0.42);
 }
 
 vec3 propEmissive() {
@@ -433,40 +751,142 @@ const patternModeByProfile: Readonly<Record<string, number>> = {
   "utility-crate": 7,
   "corroded-table": 8,
   "root-fiber": 9,
+  "weathered-surface": 10,
+  "ceiling-ruin": 11,
 };
 
 export const applyTerrainShader = (
   material: MeshStandardMaterial,
   terrainShader: TerrainShaderConfig,
   variant: TerrainVariant,
+  concretePaving: ConcretePavingState | null = null,
+  ceilingSurface: CeilingSurfaceConfig | null = null,
 ): void => {
   const tuning = TERRAIN_VARIANT_TUNING[variant];
+  const ceilingIdentity = variant === "ceiling" ? ceilingSurface : null;
+  const soilPalette = ceilingIdentity?.decayPalette ?? terrainShader.soilPalette;
+  const grassPalette = ceilingIdentity?.mossPalette ?? terrainShader.grassPalette;
+  const concretePalette =
+    ceilingIdentity?.concretePalette ?? terrainShader.concretePalette;
   applyShaderPatch(material, `terrain:${variant}`, (shader) => {
-    shader.uniforms.uTerrainSoilA = { value: createColor(terrainShader.soilPalette[0]) };
-    shader.uniforms.uTerrainSoilB = { value: createColor(terrainShader.soilPalette[1]) };
-    shader.uniforms.uTerrainSoilC = { value: createColor(terrainShader.soilPalette[2]) };
-    shader.uniforms.uTerrainGrassA = { value: createColor(terrainShader.grassPalette[0]) };
-    shader.uniforms.uTerrainGrassB = { value: createColor(terrainShader.grassPalette[1]) };
-    shader.uniforms.uTerrainGrassC = { value: createColor(terrainShader.grassPalette[2]) };
-    shader.uniforms.uTerrainConcreteA = { value: createColor(terrainShader.concretePalette[0]) };
-    shader.uniforms.uTerrainConcreteB = { value: createColor(terrainShader.concretePalette[1]) };
-    shader.uniforms.uTerrainConcreteC = { value: createColor(terrainShader.concretePalette[2]) };
-    shader.uniforms.uTerrainAccent = { value: createColor(clampColor(terrainShader.grassPalette[2], 0.92)) };
-    shader.uniforms.uTerrainMacroScale = { value: terrainShader.layerScales.macro };
-    shader.uniforms.uTerrainDetailScale = { value: terrainShader.layerScales.detail };
-    shader.uniforms.uTerrainGrassScale = { value: terrainShader.layerScales.grass };
-    shader.uniforms.uTerrainConcreteScale = { value: terrainShader.layerScales.concrete };
-    shader.uniforms.uTerrainPuddleScale = { value: terrainShader.layerScales.puddle };
-    shader.uniforms.uTerrainWetnessResponse = { value: terrainShader.wetnessResponse };
-    shader.uniforms.uTerrainRoughnessRange = { value: terrainShader.roughnessRange };
+    shader.uniforms.uTerrainSoilA = { value: createColor(soilPalette[0]) };
+    shader.uniforms.uTerrainSoilB = { value: createColor(soilPalette[1]) };
+    shader.uniforms.uTerrainSoilC = { value: createColor(soilPalette[2]) };
+    shader.uniforms.uTerrainGrassA = { value: createColor(grassPalette[0]) };
+    shader.uniforms.uTerrainGrassB = { value: createColor(grassPalette[1]) };
+    shader.uniforms.uTerrainGrassC = { value: createColor(grassPalette[2]) };
+    shader.uniforms.uTerrainConcreteA = { value: createColor(concretePalette[0]) };
+    shader.uniforms.uTerrainConcreteB = { value: createColor(concretePalette[1]) };
+    shader.uniforms.uTerrainConcreteC = { value: createColor(concretePalette[2]) };
+    shader.uniforms.uTerrainAccent = {
+      value: createColor(
+        clampColor(
+          ceilingIdentity ? concretePalette[2] : grassPalette[2],
+          0.92,
+        ),
+      ),
+    };
+    shader.uniforms.uTerrainMacroScale = {
+      value: terrainShader.layerScales.macro * (ceilingIdentity ? 1.3 : 1),
+    };
+    shader.uniforms.uTerrainDetailScale = {
+      value: terrainShader.layerScales.detail * (ceilingIdentity ? 1.55 : 1),
+    };
+    shader.uniforms.uTerrainGrassScale = {
+      value: terrainShader.layerScales.grass * (ceilingIdentity ? 0.76 : 1),
+    };
+    shader.uniforms.uTerrainConcreteScale = {
+      value: terrainShader.layerScales.concrete * (ceilingIdentity ? 1.24 : 1),
+    };
+    shader.uniforms.uTerrainPuddleScale = {
+      value: terrainShader.layerScales.puddle * (ceilingIdentity ? 0.82 : 1),
+    };
+    shader.uniforms.uTerrainWetnessResponse = {
+      value: ceilingIdentity?.dampness ?? terrainShader.wetnessResponse,
+    };
+    shader.uniforms.uTerrainRoughnessRange = {
+      value: ceilingIdentity?.roughnessRange ?? terrainShader.roughnessRange,
+    };
     shader.uniforms.uTerrainBlendSharpness = { value: terrainShader.blendSharpness };
-    shader.uniforms.uTerrainPuddleStrength = { value: terrainShader.puddleStrength };
-    shader.uniforms.uTerrainMossStrength = { value: terrainShader.mossStrength };
+    shader.uniforms.uTerrainPuddleStrength = {
+      value: ceilingIdentity
+        ? Math.min(1, 0.18 + ceilingIdentity.dampness * 0.52)
+        : terrainShader.puddleStrength,
+    };
+    shader.uniforms.uTerrainMossStrength = {
+      value: ceilingIdentity?.mossStrength ?? terrainShader.mossStrength,
+    };
     shader.uniforms.uTerrainGrassBias = { value: tuning.grassBias };
     shader.uniforms.uTerrainConcreteBias = { value: tuning.concreteBias };
     shader.uniforms.uTerrainBrickBias = { value: tuning.brickBias };
     shader.uniforms.uTerrainWetBias = { value: tuning.wetBias };
     shader.uniforms.uTerrainEmissiveStrength = { value: tuning.emissiveStrength };
+    shader.uniforms.uTerrainConcreteIdentityStrength = {
+      value: ceilingIdentity
+        ? Math.min(
+            1,
+            tuning.concreteIdentityStrength *
+              (0.78 + ceilingIdentity.surfaceRelief * 0.36),
+          )
+        : tuning.concreteIdentityStrength,
+    };
+    shader.uniforms.uTerrainIdentitySeed = {
+      value: concretePaving?.slab.cracks.seedPhase ?? 0,
+    };
+    shader.uniforms.uTerrainSlabScale = {
+      value:
+        ceilingIdentity?.seamScale ??
+        concretePaving?.slabAlignment.scale ??
+        terrainShader.concreteIdentity.slabScale,
+    };
+    shader.uniforms.uTerrainSlabJointWidth = {
+      value:
+        ceilingIdentity?.seamWidth ??
+        concretePaving?.slabAlignment.jointWidth ??
+        terrainShader.concreteIdentity.slabJointWidth,
+    };
+    shader.uniforms.uTerrainCrackScale = {
+      value:
+        concretePaving?.slab.cracks.scale ??
+        terrainShader.concreteIdentity.crackScale,
+    };
+    shader.uniforms.uTerrainCrackWidth = {
+      value:
+        concretePaving?.slab.cracks.width ??
+        terrainShader.concreteIdentity.crackWidth,
+    };
+    shader.uniforms.uTerrainCrackDensity = {
+      value:
+        concretePaving?.slab.cracks.density ??
+        terrainShader.concreteIdentity.crackDensity,
+    };
+    shader.uniforms.uTerrainAggregateScale = {
+      value:
+        ceilingIdentity?.aggregateScale ??
+        concretePaving?.aggregateScale ??
+        terrainShader.concreteIdentity.aggregateScale,
+    };
+    shader.uniforms.uTerrainAggregateExposure = {
+      value:
+        ceilingIdentity?.aggregateExposure ??
+        concretePaving?.aggregateExposure ??
+        terrainShader.concreteIdentity.aggregateExposure,
+    };
+    shader.uniforms.uTerrainRepairStrength = {
+      value:
+        ceilingIdentity?.mineralBloom ??
+        concretePaving?.slab.body.repairStrength ??
+        terrainShader.concreteIdentity.repairStrength,
+    };
+    shader.uniforms.uTerrainSurfaceRelief = {
+      value:
+        ceilingIdentity?.surfaceRelief ??
+        concretePaving?.slab.displacement.surfaceRelief ??
+        terrainShader.concreteIdentity.surfaceRelief,
+    };
+    shader.uniforms.uTerrainCeilingMode = {
+      value: ceilingIdentity ? 1 : 0,
+    };
 
     shader.fragmentShader = shader.fragmentShader.replace(
       "#include <common>",
@@ -483,6 +903,10 @@ export const applyTerrainShader = (
     shader.fragmentShader = shader.fragmentShader.replace(
       "float metalnessFactor = metalness;",
       "float metalnessFactor = terrainMetalness();",
+    );
+    shader.fragmentShader = shader.fragmentShader.replace(
+      "#include <normal_fragment_maps>",
+      "#include <normal_fragment_maps>\nnormal = terrainSurfaceNormal(normal);",
     );
     shader.fragmentShader = shader.fragmentShader.replace(
       "vec3 totalEmissiveRadiance = emissive;",
@@ -553,6 +977,10 @@ export const applyPropShader = (
     shader.fragmentShader = shader.fragmentShader.replace(
       "float metalnessFactor = metalness;",
       "float metalnessFactor = propMetalness();",
+    );
+    shader.fragmentShader = shader.fragmentShader.replace(
+      "#include <normal_fragment_maps>",
+      "#include <normal_fragment_maps>\nnormal = propSurfaceNormal(normal);",
     );
     shader.fragmentShader = shader.fragmentShader.replace(
       "vec3 totalEmissiveRadiance = emissive;",

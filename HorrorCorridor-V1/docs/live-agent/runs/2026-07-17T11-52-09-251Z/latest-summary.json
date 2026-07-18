@@ -1,0 +1,38 @@
+{
+  "actionProfile": "backward",
+  "callId": "call-0002",
+  "command": "node scripts/horror-corridor-live-player-harness.mjs --artifact-dir /Users/crimsonwheeler/Documents/GitHub/HorrorCorridor/HorrorCorridor-V1/docs/live-agent/runs/2026-07-17T11-52-09-251Z/episodes/episode-0002-backward --action-profile backward --action-duration-ms 2000 --cdp-port 9224 --url http://localhost:3000/?debug=frames&liveAgent=1 --session-id horror-corridor-live-2026-07-17T11-52-09-252Z --reuse-session-page --keep-page-open --launch-cdp-chrome",
+  "createdAt": "2026-07-17T11:54:27.824Z",
+  "episodeDir": "/Users/crimsonwheeler/Documents/GitHub/HorrorCorridor/HorrorCorridor-V1/docs/live-agent/runs/2026-07-17T11-52-09-251Z/episodes/episode-0002-backward",
+  "episodeIndex": 2,
+  "errorMessage": "episode process failed",
+  "judgment": {
+    "confidence": 0.42,
+    "evidence": [
+      "reportStatus=missing",
+      "movementDelta=missing"
+    ],
+    "historyCallIds": [
+      "call-0001"
+    ],
+    "judgment": "inconclusive",
+    "nextActionProfile": "strafe-left",
+    "nextHypothesis": "A different movement profile will test whether the latest result is stable across direction changes.",
+    "observation": "The current episode did not provide a complete passing gate set.",
+    "reasoningSummary": "This deterministic mock proves history wiring and next-action propagation without claiming semantic visual judgment.",
+    "status": "continue",
+    "stopReason": null,
+    "trend": "The chain contains prior calls and can compare the current episode against them."
+  },
+  "judgmentError": null,
+  "judgeTiming": {
+    "callCompletedAt": "2026-07-17T11:54:27.829Z",
+    "callDurationMs": 4,
+    "callStartedAt": "2026-07-17T11:54:27.825Z",
+    "startToStartMs": 18405,
+    "timeBetweenCallsMs": 18401
+  },
+  "providerStatus": "mock-completed",
+  "report": null,
+  "status": "failed"
+}

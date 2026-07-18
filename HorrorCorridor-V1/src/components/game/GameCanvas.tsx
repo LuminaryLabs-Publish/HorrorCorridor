@@ -4,8 +4,9 @@ import { useEffect, useRef, useState } from "react";
 import type { PerspectiveCamera, WebGLRenderer } from "three";
 
 import { CUBE_COLORS } from "@/lib/colors";
-import { CELL_SIZE, GRID_SIZE, NETWORK_TICK_RATE } from "@/lib/constants";
+import { CELL_SIZE, GRID_SIZE, MAX_PITCH, NETWORK_TICK_RATE } from "@/lib/constants";
 import { useRuntimeStore } from "@/features/game-state/store/runtimeStore";
+import { createStalkerAudio } from "@/features/audio/stalkerAudio";
 import { useSessionStore } from "@/features/game-state/store/sessionStore";
 import { useUiStore } from "@/features/game-state/store/uiStore";
 import {
@@ -18,6 +19,7 @@ import {
 } from "@/features/debug/store/runtimeDebugStore";
 
 import { advanceOozeTrail } from "@/features/game-state/domain/oozeRules";
+import { advanceEndlessExpedition } from "@/features/game-state/domain/endlessExpedition";
 import {
   buildReplicatedSnapshot,
   createFullSyncMessage,
@@ -69,16 +71,46 @@ import { createScene } from "@/features/render/three/createScene";
 import { buildMazeWorld } from "@/features/render/three/worldBuilder";
 import type { SceneDressingSummary } from "@/features/render/three/sceneDressingDescriptors";
 import { MINIMAP_CANVAS_ID, drawMinimapFrame } from "@/components/hud/Minimap";
+import {
+  createHorrorCorridorNexusRuntime,
+  proveHorrorCorridorNexusResetReplay,
+  type HorrorCorridorNexusFrame,
+  type HorrorCorridorNexusPerformance,
+  type HorrorCorridorNexusResetReplayProof,
+  type HorrorCorridorNexusRuntimeSnapshot,
+} from "@/engine/horrorCorridorNexusRuntime";
 
 import PointerLockGate from "./PointerLockGate";
 
 const MAX_PIXEL_RATIO = 1;
 const UI_SYNC_INTERVAL_MS = 100;
 const CADENCE_WINDOW_MS = 1000;
+const NEXUS_DOMAIN_SYNC_INTERVAL_MS = 250;
 const CAMERA_WALK_SHAKE_FREQUENCY = 0.012;
 const CAMERA_WALK_SHAKE_Y = 0.035;
 const CAMERA_WALK_SHAKE_X = 0.014;
 const CAMERA_WALK_ROLL = 0.006;
+
+type HorrorCorridorNexusDebugSurface = Readonly<{
+  snapshot: () => HorrorCorridorNexusRuntimeSnapshot;
+  performance: () => HorrorCorridorNexusPerformance;
+  proveResetReplay: () => HorrorCorridorNexusResetReplayProof;
+}>;
+
+type HorrorCorridorLiveControl = Readonly<{
+  hold: () => void;
+  resume: () => void;
+  isHeld: () => boolean;
+  turnByRadians: (deltaYaw: number) => void;
+  lookByRadians: (deltaYaw: number, deltaPitch: number) => void;
+}>;
+
+type HorrorCorridorWindow = Window &
+  typeof globalThis & {
+    __HORROR_CORRIDOR_NEXUS__?: HorrorCorridorNexusDebugSurface;
+    __HORROR_CORRIDOR_LIVE_CONTROL__?: HorrorCorridorLiveControl;
+    __HORROR_CORRIDOR_LIVE_SESSION_ID__?: string;
+  };
 const cubeHexByName = new Map<MazeCubeColorName, MazeCubeColorHex>(
   CUBE_COLORS.map((color) => [color.name, color.hex] as const),
 );
@@ -229,6 +261,7 @@ const createRuntimeDebugFrameRecord = (input: Readonly<{
           sequence: [],
           slots: [],
         },
+    expedition: input.snapshot?.expedition ?? null,
     cadence: {
       networkTickAgeMs: Math.max(0, input.recordedAtMs - input.cadence.lastNetworkTickAtMs),
       authoritativePublishesPerSecond: input.cadence.publishesPerSecond,
@@ -347,6 +380,21 @@ const buildGameStateFromSnapshot = (
       isUnlocked: index === 0,
       isSolved: false,
     })),
+    expedition: {
+      ...snapshot.expedition,
+      flashlight: { ...snapshot.expedition.flashlight },
+      boons: { ...snapshot.expedition.boons },
+      activeEncounter: snapshot.expedition.activeEncounter
+        ? {
+            ...snapshot.expedition.activeEncounter,
+            audioCue: { ...snapshot.expedition.activeEncounter.audioCue },
+          }
+        : null,
+      roomOffer: snapshot.expedition.roomOffer
+        ? { ...snapshot.expedition.roomOffer }
+        : null,
+      monsterIndex: snapshot.expedition.monsterIndex.map((entry) => ({ ...entry })),
+    },
     mazeLookup,
     endAnomalyCellId: cellKey(exitCell),
     oozeTrail: snapshot.oozeTrail,
@@ -375,11 +423,13 @@ const buildPlayerPoseFromSnapshot = (
 export default function GameCanvas({ transport }: GameCanvasProps) {
   const mountRef = useRef<HTMLDivElement | null>(null);
   const [isPointerLocked, setIsPointerLocked] = useState(false);
+  const [isRendererReady, setIsRendererReady] = useState(false);
 
   const setScreen = useUiStore((state) => state.setScreen);
   const setPaused = useUiStore((state) => state.setPaused);
   const setCompletion = useUiStore((state) => state.setCompletion);
   const toggleSettingsOverlay = useUiStore((state) => state.toggleSettingsOverlay);
+  const toggleMonsterIndexOverlay = useUiStore((state) => state.toggleMonsterIndexOverlay);
 
   const setLocalPlayerPose = useRuntimeStore((state) => state.setLocalPlayerPose);
   const setViewAngles = useRuntimeStore((state) => state.setViewAngles);
@@ -404,6 +454,7 @@ export default function GameCanvas({ transport }: GameCanvasProps) {
       }
 
       initialized = true;
+      setIsRendererReady(false);
       initializeRuntimeDebug();
       clearRuntimeDebug();
 
@@ -417,6 +468,7 @@ export default function GameCanvas({ transport }: GameCanvasProps) {
       });
       const postProcessing = createPostProcessing(renderer, scene, camera);
       const world = buildMazeWorld(maze);
+      const stalkerAudio = createStalkerAudio();
       const pointerLockTarget = mount;
       const session = useSessionStore.getState();
       const isHostSession = session.sessionMode === "host";
@@ -441,6 +493,71 @@ export default function GameCanvas({ transport }: GameCanvasProps) {
       const inputRef = { current: inputState };
       const pointerLockedRef = { current: false };
       const minimapCanvasRef = { current: null as HTMLCanvasElement | null };
+      const liveAgentMode = new URLSearchParams(window.location.search).get("liveAgent") === "1";
+      let liveAgentHeld = liveAgentMode;
+      const commitLiveAgentView = (
+        nextViewAngles: ReturnType<typeof createPlayerViewAngles>,
+      ): void => {
+        const committedAtMs = nowMs();
+        viewAnglesRef.current = nextViewAngles;
+        poseRef.current = {
+          ...poseRef.current,
+          rotationY: nextViewAngles.yaw,
+        };
+
+        if (isAuthoritativeLocalSession) {
+          currentGameState = applyNetworkPlayerUpdate(currentGameState, {
+            playerId: localPlayerId,
+            position: poseRef.current.position,
+            rotationY: nextViewAngles.yaw,
+            pitch: nextViewAngles.pitch,
+            velocity: poseRef.current.velocity,
+          });
+          latestHostSnapshot = publishAuthoritativeState(
+            "resync",
+            committedAtMs,
+          );
+        } else if (isClientTransport) {
+          sendPlayerUpdate();
+        }
+
+        syncRuntimeStores(committedAtMs, true);
+      };
+      const liveAgentControl: HorrorCorridorLiveControl = Object.freeze({
+        hold: () => {
+          liveAgentHeld = true;
+          inputRef.current = createPlayerInputState();
+        },
+        resume: () => {
+          liveAgentHeld = false;
+          const liveUi = useUiStore.getState();
+          if (liveUi.screen === "PAUSED") {
+            setPaused(false, "none");
+            setScreen("PLAYING");
+          }
+        },
+        isHeld: () => liveAgentHeld,
+        turnByRadians: (deltaYaw) => {
+          if (!Number.isFinite(deltaYaw)) return;
+          commitLiveAgentView(createPlayerViewAngles(
+            viewAnglesRef.current.yaw + deltaYaw,
+            viewAnglesRef.current.pitch,
+            viewAnglesRef.current.lastPitchInputAtMs,
+          ));
+        },
+        lookByRadians: (deltaYaw, deltaPitch) => {
+          if (!Number.isFinite(deltaYaw) || !Number.isFinite(deltaPitch)) return;
+          const current = viewAnglesRef.current;
+          commitLiveAgentView(createPlayerViewAngles(
+            current.yaw + deltaYaw,
+            Math.max(-MAX_PITCH, Math.min(MAX_PITCH, current.pitch + deltaPitch)),
+            nowMs(),
+          ));
+        },
+      });
+      if (liveAgentMode) {
+        (window as HorrorCorridorWindow).__HORROR_CORRIDOR_LIVE_CONTROL__ = liveAgentControl;
+      }
       const nowMs = () => Date.now();
       const frameCadence: RuntimeCadenceState = {
         lastNetworkTickAtMs: nowMs(),
@@ -455,19 +572,51 @@ export default function GameCanvas({ transport }: GameCanvasProps) {
       };
       let networkUpdateSequence = 0;
       let debugFrameNumber = 0;
+      let lastNexusSyncAtMs: number | null = null;
       const startingGameState = buildGameStateFromSnapshot(snapshot);
       let currentGameState = startingGameState;
       let latestHostSnapshot: ReplicatedGameSnapshot | null = snapshot;
+      const nexusRuntimeOptions = Object.freeze({
+        seed: snapshot.seed,
+        roomId: snapshot.room.roomId,
+        sessionMode: session.sessionMode,
+      });
+      let latestNexusFrame: HorrorCorridorNexusFrame = Object.freeze({
+        snapshot,
+        screen: useUiStore.getState().screen,
+        localPlayerId,
+        localPlayerPosition: poseRef.current.position,
+        pointerLocked: pointerLockedRef.current,
+        elapsedMs: 0,
+        sharedRecovery: useSessionStore.getState().recovery,
+        concretePaving:
+          world.getSceneDressingSummary().concretePaving ?? null,
+        ceilingCollapse:
+          world.getSceneDressingSummary().ceilingCollapse ?? null,
+      });
+      const nexusRuntime = createHorrorCorridorNexusRuntime(nexusRuntimeOptions);
+      const nexusDebugSurface: HorrorCorridorNexusDebugSurface = Object.freeze({
+        snapshot: nexusRuntime.snapshot,
+        performance: nexusRuntime.performance,
+        proveResetReplay: () =>
+          proveHorrorCorridorNexusResetReplay(
+            nexusRuntimeOptions,
+            latestNexusFrame,
+          ),
+      });
+      (window as HorrorCorridorWindow).__HORROR_CORRIDOR_NEXUS__ = nexusDebugSurface;
 
       recordRuntimeDebugEvent({
         kind: "runtime",
-        message: "Initialized maze runtime session",
+        message: "Initialized maze runtime session with NexusEngine composition",
         payload: {
           roomId: snapshot.room.roomId,
           localPlayerId,
           mode: transport?.role ?? "local",
           players: snapshot.players.length,
           cubes: snapshot.cubes.length,
+          nexusDomains: nexusRuntime.snapshot().domains.length,
+          nexusInstallCount: nexusRuntime.snapshot().installOrder.length,
         },
       });
 
@@ -530,6 +679,7 @@ export default function GameCanvas({ transport }: GameCanvasProps) {
       const publishAuthoritativeState = (
         reason: "initial" | "join" | "resync" | "reconnect" | "recovery" = "resync",
         publishedAtMs = nowMs(),
+        requestId?: string,
       ): ReplicatedGameSnapshot => {
         currentGameState = {
           ...currentGameState,
@@ -566,6 +716,7 @@ export default function GameCanvas({ transport }: GameCanvasProps) {
               state: currentGameState,
               reason,
               timestampMs: publishedAtMs,
+              requestId,
             }),
           );
         }
@@ -648,23 +799,10 @@ export default function GameCanvas({ transport }: GameCanvasProps) {
         }
 
         const referenceState = getReferenceGameState();
-        const endCell = mazeCellToWorld(maze.end.x, maze.end.y);
-        const distanceToEnd = Math.hypot(
-          poseRef.current.position.x - endCell.x,
-          poseRef.current.position.z - endCell.z,
-        );
-        const hasCarriedCube = referenceState.cubes.some(
-          (cube) => cube.heldByPlayerId === localPlayerId,
-        );
-
         const action =
-          distanceToEnd < 6
-            ? hasCarriedCube
-              ? "place-cube-at-anomaly"
-              : "remove-cube-from-anomaly"
-            : hasCarriedCube
-              ? "drop-cube"
-              : "pickup-cube";
+          referenceState.expedition.roomOffer && !referenceState.expedition.roomOffer.claimed
+            ? "claim-room-offer"
+            : "cancel";
 
         transport.send(
           createInteractionRequestMessage({
@@ -683,6 +821,23 @@ export default function GameCanvas({ transport }: GameCanvasProps) {
           atMs: nowMs(),
         });
         setScreen("COMPLETED");
+        setPaused(false, "none");
+        releasePointerLock();
+      };
+
+      let caughtCommitted = false;
+      const commitCaught = (): void => {
+        if (caughtCommitted) return;
+        caughtCommitted = true;
+        const encounter = currentGameState.expedition.activeEncounter;
+        const monster = currentGameState.expedition.monsterIndex.find(
+          (entry) => entry.id === encounter?.monsterId,
+        );
+        setCompletion({
+          status: "failure",
+          message: `${monster?.name ?? "Something in the dark"} caught you after ${currentGameState.expedition.encountersSurvived} survived encounters.`,
+          atMs: nowMs(),
+        });
         setPaused(false, "none");
         releasePointerLock();
       };
@@ -733,7 +888,11 @@ export default function GameCanvas({ transport }: GameCanvasProps) {
             });
             currentGameState = syncHeldCubesToPlayers(currentGameState);
             syncLocalCarryStateFromGameState(currentGameState);
-            publishAuthoritativeState(event.message.payload.action === "request-sync" ? "recovery" : "resync");
+            publishAuthoritativeState(
+              event.message.payload.action === "request-sync" ? "recovery" : "resync",
+              nowMs(),
+              event.message.requestId,
+            );
 
             if (currentGameState.gameState === "victory") {
               commitVictory();
@@ -754,30 +913,16 @@ export default function GameCanvas({ transport }: GameCanvasProps) {
         }
 
         const referenceState = getReferenceGameState();
-        const endCell = mazeCellToWorld(maze.end.x, maze.end.y);
-        const distanceToEnd = Math.hypot(
-          poseRef.current.position.x - endCell.x,
-          poseRef.current.position.z - endCell.z,
-        );
-        const hasCarriedCube = referenceState.cubes.some(
-          (cube) => cube.heldByPlayerId === localPlayerId,
-        );
-
         const action =
-          distanceToEnd < 6
-            ? hasCarriedCube
-              ? "place-cube-at-anomaly"
-              : "remove-cube-from-anomaly"
-            : hasCarriedCube
-              ? "drop-cube"
-              : "pickup-cube";
+          referenceState.expedition.roomOffer && !referenceState.expedition.roomOffer.claimed
+            ? "claim-room-offer"
+            : "cancel";
 
         recordRuntimeDebugEvent({
           kind: "interaction",
           message: "Local interaction requested",
           payload: {
             action,
-            distanceToEnd: Number(distanceToEnd.toFixed(2)),
             host: isAuthoritativeLocalSession,
           },
         });
@@ -833,6 +978,7 @@ export default function GameCanvas({ transport }: GameCanvasProps) {
       };
 
       const onKeyDown = (event: KeyboardEvent): void => {
+        void stalkerAudio.resume();
         if (event.code === "Backquote") {
           initializeRuntimeDebug();
           const debugStore = useRuntimeDebugStore.getState();
@@ -852,6 +998,11 @@ export default function GameCanvas({ transport }: GameCanvasProps) {
 
         if (event.code === "KeyQ" && !event.repeat) {
           toggleSettingsOverlay();
+          return;
+        }
+
+        if (event.code === "KeyM" && !event.repeat) {
+          toggleMonsterIndexOverlay();
           return;
         }
 
@@ -918,6 +1069,10 @@ export default function GameCanvas({ transport }: GameCanvasProps) {
         syncPointerLockState();
       };
 
+      const onPointerDown = (): void => {
+        void stalkerAudio.resume();
+      };
+
       const resizeObserver =
         typeof ResizeObserver !== "undefined"
           ? new ResizeObserver(() => resizeRenderer(renderer, camera, mount, postProcessing))
@@ -935,10 +1090,10 @@ export default function GameCanvas({ transport }: GameCanvasProps) {
       setInputFlags(toPlayerInputSnapshot(inputRef.current));
       setAuthoritativeSnapshot(latestHostSnapshot);
       patchReadiness({
-        simulation: isAuthoritativeLocalSession || isClientTransport,
-        rendering: true,
+        simulation: false,
+        rendering: false,
         networking: !isSoloSession,
-        input: true,
+        input: false,
       });
       setPaused(false, "none");
 
@@ -948,6 +1103,7 @@ export default function GameCanvas({ transport }: GameCanvasProps) {
       window.addEventListener("keydown", onKeyDown);
       window.addEventListener("keyup", onKeyUp);
       document.addEventListener("mousemove", onMouseMove);
+      mount.addEventListener("pointerdown", onPointerDown);
       window.addEventListener("blur", onBlur);
       onResize();
 
@@ -991,6 +1147,33 @@ export default function GameCanvas({ transport }: GameCanvasProps) {
           mode: RuntimeDebugFrameMode,
           snapshotForFrame: ReplicatedGameSnapshot | null,
         ): void => {
+          if (
+            lastNexusSyncAtMs === null ||
+            elapsedMs - lastNexusSyncAtMs >= NEXUS_DOMAIN_SYNC_INTERVAL_MS
+          ) {
+            const nexusDeltaSeconds =
+              lastNexusSyncAtMs === null
+                ? 0
+                : Math.max(0, (elapsedMs - lastNexusSyncAtMs) / 1000);
+            latestNexusFrame = Object.freeze({
+              snapshot: snapshotForFrame,
+              screen: uiState.screen,
+              localPlayerId,
+              localPlayerPosition: poseRef.current.position,
+              pointerLocked: pointerLockedRef.current,
+              elapsedMs,
+              sharedRecovery: useSessionStore.getState().recovery,
+              concretePaving:
+                world.getSceneDressingSummary().concretePaving ?? null,
+              ceilingCollapse:
+                world.getSceneDressingSummary().ceilingCollapse ?? null,
+            });
+            nexusRuntime.syncHostFrame(latestNexusFrame);
+            nexusRuntime.tick(
+              uiState.screen === "PLAYING" ? nexusDeltaSeconds : 0,
+            );
+            lastNexusSyncAtMs = elapsedMs;
+          }
           const cameraPosition = world.getTerrainEyePosition(poseRef.current.position);
           syncCameraFromPlayer(
             camera,
@@ -1004,7 +1187,9 @@ export default function GameCanvas({ transport }: GameCanvasProps) {
             localPlayerId,
             localPlayerPosition: poseRef.current.position,
             localViewAngles: viewAnglesRef.current,
+            localCamera: camera,
           });
+          stalkerAudio.update(snapshotForFrame?.expedition ?? null);
           minimapCanvasRef.current = document.getElementById(MINIMAP_CANVAS_ID) as HTMLCanvasElement | null;
           drawMinimapFrame({
             canvas: minimapCanvasRef.current,
@@ -1017,17 +1202,29 @@ export default function GameCanvas({ transport }: GameCanvasProps) {
           postProcessing.render();
         };
 
-        if ((uiState.screen === "PAUSED" || uiState.screen === "COMPLETED") && pointerLockedRef.current) {
+        if (
+          (uiState.screen === "RECOVERING" ||
+            uiState.screen === "PAUSED" ||
+            uiState.screen === "COMPLETED") &&
+          pointerLockedRef.current
+        ) {
           releasePointerLock();
         }
 
         const latestSnapshot = isAuthoritativeLocalSession
           ? latestHostSnapshot
           : useRuntimeStore.getState().authoritativeSnapshot;
-        const shouldAdvanceSimulation = uiState.screen === "PLAYING";
+        const shouldAdvanceSimulation =
+          uiState.screen === "PLAYING" &&
+          (!liveAgentHeld || currentGameState.expedition.phase === "jumpscare");
 
         if (shouldAdvanceSimulation && isAuthoritativeLocalSession) {
+          const previousPosition = poseRef.current.position;
           const { nextViewAngles, resolvedPose } = stepLocalPose(deltaMs);
+          const travelledMeters = Math.hypot(
+            resolvedPose.position.x - previousPosition.x,
+            resolvedPose.position.z - previousPosition.z,
+          );
 
           poseRef.current = resolvedPose;
           viewAnglesRef.current = nextViewAngles;
@@ -1045,6 +1242,24 @@ export default function GameCanvas({ transport }: GameCanvasProps) {
             pitch: viewAnglesRef.current.pitch,
             velocity: resolvedPose.velocity,
           });
+          currentGameState = {
+            ...currentGameState,
+            expedition: advanceEndlessExpedition(
+              currentGameState.expedition,
+              currentGameState.seed,
+              {
+                deltaMs,
+                travelledMeters,
+                playerYaw: viewAnglesRef.current.yaw,
+              },
+            ),
+          };
+          if (currentGameState.expedition.phase === "caught") {
+            currentGameState = {
+              ...currentGameState,
+              gameState: "failure",
+            };
+          }
           currentGameState = syncHeldCubesToPlayers(currentGameState);
           syncLocalCarryStateFromGameState(currentGameState);
 
@@ -1054,6 +1269,11 @@ export default function GameCanvas({ transport }: GameCanvasProps) {
               playerPositions: currentGameState.players.map((player) => player.position),
             });
             latestHostSnapshot = publishAuthoritativeState("resync", recordedAtMs);
+          }
+
+          if (currentGameState.expedition.phase === "caught") {
+            latestHostSnapshot = publishAuthoritativeState("resync", recordedAtMs);
+            commitCaught();
           }
 
           syncRuntimeStores(recordedAtMs);
@@ -1104,10 +1324,124 @@ export default function GameCanvas({ transport }: GameCanvasProps) {
         renderFrame("idle", null);
       });
 
-      loop.start();
+      let runtimeDisposed = false;
+      const rendererWarmupStartedAtMs = performance.now();
+      const waitForVisualFrame = (): Promise<void> =>
+        new Promise((resolve) => {
+          window.requestAnimationFrame(() => resolve());
+        });
+      const forceProgramLinkCompletion = (): number => {
+        const gl = renderer.getContext();
+        let linkedProgramCount = 0;
+
+        for (const program of renderer.info.programs ?? []) {
+          const linkableProgram = program as unknown as {
+            program?: WebGLProgram;
+          };
+          if (!linkableProgram.program) continue;
+
+          linkedProgramCount += 1;
+          const linked = gl.getProgramParameter(
+            linkableProgram.program,
+            gl.LINK_STATUS,
+          ) as boolean;
+          if (!linked) {
+            const details = gl.getProgramInfoLog(linkableProgram.program) ?? "unknown program link error";
+            throw new Error(`Corridor renderer program failed to link: ${details}`);
+          }
+        }
+
+        return linkedProgramCount;
+      };
+      const prepareWarmupFrame = (elapsedMs: number): void => {
+        const cameraPosition = world.getTerrainEyePosition(poseRef.current.position);
+        syncCameraFromPlayer(
+          camera,
+          cameraPosition,
+          viewAnglesRef.current,
+          elapsedMs,
+          0,
+        );
+        world.update(elapsedMs, {
+          snapshot,
+          localPlayerId,
+          localPlayerPosition: poseRef.current.position,
+          localViewAngles: viewAnglesRef.current,
+          localCamera: camera,
+        });
+      };
+
+      const warmRenderer = async (): Promise<void> => {
+        try {
+          prepareWarmupFrame(rendererWarmupStartedAtMs);
+          renderer.compile(scene, camera);
+          let linkedProgramCount = forceProgramLinkCompletion();
+
+          if (runtimeDisposed) return;
+          postProcessing.render();
+          linkedProgramCount = Math.max(
+            linkedProgramCount,
+            forceProgramLinkCompletion(),
+          );
+          await waitForVisualFrame();
+
+          if (runtimeDisposed) return;
+          prepareWarmupFrame(performance.now());
+          postProcessing.render();
+          linkedProgramCount = Math.max(
+            linkedProgramCount,
+            forceProgramLinkCompletion(),
+          );
+          await waitForVisualFrame();
+
+          if (runtimeDisposed) return;
+          postProcessing.render();
+          loop.start();
+          patchReadiness({
+            simulation: isAuthoritativeLocalSession || isClientTransport,
+            rendering: true,
+            input: true,
+          });
+          setIsRendererReady(true);
+          recordRuntimeDebugEvent({
+            kind: "rendering",
+            message: "Completed corridor renderer warm-up",
+            payload: {
+              durationMs: Math.round((performance.now() - rendererWarmupStartedAtMs) * 100) / 100,
+              programs: renderer.info.programs?.length ?? 0,
+              linkedProgramCount,
+            },
+          });
+        } catch (error) {
+          if (runtimeDisposed) return;
+          console.error("Horror Corridor renderer warm-up failed", error);
+          recordRuntimeDebugEvent({
+            kind: "rendering",
+            message: "Corridor renderer warm-up failed",
+            payload: {
+              error: error instanceof Error ? error.message : String(error),
+            },
+          });
+        }
+      };
+
+      void warmRenderer();
 
       cleanupRuntime = (): void => {
+        runtimeDisposed = true;
         loop.stop();
+        if (
+          (window as HorrorCorridorWindow).__HORROR_CORRIDOR_NEXUS__ ===
+          nexusDebugSurface
+        ) {
+          delete (window as HorrorCorridorWindow).__HORROR_CORRIDOR_NEXUS__;
+        }
+        if (
+          (window as HorrorCorridorWindow).__HORROR_CORRIDOR_LIVE_CONTROL__ ===
+          liveAgentControl
+        ) {
+          delete (window as HorrorCorridorWindow).__HORROR_CORRIDOR_LIVE_CONTROL__;
+        }
         unsubscribeTransport?.();
         resizeObserver?.disconnect();
         window.removeEventListener("resize", onResize);
@@ -1115,8 +1449,10 @@ export default function GameCanvas({ transport }: GameCanvasProps) {
         window.removeEventListener("keydown", onKeyDown);
         window.removeEventListener("keyup", onKeyUp);
         document.removeEventListener("mousemove", onMouseMove);
+        mount.removeEventListener("pointerdown", onPointerDown);
         window.removeEventListener("blur", onBlur);
         world.dispose();
+        stalkerAudio.dispose();
         postProcessing.dispose();
         renderer.dispose();
 
@@ -1155,7 +1491,7 @@ export default function GameCanvas({ transport }: GameCanvasProps) {
       unsubscribe?.();
       cleanupRuntime();
     };
-  }, [patchReadiness, setAuthoritativeSnapshot, setCompletion, setInputFlags, setLocalPlayerPose, setPaused, setScreen, setViewAngles, toggleSettingsOverlay, transport]);
+  }, [patchReadiness, setAuthoritativeSnapshot, setCompletion, setInputFlags, setLocalPlayerPose, setPaused, setScreen, setViewAngles, toggleMonsterIndexOverlay, toggleSettingsOverlay, transport]);
 
   return (
     <PointerLockGate
@@ -1170,7 +1506,21 @@ export default function GameCanvas({ transport }: GameCanvasProps) {
         document.exitPointerLock();
       }}
     >
-      <div ref={mountRef} className="absolute inset-0 h-full w-full" />
+      <div
+        ref={mountRef}
+        data-render-ready={isRendererReady ? "true" : "false"}
+        className="absolute inset-0 h-full w-full"
+      />
+      {!isRendererReady ? (
+        <div
+          data-render-warmup="true"
+          className="pointer-events-none absolute inset-0 z-10 flex items-center justify-center bg-[#050705]"
+        >
+          <p className="font-mono text-[10px] uppercase tracking-[0.36em] text-[#9fbd8c]">
+            Warming corridor materials
+          </p>
+        </div>
+      ) : null}
     </PointerLockGate>
   );
 }

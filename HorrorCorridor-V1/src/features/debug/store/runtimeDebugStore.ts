@@ -2,7 +2,7 @@
 
 import { create } from "zustand";
 
-import type { AppScreenState, GameScreenState, PlayerId, ReplicatedGameSnapshot, WorldPosition } from "@/types/shared";
+import type { AppScreenState, EndlessExpeditionSnapshot, GameScreenState, PlayerId, ReplicatedGameSnapshot, WorldPosition } from "@/types/shared";
 import type { PlayerInputSnapshot } from "@/features/player/domain/input";
 
 const DEBUG_QUERY_VALUES = new Set(["1", "true", "frames", "verbose"]);
@@ -97,6 +97,7 @@ export type RuntimeDebugFrameRecord = Readonly<{
   }>;
   cubes: readonly RuntimeDebugCubeRecord[];
   anomaly: RuntimeDebugAnomalyRecord;
+  expedition: EndlessExpeditionSnapshot | null;
   cadence: RuntimeDebugCadenceRecord;
   sceneDressing: RuntimeDebugSceneDressingRecord | null;
 }>;
@@ -191,6 +192,21 @@ const cloneFrameRecord = (frame: RuntimeDebugFrameRecord): RuntimeDebugFrameReco
     sequence: [...frame.anomaly.sequence],
     slots: [...frame.anomaly.slots],
   },
+  expedition: frame.expedition
+    ? {
+        ...frame.expedition,
+        flashlight: { ...frame.expedition.flashlight },
+        boons: { ...frame.expedition.boons },
+        activeEncounter: frame.expedition.activeEncounter
+          ? {
+              ...frame.expedition.activeEncounter,
+              audioCue: { ...frame.expedition.activeEncounter.audioCue },
+            }
+          : null,
+        roomOffer: frame.expedition.roomOffer ? { ...frame.expedition.roomOffer } : null,
+        monsterIndex: frame.expedition.monsterIndex.map((entry) => ({ ...entry })),
+      }
+    : null,
   cadence: {
     ...frame.cadence,
   },

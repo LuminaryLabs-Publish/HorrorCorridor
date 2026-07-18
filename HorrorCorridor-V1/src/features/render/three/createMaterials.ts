@@ -9,6 +9,7 @@ import {
   createHorrorCorridorPreset,
   type HorrorCorridorPreset,
 } from "@/protokits/presets/horror-corridor-preset";
+import type { ConcretePavingState } from "@/features/corridor/domain/concretePaving";
 
 import { applyTerrainShader } from "./proceduralShaders";
 
@@ -30,6 +31,7 @@ export type CorridorMaterials = Readonly<{
 
 export const createMaterials = (
   preset: HorrorCorridorPreset = createHorrorCorridorPreset(),
+  concretePaving: ConcretePavingState | null = null,
 ): CorridorMaterials => {
   const floor = new MeshStandardMaterial({
     color: 0x3f3325,
@@ -38,7 +40,7 @@ export const createMaterials = (
     emissive: 0x110d09,
     emissiveIntensity: 0.08,
   });
-  applyTerrainShader(floor, preset.terrainShader, "main-floor");
+  applyTerrainShader(floor, preset.terrainShader, "main-floor", concretePaving);
 
   const branchFloor = new MeshStandardMaterial({
     color: 0x352a1d,
@@ -47,7 +49,7 @@ export const createMaterials = (
     emissive: 0x0e0b08,
     emissiveIntensity: 0.06,
   });
-  applyTerrainShader(branchFloor, preset.terrainShader, "branch-floor");
+  applyTerrainShader(branchFloor, preset.terrainShader, "branch-floor", concretePaving);
 
   const ceiling = new MeshStandardMaterial({
     color: 0x4a443b,
@@ -56,7 +58,13 @@ export const createMaterials = (
     emissive: 0x0d0a08,
     emissiveIntensity: 0.05,
   });
-  applyTerrainShader(ceiling, preset.terrainShader, "ceiling");
+  applyTerrainShader(
+    ceiling,
+    preset.terrainShader,
+    "ceiling",
+    null,
+    preset.chamberFurnishing.ceilingSurface,
+  );
 
   const wall = new MeshStandardMaterial({
     color: 0x5a4a3e,

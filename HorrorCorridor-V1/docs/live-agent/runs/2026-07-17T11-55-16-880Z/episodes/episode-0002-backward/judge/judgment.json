@@ -1,0 +1,18 @@
+{
+  "confidence": 0.72,
+  "evidence": [
+    "reportStatus=passed",
+    "movementDelta=10.349999999999739"
+  ],
+  "historyCallIds": [
+    "call-0001"
+  ],
+  "judgment": "partially-confirmed",
+  "nextActionProfile": "strafe-left",
+  "nextHypothesis": "A different movement profile will test whether the latest result is stable across direction changes.",
+  "observation": "The current episode passed its deterministic live-player gates.",
+  "reasoningSummary": "This deterministic mock proves history wiring and next-action propagation without claiming semantic visual judgment.",
+  "status": "continue",
+  "stopReason": null,
+  "trend": "The chain contains prior calls and can compare the current episode against them."
+}

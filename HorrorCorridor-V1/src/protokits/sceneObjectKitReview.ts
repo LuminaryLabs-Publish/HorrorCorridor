@@ -133,9 +133,13 @@ export const createSceneObjectKitReview = (
   {
     kitId: "overgrowth-object-kit",
     title: "Overgrowth Object Kit",
-    propKinds: ["grass-clump", "root-strip"],
+    propKinds: ["grass-clump", "root-strip", "hanging-vine"],
     materialFamilies: ["muddy-grass", "root-fiber"],
-    shaderProfiles: [objectProfile(preset, "grass-clump"), objectProfile(preset, "root-strip")],
+    shaderProfiles: [
+      objectProfile(preset, "grass-clump"),
+      objectProfile(preset, "root-strip"),
+      objectProfile(preset, "hanging-vine"),
+    ],
   },
   ...meshObjectCatalog.map((entry) => ({
     kitId: entry.profile.kitId,

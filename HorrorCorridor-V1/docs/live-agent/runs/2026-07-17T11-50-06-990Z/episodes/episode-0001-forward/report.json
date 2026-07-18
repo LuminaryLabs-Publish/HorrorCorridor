@@ -1,0 +1,1035 @@
+{
+  "artifacts": [
+    "/Users/crimsonwheeler/Documents/GitHub/HorrorCorridor/HorrorCorridor-V1/docs/live-agent/runs/2026-07-17T11-50-06-990Z/episodes/episode-0001-forward/starting-scene.png",
+    "/Users/crimsonwheeler/Documents/GitHub/HorrorCorridor/HorrorCorridor-V1/docs/live-agent/runs/2026-07-17T11-50-06-990Z/episodes/episode-0001-forward/movement-scene.png",
+    "/Users/crimsonwheeler/Documents/GitHub/HorrorCorridor/HorrorCorridor-V1/docs/live-agent/runs/2026-07-17T11-50-06-990Z/episodes/episode-0001-forward/report.json"
+  ],
+  "createdAt": "2026-07-17T11:50:07.089Z",
+  "harness": "horror-corridor-live-player-harness",
+  "nexusSimulator": {
+    "commandVocabulary": [
+      "openPage",
+      "click",
+      "holdKey",
+      "assertCanvasExists",
+      "captureScreenshot",
+      "assertGlobalState"
+    ],
+    "root": "/Users/crimsonwheeler/Documents/GitHub/NexusSimulator/NexusSimulator-V1",
+    "source": "local script aligned to NexusSimulator playwright-simtime semantics"
+  },
+  "options": {
+    "actionDurationMs": 2000,
+    "actionProfile": "forward",
+    "artifactDir": "/Users/crimsonwheeler/Documents/GitHub/HorrorCorridor/HorrorCorridor-V1/docs/live-agent/runs/2026-07-17T11-50-06-990Z/episodes/episode-0001-forward",
+    "browserExecutable": "",
+    "browserEngine": "all",
+    "cdpUrl": "http://127.0.0.1:9224",
+    "cdpPort": 9224,
+    "dryRun": false,
+    "headed": false,
+    "keepPageOpen": true,
+    "launchCdpChrome": true,
+    "reuseSessionPage": true,
+    "sessionId": "horror-corridor-live-2026-07-17T11-50-06-991Z",
+    "skipBrowser": false,
+    "startServer": false,
+    "url": "http://localhost:3000/?debug=frames&liveAgent=1",
+    "thresholds": {
+      "centerCropRatio": 0.82,
+      "maxDarkRatio": 0.55,
+      "minLightRatio": 0.15,
+      "minLights": 8,
+      "minMovementDelta": 0.25,
+      "minProps": 48,
+      "minTextures": 96,
+      "maxHudChromeBrightPixels": 25
+    }
+  },
+  "repoRoot": "/Users/crimsonwheeler/Documents/GitHub/HorrorCorridor/HorrorCorridor-V1",
+  "status": "passed",
+  "cdpLaunch": {
+    "launched": true,
+    "message": "CDP Chrome is reachable.",
+    "profileDir": "/tmp/horror-corridor-live-player-cdp-9224",
+    "stderr": "",
+    "stdout": "",
+    "url": "http://127.0.0.1:9224"
+  },
+  "playwrightSource": "nexus-simulator",
+  "cdpProbe": {
+    "defaultUrls": [
+      "http://127.0.0.1:9222",
+      "http://127.0.0.1:9223"
+    ],
+    "reachableUrls": [
+      "http://127.0.0.1:9224"
+    ],
+    "requestedUrl": "http://127.0.0.1:9224"
+  },
+  "launchMode": "cdp:http://127.0.0.1:9224",
+  "playMode": "solo",
+  "reusedSessionPage": false,
+  "canvas": {
+    "height": 900,
+    "width": 1400
+  },
+  "consoleErrors": [],
+  "debugAfter": {
+    "enabled": true,
+    "eventCount": 35,
+    "frameCount": 74,
+    "latestFrame": {
+      "frameNumber": 74,
+      "deltaMs": 49.099999999998545,
+      "elapsedMs": 21229.3,
+      "recordedAtMs": 1784289039082,
+      "mode": "snapshot-replay",
+      "screen": "PLAYING",
+      "pointerLocked": false,
+      "roomId": "solo-corridor-ygvsiwm34r",
+      "localPlayerId": "solo-player-klck9um34r",
+      "localPose": {
+        "position": {
+          "x": 392.48409999999967,
+          "y": 2,
+          "z": 377.5
+        },
+        "rotationY": -1.5707963267948966,
+        "pitch": 0,
+        "velocity": {
+          "x": 4.607999999038867,
+          "y": 0,
+          "z": -2.821586224646978e-16
+        },
+        "carryingCubeId": null
+      },
+      "input": {
+        "moveForward": 0,
+        "moveStrafe": 0,
+        "interact": false,
+        "pause": false,
+        "lookDeltaX": 0,
+        "lookDeltaY": 0,
+        "pointerLocked": false
+      },
+      "snapshot": {
+        "tick": 34,
+        "timestampMs": 1784289038725,
+        "appState": "PLAYING",
+        "gameState": "playing",
+        "playerCount": 1,
+        "cubeCount": 3,
+        "oozeCount": 7,
+        "decalCount": 7,
+        "slotsFilled": 0,
+        "cubeStates": {
+          "ground": 3,
+          "held": 0,
+          "placed": 0
+        },
+        "localPlayer": {
+          "id": "solo-player-klck9um34r",
+          "color": "#FF0055",
+          "position": {
+            "x": 392.48409999999967,
+            "y": 2,
+            "z": 377.5
+          },
+          "rotationY": -1.5707963267948966,
+          "pitch": 0
+        }
+      },
+      "cubes": [
+        {
+          "id": "cube_RED",
+          "color": "RED",
+          "state": "ground",
+          "ownerId": null,
+          "position": {
+            "x": 387.5,
+            "y": 0.12,
+            "z": 422.5
+          }
+        },
+        {
+          "id": "cube_GREEN",
+          "color": "GREEN",
+          "state": "ground",
+          "ownerId": null,
+          "position": {
+            "x": 652.5,
+            "y": 0.12,
+            "z": 187.5
+          }
+        },
+        {
+          "id": "cube_BLUE",
+          "color": "BLUE",
+          "state": "ground",
+          "ownerId": null,
+          "position": {
+            "x": 242.5,
+            "y": 0.12,
+            "z": 277.5
+          }
+        }
+      ],
+      "anomaly": {
+        "sequence": [
+          "BLUE",
+          "RED",
+          "GREEN"
+        ],
+        "slots": [
+          null,
+          null,
+          null
+        ]
+      },
+      "expedition": {
+        "phase": "exploring",
+        "elapsedMs": 2300.9000000000015,
+        "distanceTravelled": 14.984099999999671,
+        "introDistanceTravelled": 12.2948999999997,
+        "buildingNumber": 0,
+        "buildingsCrossed": 0,
+        "encountersSurvived": 0,
+        "distanceSinceEncounter": 2.689199999999971,
+        "nextEncounterInMeters": 7,
+        "activeEncounter": null,
+        "roomOffer": null,
+        "flashlight": {
+          "mode": "steady",
+          "intensity": 1,
+          "flickerRemainingMs": 0,
+          "nextFlickerInMs": 3461.2232794043884
+        },
+        "boons": {
+          "beamWidthBonusRadians": 0,
+          "cueFrequencyBonus": 0,
+          "lastChanceBonusMs": 0,
+          "approachSlowMultiplier": 1
+        },
+        "monsterIndex": [
+          {
+            "id": "still-guest",
+            "name": "The Still Guest",
+            "sign": "One wet footstep repeats from the place you are not looking.",
+            "scare": "It reaches the shoulder, swallows the flashlight for three seconds, then waits just outside the returning beam.",
+            "response": "Turn toward the footstep and hold the flashlight on its face before the final breath ends.",
+            "knowledge": "unknown",
+            "encounters": 0,
+            "scaresSurvived": 0,
+            "firstSeenAtEncounter": null,
+            "collectedAtEncounter": null
+          },
+          {
+            "id": "wall-knocker",
+            "name": "The Wall Knocker",
+            "sign": "Three hollow knocks trade sides whenever it crosses a doorway.",
+            "scare": "It kills the light, moves to the opposite wall, and begins a faster answer of knocks.",
+            "response": "Follow the new side after the blackout and pin the knocking shape in the beam.",
+            "knowledge": "unknown",
+            "encounters": 0,
+            "scaresSurvived": 0,
+            "firstSeenAtEncounter": null,
+            "collectedAtEncounter": null
+          },
+          {
+            "id": "rust-mother",
+            "name": "The Rust Mother",
+            "sign": "A long metal scrape circles low around the room.",
+            "scare": "Her scrape becomes a green pulse before every stolen second of light.",
+            "response": "Keep the restored beam steady through the scrape until she unfolds away from it.",
+            "knowledge": "unknown",
+            "encounters": 0,
+            "scaresSurvived": 0,
+            "firstSeenAtEncounter": null,
+            "collectedAtEncounter": null
+          },
+          {
+            "id": "breath-thief",
+            "name": "The Breath Thief",
+            "sign": "Breathing arrives in the wrong ear, closer than the corridor should allow.",
+            "scare": "It breathes through the blackout and leaves only a short silence when the light returns.",
+            "response": "Use the final breath to choose a side and reveal it before the silence closes.",
+            "knowledge": "unknown",
+            "encounters": 0,
+            "scaresSurvived": 0,
+            "firstSeenAtEncounter": null,
+            "collectedAtEncounter": null
+          }
+        ],
+        "lastEvent": "The entrance fell behind. The endless delve has begun.",
+        "eventSerial": 1
+      },
+      "cadence": {
+        "networkTickAgeMs": 357,
+        "authoritativePublishesPerSecond": 16,
+        "clientUpdatesPerSecond": 0,
+        "uiSyncsPerSecond": 8
+      },
+      "sceneDressing": {
+        "propCount": 104,
+        "textureCount": 239,
+        "lightCount": 28,
+        "walkthroughCheckpointCount": 8,
+        "anchorCount": 160,
+        "socketCount": 110,
+        "layoutCount": 26,
+        "bundleCount": 18,
+        "validation": {
+          "meetsPropThreshold": true,
+          "meetsTextureThreshold": true,
+          "meetsLightThreshold": true,
+          "readableSpawnView": true
+        },
+        "referenceRoom": {
+          "kitId": "furnish-chamber-kit",
+          "targetId": "horror-corridor-room-reference-v1",
+          "architecturalPieceCount": 78,
+          "propCount": 22,
+          "textureCount": 17,
+          "meshObjectCount": 2,
+          "lightCount": 3
+        }
+      }
+    },
+    "overlayVisible": false
+  },
+  "debugBefore": {
+    "enabled": true,
+    "eventCount": 1,
+    "frameCount": 13,
+    "latestFrame": {
+      "frameNumber": 13,
+      "deltaMs": 83.10000000000036,
+      "elapsedMs": 14529.4,
+      "recordedAtMs": 1784289032372,
+      "mode": "snapshot-replay",
+      "screen": "PLAYING",
+      "pointerLocked": false,
+      "roomId": "solo-corridor-ygvsiwm34r",
+      "localPlayerId": "solo-player-klck9um34r",
+      "localPose": {
+        "position": {
+          "x": 377.5,
+          "y": 2,
+          "z": 377.5
+        },
+        "rotationY": -1.5707963267948966,
+        "pitch": 0,
+        "velocity": {
+          "x": 0,
+          "y": 0,
+          "z": 0
+        },
+        "carryingCubeId": null
+      },
+      "input": {
+        "moveForward": 0,
+        "moveStrafe": 0,
+        "interact": false,
+        "pause": false,
+        "lookDeltaX": 0,
+        "lookDeltaY": 0,
+        "pointerLocked": false
+      },
+      "snapshot": {
+        "tick": 0,
+        "timestampMs": 1784289020030,
+        "appState": "PLAYING",
+        "gameState": "playing",
+        "playerCount": 1,
+        "cubeCount": 3,
+        "oozeCount": 0,
+        "decalCount": 0,
+        "slotsFilled": 0,
+        "cubeStates": {
+          "ground": 3,
+          "held": 0,
+          "placed": 0
+        },
+        "localPlayer": {
+          "id": "solo-player-klck9um34r",
+          "color": "#FF0055",
+          "position": {
+            "x": 377.5,
+            "y": 2,
+            "z": 377.5
+          },
+          "rotationY": -1.5707963267948966,
+          "pitch": 0
+        }
+      },
+      "cubes": [
+        {
+          "id": "cube_RED",
+          "color": "RED",
+          "state": "ground",
+          "ownerId": null,
+          "position": {
+            "x": 387.5,
+            "y": 0.12,
+            "z": 422.5
+          }
+        },
+        {
+          "id": "cube_GREEN",
+          "color": "GREEN",
+          "state": "ground",
+          "ownerId": null,
+          "position": {
+            "x": 652.5,
+            "y": 0.12,
+            "z": 187.5
+          }
+        },
+        {
+          "id": "cube_BLUE",
+          "color": "BLUE",
+          "state": "ground",
+          "ownerId": null,
+          "position": {
+            "x": 242.5,
+            "y": 0.12,
+            "z": 277.5
+          }
+        }
+      ],
+      "anomaly": {
+        "sequence": [
+          "BLUE",
+          "RED",
+          "GREEN"
+        ],
+        "slots": [
+          null,
+          null,
+          null
+        ]
+      },
+      "expedition": {
+        "phase": "intro",
+        "elapsedMs": 0,
+        "distanceTravelled": 0,
+        "introDistanceTravelled": 0,
+        "buildingNumber": 0,
+        "buildingsCrossed": 0,
+        "encountersSurvived": 0,
+        "distanceSinceEncounter": 0,
+        "nextEncounterInMeters": 7,
+        "activeEncounter": null,
+        "roomOffer": null,
+        "flashlight": {
+          "mode": "steady",
+          "intensity": 1,
+          "flickerRemainingMs": 0,
+          "nextFlickerInMs": 5762.12327940439
+        },
+        "boons": {
+          "beamWidthBonusRadians": 0,
+          "cueFrequencyBonus": 0,
+          "lastChanceBonusMs": 0,
+          "approachSlowMultiplier": 1
+        },
+        "monsterIndex": [
+          {
+            "id": "still-guest",
+            "name": "The Still Guest",
+            "sign": "One wet footstep repeats from the place you are not looking.",
+            "scare": "It reaches the shoulder, swallows the flashlight for three seconds, then waits just outside the returning beam.",
+            "response": "Turn toward the footstep and hold the flashlight on its face before the final breath ends.",
+            "knowledge": "unknown",
+            "encounters": 0,
+            "scaresSurvived": 0,
+            "firstSeenAtEncounter": null,
+            "collectedAtEncounter": null
+          },
+          {
+            "id": "wall-knocker",
+            "name": "The Wall Knocker",
+            "sign": "Three hollow knocks trade sides whenever it crosses a doorway.",
+            "scare": "It kills the light, moves to the opposite wall, and begins a faster answer of knocks.",
+            "response": "Follow the new side after the blackout and pin the knocking shape in the beam.",
+            "knowledge": "unknown",
+            "encounters": 0,
+            "scaresSurvived": 0,
+            "firstSeenAtEncounter": null,
+            "collectedAtEncounter": null
+          },
+          {
+            "id": "rust-mother",
+            "name": "The Rust Mother",
+            "sign": "A long metal scrape circles low around the room.",
+            "scare": "Her scrape becomes a green pulse before every stolen second of light.",
+            "response": "Keep the restored beam steady through the scrape until she unfolds away from it.",
+            "knowledge": "unknown",
+            "encounters": 0,
+            "scaresSurvived": 0,
+            "firstSeenAtEncounter": null,
+            "collectedAtEncounter": null
+          },
+          {
+            "id": "breath-thief",
+            "name": "The Breath Thief",
+            "sign": "Breathing arrives in the wrong ear, closer than the corridor should allow.",
+            "scare": "It breathes through the blackout and leaves only a short silence when the light returns.",
+            "response": "Use the final breath to choose a side and reveal it before the silence closes.",
+            "knowledge": "unknown",
+            "encounters": 0,
+            "scaresSurvived": 0,
+            "firstSeenAtEncounter": null,
+            "collectedAtEncounter": null
+          }
+        ],
+        "lastEvent": "The entrance is holding its breath.",
+        "eventSerial": 0
+      },
+      "cadence": {
+        "networkTickAgeMs": 7209,
+        "authoritativePublishesPerSecond": 0,
+        "clientUpdatesPerSecond": 0,
+        "uiSyncsPerSecond": 1
+      },
+      "sceneDressing": {
+        "propCount": 104,
+        "textureCount": 239,
+        "lightCount": 28,
+        "walkthroughCheckpointCount": 8,
+        "anchorCount": 160,
+        "socketCount": 110,
+        "layoutCount": 26,
+        "bundleCount": 18,
+        "validation": {
+          "meetsPropThreshold": true,
+          "meetsTextureThreshold": true,
+          "meetsLightThreshold": true,
+          "readableSpawnView": true
+        },
+        "referenceRoom": {
+          "kitId": "furnish-chamber-kit",
+          "targetId": "horror-corridor-room-reference-v1",
+          "architecturalPieceCount": 78,
+          "propCount": 22,
+          "textureCount": 17,
+          "meshObjectCount": 2,
+          "lightCount": 3
+        }
+      }
+    },
+    "overlayVisible": false
+  },
+  "hudChrome": {
+    "bottomLeftBrightPixels": 0,
+    "sampledPixels": 14112,
+    "region": {
+      "left": 0,
+      "top": 774,
+      "right": 112,
+      "bottom": 900
+    }
+  },
+  "luminance": {
+    "average": 42.245182197793504,
+    "crop": {
+      "left": 126,
+      "top": 81,
+      "right": 1274,
+      "bottom": 819,
+      "centerCropRatio": 0.82
+    },
+    "darkRatio": 0.026524272211363227,
+    "height": 900,
+    "lightRatio": 0.5304807229256961,
+    "path": "/Users/crimsonwheeler/Documents/GitHub/HorrorCorridor/HorrorCorridor-V1/docs/live-agent/runs/2026-07-17T11-50-06-990Z/episodes/episode-0001-forward/starting-scene.png",
+    "width": 1400
+  },
+  "nexusRuntime": {
+    "after": {
+      "version": "0.0.3",
+      "source": {
+        "file": ".agent/horror-corridor-domain-tree.md",
+        "sha256": "a4280291087d8181d4b27373ecbf08a3883d3de2f8dd2c28474971d4cead7164"
+      },
+      "counts": {
+        "domains": 377,
+        "states": 1145,
+        "kits": 439,
+        "uniqueKits": 433,
+        "domainKits": 416,
+        "hostKits": 23,
+        "services": 68,
+        "hosts": 4,
+        "proofs": 6,
+        "maxCompositionDepth": 24
+      },
+      "domainSnapshotCount": 378,
+      "registeredDomainPathCount": 413,
+      "installCount": 475,
+      "coreKitCount": 25,
+      "coreKitIds": [
+        "n-core-composition-kit",
+        "n-core-data-kit",
+        "n-core-persistence-kit",
+        "n-core-assets-kit",
+        "n-core-input-kit",
+        "n-core-spatial-kit",
+        "n-core-world-kit",
+        "n-core-scene-kit",
+        "n-core-physics-kit",
+        "n-core-motion-kit",
+        "n-core-simulation-kit",
+        "n-core-interaction-kit",
+        "n-core-graphics-kit",
+        "n-core-camera-kit",
+        "core-presentation-domain",
+        "n-core-animation-kit",
+        "n-core-audio-kit",
+        "n-core-network-kit",
+        "n-core-diagnostics-kit",
+        "n-core-creature-kit",
+        "n-core-character-kit",
+        "n-core-player-kit",
+        "n-core-object-kit",
+        "core-object-shape-domain",
+        "core-object-fidelity-domain"
+      ],
+      "descriptorKitCount": 72,
+      "descriptorKitIds": [
+        "grid-maze-domain-kit",
+        "grid-field-domain-kit",
+        "corridor-tile-domain-kit",
+        "terrain-field-domain-kit",
+        "terrain-shader-domain-kit",
+        "water-surface-domain-kit",
+        "raymarch-sampling-domain-kit",
+        "triangle-surface-sampler-domain-kit",
+        "socket-graph-domain-kit",
+        "wound-triangle-mesh-domain-kit",
+        "broken-city-wall-domain-kit",
+        "open-sky-projection-domain-kit",
+        "wall-panel-object-domain-kit",
+        "pipe-run-object-domain-kit",
+        "cable-run-object-domain-kit",
+        "vent-object-domain-kit",
+        "building-facade-object-domain-kit",
+        "utility-crate-object-domain-kit",
+        "storage-crate-object-domain-kit",
+        "corroded-table-object-domain-kit",
+        "corridor-lamp-foundation-profile-kit",
+        "corridor-lamp-pole-profile-kit",
+        "corridor-lamp-armature-profile-kit",
+        "corridor-lamp-head-profile-kit",
+        "corridor-lamp-cable-conduit-profile-kit",
+        "corridor-lamp-fastener-profile-kit",
+        "corridor-lamp-material-profile-kit",
+        "corridor-lamp-light-profile-kit",
+        "corridor-lamp-validation-profile-kit",
+        "corridor-lamp-object-domain-kit",
+        "brick-rubble-object-domain-kit",
+        "loose-floor-slab-object-domain-kit",
+        "ceiling-service-strip-object-domain-kit",
+        "debris-scatter-object-domain-kit",
+        "rock-cluster-object-domain-kit",
+        "overgrowth-object-domain-kit",
+        "pedestal-dressing-object-domain-kit",
+        "rusted-service-door-object-domain-kit",
+        "chain-link-fence-object-domain-kit",
+        "broken-generator-object-domain-kit",
+        "concrete-jersey-barrier-object-domain-kit",
+        "storm-drain-culvert-object-domain-kit",
+        "collapsed-signpost-object-domain-kit",
+        "industrial-shelving-object-domain-kit",
+        "hanging-chain-hook-object-domain-kit",
+        "barrel-cluster-object-domain-kit",
+        "broken-concrete-stair-object-domain-kit",
+        "brick-course-texture-domain-kit",
+        "damp-mud-texture-domain-kit",
+        "rust-streak-texture-domain-kit",
+        "moss-grime-texture-domain-kit",
+        "wet-concrete-texture-domain-kit",
+        "inventory-domain-kit",
+        "spatial-interaction-domain-kit",
+        "sequence-objective-domain-kit",
+        "trail-decal-domain-kit",
+        "prop-descriptor-domain-kit",
+        "grass-object-spawn-domain-kit",
+        "object-placement-domain-kit",
+        "footprint-layout-domain-kit",
+        "procedural-pbr-material-domain-kit",
+        "prop-material-fidelity-domain-kit",
+        "scene-bundle-domain-kit",
+        "texture-placement-domain-kit",
+        "scene-dressing-domain-kit",
+        "lighting-descriptor-domain-kit",
+        "lighting-placement-domain-kit",
+        "flashlight-domain-kit",
+        "walkthrough-domain-kit",
+        "render-validation-domain-kit",
+        "scene-generation-domain-kit",
+        "furnish-chamber-kit"
+      ],
+      "performance": {
+        "samples": 24,
+        "averageTickMs": 1.1291666477918625,
+        "maxTickMs": 8.199999928474426,
+        "lastTickMs": 0.30000007152557373,
+        "syncSamples": 24,
+        "averageSyncMs": 2.1166666795810065,
+        "maxSyncMs": 15.200000047683716,
+        "lastSyncMs": 1.5
+      },
+      "criticalState": {
+        "expedition": {
+          "current phase": "exploring",
+          "elapsed journey": 2.3009000000000013,
+          "completion status": "incomplete",
+          "encounters survived": null
+        },
+        "corridor": {
+          "world identity": "horror-corridor-expedition",
+          "world seed": 2590409196,
+          "active region": "entrance"
+        },
+        "body": {
+          "position": {
+            "x": 392.48409999999967,
+            "y": 2,
+            "z": 377.5
+          },
+          "facing": -1.5707963267948966,
+          "posture": "standing",
+          "grounded status": null
+        },
+        "anomalyRite": {
+          "objective identity": "ordered-cube-anomaly",
+          "target sequence": [
+            "BLUE",
+            "RED",
+            "GREEN"
+          ],
+          "completion": false
+        },
+        "sharedExpedition": {
+          "session identity": "solo-corridor-ygvsiwm34r"
+        }
+      }
+    },
+    "before": {
+      "version": "0.0.3",
+      "source": {
+        "file": ".agent/horror-corridor-domain-tree.md",
+        "sha256": "a4280291087d8181d4b27373ecbf08a3883d3de2f8dd2c28474971d4cead7164"
+      },
+      "counts": {
+        "domains": 377,
+        "states": 1145,
+        "kits": 439,
+        "uniqueKits": 433,
+        "domainKits": 416,
+        "hostKits": 23,
+        "services": 68,
+        "hosts": 4,
+        "proofs": 6,
+        "maxCompositionDepth": 24
+      },
+      "domainSnapshotCount": 378,
+      "registeredDomainPathCount": 413,
+      "installCount": 475,
+      "coreKitCount": 25,
+      "coreKitIds": [
+        "n-core-composition-kit",
+        "n-core-data-kit",
+        "n-core-persistence-kit",
+        "n-core-assets-kit",
+        "n-core-input-kit",
+        "n-core-spatial-kit",
+        "n-core-world-kit",
+        "n-core-scene-kit",
+        "n-core-physics-kit",
+        "n-core-motion-kit",
+        "n-core-simulation-kit",
+        "n-core-interaction-kit",
+        "n-core-graphics-kit",
+        "n-core-camera-kit",
+        "core-presentation-domain",
+        "n-core-animation-kit",
+        "n-core-audio-kit",
+        "n-core-network-kit",
+        "n-core-diagnostics-kit",
+        "n-core-creature-kit",
+        "n-core-character-kit",
+        "n-core-player-kit",
+        "n-core-object-kit",
+        "core-object-shape-domain",
+        "core-object-fidelity-domain"
+      ],
+      "descriptorKitCount": 72,
+      "descriptorKitIds": [
+        "grid-maze-domain-kit",
+        "grid-field-domain-kit",
+        "corridor-tile-domain-kit",
+        "terrain-field-domain-kit",
+        "terrain-shader-domain-kit",
+        "water-surface-domain-kit",
+        "raymarch-sampling-domain-kit",
+        "triangle-surface-sampler-domain-kit",
+        "socket-graph-domain-kit",
+        "wound-triangle-mesh-domain-kit",
+        "broken-city-wall-domain-kit",
+        "open-sky-projection-domain-kit",
+        "wall-panel-object-domain-kit",
+        "pipe-run-object-domain-kit",
+        "cable-run-object-domain-kit",
+        "vent-object-domain-kit",
+        "building-facade-object-domain-kit",
+        "utility-crate-object-domain-kit",
+        "storage-crate-object-domain-kit",
+        "corroded-table-object-domain-kit",
+        "corridor-lamp-foundation-profile-kit",
+        "corridor-lamp-pole-profile-kit",
+        "corridor-lamp-armature-profile-kit",
+        "corridor-lamp-head-profile-kit",
+        "corridor-lamp-cable-conduit-profile-kit",
+        "corridor-lamp-fastener-profile-kit",
+        "corridor-lamp-material-profile-kit",
+        "corridor-lamp-light-profile-kit",
+        "corridor-lamp-validation-profile-kit",
+        "corridor-lamp-object-domain-kit",
+        "brick-rubble-object-domain-kit",
+        "loose-floor-slab-object-domain-kit",
+        "ceiling-service-strip-object-domain-kit",
+        "debris-scatter-object-domain-kit",
+        "rock-cluster-object-domain-kit",
+        "overgrowth-object-domain-kit",
+        "pedestal-dressing-object-domain-kit",
+        "rusted-service-door-object-domain-kit",
+        "chain-link-fence-object-domain-kit",
+        "broken-generator-object-domain-kit",
+        "concrete-jersey-barrier-object-domain-kit",
+        "storm-drain-culvert-object-domain-kit",
+        "collapsed-signpost-object-domain-kit",
+        "industrial-shelving-object-domain-kit",
+        "hanging-chain-hook-object-domain-kit",
+        "barrel-cluster-object-domain-kit",
+        "broken-concrete-stair-object-domain-kit",
+        "brick-course-texture-domain-kit",
+        "damp-mud-texture-domain-kit",
+        "rust-streak-texture-domain-kit",
+        "moss-grime-texture-domain-kit",
+        "wet-concrete-texture-domain-kit",
+        "inventory-domain-kit",
+        "spatial-interaction-domain-kit",
+        "sequence-objective-domain-kit",
+        "trail-decal-domain-kit",
+        "prop-descriptor-domain-kit",
+        "grass-object-spawn-domain-kit",
+        "object-placement-domain-kit",
+        "footprint-layout-domain-kit",
+        "procedural-pbr-material-domain-kit",
+        "prop-material-fidelity-domain-kit",
+        "scene-bundle-domain-kit",
+        "texture-placement-domain-kit",
+        "scene-dressing-domain-kit",
+        "lighting-descriptor-domain-kit",
+        "lighting-placement-domain-kit",
+        "flashlight-domain-kit",
+        "walkthrough-domain-kit",
+        "render-validation-domain-kit",
+        "scene-generation-domain-kit",
+        "furnish-chamber-kit"
+      ],
+      "performance": {
+        "samples": 5,
+        "averageTickMs": 2.3399999856948854,
+        "maxTickMs": 7.099999904632568,
+        "lastTickMs": 0.5,
+        "syncSamples": 5,
+        "averageSyncMs": 4.779999995231629,
+        "maxSyncMs": 15.200000047683716,
+        "lastSyncMs": 1.100000023841858
+      },
+      "criticalState": {
+        "expedition": {
+          "current phase": "intro",
+          "elapsed journey": 0,
+          "completion status": "incomplete",
+          "encounters survived": null
+        },
+        "corridor": {
+          "world identity": "horror-corridor-expedition",
+          "world seed": 2590409196,
+          "active region": "entrance"
+        },
+        "body": {
+          "position": {
+            "x": 377.5,
+            "y": 2,
+            "z": 377.5
+          },
+          "facing": -1.5707963267948966,
+          "posture": "standing",
+          "grounded status": null
+        },
+        "anomalyRite": {
+          "objective identity": "ordered-cube-anomaly",
+          "target sequence": [
+            "BLUE",
+            "RED",
+            "GREEN"
+          ],
+          "completion": false
+        },
+        "sharedExpedition": {
+          "session identity": "solo-corridor-ygvsiwm34r"
+        }
+      }
+    },
+    "resetReplay": {
+      "schema": "horror-corridor.nexus-reset-replay-proof/1",
+      "passed": true,
+      "durationMs": 1143.1000000238419,
+      "fixture": {
+        "id": "horror-corridor-mounted-domain-reset-replay",
+        "syncCount": 2,
+        "tickCount": 5,
+        "fixedDeltaSeconds": [
+          0.016666666666666666,
+          0.03333333333333333
+        ]
+      },
+      "composition": {
+        "passed": true,
+        "installCount": 475,
+        "registeredDomainPathCount": 413,
+        "mutableDomainStateCount": 378,
+        "expectedMutableDomainStateCount": 378,
+        "installOrderStable": true,
+        "registeredPathsStable": true,
+        "completeMutableDomainGraph": true
+      },
+      "reset": {
+        "passed": true,
+        "resetDomainCount": 378,
+        "zeroRevisionCount": 378,
+        "initialDigest": "fnv1a32:3f848b26",
+        "resetDigest": "fnv1a32:3f848b26"
+      },
+      "replay": {
+        "passed": true,
+        "fixtureChangedState": true,
+        "afterResetMatches": true,
+        "freshRuntimeMatches": true,
+        "firstDigest": "fnv1a32:32801f84",
+        "afterResetDigest": "fnv1a32:32801f84",
+        "freshRuntimeDigest": "fnv1a32:32801f84"
+      }
+    }
+  },
+  "action": {
+    "durationMs": 2000,
+    "profile": "forward"
+  },
+  "expedition": {
+    "phase": "exploring",
+    "elapsedMs": 2300.9000000000015,
+    "distanceTravelled": 14.984099999999671,
+    "introDistanceTravelled": 12.2948999999997,
+    "buildingNumber": 0,
+    "buildingsCrossed": 0,
+    "encountersSurvived": 0,
+    "distanceSinceEncounter": 2.689199999999971,
+    "nextEncounterInMeters": 7,
+    "activeEncounter": null,
+    "roomOffer": null,
+    "flashlight": {
+      "mode": "steady",
+      "intensity": 1,
+      "flickerRemainingMs": 0,
+      "nextFlickerInMs": 3461.2232794043884
+    },
+    "boons": {
+      "beamWidthBonusRadians": 0,
+      "cueFrequencyBonus": 0,
+      "lastChanceBonusMs": 0,
+      "approachSlowMultiplier": 1
+    },
+    "monsterIndex": [
+      {
+        "id": "still-guest",
+        "name": "The Still Guest",
+        "sign": "One wet footstep repeats from the place you are not looking.",
+        "scare": "It reaches the shoulder, swallows the flashlight for three seconds, then waits just outside the returning beam.",
+        "response": "Turn toward the footstep and hold the flashlight on its face before the final breath ends.",
+        "knowledge": "unknown",
+        "encounters": 0,
+        "scaresSurvived": 0,
+        "firstSeenAtEncounter": null,
+        "collectedAtEncounter": null
+      },
+      {
+        "id": "wall-knocker",
+        "name": "The Wall Knocker",
+        "sign": "Three hollow knocks trade sides whenever it crosses a doorway.",
+        "scare": "It kills the light, moves to the opposite wall, and begins a faster answer of knocks.",
+        "response": "Follow the new side after the blackout and pin the knocking shape in the beam.",
+        "knowledge": "unknown",
+        "encounters": 0,
+        "scaresSurvived": 0,
+        "firstSeenAtEncounter": null,
+        "collectedAtEncounter": null
+      },
+      {
+        "id": "rust-mother",
+        "name": "The Rust Mother",
+        "sign": "A long metal scrape circles low around the room.",
+        "scare": "Her scrape becomes a green pulse before every stolen second of light.",
+        "response": "Keep the restored beam steady through the scrape until she unfolds away from it.",
+        "knowledge": "unknown",
+        "encounters": 0,
+        "scaresSurvived": 0,
+        "firstSeenAtEncounter": null,
+        "collectedAtEncounter": null
+      },
+      {
+        "id": "breath-thief",
+        "name": "The Breath Thief",
+        "sign": "Breathing arrives in the wrong ear, closer than the corridor should allow.",
+        "scare": "It breathes through the blackout and leaves only a short silence when the light returns.",
+        "response": "Use the final breath to choose a side and reveal it before the silence closes.",
+        "knowledge": "unknown",
+        "encounters": 0,
+        "scaresSurvived": 0,
+        "firstSeenAtEncounter": null,
+        "collectedAtEncounter": null
+      }
+    ],
+    "lastEvent": "The entrance fell behind. The endless delve has begun.",
+    "eventSerial": 1
+  },
+  "liveControlHeld": true,
+  "validation": {
+    "gates": {
+      "canvasMounted": true,
+      "hiddenPlayUi": true,
+      "noHudIconChrome": true,
+      "lightCount": true,
+      "luminanceReadable": true,
+      "actionObserved": true,
+      "nexusResetReplay": true,
+      "playingReached": true,
+      "propCount": true,
+      "textureCount": true
+    },
+    "expeditionElapsedDelta": 2300.9000000000015,
+    "movementDelta": 14.984099999999671,
+    "yawDelta": 0,
+    "passed": true
+  },
+  "visibleText": {
+    "length": 0,
+    "sample": ""
+  }
+}

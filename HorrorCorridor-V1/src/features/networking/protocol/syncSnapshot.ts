@@ -117,6 +117,22 @@ const cloneOozeTrailItem = (ooze: ReplicatedGameSnapshot["oozeTrail"][number]) =
   ...ooze,
 });
 
+const cloneExpedition = (
+  expedition: ReplicatedGameSnapshot["expedition"],
+): ReplicatedGameSnapshot["expedition"] => ({
+  ...expedition,
+  flashlight: { ...expedition.flashlight },
+  boons: { ...expedition.boons },
+  activeEncounter: expedition.activeEncounter
+    ? {
+        ...expedition.activeEncounter,
+        audioCue: { ...expedition.activeEncounter.audioCue },
+      }
+    : null,
+  roomOffer: expedition.roomOffer ? { ...expedition.roomOffer } : null,
+  monsterIndex: expedition.monsterIndex.map((entry) => ({ ...entry })),
+});
+
 const clonePlayerSnapshot = (player: GameState["players"][number]): ReplicatedGameSnapshot["players"][number] => ({
   id: player.id,
   color: player.color,
@@ -137,6 +153,7 @@ export const buildReplicatedSnapshot = (state: GameState): ReplicatedGameSnapsho
   players: state.players.map(clonePlayerSnapshot),
   cubes: state.cubes.map(cloneCubeSnapshot),
   anomaly: cloneAnomalySnapshot(state),
+  expedition: cloneExpedition(state.expedition),
   oozeTrail: state.oozeTrail.map(cloneOozeTrailItem),
   oozeLevel: state.oozeLevel,
 });

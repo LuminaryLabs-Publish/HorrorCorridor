@@ -34,6 +34,19 @@ export {
 export { createGridMazeDomainKit, type GridMazeDomainKitConfig } from "./grid-maze-domain-kit";
 export { createGridFieldDomainKit, type GridFieldDomainKitConfig } from "./grid-field-domain-kit";
 export { createFlashlightDomainKit, type FlashlightDomainKitConfig } from "./flashlight-domain-kit";
+export {
+  createFurnishedChamberManifest,
+  createFurnishChamberKit,
+  type FurnishedChamberLightDescriptor,
+  type FurnishedChamberManifest,
+  type FurnishedChamberMeshObjectDescriptor,
+  type FurnishedChamberPropDescriptor,
+  type FurnishedChamberRelicDescriptor,
+  type FurnishedChamberSurfaceDescriptor,
+  type FurnishedChamberTextureDescriptor,
+  type FurnishedChamberVector,
+  type FurnishChamberKitConfig,
+} from "./furnish-chamber-kit";
 export { createInventoryDomainKit, type InventoryDomainKitConfig } from "./inventory-domain-kit";
 export {
   createBrokenCityWallDomainKit,
@@ -87,6 +100,13 @@ export {
   generateChainLinkFenceMesh,
   type ChainLinkFenceObjectKitConfig,
 } from "./chain-link-fence-object-kit";
+export {
+  createCollapsedCeilingObjectKit,
+  collapsedCeilingObjectKitConfig,
+  collapsedCeilingObjectProfile,
+  generateCollapsedCeilingMesh,
+  type CollapsedCeilingObjectKitConfig,
+} from "./collapsed-ceiling-object-kit";
 export {
   createCollapsedSignpostObjectKit,
   collapsedSignpostObjectKitConfig,
@@ -325,12 +345,17 @@ export {
   type WallPanelObjectKitConfig,
 } from "./wall-panel-object-kit";
 export {
+  createWaterSurfaceDomainKit,
+  type WaterSurfaceDomainKitConfig,
+} from "./water-surface-domain-kit";
+export {
   createWetConcreteTextureKit,
   type WetConcreteTextureKitConfig,
 } from "./wet-concrete-texture-kit";
 export {
   createWoundTriangleMeshDomainKit,
   createWoundBoxMeshPart,
+  createWoundConvexSlabMeshPart,
   createWoundTrapezoidMeshPart,
   validateWoundMeshObjectDescriptor,
   woundTriangleMeshDomainKitConfig,

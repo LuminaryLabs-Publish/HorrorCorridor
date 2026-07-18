@@ -19,6 +19,10 @@ import {
   generateCollapsedSignpostMesh,
 } from "./collapsed-signpost-object-kit";
 import {
+  collapsedCeilingObjectProfile,
+  generateCollapsedCeilingMesh,
+} from "./collapsed-ceiling-object-kit";
+import {
   concreteJerseyBarrierObjectProfile,
   generateConcreteJerseyBarrierMesh,
 } from "./concrete-jersey-barrier-object-kit";
@@ -56,6 +60,7 @@ export const meshObjectCatalog = [
   { profile: concreteJerseyBarrierObjectProfile, generate: generateConcreteJerseyBarrierMesh },
   { profile: stormDrainCulvertObjectProfile, generate: generateStormDrainCulvertMesh },
   { profile: collapsedSignpostObjectProfile, generate: generateCollapsedSignpostMesh },
+  { profile: collapsedCeilingObjectProfile, generate: generateCollapsedCeilingMesh },
   { profile: industrialShelvingObjectProfile, generate: generateIndustrialShelvingMesh },
   { profile: hangingChainHookObjectProfile, generate: generateHangingChainHookMesh },
   { profile: barrelClusterObjectProfile, generate: generateBarrelClusterMesh },

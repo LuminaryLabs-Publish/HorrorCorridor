@@ -74,6 +74,102 @@ export type OozeTrailItem = Readonly<{
   scale: number;
 }>;
 
+export type ExpeditionPhase = "intro" | "exploring" | "jumpscare" | "caught";
+
+export type FlashlightMode = "steady" | "flickering" | "blackout";
+
+export type MonsterKnowledge = "unknown" | "seen" | "studied" | "collected";
+
+export type MonsterCueKind = "footstep" | "knock" | "scrape" | "breath";
+
+export type MonsterIndexEntrySnapshot = Readonly<{
+  id: string;
+  name: string;
+  sign: string;
+  scare: string;
+  response: string;
+  knowledge: MonsterKnowledge;
+  encounters: number;
+  scaresSurvived: number;
+  firstSeenAtEncounter: number | null;
+  collectedAtEncounter: number | null;
+}>;
+
+export type MonsterAudioCueSnapshot = Readonly<{
+  serial: number;
+  kind: MonsterCueKind;
+  pan: number;
+  intensity: number;
+  nextInMs: number;
+}>;
+
+export type StalkerEncounterState =
+  | "approaching"
+  | "repelling"
+  | "blackout"
+  | "last-chance"
+  | "jumpscare";
+
+export type StalkerEncounterSnapshot = Readonly<{
+  id: string;
+  encounterNumber: number;
+  buildingNumber: number;
+  monsterId: string;
+  state: StalkerEncounterState;
+  worldAngle: number;
+  bearingRadians: number;
+  distance: number;
+  closestDistance: number;
+  beamContact: boolean;
+  beamHoldMs: number;
+  fullScareWitnessed: boolean;
+  blackoutRemainingMs: number;
+  lastChanceRemainingMs: number;
+  jumpscareRemainingMs: number;
+  audioCue: MonsterAudioCueSnapshot;
+}>;
+
+export type RoomOfferKind = "fresh-cell" | "silver-bell" | "red-thread" | "salt-chalk";
+
+export type RoomOfferSnapshot = Readonly<{
+  id: string;
+  kind: RoomOfferKind;
+  title: string;
+  description: string;
+  claimed: boolean;
+}>;
+
+export type ExpeditionBoonsSnapshot = Readonly<{
+  beamWidthBonusRadians: number;
+  cueFrequencyBonus: number;
+  lastChanceBonusMs: number;
+  approachSlowMultiplier: number;
+}>;
+
+export type EndlessExpeditionSnapshot = Readonly<{
+  phase: ExpeditionPhase;
+  elapsedMs: number;
+  distanceTravelled: number;
+  introDistanceTravelled: number;
+  buildingNumber: number;
+  buildingsCrossed: number;
+  encountersSurvived: number;
+  distanceSinceEncounter: number;
+  nextEncounterInMeters: number;
+  activeEncounter: StalkerEncounterSnapshot | null;
+  roomOffer: RoomOfferSnapshot | null;
+  flashlight: Readonly<{
+    mode: FlashlightMode;
+    intensity: number;
+    flickerRemainingMs: number;
+    nextFlickerInMs: number;
+  }>;
+  boons: ExpeditionBoonsSnapshot;
+  monsterIndex: readonly MonsterIndexEntrySnapshot[];
+  lastEvent: string;
+  eventSerial: number;
+}>;
+
 export type GameScreenState = "loading" | "lobby" | "playing" | "paused" | "victory" | "failure";
 
 export type AppScreenState =
@@ -83,6 +179,7 @@ export type AppScreenState =
   | "LOBBY_HOST"
   | "LOBBY_CLIENT"
   | "PLAYING"
+  | "RECOVERING"
   | "PAUSED"
   | "COMPLETED";
 
@@ -98,11 +195,12 @@ export type ReplicatedGameSnapshot = Readonly<{
   players: readonly PlayerSnapshot[];
   cubes: readonly ReplicatedCubeSnapshot[];
   anomaly: ReplicatedAnomalySnapshot;
+  expedition: EndlessExpeditionSnapshot;
   oozeTrail: readonly OozeTrailItem[];
   oozeLevel: number;
 }>;
 
-export type NetworkProtocolVersion = 1;
+export type NetworkProtocolVersion = 2;
 
 export type NetworkEnvelope<TType extends string, TPayload> = Readonly<{
   type: TType;

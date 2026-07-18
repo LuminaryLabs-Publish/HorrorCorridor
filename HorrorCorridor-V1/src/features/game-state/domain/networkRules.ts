@@ -1,9 +1,11 @@
 import type { PlayerId, WorldPosition } from "@/types/shared";
 
 import { dropCube, pickUpCube, placeCubeAtEndAnomaly, removeCubeFromEndAnomaly } from "./interactionRules";
+import { claimRoomOffer } from "./endlessExpedition";
 import type { GameState } from "./gameTypes";
 
 export type NetworkInteractionAction =
+  | "claim-room-offer"
   | "pickup-cube"
   | "drop-cube"
   | "place-cube-at-anomaly"
@@ -98,6 +100,10 @@ export const applyNetworkInteractionRequest = (
   input: NetworkInteractionRequestInput,
 ): GameState => {
   switch (input.action) {
+    case "claim-room-offer": {
+      const expedition = claimRoomOffer(state.expedition);
+      return expedition === state.expedition ? state : { ...state, expedition };
+    }
     case "pickup-cube":
       return pickUpCube(state, input);
     case "drop-cube":

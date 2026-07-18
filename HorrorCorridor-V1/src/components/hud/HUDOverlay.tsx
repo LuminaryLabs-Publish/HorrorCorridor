@@ -9,6 +9,7 @@ import { CUBE_COLORS } from "@/lib/colors";
 import FrameDebugPanel from "./FrameDebugPanel";
 import Minimap from "./Minimap";
 import SettingsOverlay from "./SettingsOverlay";
+import MonsterIndexOverlay from "./MonsterIndexOverlay";
 
 const objectiveByScreen: Record<AppScreenState, string> = {
   START: "AWAITING ENTRY",
@@ -17,6 +18,7 @@ const objectiveByScreen: Record<AppScreenState, string> = {
   LOBBY_HOST: "HOST THE ROOM",
   LOBBY_CLIENT: "READY THE CLIENT",
   PLAYING: "FIND THE END AND PLACE THE COLORS",
+  RECOVERING: "RESTORING SHARED EXPEDITION",
   PAUSED: "THE CORRIDOR IS HOLDING",
   COMPLETED: "THE CORRIDOR HAS ENDED",
 };
@@ -42,6 +44,7 @@ export default function HUDOverlay() {
   const authoritativeSnapshot = useRuntimeStore((state) => state.authoritativeSnapshot);
   const overlay = useUiStore((state) => state.overlay);
   const toggleSettingsOverlay = useUiStore((state) => state.toggleSettingsOverlay);
+  const toggleMonsterIndexOverlay = useUiStore((state) => state.toggleMonsterIndexOverlay);
 
   if (screen !== "PLAYING" && screen !== "COMPLETED") {
     return null;
@@ -53,6 +56,10 @@ export default function HUDOverlay() {
         <SettingsOverlay
           isOpen={overlay.visible && overlay.kind === "settings"}
           onClose={() => toggleSettingsOverlay(false)}
+        />
+        <MonsterIndexOverlay
+          isOpen={overlay.visible && overlay.kind === "monster-index"}
+          onClose={() => toggleMonsterIndexOverlay(false)}
         />
         <FrameDebugPanel />
       </div>
@@ -146,6 +153,10 @@ export default function HUDOverlay() {
       <SettingsOverlay
         isOpen={overlay.visible && overlay.kind === "settings"}
         onClose={() => toggleSettingsOverlay(false)}
+      />
+      <MonsterIndexOverlay
+        isOpen={overlay.visible && overlay.kind === "monster-index"}
+        onClose={() => toggleMonsterIndexOverlay(false)}
       />
 
       <FrameDebugPanel />

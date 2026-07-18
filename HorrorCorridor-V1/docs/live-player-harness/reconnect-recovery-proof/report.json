@@ -1,0 +1,699 @@
+{
+  "schema": "horror-corridor.reconnect-recovery-proof/1",
+  "harness": "horror-corridor-reconnect-harness",
+  "status": "passed",
+  "createdAt": "2026-07-18T02:01:03.346Z",
+  "repoRoot": "/Users/crimsonwheeler/Documents/GitHub/HorrorCorridor/HorrorCorridor-V1",
+  "url": "http://127.0.0.1:3011/?debug=frames&liveAgent=1",
+  "headed": true,
+  "timeline": [
+    {
+      "event": "server-ready",
+      "atMs": 1784340068301,
+      "elapsedMs": 4955,
+      "sincePreviousMs": 4955
+    },
+    {
+      "event": "pages-opened",
+      "atMs": 1784340077381,
+      "elapsedMs": 14035,
+      "sincePreviousMs": 9080
+    },
+    {
+      "event": "host-room-created",
+      "atMs": 1784340077923,
+      "elapsedMs": 14577,
+      "sincePreviousMs": 542,
+      "roomCode": "A30E"
+    },
+    {
+      "event": "client-joined-host-lobby",
+      "atMs": 1784340078318,
+      "elapsedMs": 14972,
+      "sincePreviousMs": 395
+    },
+    {
+      "event": "shared-expedition-playing",
+      "atMs": 1784340098581,
+      "elapsedMs": 35235,
+      "sincePreviousMs": 20263
+    },
+    {
+      "event": "client-movement-observed-by-host",
+      "atMs": 1784340115682,
+      "elapsedMs": 52336,
+      "sincePreviousMs": 17101,
+      "movementMeters": 6.000299999999868,
+      "authoritativeTick": 117
+    },
+    {
+      "event": "client-disconnected",
+      "atMs": 1784340115858,
+      "elapsedMs": 52512,
+      "sincePreviousMs": 176
+    },
+    {
+      "event": "host-continued-authoritative-simulation",
+      "atMs": 1784340120604,
+      "elapsedMs": 57258,
+      "sincePreviousMs": 4746,
+      "authoritativeTick": 137
+    },
+    {
+      "event": "recovery-request-visible",
+      "atMs": 1784340121248,
+      "elapsedMs": 57902,
+      "sincePreviousMs": 644
+    },
+    {
+      "event": "client-restored",
+      "atMs": 1784340123717,
+      "elapsedMs": 60371,
+      "sincePreviousMs": 2469,
+      "authoritativeTick": 141
+    },
+    {
+      "event": "post-recovery-movement-observed",
+      "atMs": 1784340127457,
+      "elapsedMs": 64111,
+      "sincePreviousMs": 3740,
+      "movementMeters": 1.7999999999999545,
+      "authoritativeTick": 170
+    }
+  ],
+  "consoleErrors": [],
+  "artifacts": [
+    "/Users/crimsonwheeler/Documents/GitHub/HorrorCorridor/HorrorCorridor-V1/docs/live-player-harness/reconnect-recovery-proof/shared-expedition-start.png",
+    "/Users/crimsonwheeler/Documents/GitHub/HorrorCorridor/HorrorCorridor-V1/docs/live-player-harness/reconnect-recovery-proof/client-disconnected.png",
+    "/Users/crimsonwheeler/Documents/GitHub/HorrorCorridor/HorrorCorridor-V1/docs/live-player-harness/reconnect-recovery-proof/host-during-disconnect.png",
+    "/Users/crimsonwheeler/Documents/GitHub/HorrorCorridor/HorrorCorridor-V1/docs/live-player-harness/reconnect-recovery-proof/client-recovering.png",
+    "/Users/crimsonwheeler/Documents/GitHub/HorrorCorridor/HorrorCorridor-V1/docs/live-player-harness/reconnect-recovery-proof/client-restored.png",
+    "/Users/crimsonwheeler/Documents/GitHub/HorrorCorridor/HorrorCorridor-V1/docs/live-player-harness/reconnect-recovery-proof/report.json"
+  ],
+  "playwrightSource": "nexus-simulator",
+  "durationMs": 64112,
+  "roomCode": "A30E",
+  "clientPlayerId": "client-player-s0kl7p0fy3",
+  "gates": {
+    "sharedIdentityPreserved": true,
+    "hostIdentityAgrees": true,
+    "recoveryHistoryComplete": true,
+    "recoveryRequestCorrelated": true,
+    "authoritativeTickAdvanced": true,
+    "hostStayedAlive": true,
+    "restoredPlaceMatchesHost": true,
+    "lastPlacePreserved": true,
+    "nexusRejoiningRestored": true,
+    "nexusChronicleRecorded": true,
+    "clientCanMoveAfterRecovery": true,
+    "clientRemainsPlaying": true,
+    "noConsoleErrors": true
+  },
+  "evidence": {
+    "beforeMoveHost": {
+      "screen": "PLAYING",
+      "connectionStatus": "connected",
+      "recovery": {
+        "connection": "idle",
+        "disconnection": null,
+        "recovery": null,
+        "restoredPlace": null,
+        "recoveryHistory": []
+      },
+      "sessionMode": "host",
+      "playerId": "host-player-qarjw80fic",
+      "hostPeerId": "A30E",
+      "roomId": "room-corridor-0b98ck0fic",
+      "gameId": "room-corridor-0b98ck0fic",
+      "seed": 806475641,
+      "tick": 27,
+      "gameState": "playing",
+      "buildingNumber": 0,
+      "encountersSurvived": 0,
+      "players": [
+        {
+          "id": "host-player-qarjw80fic",
+          "color": "#FF0055",
+          "position": {
+            "x": 377.5,
+            "y": 2,
+            "z": 377.5
+          },
+          "rotationY": -1.1507963267948966,
+          "pitch": -0.08339242142875561
+        },
+        {
+          "id": "client-player-s0kl7p0fy3",
+          "color": "#00AAFF",
+          "position": {
+            "x": 376.1,
+            "y": 2,
+            "z": 379.3
+          },
+          "rotationY": 0,
+          "pitch": 0
+        }
+      ]
+    },
+    "beforeMoveClient": {
+      "screen": "PLAYING",
+      "connectionStatus": "connected",
+      "recovery": {
+        "connection": "connected",
+        "disconnection": null,
+        "recovery": null,
+        "restoredPlace": null,
+        "recoveryHistory": []
+      },
+      "sessionMode": "client",
+      "playerId": "client-player-s0kl7p0fy3",
+      "hostPeerId": "A30E",
+      "roomId": "room-corridor-0b98ck0fic",
+      "gameId": "room-corridor-0b98ck0fic",
+      "seed": 806475641,
+      "tick": 27,
+      "gameState": "playing",
+      "buildingNumber": 0,
+      "encountersSurvived": 0,
+      "players": [
+        {
+          "id": "host-player-qarjw80fic",
+          "color": "#FF0055",
+          "position": {
+            "x": 377.5,
+            "y": 2,
+            "z": 377.5
+          },
+          "rotationY": -1.1507963267948966,
+          "pitch": -0.08339242142875561
+        },
+        {
+          "id": "client-player-s0kl7p0fy3",
+          "color": "#00AAFF",
+          "position": {
+            "x": 376.1,
+            "y": 2,
+            "z": 379.3
+          },
+          "rotationY": 0,
+          "pitch": 0
+        }
+      ]
+    },
+    "preDisconnectHost": {
+      "screen": "PLAYING",
+      "connectionStatus": "connected",
+      "recovery": {
+        "connection": "idle",
+        "disconnection": null,
+        "recovery": null,
+        "restoredPlace": null,
+        "recoveryHistory": []
+      },
+      "sessionMode": "host",
+      "playerId": "host-player-qarjw80fic",
+      "hostPeerId": "A30E",
+      "roomId": "room-corridor-0b98ck0fic",
+      "gameId": "room-corridor-0b98ck0fic",
+      "seed": 806475641,
+      "tick": 117,
+      "gameState": "playing",
+      "buildingNumber": 0,
+      "encountersSurvived": 0,
+      "players": [
+        {
+          "id": "host-player-qarjw80fic",
+          "color": "#FF0055",
+          "position": {
+            "x": 377.5,
+            "y": 2,
+            "z": 377.5
+          },
+          "rotationY": -1.1507963267948966,
+          "pitch": -0.0024213376183830314
+        },
+        {
+          "id": "client-player-s0kl7p0fy3",
+          "color": "#00AAFF",
+          "position": {
+            "x": 376.1,
+            "y": 2,
+            "z": 373.29970000000014
+          },
+          "rotationY": 0,
+          "pitch": 0
+        }
+      ]
+    },
+    "preDisconnectClient": {
+      "screen": "PLAYING",
+      "connectionStatus": "connected",
+      "recovery": {
+        "connection": "connected",
+        "disconnection": null,
+        "recovery": null,
+        "restoredPlace": null,
+        "recoveryHistory": []
+      },
+      "sessionMode": "client",
+      "playerId": "client-player-s0kl7p0fy3",
+      "hostPeerId": "A30E",
+      "roomId": "room-corridor-0b98ck0fic",
+      "gameId": "room-corridor-0b98ck0fic",
+      "seed": 806475641,
+      "tick": 118,
+      "gameState": "playing",
+      "buildingNumber": 0,
+      "encountersSurvived": 0,
+      "players": [
+        {
+          "id": "host-player-qarjw80fic",
+          "color": "#FF0055",
+          "position": {
+            "x": 377.5,
+            "y": 2,
+            "z": 377.5
+          },
+          "rotationY": -1.1507963267948966,
+          "pitch": -0.00230027073746388
+        },
+        {
+          "id": "client-player-s0kl7p0fy3",
+          "color": "#00AAFF",
+          "position": {
+            "x": 376.1,
+            "y": 2,
+            "z": 373.29970000000014
+          },
+          "rotationY": 0,
+          "pitch": 0
+        }
+      ]
+    },
+    "hostDuringDisconnect": {
+      "screen": "PLAYING",
+      "connectionStatus": "connected",
+      "recovery": {
+        "connection": "idle",
+        "disconnection": null,
+        "recovery": null,
+        "restoredPlace": null,
+        "recoveryHistory": []
+      },
+      "sessionMode": "host",
+      "playerId": "host-player-qarjw80fic",
+      "hostPeerId": "A30E",
+      "roomId": "room-corridor-0b98ck0fic",
+      "gameId": "room-corridor-0b98ck0fic",
+      "seed": 806475641,
+      "tick": 137,
+      "gameState": "playing",
+      "buildingNumber": 0,
+      "encountersSurvived": 0,
+      "players": [
+        {
+          "id": "host-player-qarjw80fic",
+          "color": "#FF0055",
+          "position": {
+            "x": 377.5,
+            "y": 2,
+            "z": 377.5
+          },
+          "rotationY": -1.1507963267948966,
+          "pitch": -0.000868015449588544
+        },
+        {
+          "id": "client-player-s0kl7p0fy3",
+          "color": "#00AAFF",
+          "position": {
+            "x": 376.1,
+            "y": 2,
+            "z": 373.29970000000014
+          },
+          "rotationY": 0,
+          "pitch": 0
+        }
+      ]
+    },
+    "restoredClient": {
+      "screen": "PLAYING",
+      "connectionStatus": "connected",
+      "recovery": {
+        "connection": "restored",
+        "disconnection": {
+          "reason": "client disconnected",
+          "disconnectedAtMs": 1784340115693,
+          "lastKnownPlace": {
+            "roomId": "room-corridor-0b98ck0fic",
+            "gameId": "room-corridor-0b98ck0fic",
+            "authoritativeTick": 121,
+            "buildingNumber": 0,
+            "encountersSurvived": 0,
+            "playerPosition": {
+              "x": 376.1,
+              "y": 2,
+              "z": 373.29970000000014
+            },
+            "recordedAtMs": 1784340115693
+          }
+        },
+        "recovery": {
+          "requestId": "recovery-xay5mu1d2o",
+          "hostPeerId": "A30E",
+          "requestedAtMs": 1784340121200,
+          "completedAtMs": 1784340121676,
+          "authoritativeTick": 141
+        },
+        "restoredPlace": {
+          "roomId": "room-corridor-0b98ck0fic",
+          "gameId": "room-corridor-0b98ck0fic",
+          "authoritativeTick": 141,
+          "buildingNumber": 0,
+          "encountersSurvived": 0,
+          "playerPosition": {
+            "x": 376.1,
+            "y": 2,
+            "z": 373.29970000000014
+          },
+          "recordedAtMs": 1784340121676
+        },
+        "recoveryHistory": [
+          {
+            "kind": "disconnected",
+            "atMs": 1784340115693,
+            "requestId": null,
+            "authoritativeTick": 121
+          },
+          {
+            "kind": "reconnecting",
+            "atMs": 1784340121200,
+            "requestId": "recovery-xay5mu1d2o",
+            "authoritativeTick": 121
+          },
+          {
+            "kind": "restored",
+            "atMs": 1784340121676,
+            "requestId": "recovery-xay5mu1d2o",
+            "authoritativeTick": 141
+          }
+        ]
+      },
+      "sessionMode": "client",
+      "playerId": "client-player-s0kl7p0fy3",
+      "hostPeerId": "A30E",
+      "roomId": "room-corridor-0b98ck0fic",
+      "gameId": "room-corridor-0b98ck0fic",
+      "seed": 806475641,
+      "tick": 150,
+      "gameState": "playing",
+      "buildingNumber": 0,
+      "encountersSurvived": 0,
+      "players": [
+        {
+          "id": "host-player-qarjw80fic",
+          "color": "#FF0055",
+          "position": {
+            "x": 377.5,
+            "y": 2,
+            "z": 377.5
+          },
+          "rotationY": -1.1507963267948966,
+          "pitch": -0.0005197129134982704
+        },
+        {
+          "id": "client-player-s0kl7p0fy3",
+          "color": "#00AAFF",
+          "position": {
+            "x": 376.1,
+            "y": 2,
+            "z": 373.29970000000014
+          },
+          "rotationY": 0,
+          "pitch": 0
+        }
+      ]
+    },
+    "restoredHost": {
+      "screen": "PLAYING",
+      "connectionStatus": "connected",
+      "recovery": {
+        "connection": "idle",
+        "disconnection": null,
+        "recovery": null,
+        "restoredPlace": null,
+        "recoveryHistory": []
+      },
+      "sessionMode": "host",
+      "playerId": "host-player-qarjw80fic",
+      "hostPeerId": "A30E",
+      "roomId": "room-corridor-0b98ck0fic",
+      "gameId": "room-corridor-0b98ck0fic",
+      "seed": 806475641,
+      "tick": 150,
+      "gameState": "playing",
+      "buildingNumber": 0,
+      "encountersSurvived": 0,
+      "players": [
+        {
+          "id": "host-player-qarjw80fic",
+          "color": "#FF0055",
+          "position": {
+            "x": 377.5,
+            "y": 2,
+            "z": 377.5
+          },
+          "rotationY": -1.1507963267948966,
+          "pitch": -0.0005197129134982704
+        },
+        {
+          "id": "client-player-s0kl7p0fy3",
+          "color": "#00AAFF",
+          "position": {
+            "x": 376.1,
+            "y": 2,
+            "z": 373.29970000000014
+          },
+          "rotationY": 0,
+          "pitch": 0
+        }
+      ]
+    },
+    "postRecoveryHost": {
+      "screen": "PLAYING",
+      "connectionStatus": "connected",
+      "recovery": {
+        "connection": "idle",
+        "disconnection": null,
+        "recovery": null,
+        "restoredPlace": null,
+        "recoveryHistory": []
+      },
+      "sessionMode": "host",
+      "playerId": "host-player-qarjw80fic",
+      "hostPeerId": "A30E",
+      "roomId": "room-corridor-0b98ck0fic",
+      "gameId": "room-corridor-0b98ck0fic",
+      "seed": 806475641,
+      "tick": 170,
+      "gameState": "playing",
+      "buildingNumber": 0,
+      "encountersSurvived": 0,
+      "players": [
+        {
+          "id": "host-player-qarjw80fic",
+          "color": "#FF0055",
+          "position": {
+            "x": 377.5,
+            "y": 2,
+            "z": 377.5
+          },
+          "rotationY": -1.1507963267948966,
+          "pitch": -0.0002534509842363401
+        },
+        {
+          "id": "client-player-s0kl7p0fy3",
+          "color": "#00AAFF",
+          "position": {
+            "x": 376.1,
+            "y": 2,
+            "z": 371.4997000000002
+          },
+          "rotationY": 0,
+          "pitch": 0
+        }
+      ]
+    },
+    "postRecoveryClient": {
+      "screen": "PLAYING",
+      "connectionStatus": "connected",
+      "recovery": {
+        "connection": "restored",
+        "disconnection": {
+          "reason": "client disconnected",
+          "disconnectedAtMs": 1784340115693,
+          "lastKnownPlace": {
+            "roomId": "room-corridor-0b98ck0fic",
+            "gameId": "room-corridor-0b98ck0fic",
+            "authoritativeTick": 121,
+            "buildingNumber": 0,
+            "encountersSurvived": 0,
+            "playerPosition": {
+              "x": 376.1,
+              "y": 2,
+              "z": 373.29970000000014
+            },
+            "recordedAtMs": 1784340115693
+          }
+        },
+        "recovery": {
+          "requestId": "recovery-xay5mu1d2o",
+          "hostPeerId": "A30E",
+          "requestedAtMs": 1784340121200,
+          "completedAtMs": 1784340121676,
+          "authoritativeTick": 141
+        },
+        "restoredPlace": {
+          "roomId": "room-corridor-0b98ck0fic",
+          "gameId": "room-corridor-0b98ck0fic",
+          "authoritativeTick": 141,
+          "buildingNumber": 0,
+          "encountersSurvived": 0,
+          "playerPosition": {
+            "x": 376.1,
+            "y": 2,
+            "z": 373.29970000000014
+          },
+          "recordedAtMs": 1784340121676
+        },
+        "recoveryHistory": [
+          {
+            "kind": "disconnected",
+            "atMs": 1784340115693,
+            "requestId": null,
+            "authoritativeTick": 121
+          },
+          {
+            "kind": "reconnecting",
+            "atMs": 1784340121200,
+            "requestId": "recovery-xay5mu1d2o",
+            "authoritativeTick": 121
+          },
+          {
+            "kind": "restored",
+            "atMs": 1784340121676,
+            "requestId": "recovery-xay5mu1d2o",
+            "authoritativeTick": 141
+          }
+        ]
+      },
+      "sessionMode": "client",
+      "playerId": "client-player-s0kl7p0fy3",
+      "hostPeerId": "A30E",
+      "roomId": "room-corridor-0b98ck0fic",
+      "gameId": "room-corridor-0b98ck0fic",
+      "seed": 806475641,
+      "tick": 170,
+      "gameState": "playing",
+      "buildingNumber": 0,
+      "encountersSurvived": 0,
+      "players": [
+        {
+          "id": "host-player-qarjw80fic",
+          "color": "#FF0055",
+          "position": {
+            "x": 377.5,
+            "y": 2,
+            "z": 377.5
+          },
+          "rotationY": -1.1507963267948966,
+          "pitch": -0.0002534509842363401
+        },
+        {
+          "id": "client-player-s0kl7p0fy3",
+          "color": "#00AAFF",
+          "position": {
+            "x": 376.1,
+            "y": 2,
+            "z": 371.4997000000002
+          },
+          "rotationY": 0,
+          "pitch": 0
+        }
+      ]
+    },
+    "nexusRecovery": {
+      "installCount": 474,
+      "registeredDomainPathCount": 405,
+      "rejoining": {
+        "connection": "restored",
+        "disconnection": {
+          "reason": "client disconnected",
+          "disconnectedAtMs": 1784340115693,
+          "lastKnownPlace": {
+            "roomId": "room-corridor-0b98ck0fic",
+            "gameId": "room-corridor-0b98ck0fic",
+            "authoritativeTick": 121,
+            "buildingNumber": 0,
+            "encountersSurvived": 0,
+            "playerPosition": {
+              "x": 376.1,
+              "y": 2,
+              "z": 373.29970000000014
+            },
+            "recordedAtMs": 1784340115693
+          }
+        },
+        "recovery": {
+          "requestId": "recovery-xay5mu1d2o",
+          "hostPeerId": "A30E",
+          "requestedAtMs": 1784340121200,
+          "completedAtMs": 1784340121676,
+          "authoritativeTick": 141
+        },
+        "restored place": {
+          "roomId": "room-corridor-0b98ck0fic",
+          "gameId": "room-corridor-0b98ck0fic",
+          "authoritativeTick": 141,
+          "buildingNumber": 0,
+          "encountersSurvived": 0,
+          "playerPosition": {
+            "x": 376.1,
+            "y": 2,
+            "z": 373.29970000000014
+          },
+          "recordedAtMs": 1784340121676
+        }
+      },
+      "sharedChronicle": {
+        "snapshots": null,
+        "event history": null,
+        "recovery history": [
+          {
+            "kind": "disconnected",
+            "atMs": 1784340115693,
+            "requestId": null,
+            "authoritativeTick": 121
+          },
+          {
+            "kind": "reconnecting",
+            "atMs": 1784340121200,
+            "requestId": "recovery-xay5mu1d2o",
+            "authoritativeTick": 121
+          },
+          {
+            "kind": "restored",
+            "atMs": 1784340121676,
+            "requestId": "recovery-xay5mu1d2o",
+            "authoritativeTick": 141
+          }
+        ]
+      }
+    },
+    "distances": {
+      "initialMovementMeters": 6.000299999999868,
+      "restoredHostDifferenceMeters": 0,
+      "restoredLastPlaceDifferenceMeters": 0,
+      "postRecoveryMovementMeters": 1.7999999999999545
+    }
+  }
+}

@@ -1,5 +1,7 @@
 import {
   BoxGeometry,
+  Color,
+  CylinderGeometry,
   Group,
   InstancedMesh,
   Matrix4,
@@ -14,12 +16,15 @@ import {
   MeshStandardMaterial,
   Vector3,
   type Material,
+  type PerspectiveCamera,
 } from "three";
 
 import { createHorrorCorridorPreset } from "@/protokits/presets/horror-corridor-preset";
 import { CELL_SIZE, WALL_HEIGHT } from "@/lib/constants";
 import { CUBE_COLORS, type CubeColorHex } from "@/lib/colors";
 import type { MazeResult, MazeCube } from "@/features/maze/domain/mazeTypes";
+import { createConcretePavingState } from "@/features/corridor/domain/concretePaving";
+import { createCeilingCollapseState } from "@/features/corridor/domain/ceilingCollapse";
 import type { ReplicatedGameSnapshot, WorldPosition } from "@/types/shared";
 
 import { createLights } from "./createLights";
@@ -33,6 +38,7 @@ import {
   createSceneTextureRenderable,
 } from "./sceneDressingRenderer";
 import { createTerrainSurface, type TerrainSurface } from "./terrainSurface";
+import { buildFurnishedChamberLayer } from "./furnishedChamberLayer";
 
 export type MazeWorldFrame = Readonly<{
   snapshot: ReplicatedGameSnapshot | null;
@@ -42,6 +48,7 @@ export type MazeWorldFrame = Readonly<{
     yaw: number;
     pitch: number;
   }> | null;
+  localCamera?: PerspectiveCamera | null;
 }>;
 
 export type MazeWorld = Readonly<{
@@ -121,29 +128,56 @@ const buildSceneDressingLayer = (
   preset: ReturnType<typeof createHorrorCorridorPreset>,
 ): MazeSceneDressingLayer => {
   const manifest = createSceneDressingManifest(maze, preset);
+  const protectedOrigin = toWorldCellPosition(maze.start.x, maze.start.y);
+  const protectedRadius = CELL_SIZE * 3.2;
+  const isOutsideReferenceRoom = (
+    descriptor: Readonly<{ position: Readonly<{ x: number; z: number }> }>,
+  ): boolean =>
+    Math.hypot(
+      descriptor.position.x - protectedOrigin.x,
+      descriptor.position.z - protectedOrigin.z,
+    ) >= protectedRadius;
+  const props = manifest.props.filter(isOutsideReferenceRoom);
+  const textures = manifest.textures.filter(isOutsideReferenceRoom);
+  const lightDescriptors = manifest.lights.filter(isOutsideReferenceRoom);
+  const summary: SceneDressingSummary = {
+    ...manifest.summary,
+    propCount: props.length,
+    textureCount: textures.length,
+    lightCount: lightDescriptors.length,
+    validation: {
+      ...manifest.summary.validation,
+      meetsPropThreshold:
+        props.length >= preset.renderValidation.minimumPropCount,
+      meetsTextureThreshold:
+        textures.length >= preset.renderValidation.minimumTextureCount,
+      meetsLightThreshold:
+        lightDescriptors.length >= preset.renderValidation.minimumLightCount,
+    },
+  };
   const group = new Group();
   group.name = "maze-scene-dressing";
-  group.userData.sceneDressingSummary = manifest.summary;
+  group.userData.sceneDressingSummary = summary;
 
   const materials: Material[] = [];
   const propPulseTargets: Mesh[] = [];
   const texturePulseTargets: Mesh[] = [];
 
-  for (const descriptor of manifest.props) {
+  for (const descriptor of props) {
     const renderable = createScenePropRenderable(descriptor, preset);
     materials.push(...renderable.materials);
     propPulseTargets.push(...renderable.pulseTargets);
     group.add(renderable.object);
   }
 
-  for (const descriptor of manifest.textures) {
+  for (const descriptor of textures) {
     const renderable = createSceneTextureRenderable(descriptor, preset);
     materials.push(...renderable.materials);
     texturePulseTargets.push(...renderable.pulseTargets);
     group.add(renderable.object);
   }
 
-  for (const descriptor of manifest.lights) {
+  for (const descriptor of lightDescriptors) {
     const light = new PointLight(
       descriptor.color,
       descriptor.intensity,
@@ -157,7 +191,7 @@ const buildSceneDressingLayer = (
   }
 
   return Object.assign(group, {
-    summary: manifest.summary,
+    summary,
     update: (elapsedMs: number) => {
       for (const target of propPulseTargets) {
         const material = target.material;
@@ -453,10 +487,55 @@ export const buildMazeWorld = (maze: MazeResult): MazeWorld => {
   const endCell = toWorldCellPosition(maze.end.x, maze.end.y);
   const startCell = toWorldCellPosition(maze.start.x, maze.start.y);
 
-  const materials = createMaterials(preset);
+  const walkableCellCount = countCells(maze, (value) => value !== 0);
+  const concretePaving = createConcretePavingState({
+    seed: preset.sceneGeneration.seed,
+    walkableCellCount,
+    cellSize: CELL_SIZE,
+    surfaceThickness: 0.08,
+    maximumDisplacement: preset.terrainField.heightAmplitude,
+    moisture: preset.terrainField.wetness,
+    identity: preset.terrainShader.concreteIdentity,
+  });
+  const ceilingCollapse = createCeilingCollapseState({
+    seed: preset.sceneGeneration.seed,
+    chamberLength: preset.chamberFurnishing.bounds.length,
+    chamberWidth: preset.chamberFurnishing.bounds.width,
+    chamberHeight: preset.chamberFurnishing.bounds.height,
+    openingStart: preset.chamberFurnishing.daylightBreach.start,
+    openingLength: preset.chamberFurnishing.daylightBreach.length,
+    openingWidth: preset.chamberFurnishing.bounds.width * 0.42,
+    surface: preset.chamberFurnishing.ceilingSurface,
+    config: preset.chamberFurnishing.collapseDamage,
+  });
+  const materials = createMaterials(preset, concretePaving);
   const lights = createLights();
   const staticLayer = buildMazeStaticLayer(maze, materials, lights, terrain, preset);
   const sceneDressingLayer = buildSceneDressingLayer(maze, preset);
+  const furnishedChamberLayer = buildFurnishedChamberLayer({
+    maze,
+    preset,
+    terrain,
+  });
+  const sceneDressingSummary: SceneDressingSummary = Object.freeze({
+    ...sceneDressingLayer.summary,
+    concretePaving,
+    ceilingCollapse,
+    propCount:
+      sceneDressingLayer.summary.propCount + furnishedChamberLayer.summary.propCount,
+    textureCount:
+      sceneDressingLayer.summary.textureCount + furnishedChamberLayer.summary.textureCount,
+    lightCount:
+      sceneDressingLayer.summary.lightCount + furnishedChamberLayer.summary.lightCount,
+    referenceRoom: furnishedChamberLayer.summary,
+  });
+  let streamedBuildingNumber = 0;
+  let streamedChamberOrigin: WorldPosition = {
+    x: startCell.x,
+    y: terrain.floorYAt(startCell.x, startCell.z),
+    z: startCell.z,
+  };
+  let streamedEntryYaw = -Math.PI / 2;
 
   const cubeGroup = new Group();
   cubeGroup.name = "maze-cubes";
@@ -465,7 +544,7 @@ export const buildMazeWorld = (maze: MazeResult): MazeWorld => {
 
   const playerGroup = new Group();
   playerGroup.name = "maze-players";
-  const playerFollowLight = new PointLight(0xffddb0, 0.62, 18, 1.28);
+  const playerFollowLight = new PointLight(0xffddb0, 0.82, 21, 1.22);
   playerFollowLight.name = "maze-player-near-fill";
   playerFollowLight.position.set(startCell.x, terrain.floorYAt(startCell.x, startCell.z, 2), startCell.z);
   const flashlightGroup = new Group();
@@ -493,6 +572,69 @@ export const buildMazeWorld = (maze: MazeResult): MazeWorld => {
   flashlightGroup.add(flashlight);
   flashlightGroup.add(flashlight.target);
 
+  const monsterGroup = new Group();
+  monsterGroup.name = "maze-stalker-encounter";
+  monsterGroup.visible = false;
+  const monsterMaterial = new MeshStandardMaterial({
+    color: 0x071008,
+    emissive: 0x071c0d,
+    emissiveIntensity: 0.08,
+    roughness: 0.94,
+    metalness: 0.02,
+  });
+  const monsterTorso = new Mesh(
+    new CylinderGeometry(0.34, 0.62, 2.3, 7),
+    monsterMaterial,
+  );
+  monsterTorso.position.y = 1.35;
+  const monsterHead = new Mesh(
+    new SphereGeometry(0.39, 10, 8),
+    monsterMaterial,
+  );
+  monsterHead.position.set(0, 2.72, 0.04);
+  monsterHead.scale.set(0.78, 1.24, 0.7);
+  const monsterArmGeometry = new BoxGeometry(0.16, 2.15, 0.18);
+  const monsterLeftArm = new Mesh(monsterArmGeometry, monsterMaterial);
+  const monsterRightArm = new Mesh(monsterArmGeometry, monsterMaterial);
+  monsterLeftArm.position.set(-0.53, 1.22, 0.02);
+  monsterRightArm.position.set(0.53, 1.22, 0.02);
+  monsterLeftArm.rotation.z = -0.12;
+  monsterRightArm.rotation.z = 0.12;
+  const monsterEyeMaterial = new MeshBasicMaterial({ color: 0xb3ffc2 });
+  const monsterEyeGeometry = new SphereGeometry(0.03, 7, 6);
+  const monsterLeftEye = new Mesh(monsterEyeGeometry, monsterEyeMaterial);
+  const monsterRightEye = new Mesh(monsterEyeGeometry, monsterEyeMaterial);
+  monsterLeftEye.position.set(-0.12, 2.79, -0.26);
+  monsterRightEye.position.set(0.12, 2.79, -0.26);
+  monsterLeftEye.scale.set(0.76, 1.08, 0.72);
+  monsterRightEye.scale.set(1.08, 0.72, 0.72);
+  const monsterMouthMaterial = new MeshBasicMaterial({ color: 0x010302 });
+  const monsterMouth = new Mesh(
+    new BoxGeometry(0.2, 0.026, 0.022),
+    monsterMouthMaterial,
+  );
+  monsterMouth.name = "maze-stalker-mouth";
+  monsterMouth.position.set(0.025, 2.57, -0.265);
+  monsterMouth.rotation.z = -0.08;
+  const monsterLight = new PointLight(0x4dff79, 0, 5.5, 1.8);
+  monsterLight.position.set(0, 2.05, -0.42);
+  monsterGroup.add(
+    monsterTorso,
+    monsterHead,
+    monsterLeftArm,
+    monsterRightArm,
+    monsterLeftEye,
+    monsterRightEye,
+    monsterMouth,
+    monsterLight,
+  );
+  let attachedScene: Scene | null = null;
+  const calmSky = new Color(0x0b0c0a);
+  const huntedSky = new Color(0x06170c);
+  const jumpscareSky = new Color(0x0b2813);
+  const calmFog = new Color(0x0d0f0c);
+  const huntedFog = new Color(0x082411);
+
   const oozeGeometry = new PlaneGeometry(CELL_SIZE * 0.28, CELL_SIZE * 0.28);
   oozeGeometry.rotateX(-Math.PI / 2);
   const oozeMesh = new InstancedMesh(oozeGeometry, materials.ooze, Math.max(maze.cubes.length, 800));
@@ -517,6 +659,7 @@ export const buildMazeWorld = (maze: MazeResult): MazeWorld => {
   }
 
   root.add(staticLayer);
+  root.add(furnishedChamberLayer);
   root.add(sceneDressingLayer);
   root.add(cubeGroup);
   root.add(cubeLightGroup);
@@ -524,6 +667,7 @@ export const buildMazeWorld = (maze: MazeResult): MazeWorld => {
   root.add(oozeMesh);
   root.add(playerFollowLight);
   root.add(flashlightGroup);
+  root.add(monsterGroup);
   root.add(lights.group);
 
   const syncCubeMeshes = (
@@ -674,10 +818,12 @@ export const buildMazeWorld = (maze: MazeResult): MazeWorld => {
   return {
     root,
     attach: (scene) => {
+      attachedScene = scene;
       scene.add(root);
     },
     update: (elapsedMs, frame) => {
       staticLayer.update(elapsedMs);
+      furnishedChamberLayer.update(elapsedMs);
       sceneDressingLayer.update(elapsedMs);
       const localPlayerPosition = frame?.localPlayerPosition;
 
@@ -703,25 +849,162 @@ export const buildMazeWorld = (maze: MazeResult): MazeWorld => {
           terrain.floorYAt(localPlayerPosition.x, localPlayerPosition.z, localPlayerPosition.y + 0.75),
           localPlayerPosition.z,
         );
-        flashlightGroup.visible = preset.flashlight.enabled;
+        const flashlightState = frame?.snapshot?.expedition.flashlight;
+        const flashlightPower = flashlightState?.intensity ?? 1;
+        flashlightGroup.visible = preset.flashlight.enabled && flashlightPower > 0.01;
         flashlightGroup.position.copy(flashlightPosition);
         flashlightGroup.rotation.order = "YXZ";
         flashlightGroup.rotation.y = viewAngles.yaw;
         flashlightGroup.rotation.x = viewAngles.pitch;
         flashlight.position.set(0, 0, 0);
         flashlight.target.position.set(0, 0, -preset.flashlight.range * 0.55);
-        flashlight.intensity = preset.flashlight.intensity + Math.sin(elapsedMs * 0.018) * 0.14;
+        flashlight.intensity =
+          (preset.flashlight.intensity + Math.sin(elapsedMs * 0.018) * 0.14) *
+          flashlightPower;
+        const lensMaterial = flashlightLens.material;
+        if (lensMaterial instanceof MeshStandardMaterial) {
+          lensMaterial.emissiveIntensity = 0.25 + flashlightPower * 1.75;
+        } else if (lensMaterial instanceof MeshBasicMaterial) {
+          lensMaterial.opacity = 0.2 + flashlightPower * 0.8;
+        }
       }
-      playerFollowLight.intensity = 0.62 + Math.sin(elapsedMs * 0.0025) * 0.05;
+      const flashlightPower = frame?.snapshot?.expedition.flashlight.intensity ?? 1;
+      playerFollowLight.intensity =
+        (0.82 + Math.sin(elapsedMs * 0.0025) * 0.05) *
+        Math.max(0.03, flashlightPower);
 
       const snapshot = frame?.snapshot;
       if (snapshot) {
+        const nextBuildingNumber = snapshot.expedition.buildingNumber;
+        if (
+          localPlayerPosition &&
+          nextBuildingNumber > 0 &&
+          nextBuildingNumber !== streamedBuildingNumber
+        ) {
+          const entryYaw = frame?.localViewAngles?.yaw ?? streamedEntryYaw;
+          const floorY = terrain.floorYAt(
+            localPlayerPosition.x,
+            localPlayerPosition.z,
+          );
+          furnishedChamberLayer.position.set(
+            localPlayerPosition.x,
+            floorY,
+            localPlayerPosition.z,
+          );
+          furnishedChamberLayer.rotation.y = entryYaw + Math.PI / 2;
+          furnishedChamberLayer.userData.streamedBuildingNumber =
+            nextBuildingNumber;
+          furnishedChamberLayer.userData.streamedOrigin = {
+            x: localPlayerPosition.x,
+            y: floorY,
+            z: localPlayerPosition.z,
+          };
+          furnishedChamberLayer.userData.entryYaw = entryYaw;
+          streamedBuildingNumber = nextBuildingNumber;
+          streamedChamberOrigin = {
+            x: localPlayerPosition.x,
+            y: floorY,
+            z: localPlayerPosition.z,
+          };
+          streamedEntryYaw = entryYaw;
+        }
         syncCubeMeshes(snapshot.cubes, snapshot.anomaly.slots);
         syncPlayerMeshes(snapshot.players, frame?.localPlayerId ?? null);
         syncOozeTrail(snapshot.oozeTrail);
+
+        const encounter = snapshot.expedition.activeEncounter;
+        if (encounter && localPlayerPosition) {
+          const isJumpscare = snapshot.expedition.phase === "jumpscare";
+          const presentedDistance = Math.min(encounter.distance, 18);
+          const monsterX = localPlayerPosition.x -
+            Math.sin(encounter.worldAngle) * presentedDistance;
+          const monsterZ = localPlayerPosition.z -
+            Math.cos(encounter.worldAngle) * presentedDistance;
+          monsterGroup.visible = true;
+          if (isJumpscare && frame.localCamera) {
+            const cameraForward = new Vector3(0, 0, -1)
+              .applyQuaternion(frame.localCamera.quaternion);
+            monsterGroup.quaternion.copy(frame.localCamera.quaternion);
+            monsterGroup.rotateY(Math.PI);
+            const headOffset = monsterHead.position.clone()
+              .applyQuaternion(monsterGroup.quaternion);
+            monsterGroup.position.copy(frame.localCamera.position)
+              .addScaledVector(cameraForward, 1.32)
+              .sub(headOffset);
+          } else {
+            monsterGroup.position.set(
+              monsterX,
+              terrain.floorYAt(monsterX, monsterZ),
+              monsterZ,
+            );
+            monsterGroup.lookAt(localPlayerPosition.x, localPlayerPosition.y, localPlayerPosition.z);
+            monsterGroup.rotation.y += Math.PI;
+          }
+          const jumpscarePulse = encounter.state === "jumpscare"
+            ? 1.2 + Math.sin(elapsedMs * 0.05) * 0.12
+            : 1;
+          monsterGroup.scale.setScalar(jumpscarePulse);
+          monsterMaterial.depthTest = !isJumpscare;
+          monsterMaterial.depthWrite = !isJumpscare;
+          monsterEyeMaterial.depthTest = !isJumpscare;
+          monsterEyeMaterial.depthWrite = !isJumpscare;
+          monsterMouthMaterial.depthTest = !isJumpscare;
+          monsterMouthMaterial.depthWrite = !isJumpscare;
+          monsterTorso.renderOrder = isJumpscare ? 100 : 0;
+          monsterHead.renderOrder = isJumpscare ? 100 : 0;
+          monsterLeftArm.renderOrder = isJumpscare ? 100 : 0;
+          monsterRightArm.renderOrder = isJumpscare ? 100 : 0;
+          monsterLeftEye.renderOrder = isJumpscare ? 101 : 0;
+          monsterRightEye.renderOrder = isJumpscare ? 101 : 0;
+          monsterMouth.renderOrder = isJumpscare ? 101 : 0;
+          monsterMaterial.emissiveIntensity = encounter.beamContact
+            ? 0.72 + Math.sin(elapsedMs * 0.025) * 0.24
+            : encounter.state === "jumpscare"
+              ? 0.34
+              : 0.08;
+          monsterMaterial.emissive.setHex(
+            encounter.state === "jumpscare" ? 0x0a3116 : 0x071c0d,
+          );
+          monsterLight.intensity = encounter.state === "jumpscare"
+            ? 0.62 + Math.sin(elapsedMs * 0.04) * 0.12
+            : encounter.beamContact
+              ? 0.8
+              : 0;
+          monsterEyeMaterial.color.setHex(
+            encounter.beamContact || encounter.state === "jumpscare" ? 0x74ff92 : 0x193e22,
+          );
+        } else {
+          monsterGroup.visible = false;
+        }
+
+        const proximity = encounter
+          ? Math.max(0, Math.min(1, 1 - encounter.distance / 18))
+          : 0;
+        const blackoutPressure = snapshot.expedition.flashlight.mode === "blackout" ? 0.58 : 0;
+        const jumpscarePressure = snapshot.expedition.phase === "jumpscare" ? 0.78 : 0;
+        const greenPressure = Math.max(proximity * 0.72, blackoutPressure, jumpscarePressure);
+        if (attachedScene?.background instanceof Color) {
+          attachedScene.background.copy(calmSky).lerp(
+            jumpscarePressure > 0 ? jumpscareSky : huntedSky,
+            greenPressure,
+          );
+        }
+        if (attachedScene?.fog && "color" in attachedScene.fog) {
+          attachedScene.fog.color.copy(calmFog).lerp(huntedFog, greenPressure);
+        }
       }
     },
-    getSceneDressingSummary: () => sceneDressingLayer.summary,
+    getSceneDressingSummary: () => ({
+      ...sceneDressingSummary,
+      referenceRoom: sceneDressingSummary.referenceRoom
+        ? {
+            ...sceneDressingSummary.referenceRoom,
+            streamedBuildingNumber,
+            streamedOrigin: streamedChamberOrigin,
+            entryYaw: streamedEntryYaw,
+          }
+        : undefined,
+    }),
     getTerrainEyePosition: (position) => ({
       x: position.x,
       y: terrain.floorYAt(position.x, position.z, position.y),
@@ -731,9 +1014,12 @@ export const buildMazeWorld = (maze: MazeResult): MazeWorld => {
       if (root.parent) {
         root.parent.remove(root);
       }
+      attachedScene = null;
 
       sceneDressingLayer.dispose();
       root.remove(sceneDressingLayer);
+      furnishedChamberLayer.dispose();
+      root.remove(furnishedChamberLayer);
 
       disposeObject(
         root,

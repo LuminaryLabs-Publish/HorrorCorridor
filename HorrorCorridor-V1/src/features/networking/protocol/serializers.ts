@@ -84,6 +84,87 @@ const isRoomState = (value: unknown): value is RoomState =>
   isNumber(value.createdAt) &&
   isNumber(value.updatedAt);
 
+const isMonsterIndexEntry = (
+  value: unknown,
+): value is ReplicatedGameSnapshot["expedition"]["monsterIndex"][number] =>
+  isRecord(value) &&
+  isString(value.id) &&
+  isString(value.name) &&
+  isString(value.sign) &&
+  isString(value.scare) &&
+  isString(value.response) &&
+  isString(value.knowledge) &&
+  ["unknown", "seen", "studied", "collected"].includes(value.knowledge) &&
+  isNumber(value.encounters) &&
+  isNumber(value.scaresSurvived) &&
+  (value.firstSeenAtEncounter === null || isNumber(value.firstSeenAtEncounter)) &&
+  (value.collectedAtEncounter === null || isNumber(value.collectedAtEncounter));
+
+const isExpeditionSnapshot = (
+  value: unknown,
+): value is ReplicatedGameSnapshot["expedition"] =>
+  isRecord(value) &&
+  isString(value.phase) &&
+  ["intro", "exploring", "jumpscare", "caught"].includes(value.phase) &&
+  isNumber(value.elapsedMs) &&
+  isNumber(value.distanceTravelled) &&
+  isNumber(value.introDistanceTravelled) &&
+  isNumber(value.buildingNumber) &&
+  isNumber(value.buildingsCrossed) &&
+  isNumber(value.encountersSurvived) &&
+  isNumber(value.distanceSinceEncounter) &&
+  isNumber(value.nextEncounterInMeters) &&
+  (value.activeEncounter === null ||
+    (isRecord(value.activeEncounter) &&
+      isString(value.activeEncounter.id) &&
+      isNumber(value.activeEncounter.encounterNumber) &&
+      isNumber(value.activeEncounter.buildingNumber) &&
+      isString(value.activeEncounter.monsterId) &&
+      isString(value.activeEncounter.state) &&
+      ["approaching", "repelling", "blackout", "last-chance", "jumpscare"].includes(
+        value.activeEncounter.state,
+      ) &&
+      isNumber(value.activeEncounter.worldAngle) &&
+      isNumber(value.activeEncounter.bearingRadians) &&
+      isNumber(value.activeEncounter.distance) &&
+      isNumber(value.activeEncounter.closestDistance) &&
+      isBoolean(value.activeEncounter.beamContact) &&
+      isNumber(value.activeEncounter.beamHoldMs) &&
+      isBoolean(value.activeEncounter.fullScareWitnessed) &&
+      isNumber(value.activeEncounter.blackoutRemainingMs) &&
+      isNumber(value.activeEncounter.lastChanceRemainingMs) &&
+      isNumber(value.activeEncounter.jumpscareRemainingMs) &&
+      isRecord(value.activeEncounter.audioCue) &&
+      isNumber(value.activeEncounter.audioCue.serial) &&
+      isString(value.activeEncounter.audioCue.kind) &&
+      ["footstep", "knock", "scrape", "breath"].includes(value.activeEncounter.audioCue.kind) &&
+      isNumber(value.activeEncounter.audioCue.pan) &&
+      isNumber(value.activeEncounter.audioCue.intensity) &&
+      isNumber(value.activeEncounter.audioCue.nextInMs))) &&
+  (value.roomOffer === null ||
+    (isRecord(value.roomOffer) &&
+      isString(value.roomOffer.id) &&
+      isString(value.roomOffer.kind) &&
+      ["fresh-cell", "silver-bell", "red-thread", "salt-chalk"].includes(value.roomOffer.kind) &&
+      isString(value.roomOffer.title) &&
+      isString(value.roomOffer.description) &&
+      isBoolean(value.roomOffer.claimed))) &&
+  isRecord(value.flashlight) &&
+  isString(value.flashlight.mode) &&
+  ["steady", "flickering", "blackout"].includes(value.flashlight.mode) &&
+  isNumber(value.flashlight.intensity) &&
+  isNumber(value.flashlight.flickerRemainingMs) &&
+  isNumber(value.flashlight.nextFlickerInMs) &&
+  isRecord(value.boons) &&
+  isNumber(value.boons.beamWidthBonusRadians) &&
+  isNumber(value.boons.cueFrequencyBonus) &&
+  isNumber(value.boons.lastChanceBonusMs) &&
+  isNumber(value.boons.approachSlowMultiplier) &&
+  Array.isArray(value.monsterIndex) &&
+  value.monsterIndex.every(isMonsterIndexEntry) &&
+  isString(value.lastEvent) &&
+  isNumber(value.eventSerial);
+
 const isSnapshot = (value: unknown): value is ReplicatedGameSnapshot =>
   isRecord(value) &&
   isString(value.gameId) &&
@@ -100,6 +181,7 @@ const isSnapshot = (value: unknown): value is ReplicatedGameSnapshot =>
   Array.isArray(value.cubes) &&
   value.cubes.every(isCubeSnapshot) &&
   isAnomalySnapshot(value.anomaly) &&
+  isExpeditionSnapshot(value.expedition) &&
   Array.isArray(value.oozeTrail) &&
   value.oozeTrail.every(isOozeTrailItem) &&
   isNumber(value.oozeLevel);

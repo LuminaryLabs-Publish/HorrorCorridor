@@ -8,6 +8,7 @@ import {
 } from "@/lib/constants";
 
 import { createHorrorContentPackManifest, defineHorrorContentPack } from "../contentPack";
+import type { FurnishChamberKitConfig } from "../furnish-chamber-kit";
 
 export type HorrorCorridorPreset = Readonly<{
   maze: {
@@ -93,6 +94,29 @@ export type HorrorCorridorPreset = Readonly<{
     blendSharpness: number;
     puddleStrength: number;
     mossStrength: number;
+    concreteIdentity: {
+      slabScale: number;
+      slabJointWidth: number;
+      crackScale: number;
+      crackWidth: number;
+      crackDensity: number;
+      aggregateScale: number;
+      aggregateExposure: number;
+      repairStrength: number;
+      surfaceRelief: number;
+    };
+  };
+  waterSurface: {
+    palette: readonly [number, number, number];
+    opacityRange: readonly [number, number];
+    roughnessRange: readonly [number, number];
+    rippleTextureSize: number;
+    rippleScale: number;
+    rippleStrength: number;
+    driftSpeed: number;
+    reflectionStrength: number;
+    warmReflectionColor: number;
+    coldReflectionColor: number;
   };
   grassObjectSpawn: {
     maxGrassClumps: number;
@@ -281,6 +305,7 @@ export type HorrorCorridorPreset = Readonly<{
     maxDecorations: number;
     descriptorOnly: boolean;
   };
+  chamberFurnishing: FurnishChamberKitConfig;
   renderValidation: {
     noHudDuringPlaying: boolean;
     requireNonBlankCanvas: boolean;
@@ -315,8 +340,10 @@ export type HorrorCorridorPresetInput = Partial<{
   flashlight: Partial<HorrorCorridorPreset["flashlight"]>;
   walkthrough: Partial<HorrorCorridorPreset["walkthrough"]>;
   sceneGeneration: Partial<HorrorCorridorPreset["sceneGeneration"]>;
+  chamberFurnishing: Partial<HorrorCorridorPreset["chamberFurnishing"]>;
   terrainField: Partial<HorrorCorridorPreset["terrainField"]>;
   terrainShader: Partial<HorrorCorridorPreset["terrainShader"]>;
+  waterSurface: Partial<HorrorCorridorPreset["waterSurface"]>;
   grassObjectSpawn: Partial<HorrorCorridorPreset["grassObjectSpawn"]>;
   corridorTile: Partial<HorrorCorridorPreset["corridorTile"]>;
   brokenCityWall: Partial<HorrorCorridorPreset["brokenCityWall"]>;
@@ -328,6 +355,7 @@ export type HorrorCorridorPresetInput = Partial<{
 
 const DEFAULT_COLORS = CUBE_COLORS.map((color) => color.name);
 const DEFAULT_PROP_KINDS = [
+  "weathered-surface",
   "wall-box",
   "pipe",
   "floor-pipe",
@@ -342,6 +370,7 @@ const DEFAULT_PROP_KINDS = [
   "debris",
   "grass-clump",
   "root-strip",
+  "hanging-vine",
   "rubble",
   "rock-cluster",
   "table",
@@ -354,6 +383,7 @@ const DEFAULT_PROP_KINDS = [
   "concrete-jersey-barrier",
   "storm-drain-culvert",
   "collapsed-signpost",
+  "collapsed-ceiling",
   "industrial-shelving",
   "hanging-chain-hook",
   "barrel-cluster",
@@ -463,6 +493,37 @@ export const createHorrorCorridorPreset = (
     blendSharpness: input.terrainShader?.blendSharpness ?? 3.4,
     puddleStrength: input.terrainShader?.puddleStrength ?? 0.58,
     mossStrength: input.terrainShader?.mossStrength ?? 0.42,
+    concreteIdentity: {
+      slabScale: input.terrainShader?.concreteIdentity?.slabScale ?? 0.28,
+      slabJointWidth:
+        input.terrainShader?.concreteIdentity?.slabJointWidth ?? 0.006,
+      crackScale: input.terrainShader?.concreteIdentity?.crackScale ?? 1.05,
+      crackWidth: input.terrainShader?.concreteIdentity?.crackWidth ?? 0.016,
+      crackDensity:
+        input.terrainShader?.concreteIdentity?.crackDensity ?? 0.48,
+      aggregateScale:
+        input.terrainShader?.concreteIdentity?.aggregateScale ?? 13.8,
+      aggregateExposure:
+        input.terrainShader?.concreteIdentity?.aggregateExposure ?? 0.18,
+      repairStrength:
+        input.terrainShader?.concreteIdentity?.repairStrength ?? 0.34,
+      surfaceRelief:
+        input.terrainShader?.concreteIdentity?.surfaceRelief ?? 0.16,
+    },
+  },
+  waterSurface: {
+    palette: input.waterSurface?.palette ?? [0x0d1613, 0x30483a, 0x8db6c9],
+    opacityRange: input.waterSurface?.opacityRange ?? [0.34, 0.68],
+    roughnessRange: input.waterSurface?.roughnessRange ?? [0.06, 0.2],
+    rippleTextureSize: input.waterSurface?.rippleTextureSize ?? 128,
+    rippleScale: input.waterSurface?.rippleScale ?? 2.8,
+    rippleStrength: input.waterSurface?.rippleStrength ?? 0.13,
+    driftSpeed: input.waterSurface?.driftSpeed ?? 0.000012,
+    reflectionStrength: input.waterSurface?.reflectionStrength ?? 1.55,
+    warmReflectionColor:
+      input.waterSurface?.warmReflectionColor ?? 0xffb36b,
+    coldReflectionColor:
+      input.waterSurface?.coldReflectionColor ?? 0x7f9f91,
   },
   grassObjectSpawn: {
     maxGrassClumps: input.grassObjectSpawn?.maxGrassClumps ?? 34,
@@ -587,6 +648,7 @@ export const createHorrorCorridorPreset = (
       "rubber-cable",
       "damp-concrete",
       "broken-brick",
+      "fracture-shadow",
       "painted-utility",
       "wet-concrete",
       "muddy-grass",
@@ -629,6 +691,13 @@ export const createHorrorCorridorPreset = (
         accentColor: 0x8a6042,
         roughnessBias: 0.12,
         metalnessBias: -0.06,
+        emissiveBoost: 0,
+      },
+      "fracture-shadow": {
+        shaderProfile: "concrete-slab",
+        accentColor: 0x0b0d0c,
+        roughnessBias: 0.24,
+        metalnessBias: -0.08,
         emissiveBoost: 0,
       },
       "painted-utility": {
@@ -691,6 +760,13 @@ export const createHorrorCorridorPreset = (
     emissiveCueStrength: input.propMaterialFidelity?.emissiveCueStrength ?? 0.34,
     visibleSpawnPropTarget: input.propMaterialFidelity?.visibleSpawnPropTarget ?? 12,
     objectProfiles: input.propMaterialFidelity?.objectProfiles ?? {
+      "weathered-surface": {
+        shaderProfile: "weathered-surface",
+        detailScale: 9.2,
+        edgeWear: 0.2,
+        grimeBoost: 0.72,
+        accentColor: 0x59665a,
+      },
       "wall-box": {
         shaderProfile: "painted-panel",
         detailScale: 11.5,
@@ -789,6 +865,13 @@ export const createHorrorCorridorPreset = (
         grimeBoost: 0.22,
         accentColor: 0x7d5d3b,
       },
+      "hanging-vine": {
+        shaderProfile: "root-fiber",
+        detailScale: 15.4,
+        edgeWear: 0.22,
+        grimeBoost: 0.18,
+        accentColor: 0x70804c,
+      },
       rubble: {
         shaderProfile: "concrete-slab",
         detailScale: 8.8,
@@ -872,6 +955,13 @@ export const createHorrorCorridorPreset = (
         edgeWear: 0.66,
         grimeBoost: 0.48,
         accentColor: 0xb17a3f,
+      },
+      "collapsed-ceiling": {
+        shaderProfile: "ceiling-ruin",
+        detailScale: 14.8,
+        edgeWear: 0.72,
+        grimeBoost: 0.64,
+        accentColor: 0x8a8068,
       },
       "industrial-shelving": {
         shaderProfile: "utility-crate",
@@ -983,6 +1073,101 @@ export const createHorrorCorridorPreset = (
     maxDecorations: input.sceneGeneration?.maxDecorations ?? 430,
     descriptorOnly: input.sceneGeneration?.descriptorOnly ?? true,
   },
+  chamberFurnishing: {
+    enabled: input.chamberFurnishing?.enabled ?? true,
+    targetId:
+      input.chamberFurnishing?.targetId ??
+      "horror-corridor-expedition-room-v2",
+    bounds: {
+      length: input.chamberFurnishing?.bounds?.length ?? 14,
+      width: input.chamberFurnishing?.bounds?.width ?? 9.8,
+      height: input.chamberFurnishing?.bounds?.height ?? 5.3,
+    },
+    thresholdDepth: input.chamberFurnishing?.thresholdDepth ?? 0.7,
+    daylightBreach: {
+      start: input.chamberFurnishing?.daylightBreach?.start ?? 4.8,
+      length: input.chamberFurnishing?.daylightBreach?.length ?? 3.4,
+      color: input.chamberFurnishing?.daylightBreach?.color ?? 0x6d8f78,
+      intensity: input.chamberFurnishing?.daylightBreach?.intensity ?? 2.4,
+    },
+    wetGround: {
+      coverage: input.chamberFurnishing?.wetGround?.coverage ?? 0.8,
+      puddleCount: input.chamberFurnishing?.wetGround?.puddleCount ?? 4,
+    },
+    serviceBay: {
+      position: {
+        x: input.chamberFurnishing?.serviceBay?.position?.x ?? 5.7,
+        y: input.chamberFurnishing?.serviceBay?.position?.y ?? 2.6,
+        z: input.chamberFurnishing?.serviceBay?.position?.z ?? -3.55,
+      },
+      warmColor: input.chamberFurnishing?.serviceBay?.warmColor ?? 0xffad63,
+      intensity: input.chamberFurnishing?.serviceBay?.intensity ?? 4.6,
+    },
+    routeRelic: {
+      position: {
+        x: input.chamberFurnishing?.routeRelic?.position?.x ?? 12.6,
+        y: input.chamberFurnishing?.routeRelic?.position?.y ?? 1.45,
+        z: input.chamberFurnishing?.routeRelic?.position?.z ?? 1.15,
+      },
+      color: input.chamberFurnishing?.routeRelic?.color ?? 0x85d89b,
+      intensity: input.chamberFurnishing?.routeRelic?.intensity ?? 1.05,
+    },
+    overgrowth: {
+      density: input.chamberFurnishing?.overgrowth?.density ?? 0.58,
+      reach: input.chamberFurnishing?.overgrowth?.reach ?? 4.5,
+    },
+    ceilingSurface: {
+      construction:
+        input.chamberFurnishing?.ceilingSurface?.construction ??
+        "reinforced-concrete-and-brick",
+      condition:
+        input.chamberFurnishing?.ceilingSurface?.condition ??
+        "damp-spalled-masonry",
+      concretePalette:
+        input.chamberFurnishing?.ceilingSurface?.concretePalette ??
+        [0x252824, 0x41443b, 0x6d6858],
+      decayPalette:
+        input.chamberFurnishing?.ceilingSurface?.decayPalette ??
+        [0x17130f, 0x34271e, 0x594232],
+      mossPalette:
+        input.chamberFurnishing?.ceilingSurface?.mossPalette ??
+        [0x142018, 0x293a25, 0x536146],
+      roughnessRange:
+        input.chamberFurnishing?.ceilingSurface?.roughnessRange ?? [0.68, 0.96],
+      seamScale:
+        input.chamberFurnishing?.ceilingSurface?.seamScale ?? 0.19,
+      seamWidth:
+        input.chamberFurnishing?.ceilingSurface?.seamWidth ?? 0.005,
+      aggregateScale:
+        input.chamberFurnishing?.ceilingSurface?.aggregateScale ?? 18.5,
+      aggregateExposure:
+        input.chamberFurnishing?.ceilingSurface?.aggregateExposure ?? 0.32,
+      dampness:
+        input.chamberFurnishing?.ceilingSurface?.dampness ?? 0.48,
+      mineralBloom:
+        input.chamberFurnishing?.ceilingSurface?.mineralBloom ?? 0.34,
+      mossStrength:
+        input.chamberFurnishing?.ceilingSurface?.mossStrength ?? 0.26,
+      surfaceRelief:
+        input.chamberFurnishing?.ceilingSurface?.surfaceRelief ?? 0.32,
+    },
+    collapseDamage: {
+      fracturePathCount:
+        input.chamberFurnishing?.collapseDamage?.fracturePathCount ?? 8,
+      edgeFragmentCount:
+        input.chamberFurnishing?.collapseDamage?.edgeFragmentCount ?? 10,
+      rubbleClusterCount:
+        input.chamberFurnishing?.collapseDamage?.rubbleClusterCount ?? 3,
+      estimatedRubblePieceCount:
+        input.chamberFurnishing?.collapseDamage?.estimatedRubblePieceCount ?? 42,
+      maximumPileHeight:
+        input.chamberFurnishing?.collapseDamage?.maximumPileHeight ?? 0.52,
+      routeClearance:
+        input.chamberFurnishing?.collapseDamage?.routeClearance ?? 2.2,
+      skyExposure:
+        input.chamberFurnishing?.collapseDamage?.skyExposure ?? 0.68,
+    },
+  },
   renderValidation: {
     noHudDuringPlaying: input.renderValidation?.noHudDuringPlaying ?? true,
     requireNonBlankCanvas: input.renderValidation?.requireNonBlankCanvas ?? true,
@@ -1034,6 +1219,7 @@ export const createHorrorCorridorContentPacks = (preset: HorrorCorridorPreset) =
         propDescriptor: preset.propDescriptor,
         terrainField: preset.terrainField,
         terrainShader: preset.terrainShader,
+        waterSurface: preset.waterSurface,
         grassObjectSpawn: preset.grassObjectSpawn,
         corridorTile: preset.corridorTile,
         brokenCityWall: preset.brokenCityWall,
@@ -1050,6 +1236,7 @@ export const createHorrorCorridorContentPacks = (preset: HorrorCorridorPreset) =
         lightingPlacement: preset.lightingPlacement,
         flashlight: preset.flashlight,
         sceneGeneration: preset.sceneGeneration,
+        chamberFurnishing: preset.chamberFurnishing,
       },
     }),
     defineHorrorContentPack({

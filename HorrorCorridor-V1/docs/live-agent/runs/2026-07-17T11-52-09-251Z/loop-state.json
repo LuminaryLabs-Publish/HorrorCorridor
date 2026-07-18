@@ -1,0 +1,110 @@
+{
+  "callCount": 2,
+  "consecutiveJudgeFailures": 0,
+  "episodeCount": 2,
+  "goal": "Play one continuous HorrorCorridor expedition: move through the intro, listen for each stalker, turn toward its directional sign, hold the flashlight beam to repel it, and keep collecting scare records until the game authoritatively reports caught.",
+  "historyWindow": 3,
+  "latestJudgment": {
+    "confidence": 0.42,
+    "evidence": [
+      "reportStatus=missing",
+      "movementDelta=missing"
+    ],
+    "historyCallIds": [
+      "call-0001"
+    ],
+    "judgment": "inconclusive",
+    "nextActionProfile": "strafe-left",
+    "nextHypothesis": "A different movement profile will test whether the latest result is stable across direction changes.",
+    "observation": "The current episode did not provide a complete passing gate set.",
+    "reasoningSummary": "This deterministic mock proves history wiring and next-action propagation without claiming semantic visual judgment.",
+    "status": "continue",
+    "stopReason": null,
+    "trend": "The chain contains prior calls and can compare the current episode against them."
+  },
+  "nextActionProfile": "strafe-left",
+  "recentCalls": [
+    {
+      "actionProfile": "forward",
+      "callId": "call-0001",
+      "episodeIndex": 1,
+      "judgment": {
+        "confidence": 0.42,
+        "evidence": [
+          "reportStatus=blocked",
+          "movementDelta=missing"
+        ],
+        "judgment": "inconclusive",
+        "nextActionProfile": "backward",
+        "nextHypothesis": "A different movement profile will test whether the latest result is stable across direction changes.",
+        "observation": "The current episode did not provide a complete passing gate set.",
+        "reasoningSummary": "This deterministic mock proves history wiring and next-action propagation without claiming semantic visual judgment.",
+        "status": "continue",
+        "trend": "This is the first call, so no over-time trend is established yet."
+      },
+      "judgeTiming": {
+        "callCompletedAt": "2026-07-17T11:54:09.424Z",
+        "callDurationMs": 4,
+        "callStartedAt": "2026-07-17T11:54:09.420Z",
+        "startToStartMs": null,
+        "timeBetweenCallsMs": null
+      },
+      "processStatus": "failed",
+      "report": {
+        "artifacts": [],
+        "consoleErrors": [],
+        "gates": {},
+        "hudChrome": null,
+        "luminance": null,
+        "movementDelta": null,
+        "playerPosition": null,
+        "reportStatus": "blocked",
+        "sceneDressing": null,
+        "expedition": null,
+        "visibleText": null
+      }
+    },
+    {
+      "actionProfile": "backward",
+      "callId": "call-0002",
+      "episodeIndex": 2,
+      "judgment": {
+        "confidence": 0.42,
+        "evidence": [
+          "reportStatus=missing",
+          "movementDelta=missing"
+        ],
+        "judgment": "inconclusive",
+        "nextActionProfile": "strafe-left",
+        "nextHypothesis": "A different movement profile will test whether the latest result is stable across direction changes.",
+        "observation": "The current episode did not provide a complete passing gate set.",
+        "reasoningSummary": "This deterministic mock proves history wiring and next-action propagation without claiming semantic visual judgment.",
+        "status": "continue",
+        "trend": "The chain contains prior calls and can compare the current episode against them."
+      },
+      "judgeTiming": {
+        "callCompletedAt": "2026-07-17T11:54:27.829Z",
+        "callDurationMs": 4,
+        "callStartedAt": "2026-07-17T11:54:27.825Z",
+        "startToStartMs": 18405,
+        "timeBetweenCallsMs": 18401
+      },
+      "processStatus": "failed",
+      "report": {
+        "artifacts": [],
+        "consoleErrors": [],
+        "gates": {},
+        "hudChrome": null,
+        "luminance": null,
+        "movementDelta": null,
+        "playerPosition": null,
+        "reportStatus": "missing-report",
+        "sceneDressing": null,
+        "expedition": null,
+        "visibleText": null
+      }
+    }
+  ],
+  "stopRequested": false,
+  "updatedAt": "2026-07-17T11:54:27.830Z"
+}

@@ -394,20 +394,30 @@ export const createClient = (options: ClientCreateOptions): ClientTransportAdapt
     send,
     disconnect: () => {
       if (localBridge && localConnectionRecord) {
+        const closingConnection = localConnectionRecord;
         localBridge.postMessage({
           kind: "client-disconnect",
           remotePeerId: currentPeerId ?? options.peerId ?? "unknown-peer",
-          connectionId: localConnectionRecord.connectionId,
+          connectionId: closingConnection.connectionId,
         } satisfies LocalBridgePacket);
         localConnectionRecord = null;
         currentStatus = "closed";
+        eventBus.emit({
+          type: "peer/connection-close",
+          role: "client",
+          roomId: options.roomId ?? null,
+          peerId: resolvePeerId(currentPeerId, options.peerId ?? null),
+          remotePeerId: closingConnection.remotePeerId,
+          connectionId: closingConnection.connectionId,
+          timestampMs: now(),
+          reason: "client disconnected",
+        });
         emitStatus("client disconnected");
         return;
       }
 
       activeConnection?.close();
       activeConnection = null;
-      peer.disconnect();
       currentStatus = "closed";
       emitStatus("client disconnected");
     },

@@ -16,8 +16,8 @@ const JUDGMENT_SCHEMA_PATH = join(REPO_ROOT, "HorrorCorridor-Harness", "schemas"
 const JUDGMENT_PROMPT_PATH = join(REPO_ROOT, "HorrorCorridor-Harness", "prompts", "live-agent-judge.md");
 const DEFAULT_CDP_PORT = 9224;
 const DEFAULT_INTERVAL_MS = 0;
-const DEFAULT_URL = "http://localhost:3000/?debug=frames";
-const DEFAULT_GOAL = "Judge HorrorCorridor player-visible stability and quality over time, choose the next bounded action, and stop only when repeated evidence supports a durable conclusion.";
+const DEFAULT_URL = "http://localhost:3000/?debug=frames&liveAgent=1";
+const DEFAULT_GOAL = "Play one continuous HorrorCorridor expedition: move through the intro, listen for each stalker, turn toward its directional sign, hold the flashlight beam to repel it, and keep collecting scare records until the game authoritatively reports caught.";
 const ACTION_PROFILES = Object.freeze([
   "forward",
   "backward",
@@ -25,6 +25,11 @@ const ACTION_PROFILES = Object.freeze([
   "strafe-right",
   "forward-left",
   "forward-right",
+  "listen",
+  "turn-left",
+  "turn-right",
+  "hold-beam",
+  "claim-offer",
 ]);
 const JUDGMENT_VALUES = new Set(["confirmed", "partially-confirmed", "inconclusive", "regressed", "blocked"]);
 const STATUS_VALUES = new Set(["continue", "stop", "blocked"]);
@@ -39,7 +44,7 @@ function slugTime(date = new Date()) {
 
 function parseArgs(argv) {
   const args = {
-    actionDurationMs: 900,
+    actionDurationMs: 2_000,
     cdpPort: DEFAULT_CDP_PORT,
     codexPath: "codex",
     episodeTimeoutMs: 120_000,
@@ -58,6 +63,7 @@ function parseArgs(argv) {
     runDir: "",
     runsRoot: DEFAULT_RUNS_ROOT,
     serviceTier: "priority",
+    sessionId: "",
     startServerOnce: false,
     url: DEFAULT_URL,
   };
@@ -114,6 +120,12 @@ function parseArgs(argv) {
     } else if (arg === "--service-tier" && next) {
       args.serviceTier = next;
       index += 1;
+    } else if (arg === "--session-id" && next) {
+      args.sessionId = next;
+      index += 1;
+    } else if (arg === "--until-loss") {
+      args.forever = true;
+      args.maxEpisodes = Number.POSITIVE_INFINITY;
     } else if (arg === "--forever") {
       args.forever = true;
       args.maxEpisodes = Number.POSITIVE_INFINITY;
@@ -154,6 +166,24 @@ function ensureDir(dir) {
 
 function sleep(ms) {
   return new Promise((resolveSleep) => setTimeout(resolveSleep, ms));
+}
+
+async function waitForGameServer(url, timeoutMs = 60_000) {
+  const startedAt = Date.now();
+  let lastError = null;
+  while (Date.now() - startedAt < timeoutMs) {
+    try {
+      const response = await fetch(url);
+      if (response.status < 500) return;
+      lastError = new Error(`Game server returned HTTP ${response.status}.`);
+    } catch (error) {
+      lastError = error;
+    }
+    await sleep(250);
+  }
+  throw new Error(
+    `Timed out waiting for the persistent game server: ${lastError instanceof Error ? lastError.message : "unknown error"}`,
+  );
 }
 
 function writeText(path, value) {
@@ -252,6 +282,7 @@ function summarizeReport(report) {
     playerPosition: latestFrame?.localPose?.position ?? null,
     reportStatus: report?.status ?? "missing-report",
     sceneDressing: latestFrame?.sceneDressing ?? null,
+    expedition: latestFrame?.expedition ?? report?.expedition ?? null,
     visibleText: report?.visibleText ?? null,
   };
 }
@@ -458,6 +489,11 @@ function runEpisode(options, runDir, episodeIndex, previousEpisodes) {
     String(options.cdpPort),
     "--url",
     options.url,
+    "--session-id",
+    options.sessionId,
+    "--reuse-session-page",
+    "--keep-page-open",
+    "--fast-live",
   ];
   if (options.launchCdpChrome) {
     command.push("--launch-cdp-chrome");
@@ -497,6 +533,7 @@ function writeLoopState(path, options, episodes, consecutiveJudgeFailures, stopR
 async function main() {
   const options = parseArgs(process.argv.slice(2));
   const runDir = options.runDir || join(options.runsRoot, slugTime());
+  options.sessionId ||= `horror-corridor-live-${slugTime()}`;
   ensureDir(join(runDir, "episodes"));
   const manifestPath = join(runDir, "run-manifest.json");
   const logPath = join(runDir, "agent-log.jsonl");
@@ -521,6 +558,7 @@ async function main() {
   try {
     if (options.startServerOnce) {
       server = startDevServer(runDir);
+      await waitForGameServer(options.url);
     }
 
     let episodeIndex = 1;
@@ -543,9 +581,6 @@ async function main() {
         episode.judgment = result.judgment;
         episode.providerStatus = result.providerStatus;
         consecutiveJudgeFailures = 0;
-        if (episode.judgment.status === "stop" || episode.judgment.status === "blocked") {
-          stopReason = episode.judgment.stopReason || episode.judgment.status;
-        }
       } catch (error) {
         episode.providerStatus = "failed";
         episode.judgmentError = error instanceof Error ? error.message : String(error);
@@ -564,6 +599,18 @@ async function main() {
       };
       writeJson(join(episode.episodeDir, "judge", "timing.json"), episode.judgeTiming);
 
+      const expeditionPhase =
+        episode.report?.debugAfter?.latestFrame?.expedition?.phase ??
+        episode.report?.expedition?.phase ??
+        null;
+      if (expeditionPhase === "caught") {
+        const score =
+          episode.report?.debugAfter?.latestFrame?.expedition?.encountersSurvived ??
+          episode.report?.expedition?.encountersSurvived ??
+          0;
+        stopReason = `authoritative game loss after ${score} survived encounters`;
+      }
+
       previousEpisodes.push(episode);
       appendJsonLine(logPath, episode);
       writeJson(latestPath, episode);
@@ -577,6 +624,7 @@ async function main() {
         callDurationMs: episode.judgeTiming.callDurationMs,
         nextActionProfile: episode.judgment?.nextActionProfile ?? null,
         providerStatus: episode.providerStatus,
+        expeditionPhase,
         status: episode.status,
         timeBetweenCallsMs: episode.judgeTiming.timeBetweenCallsMs,
       }));

@@ -17,8 +17,10 @@ export type UiOverlayKind =
   | "loading"
   | "lobby"
   | "settings"
+  | "monster-index"
   | "pause"
   | "objective"
+  | "recovery"
   | "victory"
   | "failure"
   | "error";
@@ -61,6 +63,7 @@ export type UiActions = Readonly<{
   setCompletion: (completion: Omit<UiCompletionState, "acknowledged">) => void;
   acknowledgeCompletion: () => void;
   toggleSettingsOverlay: (visible?: boolean) => void;
+  toggleMonsterIndexOverlay: (visible?: boolean) => void;
   resetUi: () => void;
 }>;
 
@@ -155,6 +158,19 @@ export const useUiStore = create<UiStore>((set) => ({
         overlay: {
           kind: nextVisible ? "settings" : "none",
           message: nextVisible ? "Settings" : null,
+          visible: nextVisible,
+        },
+      };
+    }),
+  toggleMonsterIndexOverlay: (visible) =>
+    set((state) => {
+      const isCurrentOverlay = state.overlay.visible && state.overlay.kind === "monster-index";
+      const nextVisible = visible ?? !isCurrentOverlay;
+
+      return {
+        overlay: {
+          kind: nextVisible ? "monster-index" : "none",
+          message: nextVisible ? "Monster Index" : null,
           visible: nextVisible,
         },
       };

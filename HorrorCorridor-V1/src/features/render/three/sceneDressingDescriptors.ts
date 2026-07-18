@@ -1,10 +1,13 @@
 import type { MazeResult } from "@/features/maze/domain/mazeTypes";
+import type { ConcretePavingState } from "@/features/corridor/domain/concretePaving";
+import type { CeilingCollapseState } from "@/features/corridor/domain/ceilingCollapse";
 import type { HorrorCorridorPreset } from "@/protokits";
 
 import { createTerrainSurface, type TerrainSurface } from "./terrainSurface";
 
 type SurfaceKind = "wall" | "floor" | "ceiling" | "anomaly";
 export type ScenePropKind =
+  | "weathered-surface"
   | "wall-box"
   | "pipe"
   | "floor-pipe"
@@ -19,6 +22,7 @@ export type ScenePropKind =
   | "debris"
   | "grass-clump"
   | "root-strip"
+  | "hanging-vine"
   | "rubble"
   | "rock-cluster"
   | "table"
@@ -94,12 +98,40 @@ export type SceneDressingSummary = Readonly<{
   socketCount: number;
   layoutCount: number;
   bundleCount: number;
+  concretePaving?: ConcretePavingState;
+  ceilingCollapse?: CeilingCollapseState;
   validation: {
     meetsPropThreshold: boolean;
     meetsTextureThreshold: boolean;
     meetsLightThreshold: boolean;
     readableSpawnView: boolean;
   };
+  referenceRoom?: Readonly<{
+    kitId?: string;
+    targetId: string;
+    architecturalPieceCount: number;
+    propCount: number;
+    textureCount?: number;
+    meshObjectCount: number;
+    lightCount: number;
+    masonryReliefPatchCount?: number;
+    masonryReliefBrickCount?: number;
+    collapsedCeilingPartCount?: number;
+    collapsedCeilingFractureCount?: number;
+    collapsedCeilingEdgeFragmentCount?: number;
+    collapseRubbleClusterCount?: number;
+    industrialShelvingObjectCount?: number;
+    industrialShelvingPartCount?: number;
+    industrialShelvingStoredPartCount?: number;
+    industrialShelvingTriangleCount?: number;
+    standingWaterPatchCount?: number;
+    wetGroundPatchCount?: number;
+    waterSurfaceCount?: number;
+    brokenReflectionLayerCount?: number;
+    streamedBuildingNumber?: number;
+    streamedOrigin?: SceneDressingVector;
+    entryYaw?: number;
+  }>;
 }>;
 
 export type SceneDressingManifest = Readonly<{

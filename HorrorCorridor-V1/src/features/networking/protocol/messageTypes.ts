@@ -6,7 +6,7 @@ import type {
   WorldPosition,
 } from "@/types/shared";
 
-export const NETWORK_PROTOCOL_VERSION = 1 as const;
+export const NETWORK_PROTOCOL_VERSION = 2 as const;
 
 export type ProtocolVersion = typeof NETWORK_PROTOCOL_VERSION;
 
@@ -69,6 +69,7 @@ export type PlayerUpdateMessage = ProtocolEnvelope<
 >;
 
 export type InteractionRequestAction =
+  | "claim-room-offer"
   | "pickup-cube"
   | "drop-cube"
   | "place-cube-at-anomaly"

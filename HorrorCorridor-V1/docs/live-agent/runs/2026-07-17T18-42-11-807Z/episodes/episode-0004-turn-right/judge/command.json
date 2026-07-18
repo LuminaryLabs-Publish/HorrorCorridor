@@ -1,0 +1,10 @@
+{
+  "command": "codex -a never --disable multi_agent exec --ignore-user-config --sandbox read-only --ephemeral --color never -C /Users/crimsonwheeler/Documents/GitHub/HorrorCorridor/HorrorCorridor-V1 --json --output-schema /Users/crimsonwheeler/Documents/GitHub/HorrorCorridor/HorrorCorridor-V1/HorrorCorridor-Harness/schemas/live-agent-judgment.schema.json --output-last-message /Users/crimsonwheeler/Documents/GitHub/HorrorCorridor/HorrorCorridor-V1/docs/live-agent/runs/2026-07-17T18-42-11-807Z/episodes/episode-0004-turn-right/judge/judgment.json --model gpt-5.6-luna --config model_reasoning_effort=\"low\" --config service_tier=\"priority\" -",
+  "historyCallIds": [
+    "call-0003"
+  ],
+  "model": "gpt-5.6-luna",
+  "reasoning": "low",
+  "sandbox": "read-only",
+  "serviceTier": "priority"
+}

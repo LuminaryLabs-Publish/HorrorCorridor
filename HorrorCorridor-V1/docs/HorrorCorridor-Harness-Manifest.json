@@ -1,6 +1,6 @@
 {
   "name": "HorrorCorridor-Harness",
-  "generatedAt": "2026-07-17T00:36:33.226Z",
+  "generatedAt": "2026-07-18T02:09:35.656Z",
   "source": "HorrorCorridor-Harness/domain-service-kit-source.json",
   "outputs": [
     "docs/HorrorCorridor-Harness-Guide.md",
@@ -9,7 +9,7 @@
   "controlFiles": [
     {
       "path": ".agent/start-here.md",
-      "purpose": "Use this workspace to coordinate the HorrorCorridor long-running build toward a high-fidelity procedural horror corridor composed from NexusRealtime kits, public ProtoKits, and local HorrorCorridor ProtoKits."
+      "purpose": "Use this workspace to coordinate the HorrorCorridor long-running build toward a high-fidelity endless horror expedition composed from the current public NexusEngine core, natural HorrorCorridor domains, and the smallest necessary local kits."
     },
     {
       "path": ".agent/workflow.md",
@@ -17,7 +17,7 @@
     },
     {
       "path": ".agent/intention.md",
-      "purpose": "Build HorrorCorridor into a high-fidelity procedural cooperative horror corridor using NexusRealtime ecosystem ideas, public ProtoKits where they fit, and local HorrorCorridor ProtoKits where the public ecosystem lacks a needed domain."
+      "purpose": "Build HorrorCorridor into a high-fidelity cooperative horror expedition by composing current NexusEngine cores, natural world domains, and local HorrorCorridor behavior/content kits only where the public core does not own the game-specific rule."
     },
     {
       "path": ".agent/live-agent.md",
@@ -29,7 +29,7 @@
     },
     {
       "path": ".agent/goal.md",
-      "purpose": "Upgrade the HorrorCorridor live-agent harness into a real sequential Luna judgment chain that accumulates bounded evidence over time."
+      "purpose": "Build the complete Horror Corridor Expedition domain-service composition against the current NexusEngine core-kit architecture, turn the canonical target tree into installed runtime behavior, and keep iterating until the whole expedition plays smoothly and the corridor environment visibly matches the generated room target."
     },
     {
       "path": ".agent/feedback.md",
@@ -37,12 +37,16 @@
     },
     {
       "path": "memory.md",
-      "purpose": "HorrorCorridor-V1 is a multiplayer first-person maze horror prototype port. The current priority is preserving prototype feel while incrementally moving runtime, rendering, validation, and content authoring into clearer multi-file architecture."
+      "purpose": "HorrorCorridor-V1 is a multiplayer first-person horror expedition prototype: a finite entrance opens into an effectively endless ruined-building delve where directional monster encounters, scare-earned collection, and room discoveries drive the run. The current priority is cohesive playable depth, natural domain ownership, and human-visible quality."
     }
   ],
   "definitions": [
     "Kit",
     "Domain Service Kit",
+    "Natural Domain",
+    "Composition Kit",
+    "Atomic Behavior Kit",
+    "Thin Host",
     "Preset",
     "Content Pack",
     "Preview Surface",
@@ -84,6 +88,8 @@
     "historyWindow": 3,
     "predictionConcurrency": 1,
     "waitBetweenEpisodesMs": 0,
-    "policy": "one read-only judgment after every live browser episode"
+    "policy": "one read-only judgment after every live browser episode",
+    "stopCondition": "authoritative expedition phase caught",
+    "currentProof": "docs/live-agent/runs/2026-07-17T18-42-11-807Z"
   }
 }

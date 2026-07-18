@@ -9,12 +9,17 @@ export const createOvergrowthObjectKit = (
   createSceneObjectDomainKit(
     {
       domain: "overgrowth-object",
-      services: ["grass-clump-descriptors", "root-strip-descriptors", "alpha-clipped-overgrowth-profile"],
+      services: [
+        "grass-clump-descriptors",
+        "root-strip-descriptors",
+        "hanging-vine-descriptors",
+        "alpha-clipped-overgrowth-profile",
+      ],
       resources: {
         OvergrowthObjectDescriptors: "overgrowthObject.descriptors",
       },
       requires: [createHorrorDomainToken("terrain-field")],
-      purpose: "Generic overgrowth object kit for grass cards, roots, and terrain-edge organic breakup.",
+      purpose: "Generic overgrowth object kit for grass blades, roots, hanging vines, and terrain-edge organic breakup.",
     },
     config,
   );

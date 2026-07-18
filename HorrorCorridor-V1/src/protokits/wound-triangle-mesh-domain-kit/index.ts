@@ -11,6 +11,8 @@ export type WoundMeshVector2 = Readonly<{
   v: number;
 }>;
 
+export type WoundMeshAxis = "x" | "y" | "z";
+
 export type WoundMeshMaterialSlot = Readonly<{
   id: string;
   family: string;
@@ -246,6 +248,199 @@ export const createWoundTrapezoidMeshPart = (
   ];
 
   return createPart(id, label, positions, indices, materialFamily, ["wound-trapezoid", ...tags]);
+};
+
+export const createWoundConvexSlabMeshPart = (
+  id: string,
+  label: string,
+  topFace: readonly WoundMeshVector3[],
+  thickness: number,
+  materialFamily: string,
+  tags: readonly string[] = [],
+): WoundMeshPartDescriptor => {
+  if (topFace.length < 3) {
+    throw new Error(`Wound convex slab ${id} requires at least three top-face points.`);
+  }
+  if (!Number.isFinite(thickness) || thickness <= 0) {
+    throw new Error(`Wound convex slab ${id} thickness must be positive.`);
+  }
+
+  const positions = [
+    ...topFace.flatMap((point) => [point.x, point.y, point.z]),
+    ...topFace.flatMap((point) => [point.x, point.y - thickness, point.z]),
+  ];
+  const count = topFace.length;
+  const indices: number[] = [];
+
+  // Top-face points are clockwise when viewed from above so the top normal is
+  // +Y. The reversed lower fan faces the room below, and every side is closed.
+  for (let index = 1; index < count - 1; index += 1) {
+    indices.push(0, index, index + 1);
+    indices.push(count, count + index + 1, count + index);
+  }
+  for (let index = 0; index < count; index += 1) {
+    const next = (index + 1) % count;
+    indices.push(index, count + next, next);
+    indices.push(index, count + index, count + next);
+  }
+
+  return createPart(id, label, positions, indices, materialFamily, [
+    "wound-convex-slab",
+    ...tags,
+  ]);
+};
+
+const cylinderDimensions = (
+  size: WoundMeshVector3,
+  axis: WoundMeshAxis,
+) => {
+  if (axis === "x") {
+    return {
+      halfLength: size.x * 0.5,
+      radiusA: size.y * 0.5,
+      radiusB: size.z * 0.5,
+    };
+  }
+  if (axis === "z") {
+    return {
+      halfLength: size.z * 0.5,
+      radiusA: size.x * 0.5,
+      radiusB: size.y * 0.5,
+    };
+  }
+  return {
+    halfLength: size.y * 0.5,
+    radiusA: size.x * 0.5,
+    radiusB: size.z * 0.5,
+  };
+};
+
+const cylinderPoint = (
+  center: WoundMeshVector3,
+  axis: WoundMeshAxis,
+  axial: number,
+  radialA: number,
+  radialB: number,
+): WoundMeshVector3 => {
+  if (axis === "x") {
+    return vector(
+      center.x + axial,
+      center.y - radialA,
+      center.z + radialB,
+    );
+  }
+  if (axis === "z") {
+    return vector(
+      center.x + radialA,
+      center.y - radialB,
+      center.z + axial,
+    );
+  }
+  return vector(
+    center.x + radialA,
+    center.y + axial,
+    center.z + radialB,
+  );
+};
+
+export const createWoundCylinderMeshPart = (
+  id: string,
+  label: string,
+  size: WoundMeshVector3,
+  center: WoundMeshVector3,
+  axis: WoundMeshAxis,
+  radialSegments: number,
+  materialFamily: string,
+  tags: readonly string[] = [],
+): WoundMeshPartDescriptor => {
+  const segments = Math.max(6, Math.min(32, Math.floor(radialSegments)));
+  const { halfLength, radiusA, radiusB } = cylinderDimensions(size, axis);
+  const positions: number[] = [];
+  const indices: number[] = [];
+  const pushPoint = (point: WoundMeshVector3) => {
+    positions.push(point.x, point.y, point.z);
+  };
+
+  const sideBottomStart = positions.length / 3;
+  for (let index = 0; index < segments; index += 1) {
+    const radians = (index / segments) * Math.PI * 2;
+    pushPoint(
+      cylinderPoint(
+        center,
+        axis,
+        -halfLength,
+        Math.cos(radians) * radiusA,
+        Math.sin(radians) * radiusB,
+      ),
+    );
+    pushPoint(
+      cylinderPoint(
+        center,
+        axis,
+        halfLength,
+        Math.cos(radians) * radiusA,
+        Math.sin(radians) * radiusB,
+      ),
+    );
+  }
+
+  const bottomCapStart = positions.length / 3;
+  for (let index = 0; index < segments; index += 1) {
+    const radians = (index / segments) * Math.PI * 2;
+    pushPoint(
+      cylinderPoint(
+        center,
+        axis,
+        -halfLength,
+        Math.cos(radians) * radiusA,
+        Math.sin(radians) * radiusB,
+      ),
+    );
+  }
+
+  const topCapStart = positions.length / 3;
+  for (let index = 0; index < segments; index += 1) {
+    const radians = (index / segments) * Math.PI * 2;
+    pushPoint(
+      cylinderPoint(
+        center,
+        axis,
+        halfLength,
+        Math.cos(radians) * radiusA,
+        Math.sin(radians) * radiusB,
+      ),
+    );
+  }
+
+  const bottomCenter = positions.length / 3;
+  pushPoint(cylinderPoint(center, axis, -halfLength, 0, 0));
+  const topCenter = positions.length / 3;
+  pushPoint(cylinderPoint(center, axis, halfLength, 0, 0));
+
+  for (let index = 0; index < segments; index += 1) {
+    const next = (index + 1) % segments;
+    const bottom = sideBottomStart + index * 2;
+    const top = bottom + 1;
+    const nextBottom = sideBottomStart + next * 2;
+    const nextTop = nextBottom + 1;
+    indices.push(bottom, nextTop, nextBottom, bottom, top, nextTop);
+    indices.push(
+      bottomCenter,
+      bottomCapStart + index,
+      bottomCapStart + next,
+    );
+    indices.push(
+      topCenter,
+      topCapStart + next,
+      topCapStart + index,
+    );
+  }
+
+  return createPart(id, label, positions, indices, materialFamily, [
+    "wound-cylinder",
+    `axis:${axis}`,
+    ...tags,
+  ]);
 };
 
 export const validateWoundMeshObjectDescriptor = (

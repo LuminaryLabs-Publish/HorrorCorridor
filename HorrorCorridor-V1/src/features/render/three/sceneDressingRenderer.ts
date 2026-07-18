@@ -90,27 +90,144 @@ const createAlphaClipTexture = (
   return texture;
 };
 
-const createProjectionAlphaTexture = (
+type VegetationAlphaProfile = "grass-blades" | "vine-leaf";
+
+const createVegetationAlphaTexture = (
   seed: string,
   size: number,
+  profile: VegetationAlphaProfile,
 ): DataTexture => {
   const random = createRandom(seed);
   const data = new Uint8Array(size * size * 4);
-  const centerX = size * (0.42 + random() * 0.16);
-  const centerY = size * (0.42 + random() * 0.16);
-  const radiusX = size * (0.28 + random() * 0.18);
-  const radiusY = size * (0.2 + random() * 0.22);
+  const clamp01 = (value: number): number => Math.max(0, Math.min(1, value));
+  const blades = Array.from({ length: 8 }, (_, index) => ({
+    base: 0.08 + (index / 7) * 0.84 + (random() - 0.5) * 0.075,
+    bend: (random() - 0.5) * 0.34,
+    height: 0.58 + random() * 0.4,
+    width: 0.045 + random() * 0.035,
+    phase: random() * Math.PI * 2,
+  }));
+  const leafBend = (random() - 0.5) * 0.12;
+  const leafPhase = random() * Math.PI * 2;
 
   for (let y = 0; y < size; y += 1) {
     for (let x = 0; x < size; x += 1) {
       const index = (y * size + x) * 4;
-      const nx = (x - centerX) / radiusX;
-      const ny = (y - centerY) / radiusY;
-      const radial = Math.max(0, 1 - Math.sqrt(nx * nx + ny * ny));
-      const diagonalScratch = (x + y + Math.floor(random() * 11)) % 17 === 0;
-      const voidPatch = random() > 0.88 || diagonalScratch;
-      const roughEdge = random() * 0.28;
-      const value = voidPatch ? 0 : Math.max(0, Math.min(1, radial * 1.4 - roughEdge));
+      const u = x / Math.max(1, size - 1);
+      const v = y / Math.max(1, size - 1);
+      let field = 0;
+
+      if (profile === "grass-blades") {
+        for (const blade of blades) {
+          if (v > blade.height) continue;
+          const progress = v / blade.height;
+          const center =
+            blade.base +
+            blade.bend * progress * progress +
+            Math.sin(progress * Math.PI * 1.35 + blade.phase) * 0.012;
+          const halfWidth =
+            blade.width * Math.pow(Math.max(0, 1 - progress), 0.62) + 0.002;
+          const edgeDistance = halfWidth - Math.abs(u - center);
+          field = Math.max(field, clamp01(edgeDistance * size * 0.38 + 0.42));
+        }
+
+        const mossBase = clamp01((0.13 - v) * 12) * clamp01(1 - Math.abs(u - 0.5) * 1.75);
+        field = Math.max(field, mossBase * 0.86);
+      } else {
+        const progress = clamp01(v);
+        const center =
+          0.5 +
+          leafBend * Math.sin(progress * Math.PI) +
+          Math.sin(progress * Math.PI * 2 + leafPhase) * 0.008;
+        const pointedWidth =
+          Math.pow(Math.max(0, Math.sin(progress * Math.PI)), 0.74) *
+          (0.38 + Math.sin(progress * Math.PI * 5 + leafPhase) * 0.018);
+        const edgeDistance = pointedWidth - Math.abs(u - center);
+        const blade = clamp01(edgeDistance * size * 0.18 + 0.38);
+        const stem = clamp01((0.018 - Math.abs(u - 0.5)) * size * 0.32 + 0.24);
+        field = Math.max(blade, stem * clamp01((v - 0.02) * 16));
+      }
+
+      const grain = 0.9 + random() * 0.1;
+      const value = Math.round(clamp01(field * grain) * 255);
+      data[index] = value;
+      data[index + 1] = value;
+      data[index + 2] = value;
+      data[index + 3] = 255;
+    }
+  }
+
+  const texture = new DataTexture(data, size, size, RGBAFormat, UnsignedByteType);
+  texture.wrapS = RepeatWrapping;
+  texture.wrapT = RepeatWrapping;
+  texture.repeat.set(1, 1);
+  texture.needsUpdate = true;
+  return texture;
+};
+
+const createProjectionAlphaTexture = (
+  seed: string,
+  size: number,
+  kind: SceneTextureDescriptor["kind"],
+): DataTexture => {
+  const random = createRandom(seed);
+  const data = new Uint8Array(size * size * 4);
+  const phase = random() * Math.PI * 2;
+  const lobes = Array.from({ length: 5 }, (_, index) => ({
+    centerX: 0.22 + random() * 0.56,
+    centerY: 0.18 + random() * 0.64,
+    radiusX: 0.2 + random() * 0.22,
+    radiusY: 0.16 + random() * 0.28,
+    phase: phase + index * 1.37,
+  }));
+  const clamp01 = (value: number): number => Math.max(0, Math.min(1, value));
+
+  for (let y = 0; y < size; y += 1) {
+    for (let x = 0; x < size; x += 1) {
+      const index = (y * size + x) * 4;
+      const u = x / Math.max(1, size - 1);
+      const v = y / Math.max(1, size - 1);
+      let organicField = 0;
+
+      for (const lobe of lobes) {
+        const nx = (u - lobe.centerX) / lobe.radiusX;
+        const ny = (v - lobe.centerY) / lobe.radiusY;
+        const angle = Math.atan2(ny, nx);
+        const wobble =
+          Math.sin(angle * 3 + lobe.phase) * 0.13 +
+          Math.sin(angle * 7 - lobe.phase * 0.7) * 0.06;
+        const distance = Math.sqrt(nx * nx + ny * ny) - wobble;
+        organicField = Math.max(
+          organicField,
+          clamp01((1 - distance) * 1.55),
+        );
+      }
+
+      const lowFrequencyNoise =
+        Math.sin(u * 11.7 + v * 7.1 + phase) * 0.06 +
+        Math.sin(u * 4.3 - v * 13.9 - phase * 0.6) * 0.04;
+      let value = clamp01(organicField + lowFrequencyNoise - 0.08);
+
+      if (kind === "rust-streak" || kind === "rust") {
+        const streak =
+          0.34 +
+          0.66 * Math.pow(
+            Math.max(0, Math.sin((u * 7.5 + Math.sin(v * 4 + phase) * 0.35) * Math.PI)),
+            3,
+          );
+        value *= streak * (0.72 + v * 0.28);
+      } else if (kind === "crack") {
+        const crack = 1 - Math.min(1, Math.abs(Math.sin((u * 2.8 + v * 4.6 + phase) * Math.PI)) * 9);
+        value *= crack;
+      } else if (kind === "brick-course") {
+        const course = 0.55 + 0.45 * Math.pow(Math.abs(Math.sin(v * 11 * Math.PI)), 5);
+        value *= course;
+      } else if (kind === "moss-grime" || kind === "moss") {
+        value *= 0.72 + 0.28 * clamp01(1 - v + Math.sin(u * 8 + phase) * 0.12);
+      }
+
+      const grain = 0.88 + random() * 0.12;
+      value = clamp01(value * grain);
       const byte = Math.round(value * 255);
       data[index] = byte;
       data[index + 1] = byte;
@@ -161,6 +278,7 @@ const createPropMaterial = (
   descriptor: ScenePropDescriptor,
   preset: HorrorCorridorPreset,
   materialRole = "body",
+  alphaMode: "auto" | "none" | VegetationAlphaProfile = "auto",
 ): MeshStandardMaterial => {
   const baseColor =
     materialColorByFamily[descriptor.materialFamily as keyof typeof materialColorByFamily] ?? 0x34453b;
@@ -169,7 +287,10 @@ const createPropMaterial = (
     pbrProfileByFamily["damp-concrete"];
   const isCable = descriptor.kind === "cable";
   const isDebris = descriptor.kind === "debris" || descriptor.kind === "rubble";
-  const isVegetation = descriptor.kind === "grass-clump" || descriptor.kind === "root-strip";
+  const isVegetation =
+    descriptor.kind === "grass-clump" ||
+    descriptor.kind === "root-strip" ||
+    descriptor.kind === "hanging-vine";
   const isTableObject = descriptor.kind === "table" || descriptor.kind === "crate";
   const isFacade = descriptor.kind === "building-facade";
   const isSmallKitObject =
@@ -178,17 +299,34 @@ const createPropMaterial = (
     descriptor.kind === "loose-floor-slab" ||
     descriptor.kind === "ceiling-service-strip";
   const isResidue = descriptor.materialFamily === "anomaly-residue";
-  const usesAlphaClip = isVegetation || isFacade;
+  const usesAlphaClip =
+    alphaMode === "none"
+      ? false
+      : alphaMode === "grass-blades" || alphaMode === "vine-leaf"
+        ? true
+        : isVegetation || isFacade;
   const alphaTexture = usesAlphaClip
-    ? createAlphaClipTexture(
-        `${preset.proceduralPbrMaterial.seed}:${descriptor.id}:${materialRole}:alpha`,
-        preset.propMaterialFidelity.clipTextureSize,
-      )
+    ? alphaMode === "grass-blades" || alphaMode === "vine-leaf"
+      ? createVegetationAlphaTexture(
+          `${preset.proceduralPbrMaterial.seed}:${descriptor.id}:${materialRole}:alpha`,
+          preset.propMaterialFidelity.clipTextureSize,
+          alphaMode,
+        )
+      : createAlphaClipTexture(
+          `${preset.proceduralPbrMaterial.seed}:${descriptor.id}:${materialRole}:alpha`,
+          preset.propMaterialFidelity.clipTextureSize,
+        )
     : null;
   const material = new MeshStandardMaterial({
     color: baseColor,
     alphaMap: alphaTexture ?? null,
-    alphaTest: usesAlphaClip ? (isVegetation ? 0.36 : 0.18) : 0,
+    alphaTest: usesAlphaClip
+      ? alphaMode === "grass-blades" || alphaMode === "vine-leaf"
+        ? 0.3
+        : isVegetation
+          ? 0.36
+          : 0.18
+      : 0,
     transparent: usesAlphaClip,
     roughness:
       isCable || isVegetation
@@ -729,7 +867,12 @@ const buildGrassClump = (
   materials: Material[],
 ): Group => {
   const group = new Group();
-  const material = createPropMaterial(descriptor, preset, "grass-card");
+  const material = createPropMaterial(
+    descriptor,
+    preset,
+    "grass-card",
+    "grass-blades",
+  );
   material.side = DoubleSide;
   materials.push(material);
   const random = createRandom(descriptor.id);
@@ -762,7 +905,7 @@ const buildRootStrip = (
   materials: Material[],
 ): Group => {
   const group = new Group();
-  const material = createPropMaterial(descriptor, preset, "root-fiber");
+  const material = createPropMaterial(descriptor, preset, "root-fiber", "none");
   materials.push(material);
   const random = createRandom(descriptor.id);
 
@@ -782,6 +925,109 @@ const buildRootStrip = (
     root.position.x = (random() - 0.5) * descriptor.scale.x * 2;
     root.rotation.y = (random() - 0.5) * 0.28;
     group.add(root);
+  }
+
+  return group;
+};
+
+const buildHangingVine = (
+  descriptor: ScenePropDescriptor,
+  preset: HorrorCorridorPreset,
+  materials: Material[],
+): Group => {
+  const group = new Group();
+  const stemDescriptor: ScenePropDescriptor = {
+    ...descriptor,
+    materialFamily: "root-fiber",
+  };
+  const leafDescriptor: ScenePropDescriptor = {
+    ...descriptor,
+    materialFamily: "muddy-grass",
+  };
+  const stemMaterial = createPropMaterial(
+    stemDescriptor,
+    preset,
+    "vine-stem",
+    "none",
+  );
+  const leafMaterial = createPropMaterial(
+    leafDescriptor,
+    preset,
+    "vine-leaf",
+    "vine-leaf",
+  );
+  leafMaterial.side = DoubleSide;
+  materials.push(stemMaterial, leafMaterial);
+
+  const random = createRandom(descriptor.id);
+  const spread = Math.max(0.35, descriptor.scale.x);
+  const hangingLength = Math.max(0.7, descriptor.scale.y);
+  const depth = Math.max(0.18, descriptor.scale.z);
+  const vineCount = Math.max(3, Math.min(7, Math.round(3 + spread * 1.6)));
+  const stemRadius = Math.max(0.012, Math.min(0.035, spread * 0.021));
+
+  for (let vineIndex = 0; vineIndex < vineCount; vineIndex += 1) {
+    const startX =
+      ((vineIndex + 0.5) / vineCount - 0.5) * spread +
+      (random() - 0.5) * spread * 0.12;
+    const startZ = (random() - 0.5) * depth;
+    const length = hangingLength * (0.62 + random() * 0.38);
+    const sway = (random() - 0.5) * spread * 0.46;
+    const curve = new CatmullRomCurve3([
+      new Vector3(startX, 0, startZ),
+      new Vector3(
+        startX + sway * 0.28,
+        -length * 0.3,
+        startZ + (random() - 0.5) * depth * 0.42,
+      ),
+      new Vector3(
+        startX - sway * 0.2,
+        -length * 0.64,
+        startZ + (random() - 0.5) * depth * 0.54,
+      ),
+      new Vector3(
+        startX + sway,
+        -length,
+        startZ + (random() - 0.5) * depth * 0.7,
+      ),
+    ]);
+    const stem = new Mesh(
+      new TubeGeometry(
+        curve,
+        18,
+        stemRadius * (0.72 + random() * 0.42),
+        6,
+        false,
+      ),
+      stemMaterial,
+    );
+    stem.name = `${descriptor.id}-vine-stem-${vineIndex}`;
+    group.add(stem);
+
+    const leafTierCount = 3 + Math.floor(random() * 3);
+    for (let tier = 0; tier < leafTierCount; tier += 1) {
+      const point = curve.getPoint((tier + 1) / (leafTierCount + 1.4));
+      const leafWidth = Math.min(
+        0.34,
+        0.13 + spread * 0.075 + random() * 0.07,
+      );
+      const leafHeight = leafWidth * (1.55 + random() * 0.5);
+
+      for (const side of [-1, 1]) {
+        const leaf = new Mesh(
+          new PlaneGeometry(leafWidth, leafHeight),
+          leafMaterial,
+        );
+        leaf.name = `${descriptor.id}-vine-leaf-${vineIndex}-${tier}-${side}`;
+        leaf.position.copy(point);
+        leaf.position.x += side * leafWidth * (0.34 + random() * 0.18);
+        leaf.position.y -= leafHeight * 0.08;
+        leaf.position.z += (random() - 0.5) * depth * 0.18;
+        leaf.rotation.y = random() * Math.PI;
+        leaf.rotation.z = side * (0.58 + random() * 0.34);
+        group.add(leaf);
+      }
+    }
   }
 
   return group;
@@ -1256,8 +1502,10 @@ export const createScenePropRenderable = (
                     ? buildRockCluster(descriptor, preset, materials)
                   : descriptor.kind === "grass-clump"
                     ? buildGrassClump(descriptor, preset, materials)
-                    : descriptor.kind === "root-strip"
-                      ? buildRootStrip(descriptor, preset, materials)
+                  : descriptor.kind === "root-strip"
+                    ? buildRootStrip(descriptor, preset, materials)
+                    : descriptor.kind === "hanging-vine"
+                      ? buildHangingVine(descriptor, preset, materials)
                       : descriptor.kind === "lamp-post"
                         ? buildLampPost(descriptor, preset, materials, pulseTargets)
                       : descriptor.kind === "table"
@@ -1281,22 +1529,28 @@ export const createSceneTextureRenderable = (
   descriptor: SceneTextureDescriptor,
   preset: HorrorCorridorPreset,
 ): SceneTextureRenderable => {
+  const isMoss = descriptor.kind === "moss" || descriptor.kind === "moss-grime";
   const geometry = new PlaneGeometry(descriptor.scale.x, descriptor.scale.y);
   const alphaMap = createProjectionAlphaTexture(
     `${descriptor.id}:${descriptor.kind}:projection-alpha`,
     preset.propMaterialFidelity.projectionTextureSize,
+    descriptor.kind,
   );
-  const opacity = Math.min(descriptor.opacity, descriptor.kind === "anomaly-residue" ? 0.22 : 0.18);
+  const opacity = Math.min(
+    descriptor.opacity,
+    descriptor.kind === "anomaly-residue" ? 0.22 : isMoss ? 0.12 : 0.18,
+  );
   const material = new MeshBasicMaterial({
     color: descriptor.color,
     alphaMap,
-    alphaTest: descriptor.kind === "anomaly-residue" ? 0.18 : 0.12,
+    alphaTest: descriptor.kind === "anomaly-residue" ? 0.18 : isMoss ? 0.24 : 0.12,
     transparent: true,
     opacity,
     side: DoubleSide,
     depthWrite: false,
     polygonOffset: true,
-    polygonOffsetFactor: -2,
+    polygonOffsetFactor: -4,
+    polygonOffsetUnits: -4,
     toneMapped: true,
   });
   material.userData.baseOpacity = opacity;

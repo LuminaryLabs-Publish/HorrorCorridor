@@ -1,0 +1,163 @@
+{
+  "callCount": 3,
+  "consecutiveJudgeFailures": 0,
+  "episodeCount": 3,
+  "goal": "Play one continuous HorrorCorridor expedition: move through the intro, listen for each stalker, turn toward its directional sign, hold the flashlight beam to repel it, and keep collecting scare records until the game authoritatively reports caught.",
+  "historyWindow": 3,
+  "latestJudgment": {
+    "status": "blocked",
+    "judgment": "blocked",
+    "observation": "Provider infrastructure failed again before producing expedition state, screenshot artifacts, or player telemetry.",
+    "trend": "Repeated infrastructure failure across call-0001, call-0002, and call-0003; no authoritative game progress is established.",
+    "reasoningSummary": "The current report is blocked with processStatus=failed, expedition=null, no artifacts, and no player position, so expedition progress and encounter-directed action cannot be judged without fabricating evidence.",
+    "evidence": [
+      "processStatus=failed",
+      "reportStatus=blocked",
+      "expedition=null",
+      "artifacts=[]",
+      "playerPosition=null"
+    ],
+    "historyCallIds": [
+      "call-0001",
+      "call-0002"
+    ],
+    "nextActionProfile": "forward",
+    "nextHypothesis": "Retry the live session to obtain an authoritative expedition frame.",
+    "confidence": 1,
+    "stopReason": "Provider infrastructure failed before producing an authoritative game report."
+  },
+  "nextActionProfile": "forward",
+  "recentCalls": [
+    {
+      "actionProfile": "forward",
+      "callId": "call-0001",
+      "episodeIndex": 1,
+      "judgment": {
+        "confidence": 1,
+        "evidence": [
+          "processStatus=failed",
+          "reportStatus=blocked",
+          "expedition=null",
+          "artifacts=[]",
+          "playerPosition=null"
+        ],
+        "judgment": "blocked",
+        "nextActionProfile": "forward",
+        "nextHypothesis": "Retry the live session to obtain an authoritative expedition frame.",
+        "observation": "Provider infrastructure failed before producing expedition state, screenshot artifacts, or player telemetry.",
+        "reasoningSummary": "No authoritative game frame or expedition phase is available, so progress and encounter-directed action cannot be judged without fabricating evidence.",
+        "status": "blocked",
+        "trend": "No trend is established; this is the first call."
+      },
+      "judgeTiming": {
+        "callCompletedAt": "2026-07-17T18:38:46.333Z",
+        "callDurationMs": 7824,
+        "callStartedAt": "2026-07-17T18:38:38.509Z",
+        "startToStartMs": null,
+        "timeBetweenCallsMs": null
+      },
+      "processStatus": "failed",
+      "report": {
+        "artifacts": [],
+        "consoleErrors": [],
+        "gates": {},
+        "hudChrome": null,
+        "luminance": null,
+        "movementDelta": null,
+        "playerPosition": null,
+        "reportStatus": "blocked",
+        "sceneDressing": null,
+        "expedition": null,
+        "visibleText": null
+      }
+    },
+    {
+      "actionProfile": "forward",
+      "callId": "call-0002",
+      "episodeIndex": 2,
+      "judgment": {
+        "confidence": 1,
+        "evidence": [
+          "processStatus=failed",
+          "reportStatus=missing-report",
+          "expedition=null",
+          "artifacts=[]",
+          "playerPosition=null"
+        ],
+        "judgment": "blocked",
+        "nextActionProfile": "forward",
+        "nextHypothesis": "Retry the live session to obtain an authoritative expedition frame.",
+        "observation": "Provider infrastructure failed again before producing expedition state, screenshot artifacts, or player telemetry.",
+        "reasoningSummary": "The current report is missing and processStatus=failed, so expedition phase and encounter direction cannot be judged without fabricating evidence.",
+        "status": "blocked",
+        "trend": "Repeated infrastructure failure across call-0001 and call-0002; no authoritative game progress is established."
+      },
+      "judgeTiming": {
+        "callCompletedAt": "2026-07-17T18:39:58.687Z",
+        "callDurationMs": 7727,
+        "callStartedAt": "2026-07-17T18:39:50.960Z",
+        "startToStartMs": 72451,
+        "timeBetweenCallsMs": 64627
+      },
+      "processStatus": "failed",
+      "report": {
+        "artifacts": [],
+        "consoleErrors": [],
+        "gates": {},
+        "hudChrome": null,
+        "luminance": null,
+        "movementDelta": null,
+        "playerPosition": null,
+        "reportStatus": "missing-report",
+        "sceneDressing": null,
+        "expedition": null,
+        "visibleText": null
+      }
+    },
+    {
+      "actionProfile": "forward",
+      "callId": "call-0003",
+      "episodeIndex": 3,
+      "judgment": {
+        "confidence": 1,
+        "evidence": [
+          "processStatus=failed",
+          "reportStatus=blocked",
+          "expedition=null",
+          "artifacts=[]",
+          "playerPosition=null"
+        ],
+        "judgment": "blocked",
+        "nextActionProfile": "forward",
+        "nextHypothesis": "Retry the live session to obtain an authoritative expedition frame.",
+        "observation": "Provider infrastructure failed again before producing expedition state, screenshot artifacts, or player telemetry.",
+        "reasoningSummary": "The current report is blocked with processStatus=failed, expedition=null, no artifacts, and no player position, so expedition progress and encounter-directed action cannot be judged without fabricating evidence.",
+        "status": "blocked",
+        "trend": "Repeated infrastructure failure across call-0001, call-0002, and call-0003; no authoritative game progress is established."
+      },
+      "judgeTiming": {
+        "callCompletedAt": "2026-07-17T18:40:36.934Z",
+        "callDurationMs": 7663,
+        "callStartedAt": "2026-07-17T18:40:29.271Z",
+        "startToStartMs": 38311,
+        "timeBetweenCallsMs": 30584
+      },
+      "processStatus": "failed",
+      "report": {
+        "artifacts": [],
+        "consoleErrors": [],
+        "gates": {},
+        "hudChrome": null,
+        "luminance": null,
+        "movementDelta": null,
+        "playerPosition": null,
+        "reportStatus": "blocked",
+        "sceneDressing": null,
+        "expedition": null,
+        "visibleText": null
+      }
+    }
+  ],
+  "stopRequested": false,
+  "updatedAt": "2026-07-17T18:40:36.936Z"
+}

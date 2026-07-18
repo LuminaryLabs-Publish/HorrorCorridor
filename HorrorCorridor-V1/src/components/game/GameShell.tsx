@@ -2,8 +2,9 @@
 
 import { useEffect, useRef, useState } from "react";
 
-import type { LobbyPlayer, RoomState } from "@/types/shared";
+import type { LobbyPlayer, PlayerSnapshot, RoomState } from "@/types/shared";
 
+import { beginSoloExpedition } from "@/features/game-state/domain/beginExpedition";
 import { createInitialGameState } from "@/features/game-state/domain/createInitialGameState";
 import { useRuntimeStore } from "@/features/game-state/store/runtimeStore";
 import { useSessionStore } from "@/features/game-state/store/sessionStore";
@@ -20,6 +21,7 @@ import { PROTOCOL_MESSAGE_TYPES } from "@/features/networking/protocol/messageTy
 import {
   createFullSyncMessage,
   createHostStartMessage,
+  createInteractionRequestMessage,
   createLobbyEventMessage,
 } from "@/features/networking/protocol/syncSnapshot";
 
@@ -30,6 +32,7 @@ import JoinMenu from "@/components/menus/JoinMenu";
 import LoadingScreen from "@/components/menus/LoadingScreen";
 import LobbyScreen from "@/components/menus/LobbyScreen";
 import PauseMenu from "@/components/menus/PauseMenu";
+import RecoveryScreen from "@/components/menus/RecoveryScreen";
 import StartMenu from "@/components/menus/StartMenu";
 
 const makeId = (prefix: string): string =>
@@ -39,6 +42,32 @@ const makeJoinCode = (): string =>
   Math.random().toString(36).slice(2, 6).toUpperCase().padEnd(4, "X");
 
 const makeRoomId = (): string => `room-${makeId("corridor")}`;
+const RECOVERY_STATUS_MIN_MS = 240;
+
+type HorrorCorridorSessionControl = Readonly<{
+  disconnectClient: () => boolean;
+  snapshot: () => Readonly<{
+    screen: ReturnType<typeof useUiStore.getState>["screen"];
+    connectionStatus: ReturnType<typeof useSessionStore.getState>["connectionStatus"];
+    recovery: ReturnType<typeof useSessionStore.getState>["recovery"];
+    sessionMode: ReturnType<typeof useSessionStore.getState>["sessionMode"];
+    playerId: string | null;
+    hostPeerId: string | null;
+    roomId: string | null;
+    gameId: string | null;
+    seed: number | null;
+    tick: number | null;
+    gameState: string | null;
+    buildingNumber: number | null;
+    encountersSurvived: number | null;
+    players: readonly PlayerSnapshot[];
+  }>;
+}>;
+
+type HorrorCorridorSessionWindow = Window &
+  typeof globalThis & {
+    __HORROR_CORRIDOR_SESSION_CONTROL__?: HorrorCorridorSessionControl;
+  };
 
 const makePlayer = (
   id: string,
@@ -101,6 +130,7 @@ export default function GameShell() {
   const connectionStatus = useSessionStore((state) => state.connectionStatus);
   const lobbyPlayers = useSessionStore((state) => state.lobbyPlayers);
   const peerIdentity = useSessionStore((state) => state.peerIdentity);
+  const recovery = useSessionStore((state) => state.recovery);
   const setRoom = useSessionStore((state) => state.setRoom);
   const setPeerIdentity = useSessionStore((state) => state.setPeerIdentity);
   const setSessionMode = useSessionStore((state) => state.setSessionMode);
@@ -108,7 +138,9 @@ export default function GameShell() {
   const setLobbyPlayers = useSessionStore((state) => state.setLobbyPlayers);
   const upsertLobbyPlayer = useSessionStore((state) => state.upsertLobbyPlayer);
   const removeLobbyPlayer = useSessionStore((state) => state.removeLobbyPlayer);
-  const updatePeerIdentity = useSessionStore((state) => state.updatePeerIdentity);
+  const markRecoveryConnection = useSessionStore((state) => state.markRecoveryConnection);
+  const beginRecovery = useSessionStore((state) => state.beginRecovery);
+  const resetRecovery = useSessionStore((state) => state.resetRecovery);
   const clearSession = useSessionStore((state) => state.clearSession);
 
   const setAuthoritativeSnapshot = useRuntimeStore((state) => state.setAuthoritativeSnapshot);
@@ -140,9 +172,113 @@ export default function GameShell() {
     setTransport(null);
   };
 
+  const showRecovery = (reason: string, disconnectedAtMs: number): void => {
+    const liveSession = useSessionStore.getState();
+    const liveUi = useUiStore.getState();
+
+    if (
+      liveSession.sessionMode !== "client" ||
+      (liveUi.screen !== "PLAYING" && liveUi.screen !== "RECOVERING")
+    ) {
+      return;
+    }
+
+    liveSession.recordRecoveryDisconnection({
+      reason,
+      disconnectedAtMs,
+      playerId: liveSession.peerIdentity.playerId,
+      snapshot: useRuntimeStore.getState().authoritativeSnapshot,
+    });
+    liveSession.setConnectionStatus("disconnected");
+    liveUi.setPaused(true, "connection");
+    liveUi.setScreen("RECOVERING");
+    liveUi.setGameScreen("paused");
+    liveUi.setOverlay({
+      kind: "recovery",
+      message: "Connection lost. Your last place is preserved.",
+      visible: true,
+    });
+    useRuntimeStore.getState().setReadiness({
+      simulation: true,
+      rendering: true,
+      networking: false,
+      input: false,
+    });
+  };
+
   const handleTransportEvent = (event: PeerTransportEvent): void => {
     if (event.type === "peer/status") {
-      setConnectionStatus(toSessionConnectionStatus(event.status));
+      const nextStatus = toSessionConnectionStatus(event.status);
+      const liveTransport = transportRef.current;
+      const hasOpenClientConnection =
+        liveTransport?.role === "client" &&
+        liveTransport.connections.some((connection) => connection.open);
+
+      setConnectionStatus(nextStatus);
+
+      if (
+        event.role === "client" &&
+        (event.status === "closed" || event.status === "error" || event.status === "reconnecting") &&
+        !hasOpenClientConnection
+      ) {
+        showRecovery(event.detail ?? event.status, event.timestampMs);
+      } else if (event.role === "client" && event.status === "connected") {
+        const liveUi = useUiStore.getState();
+        const liveRecovery = useSessionStore.getState().recovery;
+
+        if (
+          liveUi.screen !== "RECOVERING" &&
+          (liveRecovery.connection === "idle" || liveRecovery.connection === "connected")
+        ) {
+          useSessionStore.getState().markRecoveryConnection("connected");
+        }
+      }
+      return;
+    }
+
+    if (event.type === "peer/connection-close" && event.role === "client") {
+      showRecovery(event.reason ?? "host connection closed", event.timestampMs);
+      return;
+    }
+
+    if (event.type === "peer/connection-open" && event.role === "client") {
+      const liveSession = useSessionStore.getState();
+      const liveUi = useUiStore.getState();
+
+      if (liveUi.screen === "RECOVERING" && liveSession.recovery.connection === "reconnecting") {
+        const requestId = liveSession.recovery.recovery?.requestId ?? makeId("recovery");
+        const playerId = liveSession.peerIdentity.playerId;
+        const roomId = liveSession.room?.roomId;
+        const clientTransport = transportRef.current;
+
+        liveSession.setConnectionStatus("reconnecting");
+        liveUi.setOverlay({
+          kind: "recovery",
+          message: "Host found. Restoring authoritative corridor truth.",
+          visible: true,
+        });
+
+        if (playerId && roomId && clientTransport?.role === "client") {
+          clientTransport.send(
+            createInteractionRequestMessage({
+              senderId: playerId,
+              roomId,
+              playerId,
+              action: "request-sync",
+              requestId,
+              timestampMs: event.timestampMs,
+            }),
+          );
+        }
+      } else {
+        if (
+          liveSession.recovery.connection === "idle" ||
+          liveSession.recovery.connection === "connected"
+        ) {
+          liveSession.markRecoveryConnection("connected");
+        }
+      }
+
       return;
     }
 
@@ -225,9 +361,46 @@ export default function GameShell() {
     }
 
     if (event.message.type === PROTOCOL_MESSAGE_TYPES.SYNC) {
+      const liveSession = useSessionStore.getState();
+      const liveUi = useUiStore.getState();
+      const wasRecovering =
+        liveUi.screen === "RECOVERING" ||
+        liveSession.recovery.connection === "disconnected" ||
+        liveSession.recovery.connection === "reconnecting";
+
       setRoom(event.message.payload.room);
       setLobbyPlayers(event.message.payload.room.players);
       setAuthoritativeSnapshot(event.message.payload.snapshot);
+
+      if (wasRecovering && event.message.payload.snapshot.gameState === "playing") {
+        const requestId =
+          event.message.requestId ??
+          liveSession.recovery.recovery?.requestId ??
+          makeId("recovery");
+
+        liveSession.completeRecovery({
+          requestId,
+          recoveredAtMs: event.timestampMs,
+          playerId: liveSession.peerIdentity.playerId,
+          snapshot: event.message.payload.snapshot,
+        });
+        liveSession.setConnectionStatus("connected");
+        liveUi.setScreen("PLAYING");
+        liveUi.setGameScreen("playing");
+        liveUi.setPaused(false, "none");
+        liveUi.setOverlay({
+          kind: "none",
+          message: null,
+          visible: false,
+        });
+        setReadiness({
+          simulation: true,
+          rendering: true,
+          networking: true,
+          input: true,
+        });
+        return;
+      }
 
       if (event.message.payload.snapshot.gameState === "victory") {
         setCompletion({
@@ -237,6 +410,18 @@ export default function GameShell() {
         });
         setScreen("COMPLETED");
         setGameScreen("victory");
+        setPaused(false, "none");
+      } else if (event.message.payload.snapshot.gameState === "failure") {
+        const expedition = event.message.payload.snapshot.expedition;
+        const monsterId = expedition.activeEncounter?.monsterId;
+        const monster = expedition.monsterIndex.find((entry) => entry.id === monsterId);
+        setCompletion({
+          status: "failure",
+          message: `${monster?.name ?? "Something in the dark"} caught you after ${expedition.encountersSurvived} survived encounters.`,
+          atMs: event.timestampMs,
+        });
+        setScreen("COMPLETED");
+        setGameScreen("failure");
         setPaused(false, "none");
       } else if (event.message.payload.snapshot.gameState === "paused") {
         setScreen("PAUSED");
@@ -261,15 +446,25 @@ export default function GameShell() {
       setRoom(event.message.payload.room);
       setLobbyPlayers(event.message.payload.players);
       setConnectionStatus("connected");
+
+      const liveRecovery = useSessionStore.getState().recovery;
+      if (
+        useUiStore.getState().screen !== "RECOVERING" &&
+        (liveRecovery.connection === "idle" || liveRecovery.connection === "connected")
+      ) {
+        markRecoveryConnection("connected");
+      }
     }
   };
 
   const updatePeerIdentityIfNeeded = (hostPeerId: string): void => {
-    if (peerIdentity.hostPeerId === hostPeerId) {
+    const liveSession = useSessionStore.getState();
+
+    if (liveSession.peerIdentity.hostPeerId === hostPeerId) {
       return;
     }
 
-    updatePeerIdentity({
+    liveSession.updatePeerIdentity({
       hostPeerId,
     });
   };
@@ -289,6 +484,7 @@ export default function GameShell() {
   const enterHostLobby = (): void => {
     destroyTransport();
     resetUi();
+    resetRecovery();
     const normalizedName = playerName.trim() || "Host";
     const nextRoomId = makeRoomId();
     const nextJoinCode = makeJoinCode();
@@ -339,6 +535,7 @@ export default function GameShell() {
   const enterClientLobby = (): void => {
     destroyTransport();
     resetUi();
+    resetRecovery();
     const normalizedName = playerName.trim() || "Client";
     const normalizedJoinCode = joinCode.trim().toUpperCase() || makeJoinCode();
     const clientPlayerId = makeId("client-player");
@@ -405,28 +602,15 @@ export default function GameShell() {
 
   const enterSoloRun = async (): Promise<void> => {
     destroyTransport();
+    resetRuntime();
     resetUi();
+    resetRecovery();
     await runLoadingSteps();
-    const normalizedName = playerName.trim() || "Wanderer";
-    const nextRoomId = `solo-${makeId("corridor")}`;
-    const nextJoinCode = "SOLO";
-    const soloPlayerId = makeId("solo-player");
-    const soloPlayer = makePlayer(soloPlayerId, normalizedName, true, true);
-    const roomState = makeRoomState({
-      roomId: nextRoomId,
-      joinCode: nextJoinCode,
-      hostId: soloPlayerId,
-      players: [soloPlayer],
+    const departure = beginSoloExpedition({
+      attemptId: makeId("attempt"),
+      playerName,
     });
-    const bootstrap = createInitialGameState({
-      roomId: roomState.roomId,
-      joinCode: roomState.joinCode,
-      hostId: soloPlayerId,
-      players: roomState.players,
-      localPlayerId: soloPlayerId,
-      localPlayerName: normalizedName,
-      seedSource: `${roomState.roomId}:procedural-solo`,
-    });
+    const { bootstrap, playerId: soloPlayerId, playerName: normalizedName } = departure;
 
     setSessionMode("solo");
     setPeerIdentity({
@@ -528,6 +712,58 @@ export default function GameShell() {
     setGameScreen("playing");
   };
 
+  const reconnectToExpedition = (): void => {
+    const liveSession = useSessionStore.getState();
+    const clientTransport = transportRef.current;
+    const hostPeerId = liveSession.peerIdentity.hostPeerId;
+
+    if (clientTransport?.role !== "client" || !hostPeerId || !liveSession.room) {
+      return;
+    }
+
+    const requestId = makeId("recovery");
+    const requestedAtMs = Date.now();
+
+    beginRecovery({
+      requestId,
+      hostPeerId,
+      requestedAtMs,
+    });
+    setConnectionStatus("reconnecting");
+    setOverlay({
+      kind: "recovery",
+      message: "Finding the host and restoring your place.",
+      visible: true,
+    });
+
+    requestAnimationFrame(() => {
+      window.setTimeout(() => {
+        const activeTransport = transportRef.current;
+        const accepted =
+          activeTransport?.role === "client" &&
+          activeTransport.connectToHost(hostPeerId);
+
+        if (!accepted) {
+          const failedAtMs = Date.now();
+          const failedSession = useSessionStore.getState();
+
+          failedSession.recordRecoveryDisconnection({
+            reason: "The host could not be reached.",
+            disconnectedAtMs: failedAtMs,
+            playerId: failedSession.peerIdentity.playerId,
+            snapshot: useRuntimeStore.getState().authoritativeSnapshot,
+          });
+          failedSession.setConnectionStatus("error");
+          useUiStore.getState().setOverlay({
+            kind: "recovery",
+            message: "The host could not be reached. Try again.",
+            visible: true,
+          });
+        }
+      }, RECOVERY_STATUS_MIN_MS);
+    });
+  };
+
   const returnToLobby = (): void => {
     resetUi();
     if (!room) {
@@ -551,6 +787,15 @@ export default function GameShell() {
       networking: true,
       input: false,
     });
+  };
+
+  const restartAfterCompletion = (): void => {
+    if (sessionMode === "solo") {
+      void enterSoloRun();
+      return;
+    }
+
+    returnToLobby();
   };
 
   const addGuestPlaceholder = (): void => {
@@ -580,8 +825,54 @@ export default function GameShell() {
     [],
   );
 
+  useEffect(() => {
+    const sessionWindow = window as HorrorCorridorSessionWindow;
+    const control: HorrorCorridorSessionControl = Object.freeze({
+      disconnectClient: () => {
+        const activeTransport = transportRef.current;
+
+        if (activeTransport?.role !== "client") {
+          return false;
+        }
+
+        activeTransport.disconnect();
+        return true;
+      },
+      snapshot: () => {
+        const liveSession = useSessionStore.getState();
+        const liveUi = useUiStore.getState();
+        const snapshot = useRuntimeStore.getState().authoritativeSnapshot;
+
+        return Object.freeze({
+          screen: liveUi.screen,
+          connectionStatus: liveSession.connectionStatus,
+          recovery: liveSession.recovery,
+          sessionMode: liveSession.sessionMode,
+          playerId: liveSession.peerIdentity.playerId,
+          hostPeerId: liveSession.peerIdentity.hostPeerId,
+          roomId: snapshot?.room.roomId ?? liveSession.room?.roomId ?? null,
+          gameId: snapshot?.gameId ?? null,
+          seed: snapshot?.seed ?? null,
+          tick: snapshot?.tick ?? null,
+          gameState: snapshot?.gameState ?? null,
+          buildingNumber: snapshot?.expedition.buildingNumber ?? null,
+          encountersSurvived: snapshot?.expedition.encountersSurvived ?? null,
+          players: snapshot?.players ?? [],
+        });
+      },
+    });
+
+    sessionWindow.__HORROR_CORRIDOR_SESSION_CONTROL__ = control;
+
+    return () => {
+      if (sessionWindow.__HORROR_CORRIDOR_SESSION_CONTROL__ === control) {
+        delete sessionWindow.__HORROR_CORRIDOR_SESSION_CONTROL__;
+      }
+    };
+  }, []);
+
   const currentPlayers = room?.players ?? lobbyPlayers;
-  const isCleanPlayScreen = screen === "PLAYING";
+  const isCleanPlayScreen = screen === "PLAYING" || screen === "RECOVERING";
 
   return (
     <div className="relative min-h-screen overflow-hidden bg-[#050403] text-lime-100">
@@ -649,11 +940,20 @@ export default function GameShell() {
             />
           ) : null}
 
-          {screen === "PLAYING" || screen === "PAUSED" || screen === "COMPLETED" ? (
+          {screen === "PLAYING" || screen === "RECOVERING" || screen === "PAUSED" || screen === "COMPLETED" ? (
             <div className="absolute inset-0">
               <GameCanvas transport={transport} />
               <HUDOverlay />
             </div>
+          ) : null}
+
+          {screen === "RECOVERING" ? (
+            <RecoveryScreen
+              connectionStatus={connectionStatus}
+              recovery={recovery}
+              onReconnect={reconnectToExpedition}
+              onQuitToTitle={returnToStart}
+            />
           ) : null}
 
           {screen === "PAUSED" ? (
@@ -668,7 +968,12 @@ export default function GameShell() {
             <CompleteScreen
               outcome={completion.status === "victory" ? "victory" : "failure"}
               message={completion.message}
-              onRestart={returnToLobby}
+              restartLabel={
+                sessionMode === "solo"
+                  ? "Begin another expedition"
+                  : "Return to lobby"
+              }
+              onRestart={restartAfterCompletion}
               onQuitToTitle={returnToStart}
             />
           ) : null}

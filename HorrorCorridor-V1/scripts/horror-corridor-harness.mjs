@@ -132,6 +132,8 @@ npm run harness:swarm -- run HorrorCorridor-Harness/my-swarm-request.json --exec
 - Each judgment sees the original goal, the current compact episode, and a bounded recent window of structured outputs and reasoning summaries.
 - The judgment chooses the next action profile and records an over-time trend; malformed or missing output fails closed.
 - There is no artificial delay between episodes; each call records duration plus the completion-to-next-start gap.
+- One browser expedition persists across calls and normal execution ends only when the authoritative game reports \`caught\`.
+- The current real proof is \`docs/live-agent/runs/2026-07-17T18-42-11-807Z\` with seven Luna calls; see \`docs/HorrorCorridor-Live-Luna-Run-2026-07-17.md\`.
 - Full prompts, provider events, structured judgments, screenshots, timing, logs, and loop state remain inspectable in the external run directory.
 
 \`\`\`bash
@@ -189,6 +191,8 @@ function buildManifest(source, swarmConfig) {
       predictionConcurrency: 1,
       waitBetweenEpisodesMs: 0,
       policy: "one read-only judgment after every live browser episode",
+      stopCondition: "authoritative expedition phase caught",
+      currentProof: "docs/live-agent/runs/2026-07-17T18-42-11-807Z",
     },
   };
 }

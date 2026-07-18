@@ -9,6 +9,7 @@ import { PLAYER_EYE_HEIGHT, createPlayerPose, type PlayerPose } from "@/features
 import { buildReplicatedSnapshot } from "@/features/networking/protocol/syncSnapshot";
 
 import type { GameState } from "./gameTypes";
+import { createInitialEndlessExpedition } from "./endlessExpedition";
 
 export type InitialGameStateInput = Readonly<{
   roomId: string;
@@ -30,6 +31,8 @@ export type InitialGameStateResult = Readonly<{
 }>;
 
 const PLAYER_COLORS = ["#FF0055", "#00AAFF", "#FFDD00", "#AA00FF", "#00FFAA"] as const;
+const ENTRY_VIEW_YAW = -Math.PI / 2 + 0.42;
+const ENTRY_VIEW_PITCH = -0.18;
 
 const hashSeed = (value: string): number => {
   let hash = 2166136261;
@@ -55,9 +58,10 @@ const mazeCellToWorld = (x: number, y: number): Readonly<{ x: number; y: number;
 });
 
 export const createInitialGameState = (input: InitialGameStateInput): InitialGameStateResult => {
+  const seed = hashSeed(input.seedSource);
   const maze = generateMaze({
     size: GRID_SIZE,
-    seed: hashSeed(input.seedSource),
+    seed,
   });
 
   const mazeCells: readonly MazeCellSnapshot[] = maze.grid.flatMap((row, y) =>
@@ -100,7 +104,11 @@ export const createInitialGameState = (input: InitialGameStateInput): InitialGam
     y: PLAYER_EYE_HEIGHT,
     z: startPosition.z,
   });
-  const localViewAngles = createPlayerViewAngles(-Math.PI / 2, 0, Date.now());
+  const localViewAngles = createPlayerViewAngles(
+    ENTRY_VIEW_YAW,
+    ENTRY_VIEW_PITCH,
+    Date.now(),
+  );
   const inputState = createPlayerInputState();
 
   const sourcePlayers =
@@ -167,7 +175,7 @@ export const createInitialGameState = (input: InitialGameStateInput): InitialGam
 
   const gameState: GameState = {
     gameId: input.roomId,
-    seed: hashSeed(input.seedSource),
+    seed,
     room,
     appState: "PLAYING",
     gameState: "playing",
@@ -177,6 +185,7 @@ export const createInitialGameState = (input: InitialGameStateInput): InitialGam
     players,
     cubes: cubeSnapshots,
     sequenceSlots,
+    expedition: createInitialEndlessExpedition(seed),
     oozeTrail: [],
     oozeLevel: 0,
     mazeLookup: mazeLookup as GameState["mazeLookup"],

@@ -40,16 +40,35 @@ const profiles = {
   },
   "broken-generator": {
     title: "Broken Generator Object Review",
-    traits: ["engine body", "vent slats", "socket panel", "feet", "loose cable"],
+    traits: ["open frame", "circular flywheel", "fuel tank", "exhaust stack", "loose cable"],
     parts: [
-      ["engine-body", "trapezoid", [1.32, 0.82, 0.78], [0, 0.48, 0], "painted-metal", 0.94],
-      ["top-cap", "box", [0.72, 0.16, 0.48], [-0.14, 0.98, 0.02], "rusted-metal"],
-      ["vent-a", "box", [0.62, 0.05, 0.04], [0, 0.58, 0.42], "rusted-metal"],
-      ["vent-b", "box", [0.62, 0.05, 0.04], [0, 0.42, 0.42], "rusted-metal"],
-      ["socket-panel", "box", [0.36, 0.28, 0.05], [0.46, 0.5, 0.43], "rusted-metal"],
-      ["left-foot", "box", [0.26, 0.12, 0.2], [-0.42, 0.08, 0.28], "rusted-metal"],
-      ["right-foot", "box", [0.26, 0.12, 0.2], [0.42, 0.08, 0.28], "rusted-metal"],
-      ["loose-cable", "box", [0.12, 0.1, 0.7], [0.68, 0.18, -0.22], "rubber-cable"],
+      ["runner-near", "box", [1.72, 0.12, 0.12], [0, 0.08, 0.34], "rusted-metal"],
+      ["runner-far", "box", [1.72, 0.12, 0.12], [0, 0.08, -0.34], "rusted-metal"],
+      ["cross-left", "box", [0.12, 0.14, 0.78], [-0.68, 0.13, 0], "rusted-metal"],
+      ["cross-right", "box", [0.12, 0.14, 0.78], [0.68, 0.13, 0], "rusted-metal"],
+      ["post-left", "box", [0.09, 0.9, 0.09], [-0.72, 0.56, -0.31], "rusted-metal"],
+      ["post-right", "box", [0.09, 0.94, 0.09], [0.72, 0.58, -0.31], "rusted-metal"],
+      ["frame-top", "box", [1.5, 0.09, 0.09], [0, 1.02, -0.31], "rusted-metal"],
+      ["engine-drum", "cylinder", [0.82, 0.82, 0.64], [-0.3, 0.57, 0.02], "painted-metal", "z", 16],
+      ["flywheel-rim", "cylinder", [0.92, 0.92, 0.08], [-0.3, 0.57, 0.37], "rusted-metal", "z", 16],
+      ["flywheel-face", "cylinder", [0.68, 0.68, 0.065], [-0.3, 0.57, 0.425], "rubber-cable", "z", 16],
+      ["rotor-hub", "cylinder", [0.2, 0.2, 0.14], [-0.3, 0.57, 0.49], "rusted-metal", "z", 12],
+      ["spoke-horizontal", "box", [0.56, 0.065, 0.045], [-0.3, 0.57, 0.475], "rusted-metal"],
+      ["spoke-vertical", "box", [0.065, 0.56, 0.045], [-0.3, 0.57, 0.48], "rusted-metal"],
+      ["engine-block", "trapezoid", [0.58, 0.66, 0.6], [0.43, 0.55, -0.02], "painted-metal", 0.82],
+      ["fin-high", "box", [0.42, 0.055, 0.07], [0.43, 0.7, 0.31], "rusted-metal"],
+      ["fin-mid", "box", [0.46, 0.055, 0.07], [0.43, 0.56, 0.32], "rusted-metal"],
+      ["fin-low", "box", [0.34, 0.055, 0.07], [0.38, 0.42, 0.31], "rusted-metal"],
+      ["fuel-tank", "cylinder", [0.84, 0.26, 0.26], [0.02, 1.05, -0.09], "painted-metal", "x", 12],
+      ["fuel-band-left", "cylinder", [0.07, 0.31, 0.31], [-0.27, 1.05, -0.09], "rusted-metal", "x", 12],
+      ["fuel-band-right", "cylinder", [0.07, 0.31, 0.31], [0.3, 1.05, -0.09], "rusted-metal", "x", 12],
+      ["exhaust-stack", "cylinder", [0.16, 0.62, 0.16], [0.57, 1.22, -0.23], "rusted-metal", "y", 10],
+      ["exhaust-cap", "cylinder", [0.24, 0.08, 0.24], [0.57, 1.56, -0.23], "rusted-metal", "y", 10],
+      ["control-panel", "trapezoid", [0.3, 0.26, 0.06], [0.49, 0.75, 0.35], "painted-metal", 0.74],
+      ["socket-panel", "box", [0.19, 0.14, 0.05], [0.49, 0.71, 0.405], "rubber-cable"],
+      ["cable-socket", "cylinder", [0.14, 0.14, 0.08], [0.61, 0.31, 0.32], "rubber-cable", "z", 10],
+      ["loose-cable", "box", [0.1, 0.1, 0.48], [0.76, 0.16, -0.04], "rubber-cable"],
+      ["loose-cable-tail", "box", [0.38, 0.08, 0.1], [0.9, 0.06, -0.32], "rubber-cable"],
     ],
   },
   "concrete-jersey-barrier": {
@@ -91,16 +110,49 @@ const profiles = {
   },
   "industrial-shelving": {
     title: "Industrial Shelving Object Review",
-    traits: ["open frame", "warped shelves", "loose boxes", "brackets"],
+    traits: ["two-bay frame", "repeated shelves", "loaded machine storage", "open negative space"],
     parts: [
-      ["post-lf", "box", [0.08, 1.72, 0.08], [-0.62, 0.86, 0.32], "rusted-metal"],
-      ["post-rf", "box", [0.08, 1.62, 0.08], [0.62, 0.81, 0.32], "rusted-metal"],
-      ["post-lb", "box", [0.08, 1.62, 0.08], [-0.62, 0.81, -0.32], "rusted-metal"],
-      ["post-rb", "box", [0.08, 1.72, 0.08], [0.62, 0.86, -0.32], "rusted-metal"],
-      ["shelf-low", "trapezoid", [1.42, 0.08, 0.74], [0, 0.52, 0], "rusted-metal", 0.96],
-      ["shelf-high", "trapezoid", [1.36, 0.08, 0.7], [0, 1.18, 0], "rusted-metal", 0.92],
-      ["box-a", "box", [0.42, 0.34, 0.36], [-0.28, 0.75, 0.06], "painted-utility"],
-      ["box-b", "trapezoid", [0.36, 0.28, 0.32], [0.34, 1.38, -0.06], "painted-utility", 0.86],
+      ["post-lf", "box", [0.14, 2.32, 0.14], [-1.08, 1.16, 0.38], "rusted-metal"],
+      ["post-cf", "box", [0.14, 2.24, 0.14], [0, 1.12, 0.38], "rusted-metal"],
+      ["post-rf", "box", [0.14, 2.34, 0.14], [1.08, 1.17, 0.38], "rusted-metal"],
+      ["post-lb", "box", [0.13, 2.24, 0.13], [-1.08, 1.12, -0.38], "rusted-metal"],
+      ["post-cb", "box", [0.13, 2.3, 0.13], [0, 1.15, -0.38], "rusted-metal"],
+      ["post-rb", "box", [0.13, 2.28, 0.13], [1.08, 1.14, -0.38], "rusted-metal"],
+      ["foot-left", "box", [0.32, 0.1, 0.92], [-1.08, 0.05, 0], "rusted-metal"],
+      ["foot-center", "box", [0.32, 0.1, 0.92], [0, 0.05, 0], "rusted-metal"],
+      ["foot-right", "box", [0.32, 0.1, 0.92], [1.08, 0.05, 0], "rusted-metal"],
+      ["shelf-base", "trapezoid", [2.28, 0.11, 0.82], [0, 0.27, 0], "rusted-metal", 0.97],
+      ["shelf-low", "trapezoid", [2.28, 0.11, 0.82], [0, 0.85, 0], "rusted-metal", 0.95],
+      ["shelf-mid", "trapezoid", [2.24, 0.11, 0.8], [-0.02, 1.43, 0], "rusted-metal", 0.93],
+      ["shelf-high", "trapezoid", [2.28, 0.11, 0.82], [0, 2.01, 0], "rusted-metal", 0.96],
+      ["lip-base", "box", [2.3, 0.14, 0.1], [0, 0.34, 0.39], "rusted-metal"],
+      ["lip-low", "box", [2.3, 0.14, 0.1], [0, 0.92, 0.39], "rusted-metal"],
+      ["lip-mid", "box", [2.26, 0.14, 0.1], [-0.02, 1.5, 0.39], "rusted-metal"],
+      ["lip-high", "box", [2.3, 0.14, 0.1], [0, 2.08, 0.39], "rusted-metal"],
+      ["rear-rail-low", "box", [2.3, 0.11, 0.1], [0, 0.55, -0.38], "rusted-metal"],
+      ["rear-rail-mid", "box", [2.3, 0.11, 0.1], [0, 1.13, -0.38], "rusted-metal"],
+      ["rear-rail-high", "box", [2.3, 0.11, 0.1], [0, 1.71, -0.38], "rusted-metal"],
+      ["rear-header", "box", [2.3, 0.12, 0.1], [0, 2.28, -0.38], "rusted-metal"],
+      ["front-header", "box", [2.3, 0.12, 0.1], [0, 2.28, 0.38], "rusted-metal"],
+      ["lower-crate", "trapezoid", [0.86, 0.42, 0.56], [-0.55, 0.54, 0.02], "painted-utility", 0.91],
+      ["lower-crate-band", "box", [0.72, 0.1, 0.06], [-0.55, 0.56, 0.32], "rusted-metal"],
+      ["canister-a", "cylinder", [0.3, 0.46, 0.3], [0.4, 0.56, 0.02], "painted-utility", "y", 10],
+      ["canister-a-cap", "cylinder", [0.34, 0.06, 0.34], [0.4, 0.82, 0.02], "rusted-metal", "y", 8],
+      ["canister-b", "cylinder", [0.34, 0.5, 0.34], [0.78, 0.54, -0.04], "painted-utility", "y", 10],
+      ["canister-b-cap", "cylinder", [0.38, 0.06, 0.38], [0.78, 0.82, -0.04], "rusted-metal", "y", 8],
+      ["tool-case", "trapezoid", [0.82, 0.34, 0.52], [-0.56, 1.08, 0.02], "painted-utility", 0.93],
+      ["tool-handle", "box", [0.42, 0.07, 0.08], [-0.56, 1.31, 0.02], "rusted-metal"],
+      ["tool-handle-left", "box", [0.06, 0.16, 0.08], [-0.74, 1.25, 0.02], "rusted-metal"],
+      ["tool-handle-right", "box", [0.06, 0.16, 0.08], [-0.38, 1.25, 0.02], "rusted-metal"],
+      ["mid-bin", "trapezoid", [0.78, 0.4, 0.58], [0.56, 1.1, 0], "painted-utility", 0.86],
+      ["mid-bin-label", "box", [0.32, 0.13, 0.05], [0.56, 1.12, 0.31], "rusted-metal"],
+      ["upper-bin-left", "box", [0.48, 0.3, 0.48], [-0.78, 1.64, 0.01], "painted-utility"],
+      ["upper-bin-center", "trapezoid", [0.38, 0.38, 0.5], [-0.24, 1.68, -0.03], "painted-utility", 0.84],
+      ["upper-drum", "cylinder", [0.7, 0.32, 0.32], [0.58, 1.65, 0.02], "painted-utility", "x", 12],
+      ["upper-drum-band-left", "cylinder", [0.08, 0.38, 0.38], [0.32, 1.65, 0.02], "rusted-metal", "x", 10],
+      ["upper-drum-band-right", "cylinder", [0.08, 0.38, 0.38], [0.84, 1.65, 0.02], "rusted-metal", "x", 10],
+      ["top-tray", "trapezoid", [0.9, 0.16, 0.52], [-0.5, 2.15, 0], "painted-utility", 0.9],
+      ["top-box", "box", [0.48, 0.2, 0.42], [0.7, 2.17, -0.02], "painted-utility"],
     ],
   },
   "hanging-chain-hook": {
@@ -177,7 +229,74 @@ const materialByFamily = {
 };
 const fallbackMaterial = materialByFamily["rusted-metal"];
 
-const createGeometry = (shape, size, center, topScale = 0.86) => {
+const createCylinderGeometry = (size, center, axis = "y", radialSegments = 12) => {
+  const [sx, sy, sz] = size;
+  const [cx, cy, cz] = center;
+  const segments = Math.max(6, Math.min(32, Math.floor(radialSegments)));
+  const halfLength = axis === "x" ? sx * 0.5 : axis === "z" ? sz * 0.5 : sy * 0.5;
+  const radiusA = axis === "x" ? sy * 0.5 : sx * 0.5;
+  const radiusB = axis === "z" ? sy * 0.5 : sz * 0.5;
+  const positions = [];
+  const indices = [];
+  const point = (axial, radialAValue, radialBValue) => {
+    if (axis === "x") return [cx + axial, cy - radialAValue, cz + radialBValue];
+    if (axis === "z") return [cx + radialAValue, cy - radialBValue, cz + axial];
+    return [cx + radialAValue, cy + axial, cz + radialBValue];
+  };
+  const push = (value) => positions.push(...value);
+
+  for (let index = 0; index < segments; index += 1) {
+    const radians = (index / segments) * Math.PI * 2;
+    const radialAValue = Math.cos(radians) * radiusA;
+    const radialBValue = Math.sin(radians) * radiusB;
+    push(point(-halfLength, radialAValue, radialBValue));
+    push(point(halfLength, radialAValue, radialBValue));
+  }
+  const bottomCapStart = positions.length / 3;
+  for (let index = 0; index < segments; index += 1) {
+    const radians = (index / segments) * Math.PI * 2;
+    push(point(-halfLength, Math.cos(radians) * radiusA, Math.sin(radians) * radiusB));
+  }
+  const topCapStart = positions.length / 3;
+  for (let index = 0; index < segments; index += 1) {
+    const radians = (index / segments) * Math.PI * 2;
+    push(point(halfLength, Math.cos(radians) * radiusA, Math.sin(radians) * radiusB));
+  }
+  const bottomCenter = positions.length / 3;
+  push(point(-halfLength, 0, 0));
+  const topCenter = positions.length / 3;
+  push(point(halfLength, 0, 0));
+
+  for (let index = 0; index < segments; index += 1) {
+    const next = (index + 1) % segments;
+    const bottom = index * 2;
+    const top = bottom + 1;
+    const nextBottom = next * 2;
+    const nextTop = nextBottom + 1;
+    indices.push(bottom, nextTop, nextBottom, bottom, top, nextTop);
+    indices.push(bottomCenter, bottomCapStart + index, bottomCapStart + next);
+    indices.push(topCenter, topCapStart + next, topCapStart + index);
+  }
+
+  const geometry = new BufferGeometry();
+  geometry.setAttribute("position", new Float32BufferAttribute(positions, 3));
+  geometry.setAttribute("uv", new Float32BufferAttribute(Array.from({ length: (positions.length / 3) * 2 }, (_, index) => index % 2), 2));
+  geometry.setIndex(indices);
+  geometry.computeVertexNormals();
+  geometry.userData.triangleWinding = "outward-ccw";
+  return geometry;
+};
+
+const createGeometry = (shape, size, center, shapeDetail = 0.86, radialSegments = 12) => {
+  if (shape === "cylinder") {
+    return createCylinderGeometry(
+      size,
+      center,
+      typeof shapeDetail === "string" ? shapeDetail : "y",
+      radialSegments,
+    );
+  }
+  const topScale = typeof shapeDetail === "number" ? shapeDetail : 0.86;
   const [sx, sy, sz] = size;
   const [cx, cy, cz] = center;
   const bx = sx * 0.5;
@@ -212,8 +331,8 @@ const createGeometry = (shape, size, center, topScale = 0.86) => {
   return geometry;
 };
 
-for (const [name, shape, size, center, family, topScale] of profile.parts) {
-  const mesh = new Mesh(createGeometry(shape, size, center, topScale), materialByFamily[family] || fallbackMaterial);
+for (const [name, shape, size, center, family, shapeDetail, radialSegments] of profile.parts) {
+  const mesh = new Mesh(createGeometry(shape, size, center, shapeDetail, radialSegments), materialByFamily[family] || fallbackMaterial);
   mesh.name = `${kitId}-${name}`;
   mesh.userData.geometrySource = "explicit-wound-triangles";
   scene.add(mesh);

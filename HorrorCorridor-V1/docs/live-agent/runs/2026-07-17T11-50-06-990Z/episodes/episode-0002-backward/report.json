@@ -1,0 +1,54 @@
+{
+  "artifacts": [
+    "/Users/crimsonwheeler/Documents/GitHub/HorrorCorridor/HorrorCorridor-V1/docs/live-agent/runs/2026-07-17T11-50-06-990Z/episodes/episode-0002-backward/report.json"
+  ],
+  "createdAt": "2026-07-17T11:51:07.074Z",
+  "harness": "horror-corridor-live-player-harness",
+  "nexusSimulator": {
+    "commandVocabulary": [
+      "openPage",
+      "click",
+      "holdKey",
+      "assertCanvasExists",
+      "captureScreenshot",
+      "assertGlobalState"
+    ],
+    "root": "/Users/crimsonwheeler/Documents/GitHub/NexusSimulator/NexusSimulator-V1",
+    "source": "local script aligned to NexusSimulator playwright-simtime semantics"
+  },
+  "options": {
+    "actionDurationMs": 2000,
+    "actionProfile": "backward",
+    "artifactDir": "/Users/crimsonwheeler/Documents/GitHub/HorrorCorridor/HorrorCorridor-V1/docs/live-agent/runs/2026-07-17T11-50-06-990Z/episodes/episode-0002-backward",
+    "browserExecutable": "",
+    "browserEngine": "all",
+    "cdpUrl": "",
+    "cdpPort": 9224,
+    "dryRun": false,
+    "headed": false,
+    "keepPageOpen": true,
+    "launchCdpChrome": true,
+    "reuseSessionPage": true,
+    "sessionId": "horror-corridor-live-2026-07-17T11-50-06-991Z",
+    "skipBrowser": false,
+    "startServer": false,
+    "url": "http://localhost:3000/?debug=frames&liveAgent=1",
+    "thresholds": {
+      "centerCropRatio": 0.82,
+      "maxDarkRatio": 0.55,
+      "minLightRatio": 0.15,
+      "minLights": 8,
+      "minMovementDelta": 0.25,
+      "minProps": 48,
+      "minTextures": 96,
+      "maxHudChromeBrightPixels": 25
+    }
+  },
+  "repoRoot": "/Users/crimsonwheeler/Documents/GitHub/HorrorCorridor/HorrorCorridor-V1",
+  "status": "blocked",
+  "blocker": {
+    "launchErrors": null,
+    "message": "Timed out waiting for http://localhost:3000/?debug=frames&liveAgent=1",
+    "stack": "Error: Timed out waiting for http://localhost:3000/?debug=frames&liveAgent=1\n    at Timeout.tick [as _onTimeout] (file:///Users/crimsonwheeler/Documents/GitHub/HorrorCorridor/HorrorCorridor-V1/scripts/horror-corridor-live-player-harness.mjs:371:20)\n    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)"
+  }
+}

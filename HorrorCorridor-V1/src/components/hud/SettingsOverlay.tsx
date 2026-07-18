@@ -8,7 +8,8 @@ type SettingsOverlayProps = Readonly<{
 const controls = [
   { label: "Move", value: "WASD / Arrow Keys" },
   { label: "Look", value: "Capture mouse look" },
-  { label: "Interact", value: "E to pick up / drop" },
+  { label: "Interact", value: "E to take an offering / use" },
+  { label: "Monster Index", value: "M to open / close" },
   { label: "Place", value: "Space to place" },
   { label: "Pause", value: "P to pause" },
 ] as const;

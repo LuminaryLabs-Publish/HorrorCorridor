@@ -1,0 +1,254 @@
+{
+  "callCount": 2,
+  "consecutiveJudgeFailures": 0,
+  "episodeCount": 2,
+  "goal": "Play one continuous HorrorCorridor expedition: move through the intro, listen for each stalker, turn toward its directional sign, hold the flashlight beam to repel it, and keep collecting scare records until the game authoritatively reports caught.",
+  "historyWindow": 3,
+  "latestJudgment": {
+    "confidence": 0.42,
+    "evidence": [
+      "reportStatus=blocked",
+      "movementDelta=missing"
+    ],
+    "historyCallIds": [
+      "call-0001"
+    ],
+    "judgment": "inconclusive",
+    "nextActionProfile": "strafe-left",
+    "nextHypothesis": "A different movement profile will test whether the latest result is stable across direction changes.",
+    "observation": "The current episode did not provide a complete passing gate set.",
+    "reasoningSummary": "This deterministic mock proves history wiring and next-action propagation without claiming semantic visual judgment.",
+    "status": "continue",
+    "stopReason": null,
+    "trend": "The chain contains prior calls and can compare the current episode against them."
+  },
+  "nextActionProfile": "strafe-left",
+  "recentCalls": [
+    {
+      "actionProfile": "forward",
+      "callId": "call-0001",
+      "episodeIndex": 1,
+      "judgment": {
+        "confidence": 0.72,
+        "evidence": [
+          "reportStatus=passed",
+          "movementDelta=14.984099999999671"
+        ],
+        "judgment": "partially-confirmed",
+        "nextActionProfile": "backward",
+        "nextHypothesis": "A different movement profile will test whether the latest result is stable across direction changes.",
+        "observation": "The current episode passed its deterministic live-player gates.",
+        "reasoningSummary": "This deterministic mock proves history wiring and next-action propagation without claiming semantic visual judgment.",
+        "status": "continue",
+        "trend": "This is the first call, so no over-time trend is established yet."
+      },
+      "judgeTiming": {
+        "callCompletedAt": "2026-07-17T11:51:02.397Z",
+        "callDurationMs": 17,
+        "callStartedAt": "2026-07-17T11:51:02.380Z",
+        "startToStartMs": null,
+        "timeBetweenCallsMs": null
+      },
+      "processStatus": "failed",
+      "report": {
+        "artifacts": [
+          "/Users/crimsonwheeler/Documents/GitHub/HorrorCorridor/HorrorCorridor-V1/docs/live-agent/runs/2026-07-17T11-50-06-990Z/episodes/episode-0001-forward/starting-scene.png",
+          "/Users/crimsonwheeler/Documents/GitHub/HorrorCorridor/HorrorCorridor-V1/docs/live-agent/runs/2026-07-17T11-50-06-990Z/episodes/episode-0001-forward/movement-scene.png"
+        ],
+        "consoleErrors": [],
+        "gates": {
+          "canvasMounted": true,
+          "hiddenPlayUi": true,
+          "noHudIconChrome": true,
+          "lightCount": true,
+          "luminanceReadable": true,
+          "actionObserved": true,
+          "nexusResetReplay": true,
+          "playingReached": true,
+          "propCount": true,
+          "textureCount": true
+        },
+        "hudChrome": {
+          "bottomLeftBrightPixels": 0,
+          "sampledPixels": 14112,
+          "region": {
+            "left": 0,
+            "top": 774,
+            "right": 112,
+            "bottom": 900
+          }
+        },
+        "luminance": {
+          "average": 42.245182197793504,
+          "crop": {
+            "left": 126,
+            "top": 81,
+            "right": 1274,
+            "bottom": 819,
+            "centerCropRatio": 0.82
+          },
+          "darkRatio": 0.026524272211363227,
+          "height": 900,
+          "lightRatio": 0.5304807229256961,
+          "path": "/Users/crimsonwheeler/Documents/GitHub/HorrorCorridor/HorrorCorridor-V1/docs/live-agent/runs/2026-07-17T11-50-06-990Z/episodes/episode-0001-forward/starting-scene.png",
+          "width": 1400
+        },
+        "movementDelta": 14.984099999999671,
+        "playerPosition": {
+          "x": 392.48409999999967,
+          "y": 2,
+          "z": 377.5
+        },
+        "reportStatus": "passed",
+        "sceneDressing": {
+          "propCount": 104,
+          "textureCount": 239,
+          "lightCount": 28,
+          "walkthroughCheckpointCount": 8,
+          "anchorCount": 160,
+          "socketCount": 110,
+          "layoutCount": 26,
+          "bundleCount": 18,
+          "validation": {
+            "meetsPropThreshold": true,
+            "meetsTextureThreshold": true,
+            "meetsLightThreshold": true,
+            "readableSpawnView": true
+          },
+          "referenceRoom": {
+            "kitId": "furnish-chamber-kit",
+            "targetId": "horror-corridor-room-reference-v1",
+            "architecturalPieceCount": 78,
+            "propCount": 22,
+            "textureCount": 17,
+            "meshObjectCount": 2,
+            "lightCount": 3
+          }
+        },
+        "expedition": {
+          "phase": "exploring",
+          "elapsedMs": 2300.9000000000015,
+          "distanceTravelled": 14.984099999999671,
+          "introDistanceTravelled": 12.2948999999997,
+          "buildingNumber": 0,
+          "buildingsCrossed": 0,
+          "encountersSurvived": 0,
+          "distanceSinceEncounter": 2.689199999999971,
+          "nextEncounterInMeters": 7,
+          "activeEncounter": null,
+          "roomOffer": null,
+          "flashlight": {
+            "mode": "steady",
+            "intensity": 1,
+            "flickerRemainingMs": 0,
+            "nextFlickerInMs": 3461.2232794043884
+          },
+          "boons": {
+            "beamWidthBonusRadians": 0,
+            "cueFrequencyBonus": 0,
+            "lastChanceBonusMs": 0,
+            "approachSlowMultiplier": 1
+          },
+          "monsterIndex": [
+            {
+              "id": "still-guest",
+              "name": "The Still Guest",
+              "sign": "One wet footstep repeats from the place you are not looking.",
+              "scare": "It reaches the shoulder, swallows the flashlight for three seconds, then waits just outside the returning beam.",
+              "response": "Turn toward the footstep and hold the flashlight on its face before the final breath ends.",
+              "knowledge": "unknown",
+              "encounters": 0,
+              "scaresSurvived": 0,
+              "firstSeenAtEncounter": null,
+              "collectedAtEncounter": null
+            },
+            {
+              "id": "wall-knocker",
+              "name": "The Wall Knocker",
+              "sign": "Three hollow knocks trade sides whenever it crosses a doorway.",
+              "scare": "It kills the light, moves to the opposite wall, and begins a faster answer of knocks.",
+              "response": "Follow the new side after the blackout and pin the knocking shape in the beam.",
+              "knowledge": "unknown",
+              "encounters": 0,
+              "scaresSurvived": 0,
+              "firstSeenAtEncounter": null,
+              "collectedAtEncounter": null
+            },
+            {
+              "id": "rust-mother",
+              "name": "The Rust Mother",
+              "sign": "A long metal scrape circles low around the room.",
+              "scare": "Her scrape becomes a green pulse before every stolen second of light.",
+              "response": "Keep the restored beam steady through the scrape until she unfolds away from it.",
+              "knowledge": "unknown",
+              "encounters": 0,
+              "scaresSurvived": 0,
+              "firstSeenAtEncounter": null,
+              "collectedAtEncounter": null
+            },
+            {
+              "id": "breath-thief",
+              "name": "The Breath Thief",
+              "sign": "Breathing arrives in the wrong ear, closer than the corridor should allow.",
+              "scare": "It breathes through the blackout and leaves only a short silence when the light returns.",
+              "response": "Use the final breath to choose a side and reveal it before the silence closes.",
+              "knowledge": "unknown",
+              "encounters": 0,
+              "scaresSurvived": 0,
+              "firstSeenAtEncounter": null,
+              "collectedAtEncounter": null
+            }
+          ],
+          "lastEvent": "The entrance fell behind. The endless delve has begun.",
+          "eventSerial": 1
+        },
+        "visibleText": {
+          "length": 0,
+          "sample": ""
+        }
+      }
+    },
+    {
+      "actionProfile": "backward",
+      "callId": "call-0002",
+      "episodeIndex": 2,
+      "judgment": {
+        "confidence": 0.42,
+        "evidence": [
+          "reportStatus=blocked",
+          "movementDelta=missing"
+        ],
+        "judgment": "inconclusive",
+        "nextActionProfile": "strafe-left",
+        "nextHypothesis": "A different movement profile will test whether the latest result is stable across direction changes.",
+        "observation": "The current episode did not provide a complete passing gate set.",
+        "reasoningSummary": "This deterministic mock proves history wiring and next-action propagation without claiming semantic visual judgment.",
+        "status": "continue",
+        "trend": "The chain contains prior calls and can compare the current episode against them."
+      },
+      "judgeTiming": {
+        "callCompletedAt": "2026-07-17T11:51:39.390Z",
+        "callDurationMs": 64,
+        "callStartedAt": "2026-07-17T11:51:39.326Z",
+        "startToStartMs": 36946,
+        "timeBetweenCallsMs": 36929
+      },
+      "processStatus": "failed",
+      "report": {
+        "artifacts": [],
+        "consoleErrors": [],
+        "gates": {},
+        "hudChrome": null,
+        "luminance": null,
+        "movementDelta": null,
+        "playerPosition": null,
+        "reportStatus": "blocked",
+        "sceneDressing": null,
+        "expedition": null,
+        "visibleText": null
+      }
+    }
+  ],
+  "stopRequested": false,
+  "updatedAt": "2026-07-17T11:51:39.420Z"
+}

@@ -1,0 +1,97 @@
+{
+  "categoryScores": {
+    "artifactFreeRender": 90,
+    "geometryDetail": 90,
+    "horrorCorridorFit": 90,
+    "lampIdentity": 90,
+    "lightSourceBelievability": 90,
+    "materialBelievability": 90,
+    "playerDistanceReadability": 90,
+    "rustGrimeQuality": 90,
+    "silhouetteReadability": 90
+  },
+  "firstVisibleFailure": "",
+  "humanReadableSummary": "Mock accepted: the review-room lamp is treated as human-readable.",
+  "pass": true,
+  "promotionStatus": "accept",
+  "orbitComparison": [
+    {
+      "angle": "orbit-000",
+      "bestReferenceMatch": "reference-001",
+      "score": 90,
+      "visibleFailure": ""
+    },
+    {
+      "angle": "orbit-045",
+      "bestReferenceMatch": "reference-001",
+      "score": 90,
+      "visibleFailure": ""
+    },
+    {
+      "angle": "orbit-090",
+      "bestReferenceMatch": "reference-001",
+      "score": 90,
+      "visibleFailure": ""
+    },
+    {
+      "angle": "orbit-135",
+      "bestReferenceMatch": "reference-001",
+      "score": 90,
+      "visibleFailure": ""
+    },
+    {
+      "angle": "orbit-180",
+      "bestReferenceMatch": "reference-001",
+      "score": 90,
+      "visibleFailure": ""
+    },
+    {
+      "angle": "orbit-225",
+      "bestReferenceMatch": "reference-001",
+      "score": 90,
+      "visibleFailure": ""
+    },
+    {
+      "angle": "orbit-270",
+      "bestReferenceMatch": "reference-001",
+      "score": 90,
+      "visibleFailure": ""
+    },
+    {
+      "angle": "orbit-315",
+      "bestReferenceMatch": "reference-001",
+      "score": 90,
+      "visibleFailure": ""
+    }
+  ],
+  "referenceRanking": [
+    {
+      "rank": 1,
+      "reason": "Closest match for rusted practical-lamp silhouette.",
+      "reference": "reference-001"
+    },
+    {
+      "rank": 2,
+      "reason": "Best match for caged lamp-head detail.",
+      "reference": "reference-002"
+    },
+    {
+      "rank": 3,
+      "reason": "Best match for low-light corridor context.",
+      "reference": "reference-003"
+    },
+    {
+      "rank": 4,
+      "reason": "Best match for bracket and cable detail.",
+      "reference": "reference-004"
+    },
+    {
+      "rank": 5,
+      "reason": "Best match for broken-city mood.",
+      "reference": "reference-005"
+    }
+  ],
+  "requiredChanges": [],
+  "score": 90,
+  "topSemanticDifferences": []
+}

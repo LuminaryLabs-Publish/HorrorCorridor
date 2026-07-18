@@ -1,0 +1,74 @@
+{
+  "artifacts": [
+    "/Users/crimsonwheeler/Documents/GitHub/HorrorCorridor/HorrorCorridor-V1/docs/live-agent/runs/2026-07-17T18-36-34-085Z/episodes/episode-0001-forward/report.json"
+  ],
+  "createdAt": "2026-07-17T18:36:38.593Z",
+  "harness": "horror-corridor-live-player-harness",
+  "nexusSimulator": {
+    "commandVocabulary": [
+      "openPage",
+      "click",
+      "holdKey",
+      "assertCanvasExists",
+      "captureScreenshot",
+      "assertGlobalState"
+    ],
+    "root": "/Users/crimsonwheeler/Documents/GitHub/NexusSimulator/NexusSimulator-V1",
+    "source": "local script aligned to NexusSimulator playwright-simtime semantics"
+  },
+  "options": {
+    "actionDurationMs": 2000,
+    "actionProfile": "forward",
+    "artifactDir": "/Users/crimsonwheeler/Documents/GitHub/HorrorCorridor/HorrorCorridor-V1/docs/live-agent/runs/2026-07-17T18-36-34-085Z/episodes/episode-0001-forward",
+    "browserExecutable": "",
+    "browserEngine": "all",
+    "cdpUrl": "http://127.0.0.1:9224",
+    "cdpPort": 9224,
+    "dryRun": false,
+    "fastLive": true,
+    "headed": false,
+    "keepPageOpen": true,
+    "launchCdpChrome": true,
+    "reuseSessionPage": true,
+    "sessionId": "horror-corridor-live-2026-07-17T18-36-34-086Z",
+    "skipBrowser": false,
+    "startServer": false,
+    "url": "http://localhost:3000/?debug=frames&liveAgent=1",
+    "thresholds": {
+      "centerCropRatio": 0.82,
+      "maxDarkRatio": 0.55,
+      "minLightRatio": 0.15,
+      "minLights": 8,
+      "minMovementDelta": 0.25,
+      "minProps": 48,
+      "minTextures": 96,
+      "maxHudChromeBrightPixels": 25
+    }
+  },
+  "repoRoot": "/Users/crimsonwheeler/Documents/GitHub/HorrorCorridor/HorrorCorridor-V1",
+  "status": "blocked",
+  "cdpLaunch": {
+    "launched": false,
+    "message": "CDP already reachable at http://127.0.0.1:9224",
+    "url": "http://127.0.0.1:9224"
+  },
+  "playwrightSource": "nexus-simulator",
+  "cdpProbe": {
+    "defaultUrls": [
+      "http://127.0.0.1:9222",
+      "http://127.0.0.1:9223"
+    ],
+    "reachableUrls": [
+      "http://127.0.0.1:9224"
+    ],
+    "requestedUrl": "http://127.0.0.1:9224"
+  },
+  "launchMode": "playwright-default",
+  "playMode": "solo",
+  "reusedSessionPage": false,
+  "blocker": {
+    "launchErrors": null,
+    "message": "page.evaluate: Target page, context or browser has been closed",
+    "stack": "page.evaluate: Target page, context or browser has been closed\n    at runBrowserHarness (/Users/crimsonwheeler/Documents/GitHub/HorrorCorridor/HorrorCorridor-V1/scripts/horror-corridor-live-player-harness.mjs:883:16)\n    at async main (/Users/crimsonwheeler/Documents/GitHub/HorrorCorridor/HorrorCorridor-V1/scripts/horror-corridor-live-player-harness.mjs:1035:5)"
+  }
+}

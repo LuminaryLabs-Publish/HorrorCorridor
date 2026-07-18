@@ -8,6 +8,7 @@ import {
   createHorrorCorridorDomainKits,
   createHorrorCorridorPreset,
   meshGeneratingObjectDomainKitIds,
+  meshGeneratingObjectKitIds,
   reviewSceneObjectKitCoverage,
   validateMeshObjectDescriptorCatalog,
 } from "@/protokits";
@@ -33,6 +34,18 @@ export function GET(request: Request) {
   const missingMeshObjectKitIds = meshGeneratingObjectDomainKitIds.filter((kitId) => !domainKitIds.includes(kitId));
   const meshObjectDescriptors = createMeshObjectDescriptorCatalog();
   const meshObjectDescriptorFailures = validateMeshObjectDescriptorCatalog();
+  const industrialShelvingDescriptor = meshObjectDescriptors.find(
+    (descriptor) => descriptor.kitId === "industrial-shelving-object-kit",
+  );
+  const industrialShelvingStoredPartCount =
+    industrialShelvingDescriptor?.parts.filter((part) =>
+      part.tags.includes("stored-object"),
+    ).length ?? 0;
+  const industrialShelvingTriangleCount =
+    industrialShelvingDescriptor?.parts.reduce(
+      (count, part) => count + part.indices.length / 3,
+      0,
+    ) ?? 0;
   const maze = generateMaze({
     size: preset.maze.gridSize,
     seed,
@@ -72,8 +85,17 @@ export function GET(request: Request) {
     kitReview.missingShaderProfiles.length === 0 ? null : "scene-object-shader-profile-coverage",
     missingLampPartKitIds.length === 0 ? null : "corridor-lamp-part-kit-manifest-coverage",
     missingMeshObjectKitIds.length === 0 ? null : "mesh-object-kit-manifest-coverage",
-    meshObjectDescriptors.length === 10 ? null : "mesh-object-kit-count",
+    meshObjectDescriptors.length === meshGeneratingObjectKitIds.length ? null : "mesh-object-kit-count",
     meshObjectDescriptorFailures.length === 0 ? null : "mesh-object-descriptor-validation",
+    Number(industrialShelvingDescriptor?.parts.length ?? 0) >= 40
+      ? null
+      : "industrial-shelving-part-depth",
+    industrialShelvingStoredPartCount >= 18
+      ? null
+      : "industrial-shelving-loaded-storage-depth",
+    industrialShelvingTriangleCount >= 640
+      ? null
+      : "industrial-shelving-wound-mesh-depth",
   ].filter((failure): failure is string => failure !== null);
 
   return NextResponse.json(
@@ -99,6 +121,9 @@ export function GET(request: Request) {
           propKind: descriptor.propKind,
           triangleCount: descriptor.parts.reduce((count, part) => count + part.indices.length / 3, 0),
           triangleWinding: descriptor.triangleWinding,
+          storedPartCount: descriptor.parts.filter((part) =>
+            part.tags.includes("stored-object"),
+          ).length,
         })),
       },
       sample: {

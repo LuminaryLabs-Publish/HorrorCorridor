@@ -21,7 +21,7 @@ export const createRenderer = (surface?: RendererSurface): WebGLRenderer => {
 
   renderer.outputColorSpace = SRGBColorSpace;
   renderer.toneMapping = LinearToneMapping;
-  renderer.toneMappingExposure = 2.56;
+  renderer.toneMappingExposure = 2.24;
   renderer.setClearColor(surface?.clearColor ?? 0x090907, 1);
   renderer.setPixelRatio(surface?.pixelRatio ?? DEFAULT_PIXEL_RATIO);
   renderer.autoClear = true;
