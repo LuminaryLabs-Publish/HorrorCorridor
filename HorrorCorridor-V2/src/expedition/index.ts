@@ -63,8 +63,14 @@ export function createExpeditionDomain(seed: number) {
   let runNumber = 1;
   let state = initialState(seed, runNumber);
   let cachedSnapshot: ExpeditionSnapshot | null = null;
+  let cachedMonsterIndex: Record<MonsterId, MonsterIndexEntry> | null = null;
 
   const invalidateSnapshot = () => {
+    cachedSnapshot = null;
+  };
+
+  const invalidateIndex = () => {
+    cachedMonsterIndex = null;
     cachedSnapshot = null;
   };
 
@@ -74,10 +80,11 @@ export function createExpeditionDomain(seed: number) {
 
   const snapshot = (): ExpeditionSnapshot => {
     if (!cachedSnapshot) {
+      cachedMonsterIndex ??= cloneIndex(state.monsterIndex);
       cachedSnapshot = {
         ...state,
         chronicle: [...state.chronicle],
-        monsterIndex: cloneIndex(state.monsterIndex),
+        monsterIndex: cachedMonsterIndex,
       };
     }
     return cachedSnapshot;
@@ -113,7 +120,7 @@ export function createExpeditionDomain(seed: number) {
       };
       state.distanceSinceEncounter = 0;
       addChronicle(`${monsterName} announced itself in Building ${state.buildingNumber}.`);
-      invalidateSnapshot();
+      invalidateIndex();
       return snapshot();
     },
     recordOutcome(monsterId: MonsterId, monsterName: string, outcome: Extract<MonsterStudy, "studied" | "collected">) {
@@ -132,7 +139,7 @@ export function createExpeditionDomain(seed: number) {
           ? `${monsterName} completed its scare. You stayed long enough to collect it.`
           : `${monsterName} withdrew under the beam. Its habits were studied.`,
       );
-      invalidateSnapshot();
+      invalidateIndex();
       return snapshot();
     },
     caught(monsterId: MonsterId, monsterName: string) {
@@ -144,7 +151,7 @@ export function createExpeditionDomain(seed: number) {
       state.phase = "caught";
       state.fate = "caught";
       addChronicle(`${monsterName} found the quiet between your footsteps.`);
-      invalidateSnapshot();
+      invalidateIndex();
       return snapshot();
     },
     advanceBuilding() {
@@ -172,13 +179,13 @@ export function createExpeditionDomain(seed: number) {
       state.phase = "delving";
       state.fate = "alive";
       addChronicle("Another lift opened. The Index remembered.");
-      invalidateSnapshot();
+      invalidateIndex();
       return snapshot();
     },
     reset() {
       runNumber = 1;
       state = initialState(seed, runNumber);
-      invalidateSnapshot();
+      invalidateIndex();
       return snapshot();
     },
     load(next: ExpeditionSnapshot) {
@@ -189,7 +196,7 @@ export function createExpeditionDomain(seed: number) {
       };
       const suffix = Number(next.runId.split("-").at(-1));
       runNumber = Number.isFinite(suffix) ? suffix : runNumber;
-      invalidateSnapshot();
+      invalidateIndex();
       return snapshot();
     },
   } as const;

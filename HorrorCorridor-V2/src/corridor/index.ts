@@ -77,7 +77,7 @@ export function createCorridorDomain(
         state.illumination.greenShift = 0.88;
         state.beam.active = false;
         state.beam.contact = false;
-        return snapshot();
+        return;
       }
 
       state.illumination.nextFlickerMs -= deltaMs;
@@ -90,17 +90,15 @@ export function createCorridorDomain(
       const flicker = state.illumination.mode === "flicker";
       state.illumination.intensity = flicker ? random.between(0.22, 0.62) : 0.78;
       state.illumination.greenShift = flicker ? random.between(0.48, 0.78) : 0.18;
-      return snapshot();
+      return;
     },
     setBeam(active: boolean, contact: boolean) {
       state.beam.active = active;
       state.beam.contact = active && contact;
-      return snapshot();
     },
     setAcousticCue(pan: number, strength: number) {
       state.acoustics.cuePan = clamp(pan, -1, 1);
       state.acoustics.cueStrength = clamp(strength, 0, 1);
-      return snapshot();
     },
     openOffering(buildingNumber: number) {
       state.offering = offeringForBuilding(buildingNumber);

@@ -29,6 +29,8 @@
 - The internal preview is Vite-development-only, starts no gameplay/network/persistence services, and uses the shared prefab registry with four clean player-view cameras.
 - Streamed Three.js segments are retained by index across overlapping windows; only departing segments and the small active overlay are rebuilt.
 - Read-only semantic queries log timing without rendering. Step-driven proofs use the snapshot returned by the step call instead of polling and rendering again.
+- Encounter pacing is isolated in `src/dread/encounterPacing.ts`: Building 1 keeps a 90m opening safety window, while later buildings use a deterministic non-flat spacing profile without changing the Dread snapshot contract.
+- Expedition snapshots reuse the cloned Monster Index until an index mutation; per-tick movement still invalidates scalar snapshots, but no longer reclones all 124 entries every frame.
 
 ## Proof Baseline
 

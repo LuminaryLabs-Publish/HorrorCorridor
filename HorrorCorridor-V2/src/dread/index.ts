@@ -2,9 +2,7 @@ import type { DreadSnapshot, MonsterId } from "../contracts";
 import type { DeterministicRandom } from "../composition/determinism";
 import { clamp, normalizeAngle } from "../composition/determinism";
 import { monsterForBuilding, MONSTERS_BY_ID, type MonsterProfile } from "../content/monsters";
-
-const OPENING_SAFE_DISTANCE_METERS = 90;
-const LATER_SAFE_DISTANCE_METERS = 55;
+import { encounterSafeDistance } from "./encounterPacing";
 
 export type DreadOutcome =
   | Readonly<{ type: "encounter-started"; monster: MonsterProfile }>
@@ -76,7 +74,7 @@ export function createDreadDomain(random: DeterministicRandom) {
       const outcomes: DreadOutcome[] = [];
       const deltaSeconds = input.deltaMs / 1_000;
 
-      const safeDistance = input.buildingNumber === 1 ? OPENING_SAFE_DISTANCE_METERS : LATER_SAFE_DISTANCE_METERS;
+      const safeDistance = encounterSafeDistance(input.buildingNumber);
       if (
         (state.phase === "dormant" || state.phase === "resolved") &&
         input.distanceSinceEncounter >= safeDistance

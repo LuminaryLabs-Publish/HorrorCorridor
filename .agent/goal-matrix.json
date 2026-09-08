@@ -1,0 +1,22 @@
+{
+  "id": "horror-corridor-v2-improvement",
+  "mission": "Clean up and deepen HorrorCorridor without breaking the playable loop.",
+  "lifecycle": "active",
+  "layers": [
+    {"id":"player-experience","layer":"intent","owner":"Expedition","outcome":"ten-minute route has readable apprehension, response, collection, and recovery"},
+    {"id":"natural-domains","layer":"domain","owner":"composition","outcome":"Expedition, Corridor, Party, Dread, and Shared Expedition remain bounded"},
+    {"id":"encounter-pacing","layer":"capability","owner":"Dread","outcome":"opening safety and later encounter spacing vary deterministically"},
+    {"id":"pacing-profile","layer":"service","owner":"Dread","outcome":"encounterSafeDistance is pure, deterministic, and covered by runtime proof"},
+    {"id":"route-cohesion","layer":"proof","owner":"composition","outcome":"new spacing preserves exploration, offering, and restart flow"},
+    {"id":"promotion","layer":"proof","owner":"release","outcome":"typecheck, lint, runtime, content routing, and live proof remain green"}
+  ],
+  "routes": [
+    {"from":"player-experience","to":"natural-domains","condition":"intent names an ownerable domain","reason":"keep cleanup domain-first"},
+    {"from":"natural-domains","to":"encounter-pacing","condition":"Dread owns threat timing","reason":"target the highest-value pacing gap"},
+    {"from":"encounter-pacing","to":"pacing-profile","condition":"behavior can be isolated without snapshot changes","reason":"small safe implementation"},
+    {"from":"pacing-profile","to":"route-cohesion","condition":"focused runtime proof passes","reason":"check neighboring beats"},
+    {"from":"route-cohesion","to":"promotion","condition":"cohesion evidence passes","reason":"milestone gate"}
+  ],
+  "activeLeaf":"pacing-profile",
+  "acceptance":["first building remains safe for 90m","later spacing is deterministic and non-flat","runtime contracts remain unchanged","existing proofs pass"]
+}
