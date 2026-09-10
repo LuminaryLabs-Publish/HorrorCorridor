@@ -1,5 +1,11 @@
 # Goal
 
+## Active overhaul — 2026-09-10
+
+Implement the complete `docs/sequence-overhaul/plan.md`, preserve original work, validate outcomes and then safely push to the repository's actual default branch. Current status: in progress, not release-ready, not pushed. `docs/sequence-overhaul/checkpoint.md` is the current implementation/evidence record. Six repeated greybox places do not satisfy the eight-hour campaign objective.
+
+The following requirements and status describe the prior V2 milestone. Historical passing reports must not be presented as fresh root-overhaul acceptance.
+
 ## Requirements
 
 - Keep V1 runnable and unchanged as a reference.

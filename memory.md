@@ -6,6 +6,8 @@ HorrorCorridor is an endless first-person horror expedition. Monsters are collec
 
 ## Active Shape
 
+The authorized September overhaul is in progress on `codex/horror-sequence-overhaul`. The root Next.js host is a candidate using Nexus commit `a74e8689d1a71c0b42236c009f0f4c46e9b89387`, new `/2` schemas and six composed greybox places. It is not promoted. See `docs/sequence-overhaul/checkpoint.md` for verified evidence and remaining gates. The following V2 facts describe the preserved product baseline, not the new candidate.
+
 - `HorrorCorridor-V2` is active.
 - `HorrorCorridor-V1` is a preserved runnable reference and must not become a V2 runtime dependency.
 - V2 uses Vite as a game-authoring host, React for game UI, Three.js for presentation, and NexusEngine for explicit authoritative composition.

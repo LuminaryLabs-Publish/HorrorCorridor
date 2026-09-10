@@ -1,0 +1,36 @@
+{
+  "name": "horror-corridor",
+  "version": "0.2.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "next dev --hostname 127.0.0.1 --port 4173",
+    "build": "next build",
+    "start": "next start --hostname 127.0.0.1 --port 4173",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint src app scripts",
+    "proof:nexus": "npm --prefix tools/nexus-migration run proof",
+    "proof:runtime": "tsx scripts/prove-runtime.ts",
+    "preserve": "node scripts/overhaul-preservation.mjs"
+  },
+  "dependencies": {
+    "next": "16.3.4",
+    "nexusengine": "https://github.com/LuminaryLabs-Dev/NexusEngine/archive/a74e8689d1a71c0b42236c009f0f4c46e9b89387.tar.gz",
+    "peerjs": "1.5.5",
+    "react": "19.2.7",
+    "react-dom": "19.2.7",
+    "three": "0.185.1"
+  },
+  "devDependencies": {
+    "@eslint/js": "10.0.1",
+    "@types/node": "^25.0.0",
+    "@types/react": "^19.2.0",
+    "@types/react-dom": "^19.2.0",
+    "@types/three": "^0.185.0",
+    "eslint": "10.0.1",
+    "playwright": "1.61.1",
+    "tsx": "4.23.1",
+    "typescript": "6.0.3",
+    "typescript-eslint": "8.64.0"
+  }
+}

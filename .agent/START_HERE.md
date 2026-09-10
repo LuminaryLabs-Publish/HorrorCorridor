@@ -1,5 +1,11 @@
 # HorrorCorridor START HERE
 
+## Current checkpoint — 2026-09-10
+
+The root Next.js sequence overhaul is an **unreleased candidate**, not the completed game. Read [the current implementation checkpoint](../docs/sequence-overhaul/checkpoint.md) and [authorized plan](../docs/sequence-overhaul/plan.md) first. V2 remains the prior product baseline; V1 is preserved reference material. Do not use the historical census below as the current candidate's runtime graph or readiness evidence.
+
+## Historical July audit (retained for provenance)
+
 **Repository:** `LuminaryLabs-Publish/HorrorCorridor`  
 **Branch:** `main`  
 **Updated:** `2026-07-18T04-41-15-04-00`  

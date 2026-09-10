@@ -1,0 +1,11 @@
+{
+  "name": "horror-corridor-nexus-migration",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Isolated consumer gate; never imported by V1 or V2.",
+  "scripts": { "proof": "node prove.mjs" },
+  "dependencies": {
+    "nexusengine": "https://github.com/LuminaryLabs-Dev/NexusEngine/archive/a74e8689d1a71c0b42236c009f0f4c46e9b89387.tar.gz"
+  }
+}
