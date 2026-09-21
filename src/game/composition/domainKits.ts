@@ -4,6 +4,8 @@ import type { DreadDomain } from "../domains/dread/index";
 import type { ExpeditionDomain } from "../domains/expedition/index";
 import type { PartyDomain } from "../domains/party/index";
 import type { SharedExpeditionDomain } from "../domains/shared-expedition/index";
+import type { PlaceResidencyService } from "../domains/corridor/places";
+import type { PresentationService } from "../domains/presentation";
 
 export const HORROR_CORRIDOR_ROOT_DOMAIN = "n:horror-corridor-v2";
 export const DOMAIN_PATHS = Object.freeze({
@@ -20,16 +22,32 @@ export type HorrorCorridorDomainControllers = Readonly<{
   party: PartyDomain;
   dread: DreadDomain;
   sharedExpedition: SharedExpeditionDomain;
+  presentation: PresentationService;
 }>;
 
 export function createHorrorCorridorDomainKits(controllers: HorrorCorridorDomainControllers,composed=false): readonly NexusRuntimeKit[] {
   return Object.freeze([
+    defineDomainServiceKit({
+      id: "horror-corridor-presentation-dsk",
+      domain: "presentation",
+      domainPath: `${HORROR_CORRIDOR_ROOT_DOMAIN}:presentation`,
+      provides: ["horror-corridor:presentation"],
+      requires: [HORROR_CORRIDOR_ROOT_DOMAIN],
+      parentDomainPath: HORROR_CORRIDOR_ROOT_DOMAIN,
+      apiName: "horrorCorridorPresentation",
+      services: ["screen", "objective", "hud", "actions"],
+      stability: "project",
+      version: "1.0.0",
+      inputs: ["domain-snapshot"],
+      outputs: ["presentation-descriptor"],
+      createApi: (): PresentationService => controllers.presentation,
+    }),
     ...(composed?[defineDomainServiceKit({
       id:"horror-corridor-place-residency-kit",domain:"places",
       domainPath:`${DOMAIN_PATHS.corridor}:places`,parentDomainPath:DOMAIN_PATHS.corridor,
       requires:[DOMAIN_PATHS.corridor],provides:["horror-corridor:place-residency"],
       apiName:"horrorCorridorPlaces",version:"1.0.0",stability:"project",
-      createApi:()=>controllers.corridor.places,
+      createApi:():PlaceResidencyService=>controllers.corridor.places,
     }),defineDomainServiceKit({
       id:"horror-corridor-place-experience-kit",domain:"experience",
       domainPath:`${DOMAIN_PATHS.expedition}:experience`,parentDomainPath:DOMAIN_PATHS.expedition,

@@ -236,18 +236,40 @@ button { color: inherit; }
 .sound-left .sound-left, .sound-right .sound-right { opacity: 1; color: var(--acid); }
 .sound-ahead p { color: var(--acid); text-shadow: 0 0 12px rgba(130, 244, 171, 0.65); }
 
+.game-objective {
+  position: absolute;
+  z-index: 5;
+  left: 50%;
+  bottom: 4.15rem;
+  width: min(560px, calc(100% - 3rem));
+  transform: translateX(-50%);
+  display: grid;
+  gap: 0.28rem;
+  text-align: center;
+  pointer-events: none;
+  text-shadow: 0 2px 12px #000;
+}
+.game-objective strong {
+  color: #dce8df;
+  font-size: clamp(0.72rem, 1.4vw, 0.9rem);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+.game-objective span { color: #a8b7ad; font-family: Georgia, serif; font-size: 0.88rem; }
+.game-objective b { color: var(--acid); font-size: 0.68rem; letter-spacing: 0.14em; text-transform: uppercase; }
+.game-objective.urgency-urgent strong { color: #e7baa9; }
+
 .encounter-message {
   position: absolute;
   z-index: 5;
-  bottom: 2rem;
+  bottom: 1.35rem;
   left: 50%;
   width: min(620px, calc(100% - 3rem));
   transform: translateX(-50%);
   text-align: center;
   pointer-events: none;
 }
-.encounter-message p { margin: 0; color: #c9d2cc; font-family: Georgia, serif; font-size: clamp(0.88rem, 1.8vw, 1.08rem); text-shadow: 0 2px 8px #000; }
-.encounter-message strong { display: block; margin-top: 0.45rem; color: #a8ffbf; font-size: 0.68rem; letter-spacing: 0.16em; text-transform: uppercase; }
+.encounter-message p { margin: 0; color: #829188; font-family: Georgia, serif; font-size: 0.75rem; text-shadow: 0 2px 8px #000; }
 
 .flashlight-state {
   position: absolute;

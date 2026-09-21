@@ -6,7 +6,7 @@ import {
   type CorridorContentRoutingService,
 } from "../../../content/corridorContentRouting";
 import { offeringForBuilding } from "../../../content/offerings";
-import {createPlaceResidency} from "./places";
+import type {PlaceResidencyService} from "./places";
 
 type CorridorState = {
   buildingId: string;
@@ -49,11 +49,11 @@ export function createCorridorDomain(
   seed: number,
   random: DeterministicRandom,
   contentRouting: CorridorContentRoutingService = CORRIDOR_CONTENT_ROUTING,
+  places: PlaceResidencyService,
   composed = false,
 ) {
   const initialRandomState = random.state();
   let state = initialState(seed);
-  const places=createPlaceResidency();
 
   const snapshot = (): CorridorSnapshot => ({
     ...state,

@@ -2,7 +2,7 @@
 
 ## Active overhaul — 2026-09-10
 
-Implement the complete `docs/sequence-overhaul/plan.md`, preserve original work, validate outcomes and then safely push to the repository's actual default branch. Current status: in progress, not release-ready, not pushed. `docs/sequence-overhaul/checkpoint.md` is the current implementation/evidence record. Six repeated greybox places do not satisfy the eight-hour campaign objective.
+Implement the complete `docs/sequence-overhaul/plan.md`, preserve original work and validate outcomes. The user authorized publishing the current root-app development baseline to main and creating a Drive handoff. Full release remains unfinished. `docs/sequence-overhaul/checkpoint.md` is the implementation/evidence record. Generated corridor extent does not satisfy the eight-hour campaign objective. Next: corridor continuity, residency and long-run validation.
 
 The following requirements and status describe the prior V2 milestone. Historical passing reports must not be presented as fresh root-overhaul acceptance.
 

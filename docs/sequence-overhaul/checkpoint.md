@@ -1,6 +1,6 @@
 # Sequence overhaul checkpoint
 
-Updated: 2026-09-10. Status: **in progress; not approved for main**.
+Updated: 2026-09-20. Status: **development baseline authorized for main; full game remains in progress**.
 
 The authorized scope is [the complete plan](./plan.md). This checkpoint is not a reduced replacement scope. No final release or eight-hour completion is claimed.
 
@@ -9,7 +9,8 @@ The authorized scope is [the complete plan](./plan.md). This checkpoint is not a
 - Root Next.js candidate: `npm ci`, `npm run dev` (localhost:4173).
 - Browser-free domain runtime under `src/game`; the browser selects `worldMode: "composed"`.
 - Nexus pinned to `a74e8689d1a71c0b42236c009f0f4c46e9b89387`; public import consumer proof in `tools/nexus-migration`.
-- Six connected greybox definitions: arrival, maintenance passage, tavern, service connector, laundry, recovery. Total unique section length: **256m**. These repeat; repetition is not additional authored campaign coverage.
+- One seeded `base-corridor` grammar replaces the six fixed active environments. Geometry, fixtures, clues and encounter roles vary by seed/index. **256m is the composed traversal proof distance, not a route cap.** Lighting/materials still use renderer conventions; full variation and authored campaign coverage remain unfinished.
+- Composition injects Corridor's place-residency service. Residency retains previous/current/next places and may additionally retain the threat's place. Presentation maps snapshots to screen/HUD/objective descriptors.
 - Shared placement definitions drive room geometry, fixture collision and navigation. Stable definition/instance IDs, bounded neighboring residency, pure Nexus A* path queries and passage sequence checkpoints are implemented.
 - Difficulty filters water encounters out of dry locations, tunes response windows and avoids recent families. This is not the full eligibility contract.
 - Root save/network/snapshot schemas use `/2`; V2 `/1` data is not silently imported.
@@ -24,6 +25,15 @@ The authorized scope is [the complete plan](./plan.md). This checkpoint is not a
 - Latest root `npm run lint`, `npm run typecheck`, `npm run proof:runtime` and `npm run build` passed after residency-key and stale-snapshot fixes. The runtime proof does not replace real multiplayer recovery proof.
 - Browser startup and movement/left/right captures produced no page errors. Local images are under `artifacts/overhaul/greybox-reviewed/`. This is a greybox inspection, not final visual, audible or performance acceptance.
 - V1/V2 tracked source remains unchanged.
+
+### Publication validation — 2026-09-20
+
+- TypeScript, ESLint, runtime proof, Nexus consumer proof, production build and diff whitespace checks passed on the publication candidate.
+- Fresh Playwright captures are local under `artifacts/publish-review/`: spawn, movement, left/right, warning, capture and restart. Traversal reached 106m across generated places. Browser capture/restart completed with no page errors.
+- Human inspection finds readable floor/wall separation, route markers and primitive fixtures. This is limited greybox acceptance; the supporting image metric failed its brightness threshold (63.87% dark, 8.45% readable pixels). Final lighting and visual quality are not accepted.
+- WebAudio unlocked and reported a running context and encounter cue. Audible recording/listening and sound-mix acceptance remain unverified. Semantic stepping proves state transitions, not real-time performance.
+- Outgoing files were checked for common credential patterns and private-key markers with no matches. This is a bounded source review, not a complete security audit. PeerJS message admission/payload validation and malformed-save handling remain hardening work; multiplayer is experimental.
+- No GitHub Actions workflows are configured. Local proof is the available validation authority for this development baseline.
 
 ## Preservation
 
@@ -44,7 +54,7 @@ The authorized scope is [the complete plan](./plan.md). This checkpoint is not a
 | Freeze | Source baseline and dirty patches preserved; prove complete restore before cleanup. |
 | Nexus migration | Consumer/reference checks pass; full gameplay adapters and complete ownership graph still need reconciliation. |
 | Domain ownership | Five owners and two stateful subservices exist; legacy behavior wrappers/renderer remain to be decomposed. |
-| Place compositions | Six prototype places; connector is straight and laundry is not yet a functional water environment. |
+| Place compositions | Generated straight corridors; alcoves, reconnecting side routes, richer affordances and difficulty-shaped variation remain. |
 | Greybox | Main route passes; every room activity, side exploration, fixture interaction and player-view gate remains. |
 | Sequences | Place readiness/entry/departure checkpoint exists; warning, response, reward, cancellation and authority handoff sequences remain. |
 | Difficulty | Initial filtering exists; clearance, affordance combinations, threat budgets and fallback proofs remain. |
@@ -52,10 +62,10 @@ The authorized scope is [the complete plan](./plan.md). This checkpoint is not a
 | Model replacement | Presentation IDs exist; asset/model sockets, bounds, collision and animation parity gates remain. |
 | Next host | Boots/builds; startup cleanup, atomic malformed-save rejection, real host/client recovery and browser lifecycle checks remain. |
 | Authoring | Root has preview pieces and compatible semantic controls; existing MCP/proof manager has not been migrated to the new root authority. Do not start a second MCP. |
-| Campaign | Six repeated prototypes, not eight hours. Authored chapters, distinctive encounters, activities, pacing, finale and fresh full-run evidence remain. |
+| Campaign | Generated route extent is not authored campaign coverage. Chapters, distinctive encounters, activities, pacing, finale and full-run evidence remain. |
 | Final presentation | Final models, animation, particles, audio mix, accessibility and agreed hardware performance acceptance remain. |
-| Promotion | Full release gates, default-branch refresh, selective commit review, merge, non-force push and remote/CI verification remain. |
+| Promotion | This publication is a development baseline. Full campaign, visual/audio, multiplayer and performance release gates remain. |
 
 ## Next action
 
-Complete and prove the first composed place encounter end-to-end through the existing authoring/harness workflow, including model-swap contracts and fresh rendered/audio evidence. Keep changes bounded to that slice before expanding content. Do not publish this checkpoint as completion of the full plan.
+Review corridor continuity and residency across several seeds, including backward movement, seams, threat retention and long-run lookup cost. Then finish encounter presentation/audio evidence through the existing harness. Keep work bounded before expanding content. This checkpoint does not claim completion of the full plan.

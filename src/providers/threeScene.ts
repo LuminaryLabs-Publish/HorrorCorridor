@@ -1,5 +1,4 @@
 import * as THREE from "three";
-import {ENVIRONMENT_BY_ID} from "../content/environments/definitions";
 import type { HorrorCorridorV2Snapshot } from "../game/contracts";
 import {
   CORRIDOR_DISTRICTS,
@@ -2251,8 +2250,8 @@ export function createThreeSceneAdapter(
       for(const place of places.instances){
         if(segmentGroups.has(place.index))continue;
         const before=new Set(world.children);
-        const definition=ENVIRONMENT_BY_ID[place.definitionId];
-        const district=definition.id==="flooded-laundry"?CORRIDOR_DISTRICTS[3]:definition.id==="tavern"?CORRIDOR_DISTRICTS[1]:CORRIDOR_DISTRICTS[0];
+        const definition=place.definition;
+        const district=districtForSegment(place.index);
         const materials=createMaterials(district);
         const z=(place.entryZ+place.exitZ)/2;
         addBox(`${place.id}:floor`,[0,-0.15,z],[definition.width,0.3,definition.length],materials.floor,{cast:false});

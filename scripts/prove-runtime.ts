@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import {ENVIRONMENTS,SECTION_LENGTH} from "../src/content/environments/definitions";
+import {createCorridorDefinition,GENERATED_PROOF_DISTANCE_METERS} from "../src/content/environments/definitions";
 import {createPlaceResidency,instanceAt} from "../src/game/domains/corridor/places";
 import {selectEncounter} from "../src/game/domains/dread/encounterSelection";
 import { createHorrorCorridorV2 } from "../src/game/composition/createHorrorCorridorV2";
@@ -138,7 +138,11 @@ function proveIndependentDomainResets(): void {
   expedition.reset();
   assert.equal(deterministicDigest(expedition.snapshot()), expeditionInitial);
 
-  const corridor = createCorridorDomain(202, createDeterministicRandom(303));
+  const places = createPlaceResidency();
+  const corridor = createCorridorDomain(202, createDeterministicRandom(303), undefined, places);
+  const composedPlaces = createPlaceResidency();
+  const composedCorridor = createCorridorDomain(202, createDeterministicRandom(303), undefined, composedPlaces, true);
+  assert.deepEqual(composedCorridor.snapshot().places, composedPlaces.snapshot(), "Corridor must consume the injected place service.");
   const corridorInitial = deterministicDigest(corridor.snapshot());
   assert.equal(corridor.resolveMotion({ x: 0, y: 1.68, z: -10_000 }).z, -10_000);
   corridor.step(3_200, false);
@@ -190,7 +194,7 @@ function proveCorridorContentRouting(): Readonly<{ methods: readonly string[]; g
   assert.strictEqual(routing.routeGenerator(contexts[0]), routing.routeGenerator(contexts[0]));
   assert.strictEqual(routing.routeServiceDoor(contexts[1]), routing.routeServiceDoor(contexts[1]));
 
-  const corridor = createCorridorDomain(202, createDeterministicRandom(303), routing);
+  const corridor = createCorridorDomain(202, createDeterministicRandom(303), routing, createPlaceResidency());
   assert.strictEqual(corridor.routeGenerator(contexts[0]), routing.routeGenerator(contexts[0]));
   assert.strictEqual(corridor.routeServiceDoor(contexts[1]), routing.routeServiceDoor(contexts[1]));
 
@@ -235,7 +239,7 @@ function proveContentDepth(): Readonly<{ monsters: number; families: number; sen
   const walkMinutes = meters / 3.05 / 60;
   assert(walkMinutes >= WALKABLE_CONTENT_MINUTES);
 
-  const walkingCorridor = createCorridorDomain(707, createDeterministicRandom(808));
+  const walkingCorridor = createCorridorDomain(707, createDeterministicRandom(808), undefined, createPlaceResidency());
   const walkingParty = createPartyDomain("ten-minute-walker");
   let simulatedWalkMeters = 0;
   for (let frame = 0; frame < WALKABLE_CONTENT_MINUTES * 60 * 60; frame += 1) {
@@ -266,13 +270,23 @@ function proveContentDepth(): Readonly<{ monsters: number; families: number; sen
   return { monsters: MONSTER_PROFILES.length, families: MONSTER_FAMILY_COUNT, sensoryAudioMotifs: sensoryPlans.length, districts: districtCount, setPieces: setPieceCount, meters, walkMinutes, simulatedWalkMeters };
 }
 
+function proveGeneratedCorridorVariation(): void {
+  const first = Array.from({ length: 12 }, (_, index) => createCorridorDefinition(101, index));
+  const repeat = Array.from({ length: 12 }, (_, index) => createCorridorDefinition(101, index));
+  const alternate = Array.from({ length: 12 }, (_, index) => createCorridorDefinition(202, index));
+  assert.deepEqual(first, repeat, "Generated corridors must be deterministic for the same seed.");
+  assert.notDeepEqual(first, alternate, "Different route seeds must produce varied corridors.");
+  assert(new Set(first.map((definition) => definition.length)).size > 1, "Generated corridors must vary in length.");
+  assert(new Set(first.map((definition) => definition.width)).size > 1, "Generated corridors must vary in width.");
+}
+
 async function proveComposedSlice():Promise<void> {
   const places=createPlaceResidency();
-  for(let i=0;i<ENVIRONMENTS.length*3;i++){
+  for(let i=0;i<96;i++){
     assert.equal(instanceAt(i).exitZ,instanceAt(i+1).entryZ);
   }
   let position={x:0,y:1.68,z:4};
-  while(position.z>4-SECTION_LENGTH){
+  while(position.z>4-GENERATED_PROOF_DISTANCE_METERS){
     const proposed={...position,z:position.z-0.05};
     const next=places.resolve(proposed,position);
     assert.notEqual(next.z,position.z,"Greybox main route must not block");
@@ -327,6 +341,7 @@ async function main(): Promise<void> {
   proveIndependentDomainResets();
   const contentRouting = proveCorridorContentRouting();
   const content = proveContentDepth();
+  proveGeneratedCorridorVariation();
   const runtime = createHorrorCorridorV2({ seed: "proof-expedition", adapters: { persistence } });
   const developmentRuntime = createHorrorCorridorV2({ seed: "proof-development", development: true });
 
@@ -387,7 +402,7 @@ async function main(): Promise<void> {
   runtime.dispose();
   console.log(JSON.stringify({
     ok: true,
-    composedSlice:{environmentDefinitions:ENVIRONMENTS.length,sectionMeters:SECTION_LENGTH,proofs:["connectors","main-route-collision","bounded-residency","eligible-selection","spatial-stalker","pause","sign-approach-blackout-last-chance-resume","collection","offering-continuity","retained-index"],campaignComplete:false},
+    composedSlice:{corridorGrammar:"base-corridor",proofDistanceMeters:GENERATED_PROOF_DISTANCE_METERS,proofs:["connectors","main-route-collision","bounded-residency","eligible-selection","spatial-stalker","pause","sign-approach-blackout-last-chance-resume","collection","offering-continuity","retained-index"],campaignComplete:false},
     shippingCoreKits: 10,
     developmentCoreKits: 10,
     explicitShippingGraph: runtime.diagnostics().explicitKitCount,
@@ -408,6 +423,7 @@ async function main(): Promise<void> {
       "ten-minute-authored-route-horizon",
       "more-than-120-monster-manifestations",
       "corridor-owned-additive-content-routing",
+      "deterministic-generated-corridor-variation",
     ],
   }, null, 2));
 }

@@ -15,11 +15,13 @@ import {
   type SemanticInput,
 } from "../contracts";
 import { createCorridorDomain } from "../domains/corridor/index";
+import { createPlaceResidency } from "../domains/corridor/places";
 import { createCorridorContentRoutingService } from "../../content/corridorContentRouting";
 import { createDreadDomain } from "../domains/dread/index";
 import { createExpeditionDomain } from "../domains/expedition/index";
 import { createPartyDomain } from "../domains/party/index";
 import { createSharedExpeditionDomain } from "../domains/shared-expedition/index";
+import { createPresentationService } from "../domains/presentation";
 import { createHorrorCorridorBehaviorKits, createHorrorCorridorRootKit } from "./behaviorKits";
 import { createHorrorCorridorDomainKits, DOMAIN_PATHS } from "./domainKits";
 import {
@@ -51,11 +53,13 @@ export function createHorrorCorridorV2(options: HorrorCorridorV2Options = {}): H
   const experience=options.worldMode==="composed"?createPlaceExperience(()=>nexus.engine.sequenceNodeRuntime):undefined;
   const expedition = createExpeditionDomain(seed,experience,options.difficulty);
   const corridorContentRouting = createCorridorContentRoutingService();
-  const corridor = createCorridorDomain(seed, corridorRandom, corridorContentRouting,options.worldMode==="composed");
+  const placeResidency = createPlaceResidency(seed);
+  const corridor = createCorridorDomain(seed, corridorRandom, corridorContentRouting, placeResidency, options.worldMode==="composed");
   const party = createPartyDomain(explorerId);
   const dread = createDreadDomain(dreadRandom,options.worldMode==="composed"?(start,goal)=>nexus.findPath(corridor.places.navigationGrid(start,goal),start,goal):undefined);
   const sharedExpedition = createSharedExpeditionDomain(seed, mode, options.roomCode);
-  const controllers = { expedition, corridor, party, dread, sharedExpedition } as const;
+  const presentation = createPresentationService();
+  const controllers = { expedition, corridor, party, dread, sharedExpedition, presentation } as const;
 
   const domainKits = createHorrorCorridorDomainKits(controllers,options.worldMode==="composed");
   const behaviorKits = createHorrorCorridorBehaviorKits(controllers);

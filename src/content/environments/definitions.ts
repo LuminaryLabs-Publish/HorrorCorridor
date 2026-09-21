@@ -1,59 +1,92 @@
-/** Semantic geometry is authoritative; greybox and model bindings consume it. */
+/** Generated corridor geometry is authoritative; presentation consumes it. */
 export type EnvironmentDefinition = Readonly<{
-  id: string; version: 1; title: string;
-  role: "safe" | "investigation" | "threat" | "recovery";
-  length: number; width: number; height: number;
+  id: string;
+  version: 1;
+  title: string;
+  role: "investigation" | "threat";
+  length: number;
+  width: number;
+  height: number;
   entrance: Readonly<{ width: number; floorY: 0 }>;
   exit: Readonly<{ width: number; floorY: 0 }>;
   presentation: Readonly<{ greybox: string; model: string | null }>;
-  fixtures: readonly Readonly<{id:string;x:number;z:number;width:number;depth:number;height:number}>[];
+  fixtures: readonly Readonly<{ id: string; x: number; z: number; width: number; depth: number; height: number }>[];
   clue: string;
 }>;
 
-function place(id:string,title:string,role:EnvironmentDefinition["role"],length:number,width:number,
-  fixtures:EnvironmentDefinition["fixtures"],clue:string):EnvironmentDefinition {
-  return Object.freeze({id,version:1,title,role,length,width,height:3.8,
-    entrance:Object.freeze({width:3,floorY:0}),exit:Object.freeze({width:3,floorY:0}),
-    presentation:Object.freeze({greybox:`${id}:greybox/1`,model:null}),
-    fixtures:Object.freeze(fixtures.map(f=>Object.freeze(f))),clue});
+export const BASE_CORRIDOR_ID = "base-corridor" as const;
+export const DEFAULT_ROUTE_SEED = 0x48435632;
+export const GENERATED_PROOF_DISTANCE_METERS = 256;
+
+const LENGTHS = [24, 32, 40] as const;
+const WIDTHS = [6.4, 7.2, 8.4] as const;
+const CLUES = [
+  "The corridor carries every sound forward. Keep your footsteps moving.",
+  "A light waits somewhere ahead. Do not mistake silence for safety.",
+  "The walls change before the route does. Listen for the seam.",
+] as const;
+
+function hash(routeSeed: number, index: number): number {
+  let value = (routeSeed ^ Math.imul(index + 1, 0x9e3779b1)) >>> 0;
+  value ^= value >>> 16;
+  value = Math.imul(value, 0x21f0aaad) >>> 0;
+  value ^= value >>> 15;
+  return value >>> 0;
 }
 
-export const ENVIRONMENTS:readonly EnvironmentDefinition[] = Object.freeze([
-  place("safe-arrival","The Last Working Lift","safe",32,7.2,[],
-    "Listen here. There is no pursuit inside the arrival shelter."),
-  place("maintenance-passage","The Service Walk","investigation",64,6.4,
-    [{id:"service-cabinet",x:-2.5,z:32,width:0.8,depth:2,height:2.1}],
-    "A warm beam buys time. When it dies, keep your footsteps moving."),
-  place("tavern","The Unattended Tavern","threat",48,10,
-    [{id:"bar",x:-3.7,z:24,width:1.2,depth:12,height:1.25},
-      {id:"partition",x:2,z:21,width:0.5,depth:6,height:2.7},
-      {id:"table",x:3.5,z:32,width:1.3,depth:1.5,height:0.9}],
-    "The footsteps can come around the partition. Listen before turning."),
-  place("service-bend","The Linen Passage","investigation",24,6.4,
-    [{id:"linen-rack",x:-2.4,z:12,width:0.8,depth:5,height:2.6}],
-    "Beyond the linen the room sounds different."),
-  place("flooded-laundry","The Drowned Washroom","threat",56,9.6,
-    [{id:"washers",x:-3.7,z:25,width:1.2,depth:12,height:1.6},
-      {id:"linen-screen",x:2,z:24,width:0.4,depth:8,height:2.5}],
-    "Water carries a warning. The floor remains passable."),
-  place("recovery-place","The Night Porter's Rest","recovery",32,7.2,
-    [{id:"bench",x:-2.5,z:16,width:0.7,depth:3,height:0.7}],
-    "Read what you survived. The onward passage stays open."),
-]);
+function fixture(id: string, x: number, z: number, width: number, depth: number, height: number) {
+  return Object.freeze({ id, x, z, width, depth, height });
+}
 
-export const ENVIRONMENT_BY_ID = Object.freeze(Object.fromEntries(ENVIRONMENTS.map(place=>[place.id,place])));
-export const SECTION_LENGTH = ENVIRONMENTS.reduce((sum,place)=>sum+place.length,0);
+export function createCorridorDefinition(routeSeed: number, index: number): EnvironmentDefinition {
+  const safeIndex = Math.max(0, Math.floor(index));
+  const value = hash(routeSeed, safeIndex);
+  const length = LENGTHS[value % LENGTHS.length];
+  const width = WIDTHS[(value >>> 3) % WIDTHS.length];
+  const height = 3.8 + ((value >>> 6) % 2) * 0.35;
+  const side = (value & 1) === 0 ? -1 : 1;
+  const outerX = width / 2 - 0.95;
+  const fixtureDepth = 1.1 + ((value >>> 9) % 3) * 0.35;
+  const fixtureWidth = 0.65 + ((value >>> 12) % 3) * 0.2;
+  const fixtures = [
+    fixture(`corridor-${safeIndex}-fixture-a`, side * outerX, length * 0.38, fixtureWidth, fixtureDepth, 1.2 + ((value >>> 15) % 3) * 0.35),
+    ...((value & 0x10) !== 0
+      ? [fixture(`corridor-${safeIndex}-fixture-b`, -side * outerX, length * 0.72, fixtureWidth, fixtureDepth + 0.25, 1.4 + ((value >>> 18) % 3) * 0.3)]
+      : []),
+  ];
+  return Object.freeze({
+    id: `${BASE_CORRIDOR_ID}-${safeIndex}`,
+    version: 1,
+    title: `Corridor ${String(safeIndex + 1).padStart(3, "0")}`,
+    role: (value & 0x20) === 0 ? "investigation" : "threat",
+    length,
+    width,
+    height,
+    entrance: Object.freeze({ width: 3, floorY: 0 as const }),
+    exit: Object.freeze({ width: 3, floorY: 0 as const }),
+    presentation: Object.freeze({ greybox: `${BASE_CORRIDOR_ID}:greybox/1`, model: null }),
+    fixtures: Object.freeze(fixtures),
+    clue: CLUES[(value >>> 21) % CLUES.length],
+  });
+}
 
-export function validateEnvironmentDefinitions():void {
-  const ids=new Set<string>();
-  for(const place of ENVIRONMENTS){
-    if(ids.has(place.id))throw new Error(`Duplicate environment ${place.id}`);
-    ids.add(place.id);
-    if(place.length<=0||place.width<place.entrance.width||place.height<2.4)throw new Error(`Invalid bounds: ${place.id}`);
-    for(const fixture of place.fixtures){
-      if(Math.abs(fixture.x)+fixture.width/2>place.width/2||fixture.z-fixture.depth/2<0||fixture.z+fixture.depth/2>place.length)
-        throw new Error(`Fixture outside ${place.id}: ${fixture.id}`);
-      if(Math.abs(fixture.x)-fixture.width/2<1.5)throw new Error(`Fixture blocks main passage: ${fixture.id}`);
-    }
+export function validateCorridorDefinition(definition: EnvironmentDefinition): void {
+  if (definition.length <= 0 || definition.width < definition.entrance.width || definition.height < 2.4) {
+    throw new Error(`Invalid generated corridor bounds: ${definition.id}`);
   }
+  const ids = new Set<string>();
+  for (const fixtureValue of definition.fixtures) {
+    if (ids.has(fixtureValue.id)) throw new Error(`Duplicate generated fixture: ${fixtureValue.id}`);
+    ids.add(fixtureValue.id);
+    if (
+      Math.abs(fixtureValue.x) + fixtureValue.width / 2 > definition.width / 2 ||
+      fixtureValue.z - fixtureValue.depth / 2 < 0 ||
+      fixtureValue.z + fixtureValue.depth / 2 > definition.length ||
+      Math.abs(fixtureValue.x) - fixtureValue.width / 2 < 1.5
+    ) throw new Error(`Generated fixture blocks or leaves corridor: ${fixtureValue.id}`);
+  }
+}
+
+export function validateCorridorGrammar(routeSeed = DEFAULT_ROUTE_SEED): void {
+  for (let index = 0; index < 96; index += 1) validateCorridorDefinition(createCorridorDefinition(routeSeed, index));
 }

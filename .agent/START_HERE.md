@@ -1,8 +1,8 @@
 # HorrorCorridor START HERE
 
-## Current checkpoint — 2026-09-10
+## Current checkpoint — 2026-09-20
 
-The root Next.js sequence overhaul is an **unreleased candidate**, not the completed game. Read [the current implementation checkpoint](../docs/sequence-overhaul/checkpoint.md) and [authorized plan](../docs/sequence-overhaul/plan.md) first. V2 remains the prior product baseline; V1 is preserved reference material. Do not use the historical census below as the current candidate's runtime graph or readiness evidence.
+The root Next.js app is the **active development baseline**, with one generated corridor grammar and presentation service. Read [the current implementation checkpoint](../docs/sequence-overhaul/checkpoint.md) and [authorized plan](../docs/sequence-overhaul/plan.md) first. V2 is the prior baseline; V1 is preserved reference material. Full campaign and release acceptance remain incomplete. Do not use the historical census below as the current runtime graph or readiness evidence.
 
 ## Historical July audit (retained for provenance)
 

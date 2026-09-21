@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import type { HorrorCorridorV2Mode, HorrorCorridorV2Runtime, HorrorCorridorV2Snapshot } from "../../game/contracts";
 import { createHorrorCorridorV2 } from "../../game/composition/createHorrorCorridorV2";
+import { createPresentationService } from "../../game/domains/presentation";
 import { MONSTER_PROFILES } from "../../content/monsters";
 import { createBrowserInputAdapter } from "../../providers/browserInput";
 import { createBrowserPersistenceAdapter } from "../../providers/persistence";
@@ -34,8 +35,19 @@ function formatTime(milliseconds: number): string {
   return `${Math.floor(totalSeconds / 60).toString().padStart(2, "0")}:${(totalSeconds % 60).toString().padStart(2, "0")}`;
 }
 
+function requestPointerLockSafely(canvas: HTMLCanvasElement): void {
+  try {
+    void canvas.requestPointerLock()?.catch(() => {
+      // Pointer lock is optional; continue without it.
+    });
+  } catch {
+    // Unsupported or denied pointer lock must not crash the game.
+  }
+}
+
 export function BrowserGame() {
   const launch = useMemo(readLaunchConfig, []);
+  const presentation = useMemo(createPresentationService, []);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const runtimeRef = useRef<HorrorCorridorV2Runtime | null>(null);
   const audioRef = useRef<SpatialAudioAdapter | null>(null);
@@ -128,7 +140,7 @@ export function BrowserGame() {
       };
       const onCanvasClick = () => {
         if (hostStopped) return;
-        if (runtime.snapshot().expedition.phase === "delving") void input.requestPointerLock();
+        if (runtime.snapshot().expedition.phase === "delving") requestPointerLockSafely(canvas);
       };
       document.addEventListener("visibilitychange", onVisibilityChange);
       canvas.addEventListener("click", onCanvasClick);
@@ -195,8 +207,14 @@ export function BrowserGame() {
     const runtime = runtimeRef.current;
     const canvas = canvasRef.current;
     if (!runtime || !canvas || !ready) return;
-    if (!navigator.webdriver) void canvas.requestPointerLock();
-    void audioRef.current?.unlock();
+    if (!navigator.webdriver) requestPointerLockSafely(canvas);
+    try {
+      void audioRef.current?.unlock().catch(() => {
+        // Audio is optional; continue without an unlocked context.
+      });
+    } catch {
+      // Unsupported or denied audio must not crash the game.
+    }
     window.setTimeout(() => {
       runtime.start();
       renderRef.current?.();
@@ -227,14 +245,15 @@ export function BrowserGame() {
   const resume = () => {
     runtimeRef.current?.dispatch({ type: "pause", paused: false });
     setSnapshot(runtimeRef.current?.snapshot() ?? null);
-    void canvasRef.current?.requestPointerLock();
+    if (canvasRef.current) requestPointerLockSafely(canvasRef.current);
   };
 
   const phase = snapshot?.expedition.phase ?? "title";
+  const presentationState = snapshot ? presentation.describe(snapshot) : null;
   const heardSide = snapshot?.dread.heardSide;
 
   return (
-    <main className={`game-shell phase-${phase}`} data-testid="horror-corridor-v2">
+    <main className={`game-shell phase-${phase} screen-${presentationState?.screen ?? "title"}`} data-testid="horror-corridor-v2">
       <canvas
         ref={canvasRef}
         className="game-canvas"
@@ -288,15 +307,15 @@ export function BrowserGame() {
         </section>
       )}
 
-      {snapshot && phase !== "title" && (
+      {snapshot && presentationState && presentationState.screen === "playing" && (
         <>
           <header className="hud-top" data-testid="game-hud">
-            <div><span>Building</span><strong>{String(snapshot.expedition.buildingNumber).padStart(2, "0")}</strong></div>
-            <div><span>Depth</span><strong>{Math.floor(snapshot.expedition.distanceMeters)}m</strong></div>
-            <div><span>Chronicle</span><strong>{Math.floor(snapshot.expedition.score)}</strong></div>
-            <div><span>Time</span><strong>{formatTime(snapshot.expedition.elapsedMs)}</strong></div>
-            {snapshot.sharedExpedition.roomCode && (
-              <div className="network-state"><span>{snapshot.sharedExpedition.connection}</span><strong>{snapshot.sharedExpedition.roomCode}</strong></div>
+            <div><span>Building</span><strong>{String(presentationState.hud.building).padStart(2, "0")}</strong></div>
+            <div><span>Depth</span><strong>{presentationState.hud.depthMeters}m</strong></div>
+            <div><span>Chronicle</span><strong>{presentationState.hud.chronicle}</strong></div>
+            <div><span>Time</span><strong>{formatTime(presentationState.hud.timeMs)}</strong></div>
+            {presentationState.hud.network && (
+              <div className="network-state"><span>Session</span><strong>{presentationState.hud.network}</strong></div>
             )}
           </header>
 
@@ -318,9 +337,13 @@ export function BrowserGame() {
             </div>
           )}
           <div className="dread-vignette" style={{ "--threat": snapshot.dread.threat } as React.CSSProperties} />
+          <div className={`game-objective urgency-${presentationState.objective.urgency}`} data-testid="game-objective">
+            <strong>{presentationState.objective.title}</strong>
+            <span>{presentationState.objective.instruction}</span>
+            {presentationState.threat.countdownMs !== null && <b>{(presentationState.threat.countdownMs / 1_000).toFixed(1)} seconds</b>}
+          </div>
           <div className="encounter-message" data-testid="encounter-message">
-            <p>{snapshot.dread.message}</p>
-            {snapshot.dread.phase === "last-chance" && <strong>{(snapshot.dread.lastChanceRemainingMs / 1_000).toFixed(1)} seconds</strong>}
+            <p>{presentationState.threat.message}</p>
           </div>
           <div className={`flashlight-state ${snapshot.party.flashlight.effectiveOn ? "is-on" : "is-off"}`}>
             <span /> {snapshot.dread.phase === "blackout" ? "BLACKOUT" : snapshot.party.flashlight.effectiveOn ? "BEAM LIVE" : "BEAM OFF"}
@@ -328,7 +351,7 @@ export function BrowserGame() {
         </>
       )}
 
-      {snapshot?.corridor.offering && phase === "offering" && (
+      {snapshot?.corridor.offering && presentationState?.screen === "offering" && (
         <section className="modal-card offering-card" data-testid="offering-screen">
           <p className="eyebrow">The building gives something back</p>
           <h2>{snapshot.corridor.offering.name}</h2>
@@ -339,7 +362,7 @@ export function BrowserGame() {
         </section>
       )}
 
-      {snapshot && phase === "caught" && (
+      {snapshot && presentationState?.screen === "caught" && (
         <section className="caught-screen" data-testid="caught-screen">
           <p className="eyebrow">Expedition ended</p>
           <h2>You stopped<br />listening.</h2>
@@ -348,7 +371,7 @@ export function BrowserGame() {
         </section>
       )}
 
-      {snapshot && phase === "paused" && (
+      {snapshot && presentationState?.screen === "paused" && (
         <section className="modal-card pause-card" data-testid="pause-screen">
           <p className="eyebrow">Expedition suspended</p>
           <h2>The corridor waits.</h2>
