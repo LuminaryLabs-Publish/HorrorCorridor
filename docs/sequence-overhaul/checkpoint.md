@@ -1,5 +1,13 @@
 # Sequence overhaul checkpoint
 
+## Native Quest continuation
+
+The current direction is a Nexus-authored Rust/OpenXR APK, not a PWA wrapper.
+The first native milestone remains blocked, not implemented. The existing engine
+pin and desktop runtime are unchanged. Read [the native checkpoint](./native-quest.md)
+for the real Build inspection failure, ownership constraints and resume command.
+The following publication evidence describes the earlier desktop baseline only.
+
 Updated: 2026-09-20. Status: **development baseline authorized for main; full game remains in progress**.
 
 The authorized scope is [the complete plan](./plan.md). This checkpoint is not a reduced replacement scope. No final release or eight-hour completion is claimed.

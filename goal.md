@@ -1,5 +1,18 @@
 # Goal
 
+## Active native Quest milestone
+
+Build one shared Nexus-authored game with a Rust gameplay runtime and Android
+ARM64 OpenXR APK, preserving desktop play. Keep one game source on default
+`main`; browser, Quest APK and future PCVR are build formats sharing the same
+gameplay kits and content, not separate games. First prove one rendered corridor,
+independent head/hand tracking and a complete flashlight encounter. PWA-first
+delivery is superseded. This milestone is not implemented; the engine pin stays
+unchanged until compatibility is proven. See
+[`native-quest.md`](docs/sequence-overhaul/native-quest.md) for source evidence,
+blockers and the repeatable `npm run native:inspect` preflight. Earlier milestone
+reports below remain historical and do not establish native readiness.
+
 ## Active overhaul — 2026-09-10
 
 Implement the complete `docs/sequence-overhaul/plan.md`, preserve original work and validate outcomes. The user authorized publishing the current root-app development baseline to main and creating a Drive handoff. Full release remains unfinished. `docs/sequence-overhaul/checkpoint.md` is the implementation/evidence record. Generated corridor extent does not satisfy the eight-hour campaign objective. Next: corridor continuity, residency and long-run validation.

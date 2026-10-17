@@ -11,6 +11,7 @@
     "lint": "eslint src app scripts",
     "proof:nexus": "npm --prefix tools/nexus-migration run proof",
     "proof:runtime": "tsx scripts/prove-runtime.ts",
+    "native:inspect": "node scripts/inspect-native.mjs",
     "preserve": "node scripts/overhaul-preservation.mjs"
   },
   "dependencies": {
