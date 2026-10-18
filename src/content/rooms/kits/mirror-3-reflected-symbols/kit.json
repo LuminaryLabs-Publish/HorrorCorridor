@@ -1,0 +1,23 @@
+{
+  "id": "horror-room-mirror-3-reflected-symbols-kit",
+  "domain": "n:horror-corridor-v2:room",
+  "kind": "object-assembly-kit",
+  "version": "1.0.0",
+  "family": "mirror",
+  "difficulty": 3,
+  "entry": "index.ts",
+  "requires": [
+    "n:horror-corridor-v2:room"
+  ],
+  "owns": [
+    "authored puzzle definition",
+    "object assembly",
+    "interaction rules"
+  ],
+  "doesNotOwn": [
+    "mutable player progress",
+    "rendering",
+    "capture",
+    "transport"
+  ]
+}

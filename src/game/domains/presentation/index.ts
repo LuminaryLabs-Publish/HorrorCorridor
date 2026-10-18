@@ -24,6 +24,7 @@ function objectiveFor(snapshot: HorrorCorridorV2Snapshot): GamePresentationState
   if (snapshot.expedition.phase === "title") return { title: "Enter the corridor", instruction: "Begin the expedition.", urgency: "calm" };
   if (snapshot.expedition.phase === "caught") return { title: "The expedition ended", instruction: "Return to the lift.", urgency: "calm" };
   if (snapshot.expedition.phase === "paused") return { title: "The corridor waits", instruction: "Resume when ready.", urgency: "calm" };
+  if (snapshot.room) return { title: "", instruction: "", urgency: "calm" };
   if (snapshot.expedition.phase === "offering") return { title: "The building gives something back", instruction: "Claim the offering to cross the threshold.", urgency: "calm" };
   switch (snapshot.dread.phase) {
     case "sign": return { title: "Find the sound", instruction: "Turn toward the warning.", urgency: "building" };

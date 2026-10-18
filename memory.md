@@ -6,6 +6,12 @@ HorrorCorridor is an endless first-person horror expedition. Monsters are collec
 
 ## Active Shape
 
+The active root browser now opts into the Room-domain greybox route: 50 authored
+room kits, ten families and five levels. Exit locks are an explicit later design
+change, superseding the earlier never-block-the-route rule for this mode.
+Room state and rules are game-owned; render/audio providers only realize their
+descriptors. See `docs/sequence-overhaul/room-kits.md` for fidelity limitations.
+
 The root Next.js host is the active development baseline authorized for main, using Nexus commit `a74e8689d1a71c0b42236c009f0f4c46e9b89387`, `/2` schemas, one seeded corridor grammar and a presentation service. See `docs/sequence-overhaul/checkpoint.md` for evidence and remaining release gates. The following V2 facts describe the preserved prior baseline.
 
 - `HorrorCorridor-V2` is active.

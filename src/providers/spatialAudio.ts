@@ -155,6 +155,10 @@ export function createSpatialAudioAdapter() {
   let lastCueSimulationMs = Number.NEGATIVE_INFINITY;
   let lastSimulationMs = 0;
   let cueSequence = 0;
+  let lastRoomIdentity = "";
+  let lastRoomRevision = -1;
+  let lastRoomPhase = "";
+  let lastRoomCueAt = Number.NEGATIVE_INFINITY;
   const recentCues: SpatialAudioCueRecord[] = [];
 
   const diagnostics = (): SpatialAudioDiagnostics => Object.freeze({
@@ -296,6 +300,30 @@ export function createSpatialAudioAdapter() {
         lastCueSimulationMs = Number.NEGATIVE_INFINITY;
       }
       lastSimulationMs = simulationMs;
+      if (snapshot.room) {
+        const room = snapshot.room;
+        const identity = `${room.index}:${room.kitId}`;
+        if (identity !== lastRoomIdentity) { lastRoomIdentity = identity; lastRoomRevision = room.revision; lastRoomPhase = room.phase; lastRoomCueAt = Number.NEGATIVE_INFINITY; }
+        if (room.revision !== lastRoomRevision) {
+          const focused = room.objects.find(object => object.id === room.focus);
+          const frequency = focused?.soundHz ?? (room.family === "boiler" ? 75 : 180);
+          emitSystemCue(snapshot, "room-mechanism", [pulse("tone", 0, 0.16, frequency, frequency * 0.9, "triangle", 0.04, "lowpass", 1500)]);
+          lastRoomRevision = room.revision;
+        }
+        if (room.phase !== lastRoomPhase && room.phase === "opening") {
+          emitSystemCue(snapshot, "room-gate-release", [pulse("noise", 0, 0.8, 0.4, 0.2, "sine", 0.05, "lowpass", 360), pulse("tone", 0.12, 0.4, 330, 440, "sine", 0.035, "lowpass", 1000)]);
+        }
+        lastRoomPhase = room.phase;
+        if (room.family === "listening" && room.phase === "locked" && simulationMs - lastRoomCueAt >= 2800) {
+          const source = room.objects.find(object => object.id === "source");
+          if (source) {
+            const plan = room.difficulty >= 3 ? [330, 550, 440] : room.difficulty === 2 ? [330, 550] : [330];
+            const bearing = Math.atan2(snapshot.party.position.x - source.position.x, snapshot.party.position.z - source.position.z) - snapshot.party.yaw;
+            for (const [index, frequency] of plan.entries()) schedulePulse(pulse("tone", index * 0.32, 0.24, frequency, frequency, "sine", 0.045, "lowpass", 1800), Math.sin(bearing));
+          }
+          lastRoomCueAt = simulationMs;
+        }
+      }
 
       const roomBase = snapshot.corridor.acoustics.roomTone === "flooded"
         ? 39

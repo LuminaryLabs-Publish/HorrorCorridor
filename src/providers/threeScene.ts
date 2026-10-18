@@ -1,4 +1,5 @@
 import * as THREE from "three";
+import { createRoomScene } from "./roomScene";
 import type { HorrorCorridorV2Snapshot } from "../game/contracts";
 import {
   CORRIDOR_DISTRICTS,
@@ -157,6 +158,7 @@ export function createThreeSceneAdapter(
   renderer.shadowMap.type = THREE.PCFShadowMap;
 
   const scene = new THREE.Scene();
+  const roomScene = createRoomScene(scene);
   scene.background = new THREE.Color(0x020604);
   scene.fog = new THREE.Fog(0x06100c, 5.5, 43);
 
@@ -2273,7 +2275,7 @@ export function createThreeSceneAdapter(
           addBox(`${place.id}:route:${offset}`,[0,0.015,place.entryZ-offset],[0.1,0.02,0.9],materials.paper,{cast:false});
         }
         // This marker is a semantic clue anchor. The detailed model can replace it.
-        addBox(`${place.id}:clue`,[-1.2,1.2,z],[0.24,0.45,0.12],materials.paper,{cast:false});
+        if (!snapshot.room) addBox(`${place.id}:clue`,[-1.2,1.2,z],[0.24,0.45,0.12],materials.paper,{cast:false});
         segmentGroups.set(place.index,captureWorldGroup(place.id,before));
       }
       routeLight.color.setHex(0xb7c4a4);
@@ -2451,6 +2453,7 @@ export function createThreeSceneAdapter(
     const altar = world.getObjectByName("offering-altar");
     if (altar) altar.visible = Boolean(snapshot.corridor.offering);
     for (const rotor of fanRotors) rotor.rotation.z = snapshot.simTimeMs * 0.00125;
+    roomScene.update(snapshot.room, snapshot.party);
     renderer.render(scene, camera);
   };
 
@@ -2462,6 +2465,7 @@ export function createThreeSceneAdapter(
       builtWindowKey = "";
     },
     dispose() {
+      roomScene.dispose();
       if (disposed) return;
       disposed = true;
       clearWorld();

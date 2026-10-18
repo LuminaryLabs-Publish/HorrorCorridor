@@ -2,6 +2,7 @@ import type {PlacesSnapshot} from "./domains/corridor/places";
 import type {StalkerSnapshot} from "./domains/dread/stalker";
 import type {ExperienceCheckpoint} from "./sequences/placeExperience";
 import type {Difficulty} from "./domains/dread/encounterSelection";
+import type {RoomSnapshot} from "./domains/room/contracts";
 export const SNAPSHOT_SCHEMA = "horror-corridor.snapshot/2" as const;
 export const NETWORK_SCHEMA = "horror-corridor.network/2" as const;
 export const SAVE_SCHEMA = "horror-corridor.save/2" as const;
@@ -144,6 +145,7 @@ export type HorrorCorridorV2Snapshot = Readonly<{
   party: PartySnapshot;
   dread: DreadSnapshot;
   sharedExpedition: SharedExpeditionSnapshot;
+  room?: RoomSnapshot | null;
 }>;
 
 export type HorrorCorridorV2Save = Readonly<{
@@ -220,6 +222,7 @@ export type HorrorCorridorV2Options = Readonly<{
   development?: boolean;
   worldMode?: "reference" | "composed";
   difficulty?: Difficulty;
+  roomPuzzles?: boolean;
   adapters?: HorrorCorridorV2Adapters;
 }>;
 

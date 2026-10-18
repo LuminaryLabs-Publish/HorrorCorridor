@@ -22,6 +22,8 @@ import { createExpeditionDomain } from "../domains/expedition/index";
 import { createPartyDomain } from "../domains/party/index";
 import { createSharedExpeditionDomain } from "../domains/shared-expedition/index";
 import { createPresentationService } from "../domains/presentation";
+import { createRoomDomain } from "../domains/room";
+import { ROOM_DEFINITIONS, ROOM_KITS } from "../../content/rooms";
 import { createHorrorCorridorBehaviorKits, createHorrorCorridorRootKit } from "./behaviorKits";
 import { createHorrorCorridorDomainKits, DOMAIN_PATHS } from "./domainKits";
 import {
@@ -59,13 +61,16 @@ export function createHorrorCorridorV2(options: HorrorCorridorV2Options = {}): H
   const dread = createDreadDomain(dreadRandom,options.worldMode==="composed"?(start,goal)=>nexus.findPath(corridor.places.navigationGrid(start,goal),start,goal):undefined);
   const sharedExpedition = createSharedExpeditionDomain(seed, mode, options.roomCode);
   const presentation = createPresentationService();
-  const controllers = { expedition, corridor, party, dread, sharedExpedition, presentation } as const;
+  const room = options.roomPuzzles ? createRoomDomain(ROOM_DEFINITIONS) : undefined;
+  room?.observe(corridor.places.current());
+  const controllers = { expedition, corridor, party, dread, sharedExpedition, presentation, room } as const;
 
   const domainKits = createHorrorCorridorDomainKits(controllers,options.worldMode==="composed");
   const behaviorKits = createHorrorCorridorBehaviorKits(controllers);
   const explicitKits = [
     ...domainKits,
     ...behaviorKits,
+    ...(room ? ROOM_KITS.map(kit => kit.createRuntimeKit()) : []),
     createHorrorCorridorRootKit(),
   ];
   const nexus = createHorrorNexusRuntime(explicitKits);
@@ -92,6 +97,7 @@ export function createHorrorCorridorV2(options: HorrorCorridorV2Options = {}): H
       party: party.snapshot(),
       dread: dread.snapshot(),
       sharedExpedition: sharedExpedition.snapshot(),
+      ...(room ? { room: room.snapshot(party.snapshot()) } : {}),
     };
     const changedIndexEntries = Object.fromEntries(
       Object.entries(expeditionState.monsterIndex).filter(([, entry]) => (
@@ -119,14 +125,26 @@ export function createHorrorCorridorV2(options: HorrorCorridorV2Options = {}): H
     return latestSnapshot;
   };
 
+  const validateRoomSnapshot = (snapshot: HorrorCorridorV2Snapshot): void => {
+    if (!snapshot.room) return;
+    if (!room) throw new Error("This save requires room puzzles to be enabled.");
+    const places = snapshot.corridor.places;
+    const place = places?.instances.find(place => place.id === places.activeId);
+    if (!place) throw new Error("Room snapshot has no active Corridor place.");
+    // Validate the complete new Room branch before any existing owner is mutated.
+    createRoomDomain(ROOM_DEFINITIONS).load(snapshot.room, place);
+  };
+
   const applyAuthoritativeSnapshot = (snapshot: HorrorCorridorV2Snapshot): void => {
     assertSnapshot(snapshot);
     // Reject stale authority before any domain state can be changed.
     if (snapshot.sharedExpedition.revision < sharedExpedition.snapshot().revision) return;
+    validateRoomSnapshot(snapshot);
     expedition.load(snapshot.expedition);
     corridor.load(snapshot.corridor);
     party.load(snapshot.party);
     dread.load(snapshot.dread);
+    if (room && snapshot.room) room.load(snapshot.room, corridor.places.current());
     tickNumber = snapshot.tick;
     simTimeMs = snapshot.simTimeMs;
     engine.clock.frame = snapshot.tick;
@@ -205,8 +223,11 @@ export function createHorrorCorridorV2(options: HorrorCorridorV2Options = {}): H
         break;
       }
       case "interact":
-        if (corridor.snapshot().offering) claimOffering();
-        else if(options.worldMode==="composed"){
+        if (room && expedition.snapshot().phase !== "delving") break;
+        if (room && room.snapshot()?.phase !== "open") {
+          const pose = party.snapshot(); room.interact(pose.position, pose.yaw, pose.pitch);
+        } else if (corridor.snapshot().offering) claimOffering();
+        else if(options.worldMode==="composed" && !room){
           const result=corridor.places.inspect(party.snapshot().position);
           if(result?.fresh)expedition.recordDiscovery(result.text);
         }
@@ -224,6 +245,7 @@ export function createHorrorCorridorV2(options: HorrorCorridorV2Options = {}): H
         corridor.reset();
         party.reset();
         dread.reset();
+        room?.reset(); room?.observe(corridor.places.current());
         currentInput = { ...EMPTY_INPUT };
         started = true;
         break;
@@ -250,16 +272,24 @@ export function createHorrorCorridorV2(options: HorrorCorridorV2Options = {}): H
 
     if (mode !== "client") {
       const expeditionBefore = expedition.snapshot();
+      if (room && !["dormant", "resolved"].includes(dread.snapshot().phase)) dread.forceDormant();
       const dreadBefore = dread.snapshot();
       const forcedBlackout = dreadBefore.phase === "blackout" || dreadBefore.phase === "jumpscare";
       party.setEffectiveFlashlight(!forcedBlackout);
       const activeInput = expeditionBefore.phase === "delving" ? currentInput : EMPTY_INPUT;
-      const movement = party.step(dt, activeInput, corridor.resolveMotion);
+      room?.observe(corridor.places.current());
+      const movement = party.step(dt, activeInput, (position, previous) => {
+        const resolved = corridor.resolveMotion(position, previous);
+        return room ? room.resolve(resolved, previous) : resolved;
+      });
       expedition.step(deltaMs, movement.distanceMeters);
       corridor.step(deltaMs, forcedBlackout);
 
       const partyState = party.snapshot();
       corridor.observePose(partyState.position,dreadBefore.spatial?.position);
+      room?.observe(corridor.places.current());
+      const roomOutcome = room?.step(deltaMs);
+      if (roomOutcome) expedition.recordDiscovery(`Escaped ${room?.snapshot()?.title}.`);
       if(options.worldMode==="composed")expedition.enterPlace(corridor.places.current().id);
       const corridorState = corridor.snapshot();
       const relativeBearing = normalizeAngle(dreadBefore.bearingRadians - partyState.yaw);
@@ -273,7 +303,7 @@ export function createHorrorCorridorV2(options: HorrorCorridorV2Options = {}): H
 
       const outcomes = dread.step({
         deltaMs,
-        encounterEligible:corridor.encounterEligible(),
+        encounterEligible:room ? false : corridor.encounterEligible(),
         placeId:corridor.places.current().definitionId,
         difficulty:expedition.snapshot().difficulty,
         buildingNumber: expedition.snapshot().buildingNumber,
@@ -324,6 +354,7 @@ export function createHorrorCorridorV2(options: HorrorCorridorV2Options = {}): H
     corridor.reset();
     party.reset();
     dread.reset();
+    room?.reset(); room?.observe(corridor.places.current());
     sharedExpedition.reset();
     currentInput = { ...EMPTY_INPUT };
     tickNumber = 0;
@@ -350,10 +381,15 @@ export function createHorrorCorridorV2(options: HorrorCorridorV2Options = {}): H
     if (!resolved) return false;
     assertSave(resolved);
     const next = resolved.snapshot;
+    validateRoomSnapshot(next);
     expedition.load(next.expedition);
     corridor.load(next.corridor);
     party.load(next.party);
     dread.load(next.dread);
+    if (room) {
+      if (next.room) room.load(next.room, corridor.places.current());
+      else { room.reset(); room.observe(corridor.places.current()); }
+    }
     sharedExpedition.load(next.sharedExpedition);
     tickNumber = next.tick;
     simTimeMs = next.simTimeMs;
@@ -390,7 +426,7 @@ export function createHorrorCorridorV2(options: HorrorCorridorV2Options = {}): H
       coreKitCount: nexus.coreKitCount,
       explicitKitCount: nexus.installOrder.length,
       installOrder: [...nexus.installOrder],
-      domainPaths: Object.values(DOMAIN_PATHS),
+      domainPaths: [...Object.values(DOMAIN_PATHS), ...(room ? ["n:horror-corridor-v2:room"] : [])],
     }),
   });
 }

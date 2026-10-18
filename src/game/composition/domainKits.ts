@@ -6,6 +6,8 @@ import type { PartyDomain } from "../domains/party/index";
 import type { SharedExpeditionDomain } from "../domains/shared-expedition/index";
 import type { PlaceResidencyService } from "../domains/corridor/places";
 import type { PresentationService } from "../domains/presentation";
+import type { RoomDomain } from "../domains/room";
+import { ROOM_DOMAIN_PATH } from "../domains/room/contracts";
 
 export const HORROR_CORRIDOR_ROOT_DOMAIN = "n:horror-corridor-v2";
 export const DOMAIN_PATHS = Object.freeze({
@@ -23,10 +25,19 @@ export type HorrorCorridorDomainControllers = Readonly<{
   dread: DreadDomain;
   sharedExpedition: SharedExpeditionDomain;
   presentation: PresentationService;
+  room?: RoomDomain;
 }>;
 
 export function createHorrorCorridorDomainKits(controllers: HorrorCorridorDomainControllers,composed=false): readonly NexusRuntimeKit[] {
   return Object.freeze([
+    ...(controllers.room ? [defineDomainServiceKit({
+      id: "horror-corridor-room-dsk", domain: "room", domainPath: ROOM_DOMAIN_PATH,
+      parentDomainPath: HORROR_CORRIDOR_ROOT_DOMAIN, requires: [HORROR_CORRIDOR_ROOT_DOMAIN],
+      provides: [ROOM_DOMAIN_PATH], apiName: "horrorCorridorRoom", version: "1.0.0", stability: "project",
+      services: ["instances", "interactions", "exit-lock", "snapshot", "reset"],
+      inputs: ["place-residency", "party-pose", "interact"], outputs: ["room-descriptor", "room-opened"],
+      createApi: () => controllers.room,
+    })] : []),
     defineDomainServiceKit({
       id: "horror-corridor-presentation-dsk",
       domain: "presentation",

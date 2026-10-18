@@ -1,5 +1,13 @@
 # Sequence overhaul checkpoint
 
+## Puzzle-room continuation
+
+The browser now enables a shared Room domain with 50 separate authored kits,
+physical exit locks and no escape-instruction panel. Read
+[the room checkpoint](./room-kits.md) for proof, remaining family-specific fidelity
+and acceptance limits. This intentionally changes the earlier always-open route
+in puzzle mode; reference runtime behavior remains available without room puzzles.
+
 ## Native Quest continuation
 
 The current direction is a Nexus-authored Rust/OpenXR APK, not a PWA wrapper.

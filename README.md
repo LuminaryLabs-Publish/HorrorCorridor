@@ -1,32 +1,43 @@
 # HorrorCorridor
 
-`HorrorCorridor-V2` is the active game. `HorrorCorridor-V1` remains a runnable visual, behavioral, and content reference; V2 does not import it at runtime.
+The root Next.js app is the active desktop game. V1 and V2 remain preserved
+reference surfaces, not runtime dependencies. One shared game remains the goal
+for browser and future native formats; a Quest APK is not implemented.
 
 ```text
 HorrorCorridor/
-├── HorrorCorridor-V1/   preserved reference game and original harness
-└── HorrorCorridor-V2/   active domain-first Vite game
+├── app/                       active browser host
+├── src/game/domains/room/      shared puzzle state and exit locks
+├── src/content/rooms/kits/     50 authored room kits
+├── src/providers/              presentation, input, audio and storage
+├── HorrorCorridor-V1/          preserved reference
+└── HorrorCorridor-V2/          prior baseline and harnesses
 ```
 
-Run V2:
+Run the active game:
 
 ```bash
-cd HorrorCorridor-V2
-npm install
+npm ci
 npm run dev
 ```
 
 Controls: `WASD` move · mouse look/listen · `F` flashlight · `E` interact · `I` Monster Index · `P` pause.
 
+The browser starts a puzzle-room greybox route: ten room families at five levels.
+Aim at nearby objects and press E. Gates remain closed until the room's rules
+are satisfied; no escape solution is displayed. Read the
+[room checkpoint](docs/sequence-overhaul/room-kits.md) for fidelity limits.
+
 Validation:
 
 ```bash
-cd HorrorCorridor-V2
-npm run validate
-npm run harness:content-routing
-npm run proof:authoring-mcp
-npm run proof:live
-npm run proof:legacy  # run while the V2 dev server is live
+npm run typecheck
+npm run lint
+npm run proof:runtime
+npm run proof:nexus
+npm run build
 ```
 
-See [HorrorCorridor-V2/README.md](HorrorCorridor-V2/README.md) for architecture, runtime contracts, multiplayer URLs, authoring MCP setup, and proof details.
+See [the current checkpoint](docs/sequence-overhaul/checkpoint.md) for active
+implementation and [the native checkpoint](docs/sequence-overhaul/native-quest.md)
+for Rust/OpenXR blockers. Browser proofs do not establish headset readiness.

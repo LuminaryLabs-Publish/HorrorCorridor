@@ -1,4 +1,7 @@
 import assert from "node:assert/strict";
+import { ROOM_DEFINITIONS, ROOM_KITS } from "../src/content/rooms";
+import { createRoomDomain } from "../src/game/domains/room";
+import { conditionsMatch } from "../src/game/domains/room/contracts";
 import {createCorridorDefinition,GENERATED_PROOF_DISTANCE_METERS} from "../src/content/environments/definitions";
 import {createPlaceResidency,instanceAt} from "../src/game/domains/corridor/places";
 import {selectEncounter} from "../src/game/domains/dread/encounterSelection";
@@ -335,7 +338,83 @@ async function proveComposedSlice():Promise<void> {
   }finally{runtime.dispose();}
 }
 
+function provePuzzleRooms() {
+  let reachableStates = 0;
+  assert.equal(ROOM_KITS.length, 50);
+  assert.equal(new Set(ROOM_DEFINITIONS.map(room => room.id)).size, 50);
+  assert.equal(createRoomDomain([...ROOM_DEFINITIONS, ROOM_DEFINITIONS[0]]).definitions().length, 50);
+  assert.throws(() => createRoomDomain([...ROOM_DEFINITIONS, { ...ROOM_DEFINITIONS[0], title: "conflicting" }]));
+  for (let level = 1; level <= 5; level++) assert.equal(ROOM_DEFINITIONS.filter(room => room.difficulty === level).length, 10);
+  for (const [index, definition] of ROOM_DEFINITIONS.entries()) {
+    // Check the whole finite authored interaction graph, not only the happy path.
+    const nodes = [{ ...definition.initial }];
+    const known = new Map([[JSON.stringify(nodes[0]), 0]]);
+    const predecessors: number[][] = [[]];
+    const solved: number[] = [];
+    for (let cursor = 0; cursor < nodes.length; cursor++) {
+      assert(nodes.length <= 20000, `${definition.id}: bounded state graph`);
+      const values = nodes[cursor];
+      if (conditionsMatch(values, definition.goal)) { solved.push(cursor); continue; }
+      for (const object of definition.objects.filter(object => conditionsMatch(values, object.visibleWhen ?? []))) {
+        const rule = definition.rules.find(rule => rule.object === object.id && conditionsMatch(values, rule.when));
+        if (!rule) continue;
+        const next = { ...values };
+        for (const effect of rule.effects) next[effect.key] = effect.add ? next[effect.key] + effect.value : effect.value;
+        const digest = JSON.stringify(next);
+        let destination = known.get(digest);
+        if (destination === undefined) { destination = nodes.length; known.set(digest, destination); nodes.push(next); predecessors.push([]); }
+        predecessors[destination].push(cursor);
+      }
+    }
+    const escapable = new Set(solved), queue = [...solved];
+    for (let cursor = 0; cursor < queue.length; cursor++) for (const previous of predecessors[queue[cursor]]) {
+      if (!escapable.has(previous)) { escapable.add(previous); queue.push(previous); }
+    }
+    assert.equal(escapable.size, nodes.length, `${definition.id}: every reachable state must still allow escape`);
+    reachableStates += nodes.length;
+    const place = instanceAt(index);
+    const room = createRoomDomain(ROOM_DEFINITIONS);
+    room.observe(place);
+    const initial = room.snapshot()!;
+    assert.equal(initial.phase, "locked");
+    assert.equal("solution" in initial, false);
+    assert.equal("rules" in initial, false);
+    assert(room.resolve({ x: 0, y: 1.68, z: place.exitZ - 1 }, { x: 0, y: 1.68, z: place.exitZ + 1 }).z > place.exitZ);
+    assert.equal(room.interact({ x: 100, y: 1.68, z: place.entryZ }, 0, 0), false);
+    for (const objectId of definition.solution) {
+      const object = room.snapshot()!.objects.find(object => object.id === objectId);
+      assert(object, `${definition.id}: visible ${objectId}`);
+      assert(room.interact({ x: object.position.x, y: object.position.y, z: object.position.z + 1 }, 0, 0), `${definition.id}: accepted ${objectId}`);
+    }
+    assert.equal(room.snapshot()!.phase, "opening", definition.id);
+    for (let frame = 0; frame < 10; frame++) room.step(100);
+    assert.equal(room.snapshot()!.phase, "open", definition.id);
+    assert.equal(room.step(100), null, "completion must be exactly once");
+    const saved = JSON.parse(JSON.stringify(room.snapshot()));
+    const restored = createRoomDomain(ROOM_DEFINITIONS); restored.load(saved, place);
+    assert.deepEqual(restored.snapshot(), room.snapshot());
+    const corrupted = structuredClone(saved); corrupted.rooms[String(index)].values = {};
+    assert.throws(() => restored.load(corrupted, place));
+    assert.deepEqual(restored.snapshot(), room.snapshot(), "rejected load must not mutate Room");
+    room.reset(); room.observe(place); assert.equal(room.snapshot()!.phase, "locked");
+  }
+  const game = createHorrorCorridorV2({ seed: "room-proof", worldMode: "composed", roomPuzzles: true });
+  try {
+    game.start();
+    assert.equal(game.diagnostics().installOrder.filter(id => /^horror-room-.*-kit$/.test(id)).length, 50);
+    const start = game.snapshot().room!;
+    tick(game, 1000, { forward: 1 });
+    assert(game.snapshot().party.position.z >= start.exitZ + 0.49);
+    assert.equal(game.snapshot().room!.index, 0);
+    assert.equal(game.snapshot().dread.phase, "dormant");
+    assert.equal(game.snapshot().room!.phase, "locked");
+    game.dispatch({ type: "restart" }); assert.equal(game.snapshot().room!.phase, "locked");
+  } finally { game.dispose(); }
+  return { kits: 50, families: 10, levels: 5, reachableStates, proof: "all-reachable-states-escapable, guarded-interaction-witnesses, locked-exits, opening, snapshot-reset, installed-graph, safe-investigation" };
+}
+
 async function main(): Promise<void> {
+  const puzzleRooms = provePuzzleRooms();
   await proveComposedSlice();
   const persistence = createMemoryPersistenceAdapter();
   proveIndependentDomainResets();
@@ -402,6 +481,7 @@ async function main(): Promise<void> {
   runtime.dispose();
   console.log(JSON.stringify({
     ok: true,
+    puzzleRooms,
     composedSlice:{corridorGrammar:"base-corridor",proofDistanceMeters:GENERATED_PROOF_DISTANCE_METERS,proofs:["connectors","main-route-collision","bounded-residency","eligible-selection","spatial-stalker","pause","sign-approach-blackout-last-chance-resume","collection","offering-continuity","retained-index"],campaignComplete:false},
     shippingCoreKits: 10,
     developmentCoreKits: 10,

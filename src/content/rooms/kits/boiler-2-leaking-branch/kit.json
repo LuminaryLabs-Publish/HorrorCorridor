@@ -1,0 +1,23 @@
+{
+  "id": "horror-room-boiler-2-leaking-branch-kit",
+  "domain": "n:horror-corridor-v2:room",
+  "kind": "object-assembly-kit",
+  "version": "1.0.0",
+  "family": "boiler",
+  "difficulty": 2,
+  "entry": "index.ts",
+  "requires": [
+    "n:horror-corridor-v2:room"
+  ],
+  "owns": [
+    "authored puzzle definition",
+    "object assembly",
+    "interaction rules"
+  ],
+  "doesNotOwn": [
+    "mutable player progress",
+    "rendering",
+    "capture",
+    "transport"
+  ]
+}

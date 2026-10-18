@@ -1,5 +1,14 @@
 # Goal
 
+## Active puzzle-room increment
+
+Build each of the 50 requested rooms as its own authored kit, consumed by one
+game-owned Room domain. Rooms gate forward movement and communicate through
+objects rather than escape instructions. See
+[`room-kits.md`](docs/sequence-overhaul/room-kits.md) for implementation, proof and
+explicit fidelity limits. Native Quest remains a separate unfinished milestone;
+browser room kits do not constitute a Rust APK.
+
 ## Active native Quest milestone
 
 Build one shared Nexus-authored game with a Rust gameplay runtime and Android

@@ -85,6 +85,7 @@ export function BrowserGame() {
       const runtime = createHorrorCorridorV2({
         seed: launch.seed,
         worldMode: "composed",
+        roomPuzzles: true,
         mode: launch.mode,
         roomCode: launch.roomCode,
         development: (process.env.NODE_ENV !== "production"),
@@ -342,9 +343,9 @@ export function BrowserGame() {
             <span>{presentationState.objective.instruction}</span>
             {presentationState.threat.countdownMs !== null && <b>{(presentationState.threat.countdownMs / 1_000).toFixed(1)} seconds</b>}
           </div>
-          <div className="encounter-message" data-testid="encounter-message">
+          {!snapshot.room && <div className="encounter-message" data-testid="encounter-message">
             <p>{presentationState.threat.message}</p>
-          </div>
+          </div>}
           <div className={`flashlight-state ${snapshot.party.flashlight.effectiveOn ? "is-on" : "is-off"}`}>
             <span /> {snapshot.dread.phase === "blackout" ? "BLACKOUT" : snapshot.party.flashlight.effectiveOn ? "BEAM LIVE" : "BEAM OFF"}
           </div>
