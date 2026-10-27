@@ -141,6 +141,44 @@ export type ThreeSceneAuthoringTarget = Readonly<{
   side?: -1 | 1;
 }>;
 
+type PracticalFixture = Readonly<{ light: THREE.SpotLight; bulb: THREE.MeshStandardMaterial }>;
+
+function mountPracticalFixture(
+  parent: THREE.Object3D,
+  name: string,
+  position: THREE.Vector3,
+  color: THREE.ColorRepresentation,
+  intensity: number,
+  range: number,
+): PracticalFixture {
+  const housing = new THREE.Mesh(
+    new THREE.BoxGeometry(0.82, 0.11, 0.34),
+    new THREE.MeshStandardMaterial({ color: 0x252b27, roughness: 0.82, metalness: 0.48 }),
+  );
+  housing.name = `${name}-housing`;
+  housing.position.copy(position);
+  housing.castShadow = true;
+  parent.add(housing);
+
+  const bulb = new THREE.MeshStandardMaterial({ color, emissive: color, emissiveIntensity: 0.85, roughness: 0.32 });
+  const lens = new THREE.Mesh(new THREE.BoxGeometry(0.64, 0.035, 0.2), bulb);
+  lens.name = `${name}-lens`;
+  lens.position.copy(position).add(new THREE.Vector3(0, -0.075, 0));
+  parent.add(lens);
+
+  const light = new THREE.SpotLight(color, intensity, range, 0.62, 0.78, 2);
+  light.name = `${name}-source`;
+  light.position.copy(position).add(new THREE.Vector3(0, -0.08, 0));
+  light.target.position.set(position.x, 0.02, position.z);
+  light.castShadow = false;
+  light.shadow.mapSize.set(256, 256);
+  light.shadow.bias = -0.00025;
+  light.shadow.camera.near = 0.1;
+  light.shadow.camera.far = range;
+  parent.add(light, light.target);
+  return { light, bulb };
+}
+
 export function createThreeSceneAdapter(
   canvas: HTMLCanvasElement,
   options: Readonly<{ authoringTarget?: ThreeSceneAuthoringTarget | null }> = {},
@@ -153,7 +191,7 @@ export function createThreeSceneAdapter(
   });
   renderer.outputColorSpace = THREE.SRGBColorSpace;
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
-  renderer.toneMappingExposure = 1.2;
+  renderer.toneMappingExposure = 1.05;
   renderer.shadowMap.enabled = true;
   renderer.shadowMap.type = THREE.PCFShadowMap;
 
@@ -167,14 +205,115 @@ export function createThreeSceneAdapter(
   const world = new THREE.Group();
   world.name = "corridor-world";
   scene.add(world);
+  const corridorPracticals: Array<Readonly<{
+    light: THREE.SpotLight;
+    bulb: THREE.MeshStandardMaterial;
+    position: THREE.Vector3;
+    intensity: number;
+  }>> = [];
 
-  const ambient = new THREE.HemisphereLight(0x86aa94, 0x151a16, 1.12);
+  const ambient = new THREE.HemisphereLight(0x86aa94, 0x151a16, 0.24);
   scene.add(ambient);
-  const entranceFill = new THREE.PointLight(0x7da58c, 25, 14, 1.7);
-  entranceFill.position.set(-1.8, 2.65, 6.5);
-  scene.add(entranceFill);
 
-  const flashlight = new THREE.SpotLight(0xd8ffe2, 92, 27, 0.39, 0.78, 1.45);
+  const entranceGroup = new THREE.Group();
+  entranceGroup.name = "entry-threshold";
+  scene.add(entranceGroup);
+  const entryFrameMaterial = new THREE.MeshStandardMaterial({ color: 0x313c35, roughness: 0.9, metalness: 0.22 });
+  const entryDoorMaterial = new THREE.MeshStandardMaterial({ color: 0x59665c, roughness: 0.83, metalness: 0.12, emissive: 0x101710, emissiveIntensity: 0.75 });
+  const entryTrimMaterial = new THREE.MeshStandardMaterial({ color: 0x82765b, roughness: 0.65, metalness: 0.72 });
+  const entryDoorPickables: THREE.Object3D[] = [];
+  const entryDoorRaycaster = new THREE.Raycaster();
+  const entryDoorLeft = new THREE.Group();
+  const entryDoorRight = new THREE.Group();
+  const entryDoorPositionZ = 1.1;
+  for (const [x, y, z, w, h, d] of [
+    [-1.52, 1.52, entryDoorPositionZ, 0.18, 3.04, 0.34],
+    [1.52, 1.52, entryDoorPositionZ, 0.18, 3.04, 0.34],
+    [0, 3.04, entryDoorPositionZ, 3.22, 0.18, 0.34],
+    [0, 0.08, entryDoorPositionZ, 3.22, 0.16, 0.34],
+  ] as const) {
+    const frame = new THREE.Mesh(new THREE.BoxGeometry(w, h, d), entryFrameMaterial);
+    frame.position.set(x, y, z);
+    frame.castShadow = true;
+    frame.receiveShadow = true;
+    entranceGroup.add(frame);
+  }
+  entryDoorLeft.position.set(-1.43, 0, entryDoorPositionZ);
+  entryDoorRight.position.set(1.43, 0, entryDoorPositionZ);
+  entranceGroup.add(entryDoorLeft, entryDoorRight);
+  const createDoorLeaf = (parent: THREE.Group, centerX: number, handleX: number) => {
+    const leaf = new THREE.Mesh(new THREE.BoxGeometry(1.44, 2.82, 0.14), entryDoorMaterial);
+    leaf.position.set(centerX, 1.48, 0);
+    leaf.castShadow = true;
+    leaf.receiveShadow = true;
+    parent.add(leaf);
+    const inset = new THREE.Mesh(new THREE.BoxGeometry(1.1, 2.32, 0.035), entryFrameMaterial);
+    inset.position.set(centerX, 1.47, 0.09);
+    parent.add(inset);
+    const bar = new THREE.Mesh(new THREE.BoxGeometry(0.08, 0.62, 0.1), entryTrimMaterial);
+    bar.position.set(handleX, 1.38, 0.16);
+    parent.add(bar);
+    entryDoorPickables.push(leaf, bar);
+  };
+  createDoorLeaf(entryDoorLeft, 0.71, 1.14);
+  createDoorLeaf(entryDoorRight, -0.71, -1.14);
+
+  const entrySignCanvas = document.createElement("canvas");
+  entrySignCanvas.width = 768;
+  entrySignCanvas.height = 192;
+  const entrySignContext = entrySignCanvas.getContext("2d");
+  if (entrySignContext) {
+    entrySignContext.fillStyle = "#171d19";
+    entrySignContext.fillRect(0, 0, entrySignCanvas.width, entrySignCanvas.height);
+    entrySignContext.strokeStyle = "#85785c";
+    entrySignContext.lineWidth = 8;
+    entrySignContext.strokeRect(8, 8, entrySignCanvas.width - 16, entrySignCanvas.height - 16);
+    entrySignContext.fillStyle = "#d1c6a8";
+    entrySignContext.font = "bold 66px monospace";
+    entrySignContext.textAlign = "center";
+    entrySignContext.textBaseline = "middle";
+    entrySignContext.fillText("LOWER SERVICE", 384, 76);
+    entrySignContext.font = "32px monospace";
+    entrySignContext.fillText("SUBLEVEL 01", 384, 143);
+  }
+  const entrySignTexture = new THREE.CanvasTexture(entrySignCanvas);
+  entrySignTexture.colorSpace = THREE.SRGBColorSpace;
+  const entrySign = new THREE.Mesh(
+    new THREE.PlaneGeometry(1.15, 0.29),
+    new THREE.MeshBasicMaterial({ map: entrySignTexture, side: THREE.DoubleSide }),
+  );
+  entrySign.position.set(0, 2.72, entryDoorPositionZ + 0.19);
+  entranceGroup.add(entrySign);
+  const entryPractical = mountPracticalFixture(entranceGroup, "entry-ceiling-light", new THREE.Vector3(0, 3.44, entryDoorPositionZ + 0.65), 0xc9d4b5, 220, 4.8);
+  entryPractical.light.castShadow = true;
+  entryPractical.light.angle = 0.34;
+  entryPractical.light.target.position.set(0, 1.42, entryDoorPositionZ + 0.12);
+  let entryDoorOpen = 0;
+  let entryDoorFinished = false;
+  const setEntryDoorProgress = (value: number) => {
+    entryDoorOpen = THREE.MathUtils.clamp(value, 0, 1);
+    const eased = 1 - Math.pow(1 - entryDoorOpen, 3);
+    entryDoorLeft.rotation.y = eased * 1.28;
+    entryDoorRight.rotation.y = -eased * 1.28;
+    entryPractical.light.intensity = 220 + entryDoorOpen * 35;
+  };
+  const setEntryDoorHover = (hovered: boolean) => {
+    entryDoorMaterial.emissive.setHex(hovered ? 0x263b2d : 0x000000);
+    entryDoorMaterial.emissiveIntensity = hovered ? 0.35 : 0;
+    canvas.style.cursor = hovered ? "pointer" : "default";
+  };
+  const hitEntryDoor = (clientX: number, clientY: number) => {
+    if (entryDoorFinished || entryDoorOpen > 0) return false;
+    const bounds = canvas.getBoundingClientRect();
+    const point = new THREE.Vector2(
+      ((clientX - bounds.left) / bounds.width) * 2 - 1,
+      -((clientY - bounds.top) / bounds.height) * 2 + 1,
+    );
+    entryDoorRaycaster.setFromCamera(point, camera);
+    return entryDoorRaycaster.intersectObjects(entryDoorPickables, true).length > 0;
+  };
+
+  const flashlight = new THREE.SpotLight(0xd8ffe2, 92, 18, 0.22, 0.78, 1.45);
   flashlight.castShadow = true;
   flashlight.shadow.mapSize.set(1024, 1024);
   flashlight.shadow.bias = -0.00035;
@@ -182,25 +321,42 @@ export function createThreeSceneAdapter(
   const flashlightTarget = new THREE.Object3D();
   scene.add(flashlight, flashlightTarget);
   flashlight.target = flashlightTarget;
-  const flashlightFill = new THREE.PointLight(0x8fb69c, 9, 5.5, 1.5);
-  scene.add(flashlightFill);
-
-  const routeLight = new THREE.PointLight(0x4bff9e, 24, 18, 2.1);
+  const routeLight = new THREE.SpotLight(0x4bff9e, 20, 9, 0.74, 0.75, 2);
+  routeLight.castShadow = false;
+  routeLight.shadow.mapSize.set(256, 256);
+  routeLight.shadow.bias = -0.00025;
   scene.add(routeLight);
-  const redLampA = new THREE.PointLight(0xff3e2e, 8, 8, 2.2);
+  const routeLightTarget = new THREE.Object3D();
+  scene.add(routeLightTarget);
+  routeLight.target = routeLightTarget;
+  const redLampA = new THREE.SpotLight(0xff3e2e, 7, 6, 0.88, 0.8, 2);
+  redLampA.castShadow = true;
+  redLampA.shadow.mapSize.set(128, 128);
+  redLampA.shadow.bias = -0.00025;
   redLampA.position.set(-2.9, 2.75, -5.8);
-  scene.add(redLampA);
-  const redLampB = new THREE.PointLight(0xe46a31, 5, 7, 2.2);
+  const redLampTargetA = new THREE.Object3D();
+  scene.add(redLampA, redLampTargetA);
+  redLampA.target = redLampTargetA;
+  const redLampB = new THREE.SpotLight(0xe46a31, 5, 6, 0.88, 0.8, 2);
+  redLampB.castShadow = true;
+  redLampB.shadow.mapSize.set(128, 128);
+  redLampB.shadow.bias = -0.00025;
   redLampB.position.set(2.8, 2.65, -15.8);
-  scene.add(redLampB);
+  const redLampTargetB = new THREE.Object3D();
+  scene.add(redLampB, redLampTargetB);
+  redLampB.target = redLampTargetB;
 
   const monster = createMonsterFigure();
   scene.add(monster.group);
   const monsterRim = new THREE.PointLight(0x74ff9d, 0, 7.5, 2.2);
   scene.add(monsterRim);
-  const altarGlow = new THREE.PointLight(0x9fffc0, 0, 6, 2);
+  const altarGlow = new THREE.SpotLight(0x9fffc0, 0, 6, 0.92, 0.78, 2);
+  altarGlow.castShadow = true;
+  altarGlow.shadow.mapSize.set(128, 128);
   altarGlow.position.set(0, 1.1, -20.8);
-  scene.add(altarGlow);
+  const altarGlowTarget = new THREE.Object3D();
+  scene.add(altarGlow, altarGlowTarget);
+  altarGlow.target = altarGlowTarget;
 
   const scratch = new THREE.Vector3();
   const fogBase = new THREE.Color(0x06100c);
@@ -255,6 +411,7 @@ export function createThreeSceneAdapter(
 
   function clearWorld(): void {
     fanRotors.length = 0;
+    corridorPracticals.length = 0;
     for (const child of [...world.children]) {
       world.remove(child);
       disposeWorldObject(child);
@@ -2204,6 +2361,10 @@ export function createThreeSceneAdapter(
     } else if (prop.kind === "altar") {
       addBox(prop.id, [x, 0.4, z], [1.25, 0.8, 0.8], materials.concrete);
       addBox(`${prop.id}-top`, [x, 0.84, z], [1.52, 0.12, 1.02], materials.steel);
+      const offeringLamp = new THREE.Mesh(new THREE.SphereGeometry(0.12, 12, 8), materials.green);
+      offeringLamp.name = `${prop.id}-offering-lamp`;
+      offeringLamp.position.set(x, 1.04, z);
+      world.add(offeringLamp);
     } else if (prop.kind === "lamp") {
       addBox(prop.id, [x, y, z], [0.9, 0.18, 0.34], materials.steel);
       addBox(`${prop.id}-glass`, [x, y - 0.12, z + 0.17], [0.55, 0.12, 0.04], materials.green);
@@ -2257,9 +2418,9 @@ export function createThreeSceneAdapter(
         const materials=createMaterials(district);
         const z=(place.entryZ+place.exitZ)/2;
         addBox(`${place.id}:floor`,[0,-0.15,z],[definition.width,0.3,definition.length],materials.floor,{cast:false});
-        addBox(`${place.id}:ceiling`,[0,definition.height,z],[definition.width,0.25,definition.length],materials.wallDark,{cast:false});
+        addBox(`${place.id}:ceiling`,[0,definition.height,z],[definition.width,0.25,definition.length],materials.wallDark,{cast:true});
         for(const side of [-1,1]){
-          addBox(`${place.id}:wall:${side}`,[side*(definition.width/2+0.1),definition.height/2,z],[0.2,definition.height,definition.length],materials.wall,{cast:false});
+          addBox(`${place.id}:wall:${side}`,[side*(definition.width/2+0.1),definition.height/2,z],[0.2,definition.height,definition.length],materials.wall,{cast:true});
           const shoulder=(definition.width-definition.entrance.width)/2;
           for(const seam of [place.entryZ,place.exitZ]){
             addBox(`${place.id}:shoulder:${side}:${seam}`,[side*(definition.entrance.width/2+shoulder/2),definition.height/2,seam],
@@ -2269,6 +2430,11 @@ export function createThreeSceneAdapter(
         for(const fixture of definition.fixtures){
           addBox(`${place.id}:${fixture.id}`,[fixture.x,fixture.height/2,place.entryZ-fixture.z],
             [fixture.width,fixture.height,fixture.depth],materials.rust);
+        }
+        for (let offset = 6; offset < definition.length - 2; offset += 12) {
+          const position = new THREE.Vector3(0, definition.height - 0.28, place.entryZ - offset);
+          const fixture = mountPracticalFixture(world, `${place.id}:ceiling-practical:${offset}`, position, 0xb5c8af, 850, 8.5);
+          corridorPracticals.push({ ...fixture, position, intensity: 850 });
         }
         for(let offset=4;offset<definition.length;offset+=8){
           addBox(`${place.id}:rib:${offset}`,[0,3.5,place.entryZ-offset],[definition.width,0.15,0.2],materials.steel);
@@ -2309,10 +2475,25 @@ export function createThreeSceneAdapter(
         : districtForSegment(segment);
       const materials = createMaterials(segmentDistrict);
       addBox(`wet-floor-${segment}`, [0, -0.16, z], [7.6, 0.32, CORRIDOR_SEGMENT_LENGTH + 0.12], materials.floor, { cast: false });
-      addBox(`ceiling-${segment}`, [0, 3.8, z], [7.6, 0.28, CORRIDOR_SEGMENT_LENGTH + 0.12], materials.wallDark, { cast: false });
-      addBox(`left-wall-${segment}`, [-3.72, 1.8, z], [0.42, 3.6, CORRIDOR_SEGMENT_LENGTH + 0.08], segment % 3 === 0 ? materials.concrete : materials.wall, { cast: false });
-      addBox(`right-wall-${segment}`, [3.72, 1.8, z], [0.42, 3.6, CORRIDOR_SEGMENT_LENGTH + 0.08], segment % 4 === 0 ? materials.concrete : materials.wall, { cast: false });
+      addBox(`ceiling-${segment}`, [0, 3.8, z], [7.6, 0.28, CORRIDOR_SEGMENT_LENGTH + 0.12], materials.wallDark, { cast: true });
+      addBox(`left-wall-${segment}`, [-3.72, 1.8, z], [0.42, 3.6, CORRIDOR_SEGMENT_LENGTH + 0.08], segment % 3 === 0 ? materials.concrete : materials.wall, { cast: true });
+      addBox(`right-wall-${segment}`, [3.72, 1.8, z], [0.42, 3.6, CORRIDOR_SEGMENT_LENGTH + 0.08], segment % 4 === 0 ? materials.concrete : materials.wall, { cast: true });
       addBox(`ceiling-rib-${segment}`, [0, 3.48, z - CORRIDOR_SEGMENT_LENGTH / 2], [7.4, 0.18, 0.24], materials.rust);
+      const practicalPosition = new THREE.Vector3(0, 3.48, z);
+      const practical = mountPracticalFixture(world, `segment-${segment}:ceiling-practical`, practicalPosition, 0xb5c8af, 850, 7.5);
+      corridorPracticals.push({ ...practical, position: practicalPosition, intensity: 850 });
+      for (const side of [-1, 1]) {
+        const housing = new THREE.Mesh(new THREE.BoxGeometry(0.3, 0.2, 0.14), materials.steel);
+        housing.name = `segment-${segment}:wall-warning:${side}:housing`;
+        housing.position.set(side * 3.43, 2.75, z);
+        world.add(housing);
+        const lensMaterial = materials.red.clone();
+        lensMaterial.emissiveIntensity = 0.18;
+        const lens = new THREE.Mesh(new THREE.BoxGeometry(0.18, 0.09, 0.045), lensMaterial);
+        lens.name = `segment-${segment}:wall-warning:${side}:lens`;
+        lens.position.set(side * 3.43, 2.75, z + 0.09);
+        world.add(lens);
+      }
 
       const puddle = new THREE.Mesh(
         new THREE.CircleGeometry(0.45 + (segment % 3) * 0.18, 24),
@@ -2391,23 +2572,57 @@ export function createThreeSceneAdapter(
     camera.getWorldDirection(scratch);
     flashlight.position.copy(camera.position).addScaledVector(scratch, 0.18);
     flashlightTarget.position.copy(camera.position).addScaledVector(scratch, 8);
-    flashlight.visible = party.flashlight.effectiveOn;
-    flashlight.intensity = party.flashlight.effectiveOn ? 74 * illumination.intensity + 22 : 0;
-    flashlightFill.position.copy(camera.position).addScaledVector(scratch, 0.5);
-    flashlightFill.position.y -= 0.48;
-    flashlightFill.intensity = party.flashlight.effectiveOn ? 5 + illumination.intensity * 8 : 0;
+    const inCorridor = snapshot.expedition.phase !== "title";
+    flashlight.visible = inCorridor && party.flashlight.effectiveOn;
+    flashlight.intensity = inCorridor && party.flashlight.effectiveOn ? 74 * illumination.intensity + 22 : 0;
+    const places = snapshot.corridor.places;
+    const activePlace = places?.instances.find(place => place.id === places.activeId);
+    if (activePlace) {
+      routeLight.position.set(0, activePlace.definition.height - 0.28, activePlace.entryZ - 6);
+      routeLightTarget.position.set(0, 0.02, activePlace.entryZ - 6);
+      routeLight.intensity = 0;
+      redLampA.intensity = 0;
+      redLampA.castShadow = false;
+      redLampB.intensity = 0;
+      redLampB.castShadow = false;
+      altarGlow.position.set(2.68, 1.1, activePlace.entryZ - Math.min(18, activePlace.definition.length - 2));
+      altarGlowTarget.position.set(2.68, 0.05, altarGlow.position.z);
+    } else {
+      routeLight.position.set(0, 3.48, corridorSegmentCenter(activeSegment + 2));
+      routeLightTarget.position.set(0, 0.02, routeLight.position.z);
+      redLampA.position.set(-3.43, 2.75, corridorSegmentCenter(activeSegment + 1));
+      redLampTargetA.position.set(-0.5, 0.02, redLampA.position.z);
+      redLampB.position.set(3.43, 2.65, corridorSegmentCenter(activeSegment + 3));
+      redLampTargetB.position.set(0.5, 0.02, redLampB.position.z);
+      routeLight.intensity = 0;
+      redLampA.intensity = illumination.mode === "flicker" ? 95 : 0;
+      redLampA.castShadow = redLampA.intensity > 0;
+      redLampB.intensity = illumination.mode === "blackout" ? 0 : 70;
+      redLampB.castShadow = redLampB.intensity > 0;
+      altarGlow.position.set(2.68, 1.1, corridorSegmentCenter(activeSegment + 2) + 1.5);
+      altarGlowTarget.position.set(2.68, 0.05, altarGlow.position.z);
+    }
 
-    entranceFill.position.set(party.position.x - 1.8, 2.65, party.position.z + 5.5);
-    routeLight.position.set(0, 2.45, corridorSegmentCenter(activeSegment + 2));
-    redLampA.position.set(-2.9, 2.75, corridorSegmentCenter(activeSegment + 1));
-    redLampB.position.set(2.8, 2.65, corridorSegmentCenter(activeSegment + 3));
-    altarGlow.position.set(2.68, 1.1, corridorSegmentCenter(activeSegment + 2) + 1.5);
+    let nearestPractical: (typeof corridorPracticals)[number] | undefined;
+    let nearestPracticalDistance = Number.POSITIVE_INFINITY;
+    for (const practical of corridorPracticals) {
+      const distance = practical.position.distanceToSquared(party.position);
+      if (distance < nearestPracticalDistance) {
+        nearestPractical = practical;
+        nearestPracticalDistance = distance;
+      }
+    }
+    const flicker = illumination.mode === "flicker"
+      ? 0.48 + Math.max(0, Math.sin(snapshot.simTimeMs * 0.041)) * 0.52
+      : 1;
+    for (const practical of corridorPracticals) {
+      const active = inCorridor && illumination.mode !== "blackout" && practical === nearestPractical;
+      practical.light.intensity = active ? practical.intensity * flicker : 0;
+      practical.light.castShadow = active;
+      practical.bulb.emissiveIntensity = active ? 1.5 * flicker : illumination.mode === "blackout" ? 0.08 : 0.55;
+    }
 
-    ambient.intensity = 1.25 + illumination.intensity * 1.15;
-    entranceFill.intensity = 38 + illumination.intensity * 28;
-    routeLight.intensity = 28 + illumination.greenShift * 42;
-    redLampA.intensity = illumination.mode === "flicker" ? 5 : 15;
-    redLampB.intensity = illumination.mode === "blackout" ? 0.5 : 10;
+    ambient.intensity = 0.22 + illumination.intensity * 0.12;
     (scene.fog as THREE.Fog).color.copy(fogBase).lerp(fogGreen, illumination.greenShift);
     scene.background = (scene.fog as THREE.Fog).color.clone().multiplyScalar(0.34);
 
@@ -2449,7 +2664,7 @@ export function createThreeSceneAdapter(
       monsterRim.intensity = 0;
     }
 
-    altarGlow.intensity = snapshot.corridor.offering ? 18 : 0;
+    altarGlow.intensity = snapshot.corridor.offering ? 420 : 0;
     const altar = world.getObjectByName("offering-altar");
     if (altar) altar.visible = Boolean(snapshot.corridor.offering);
     for (const rotor of fanRotors) rotor.rotation.z = snapshot.simTimeMs * 0.00125;
@@ -2460,6 +2675,13 @@ export function createThreeSceneAdapter(
   return Object.freeze({
     ready: true,
     render,
+    hitEntranceDoor: hitEntryDoor,
+    setEntranceDoorHover: setEntryDoorHover,
+    setEntranceDoorOpen: setEntryDoorProgress,
+    finishEntranceDoor() {
+      entryDoorFinished = true;
+      canvas.style.cursor = "default";
+    },
     configureAuthoring(target: ThreeSceneAuthoringTarget | null) {
       authoringTarget = target;
       builtWindowKey = "";
@@ -2468,6 +2690,16 @@ export function createThreeSceneAdapter(
       roomScene.dispose();
       if (disposed) return;
       disposed = true;
+      entrySignTexture.dispose();
+      entryFrameMaterial.dispose();
+      entryDoorMaterial.dispose();
+      entryTrimMaterial.dispose();
+      entranceGroup.traverse(object => {
+        if (!(object instanceof THREE.Mesh)) return;
+        object.geometry.dispose();
+        for (const material of Array.isArray(object.material) ? object.material : [object.material]) material.dispose();
+      });
+      scene.remove(entranceGroup);
       clearWorld();
       monster.group.traverse((object) => {
         if (!(object instanceof THREE.Mesh)) return;

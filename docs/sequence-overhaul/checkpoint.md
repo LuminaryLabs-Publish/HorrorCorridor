@@ -1,5 +1,23 @@
 # Sequence overhaul checkpoint
 
+## Doorway opening and practical lighting — 2026-10-26
+
+The browser now starts in the scene at the lower-service entrance. Clicking the
+physical door opens it and moves the player briefly into the route; the separate
+title/start panel is removed. Corridor and room fixtures use localized downward
+spotlights, and corridor walls and ceilings cast shadows. In the fresh browser
+review, the flashlight illuminated a localized patch on each side wall without
+visible spill through it. Overall darkness and fixture readability still need
+human tuning; this is not final lighting acceptance.
+
+Fresh checks passed: TypeScript, ESLint, runtime proof, Nexus consumer proof,
+production build and `git diff --check`. Playwright confirmed door entry,
+movement stopping at 2m after the brief step, and left/right look views with no
+browser errors after the app icon was added. Two WebGL upload warnings remain in
+the development browser; their cause and production-browser behavior are
+unverified. No encounter, audible, multiplayer, headset or full-route acceptance
+was performed in this review.
+
 ## Puzzle-room continuation
 
 The browser now enables a shared Room domain with 50 separate authored kits,
@@ -14,15 +32,16 @@ The current direction is a Nexus-authored Rust/OpenXR APK, not a PWA wrapper.
 The first native milestone remains blocked, not implemented. The existing engine
 pin and desktop runtime are unchanged. Read [the native checkpoint](./native-quest.md)
 for the real Build inspection failure, ownership constraints and resume command.
-The following publication evidence describes the earlier desktop baseline only.
+The historical publication evidence below describes the earlier desktop baseline.
 
-Updated: 2026-09-20. Status: **development baseline authorized for main; full game remains in progress**.
+Updated: 2026-10-26. Status: **development baseline; full game remains in progress**.
 
 The authorized scope is [the complete plan](./plan.md). This checkpoint is not a reduced replacement scope. No final release or eight-hour completion is claimed.
 
 ## Current implementation
 
 - Root Next.js candidate: `npm ci`, `npm run dev` (localhost:4173).
+- The in-scene door entry and practical-light pass are described above; they do not complete the puzzle route or lighting acceptance.
 - Browser-free domain runtime under `src/game`; the browser selects `worldMode: "composed"`.
 - Nexus pinned to `a74e8689d1a71c0b42236c009f0f4c46e9b89387`; public import consumer proof in `tools/nexus-migration`.
 - One seeded `base-corridor` grammar replaces the six fixed active environments. Geometry, fixtures, clues and encounter roles vary by seed/index. **256m is the composed traversal proof distance, not a route cap.** Lighting/materials still use renderer conventions; full variation and authored campaign coverage remain unfinished.

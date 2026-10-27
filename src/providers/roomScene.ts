@@ -52,7 +52,29 @@ export function createRoomScene(scene: THREE.Scene) {
         label(room.title.toUpperCase(), 2.7, new THREE.Vector3(0, 3.45, room.exitZ + 0.24));
         const indicator = box(group, [0.12, 0.2, 0.08], [1.62, 1.55, room.exitZ + 0.3], room.phase === "locked" ? 0x993c25 : 0x65c781);
         indicator.material.emissive.setHex(room.phase === "locked" ? 0x662619 : 0x47b66c); indicator.material.emissiveIntensity = 1.2;
-        const lighting = new THREE.PointLight(0xd4c9a7, 14, 13, 1.7); lighting.position.set(0, 2.9, room.entryZ - 6); group.add(lighting);
+        const fixturePosition = new THREE.Vector3(0, 3.28, room.entryZ - 6);
+        const fixtureHousing = new THREE.Mesh(
+          new THREE.BoxGeometry(0.82, 0.11, 0.34),
+          new THREE.MeshStandardMaterial({ color: 0x252b27, roughness: 0.82, metalness: 0.48 }),
+        );
+        fixtureHousing.position.copy(fixturePosition);
+        fixtureHousing.castShadow = true;
+        group.add(fixtureHousing);
+        const fixtureLens = new THREE.Mesh(
+          new THREE.BoxGeometry(0.64, 0.035, 0.2),
+          new THREE.MeshStandardMaterial({ color: 0xc9d4b5, emissive: 0x9fb58c, emissiveIntensity: 0.8, roughness: 0.32 }),
+        );
+        fixtureLens.position.copy(fixturePosition).y -= 0.075;
+        group.add(fixtureLens);
+        const lighting = new THREE.SpotLight(0xd4c9a7, 500, 8.5, 0.72, 0.72, 2);
+        lighting.position.copy(fixturePosition).y -= 0.08;
+        lighting.target.position.set(0, 0.02, room.entryZ - 6);
+        lighting.castShadow = true;
+        lighting.shadow.mapSize.set(256, 256);
+        lighting.shadow.bias = -0.00025;
+        lighting.shadow.camera.near = 0.1;
+        lighting.shadow.camera.far = 8.5;
+        group.add(lighting, lighting.target);
         if (room.carried) carried = box(group, [0.1, 0.32, 0.1], [0, 0, 0], 0xc7dfbd);
         for (const object of room.objects) {
           const { x, y, z } = object.position;

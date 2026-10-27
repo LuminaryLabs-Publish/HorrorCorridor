@@ -6,7 +6,7 @@ import { MONSTER_PROFILES } from "../../content/monsters";
 import { createBrowserInputAdapter } from "../../providers/browserInput";
 import { createBrowserPersistenceAdapter } from "../../providers/persistence";
 import { createPeerNetworkAdapter } from "../../providers/peerTransport";
-import { createSpatialAudioAdapter, type SpatialAudioAdapter } from "../../providers/spatialAudio";
+import { createSpatialAudioAdapter } from "../../providers/spatialAudio";
 import { installSemanticControl } from "../../proofs/semanticControl";
 import { createThreeSceneAdapter } from "../../providers/threeScene";
 
@@ -50,14 +50,12 @@ export function BrowserGame() {
   const presentation = useMemo(createPresentationService, []);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const runtimeRef = useRef<HorrorCorridorV2Runtime | null>(null);
-  const audioRef = useRef<SpatialAudioAdapter | null>(null);
   const renderRef = useRef<(() => void) | null>(null);
   const manualRef = useRef(false);
   const [snapshot, setSnapshot] = useState<HorrorCorridorV2Snapshot | null>(null);
   const [ready, setReady] = useState(false);
   const [fatalError, setFatalError] = useState<string | null>(null);
   const [indexOpen, setIndexOpen] = useState(false);
-  const [joinCode, setJoinCode] = useState(launch.roomCode);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -69,11 +67,12 @@ export function BrowserGame() {
     let uiAccumulatorMs = UI_STEP_MS;
     let saveAccumulatorMs = 0;
     let hostStopped = false;
+    let entryFlowStartedAt: number | null = null;
+    let walkthroughStartedAt: number | null = null;
 
     try {
       const input = createBrowserInputAdapter(canvas);
       const audio = createSpatialAudioAdapter();
-      audioRef.current = audio;
       const persistence = createBrowserPersistenceAdapter();
       const network = launch.mode === "solo"
         ? undefined
@@ -139,18 +138,52 @@ export function BrowserGame() {
           setSnapshot(runtime.snapshot());
         }
       };
-      const onCanvasClick = () => {
+      const onCanvasClick = (event: MouseEvent) => {
         if (hostStopped) return;
-        if (runtime.snapshot().expedition.phase === "delving") requestPointerLockSafely(canvas);
+        const phase = runtime.snapshot().expedition.phase;
+        if (phase === "title") {
+          if (!input.ready || !presentation.ready || entryFlowStartedAt !== null || !presentation.hitEntranceDoor(event.clientX, event.clientY)) return;
+          entryFlowStartedAt = performance.now();
+          presentation.setEntranceDoorHover(false);
+          try {
+            void audio.unlock().catch(() => {
+              // Audio is optional; continue without an unlocked context.
+            });
+          } catch {
+            // Unsupported or denied audio must not block entering the corridor.
+          }
+          if (!navigator.webdriver) requestPointerLockSafely(canvas);
+          return;
+        }
+        if (phase === "delving") requestPointerLockSafely(canvas);
       };
+      const onCanvasPointerMove = (event: PointerEvent) => {
+        if (runtime.snapshot().expedition.phase !== "title" || entryFlowStartedAt !== null) return;
+        presentation.setEntranceDoorHover(presentation.hitEntranceDoor(event.clientX, event.clientY));
+      };
+      const onCanvasPointerLeave = () => presentation.setEntranceDoorHover(false);
       document.addEventListener("visibilitychange", onVisibilityChange);
       canvas.addEventListener("click", onCanvasClick);
+      canvas.addEventListener("pointermove", onCanvasPointerMove);
+      canvas.addEventListener("pointerleave", onCanvasPointerLeave);
 
       const frame = (now: number) => {
         if (disposed || hostStopped) return;
         const elapsedMs = Math.min(100, now - lastFrameAt);
         lastFrameAt = now;
-        if (!manualRef.current) {
+        if (entryFlowStartedAt !== null) {
+          const entryProgress = Math.min(1, (now - entryFlowStartedAt) / 950);
+          presentation.setEntranceDoorOpen(entryProgress);
+          if (entryProgress >= 1) {
+            presentation.finishEntranceDoor();
+            entryFlowStartedAt = null;
+            walkthroughStartedAt = now;
+            runtime.start();
+            runtime.dispatch({ type: "set-input", input: { forward: 1, strafe: 0, turn: 0, sprint: false } });
+            setSnapshot(runtime.snapshot());
+          }
+        }
+        if (!manualRef.current && runtime.snapshot().expedition.phase !== "title") {
           const sample = input.sample();
           runtime.dispatch({ type: "set-input", input: sample.input });
           if (sample.look.yawDelta || sample.look.pitchDelta) {
@@ -162,6 +195,14 @@ export function BrowserGame() {
             else if (command === "pause") runtime.dispatch({ type: "pause" });
             else if (command === "restart" && runtime.snapshot().expedition.phase === "caught") runtime.dispatch({ type: "restart" });
             else if (command === "monster-index") setIndexOpen((value) => !value);
+          }
+          if (walkthroughStartedAt !== null) {
+            if (now - walkthroughStartedAt >= 950) {
+              walkthroughStartedAt = null;
+              runtime.dispatch({ type: "set-input", input: { forward: 0, strafe: 0, turn: 0, sprint: false } });
+            } else {
+              runtime.dispatch({ type: "set-input", input: { forward: 1, strafe: 0, turn: 0, sprint: false } });
+            }
           }
           accumulator += elapsedMs / 1_000;
           while (accumulator >= FIXED_STEP) {
@@ -189,13 +230,14 @@ export function BrowserGame() {
         cancelAnimationFrame(frameId);
         document.removeEventListener("visibilitychange", onVisibilityChange);
         canvas.removeEventListener("click", onCanvasClick);
+        canvas.removeEventListener("pointermove", onCanvasPointerMove);
+        canvas.removeEventListener("pointerleave", onCanvasPointerLeave);
         removeSemanticControl();
         input.dispose();
         audio.dispose();
         presentation.dispose();
         runtime.dispose();
         runtimeRef.current = null;
-        audioRef.current = null;
         renderRef.current = null;
       };
     } catch (error) {
@@ -203,33 +245,6 @@ export function BrowserGame() {
       return undefined;
     }
   }, [launch]);
-
-  const begin = () => {
-    const runtime = runtimeRef.current;
-    const canvas = canvasRef.current;
-    if (!runtime || !canvas || !ready) return;
-    if (!navigator.webdriver) requestPointerLockSafely(canvas);
-    try {
-      void audioRef.current?.unlock().catch(() => {
-        // Audio is optional; continue without an unlocked context.
-      });
-    } catch {
-      // Unsupported or denied audio must not crash the game.
-    }
-    window.setTimeout(() => {
-      runtime.start();
-      renderRef.current?.();
-      setSnapshot(runtime.snapshot());
-    }, 0);
-  };
-
-  const launchShared = (mode: "host" | "client", roomCode: string) => {
-    const next = new URL(window.location.href);
-    next.searchParams.set("mode", mode);
-    next.searchParams.set("room", roomCode.trim().toUpperCase() || "NIGHT7");
-    next.searchParams.set("seed", launch.seed);
-    window.location.assign(next);
-  };
 
   const restart = () => {
     runtimeRef.current?.dispatch({ type: "restart" });
@@ -273,38 +288,11 @@ export function BrowserGame() {
       )}
 
       {!fatalError && phase === "title" && (
-        <section className="title-screen" data-testid="title-screen">
-          <div className="title-mark" aria-hidden="true"><span /><span /><span /></div>
-          <p className="eyebrow">Nexus expedition 02</p>
-          <h1>Horror<br />Corridor</h1>
-          <p className="title-promise">Listen for what follows. Face it. Let it finish the scare if you want to collect it.</p>
-          {launch.mode !== "solo" && (
-            <p className="session-line">
-              {launch.mode === "host" ? "Hosting" : "Joining"} <strong>{launch.roomCode}</strong>
-            </p>
-          )}
-          <button
-            type="button"
-            className="hero-button"
-            onClick={begin}
-            disabled={!ready}
-            data-testid="begin-expedition"
-            aria-label="Start solo corridor"
-          >
-            {ready ? (launch.mode === "client" ? "Enter Shared Expedition" : "Start Solo Corridor") : "Opening corridor…"}
-          </button>
-          <p className="controls-line">WASD move · mouse listen/look · F flashlight · E interact · I index</p>
-          <details className="advanced-launch">
-            <summary>Shared expedition</summary>
-            <div className="advanced-launch-content">
-              <button onClick={() => launchShared("host", joinCode)}>Host</button>
-              <label>
-                Room code
-                <input value={joinCode} onChange={(event) => setJoinCode(event.target.value)} maxLength={12} />
-              </label>
-              <button onClick={() => launchShared("client", joinCode)}>Join</button>
-            </div>
-          </details>
+        <section className="entry-screen" data-testid="title-screen" aria-label="Corridor entrance">
+          <h1 className="visually-hidden">Horror Corridor</h1>
+          <p className="entry-prompt" data-testid="door-entry-prompt">
+            {ready ? "Click the service door to enter" : "The door is waking…"}
+          </p>
         </section>
       )}
 

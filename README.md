@@ -23,9 +23,13 @@ npm run dev
 
 Controls: `WASD` move · mouse look/listen · `F` flashlight · `E` interact · `I` Monster Index · `P` pause.
 
-The browser starts a puzzle-room greybox route: ten room families at five levels.
+The game opens in the scene at a lower-service door. Click the physical door to
+open it and step into the route; there is no separate start screen. The active
+browser route remains a puzzle-room greybox: ten room families at five levels.
 Aim at nearby objects and press E. Gates remain closed until the room's rules
-are satisfied; no escape solution is displayed. Read the
+are satisfied; no escape solution is displayed. Practical lights are localized
+to fixtures, with corridor walls and ceilings casting shadows. This is still
+in-progress low-poly lighting, not final visual acceptance. Read the
 [room checkpoint](docs/sequence-overhaul/room-kits.md) for fidelity limits.
 
 Validation:
